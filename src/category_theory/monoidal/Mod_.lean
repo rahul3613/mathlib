@@ -62,12 +62,12 @@ def comp {M N O : Mod_ A} (f : hom M N) (g : hom N O) : hom M O :=
 
 instance : category (Mod_ A) :=
 { hom := λ M N, hom M N,
- id := id,
- comp := λ M N O f g, comp f g, }
+  id := id,
+  comp := λ M N O f g, comp f g, }
 
 @[simp] lemma id_hom' (M : Mod_ A) : (𝟙 M : hom M M).hom = 𝟙 M.X := rfl
 @[simp] lemma comp_hom' {M N K : Mod_ A} (f : M ⟶ N) (g : N ⟶ K) :
- (f ≫ g : hom M K).hom = f.hom ≫ g.hom := rfl
+  (f ≫ g : hom M K).hom = f.hom ≫ g.hom := rfl
 
 variables (A)
 
@@ -75,14 +75,14 @@ variables (A)
 @[simps]
 def regular : Mod_ A :=
 { X := A.X,
- act := A.mul, }
+  act := A.mul, }
 
 instance : inhabited (Mod_ A) := ⟨regular A⟩
 
 /-- The forgetful functor from module objects to the ambient category. -/
 def forget : Mod_ A ⥤ C :=
 { obj := λ A, A.X,
- map := λ A B f, f.hom, }
+  map := λ A B f, f.hom, }
 
 open category_theory.monoidal_category
 
@@ -93,38 +93,37 @@ between the categories of module objects.
 @[simps]
 def comap {A B : Mon_ C} (f : A ⟶ B) : Mod_ B ⥤ Mod_ A :=
 { obj := λ M,
- { X := M.X,
- act := (f.hom ⊗ 𝟙 M.X) ≫ M.act,
- one_act' :=
- begin
- slice_lhs 1 2 { rw [←comp_tensor_id], },
- rw [f.one_hom]; rw [ one_act],
- end,
- assoc' :=
- begin
- -- oh, for homotopy.io in a widget!
- slice_rhs 2 3 { rw [id_tensor_comp_tensor_id]; rw [ ←tensor_id_comp_id_tensor], },
- rw id_tensor_comp,
- slice_rhs 4 5 { rw Mod_.assoc_flip, },
- slice_rhs 3 4 { rw associator_inv_naturality, },
- slice_rhs 2 3 { rw [←tensor_id]; rw [ associator_inv_naturality], },
- slice_rhs 1 3 { rw [iso.hom_inv_id_assoc], },
- slice_rhs 1 2 { rw [←comp_tensor_id]; rw [ tensor_id_comp_id_tensor], },
- slice_rhs 1 2 { rw [←comp_tensor_id]; rw [ ←f.mul_hom], },
- rw [comp_tensor_id]; rw [ category.assoc],
- end, },
- map := λ M N g,
- { hom := g.hom,
- act_hom' :=
- begin
- dsimp,
- slice_rhs 1 2 { rw [id_tensor_comp_tensor_id]; rw [ ←tensor_id_comp_id_tensor], },
- slice_rhs 2 3 { rw ←g.act_hom, },
- rw category.assoc,
- end }, }
+  { X := M.X,
+    act := (f.hom ⊗ 𝟙 M.X) ≫ M.act,
+    one_act' :=
+    begin
+      slice_lhs 1 2 { rw [←comp_tensor_id], },
+      rw [f.one_hom, one_act],
+    end,
+    assoc' :=
+    begin
+      -- oh, for homotopy.io in a widget!
+      slice_rhs 2 3 { rw [id_tensor_comp_tensor_id, ←tensor_id_comp_id_tensor], },
+      rw id_tensor_comp,
+      slice_rhs 4 5 { rw Mod_.assoc_flip, },
+      slice_rhs 3 4 { rw associator_inv_naturality, },
+      slice_rhs 2 3 { rw [←tensor_id, associator_inv_naturality], },
+      slice_rhs 1 3 { rw [iso.hom_inv_id_assoc], },
+      slice_rhs 1 2 { rw [←comp_tensor_id, tensor_id_comp_id_tensor], },
+      slice_rhs 1 2 { rw [←comp_tensor_id, ←f.mul_hom], },
+      rw [comp_tensor_id, category.assoc],
+    end, },
+  map := λ M N g,
+  { hom := g.hom,
+    act_hom' :=
+    begin
+      dsimp,
+      slice_rhs 1 2 { rw [id_tensor_comp_tensor_id, ←tensor_id_comp_id_tensor], },
+      slice_rhs 2 3 { rw ←g.act_hom, },
+      rw category.assoc,
+    end }, }
 
 -- Lots more could be said about `comap`, e.g. how it interacts with
 -- identities, compositions, and equalities of monoid object morphisms.
 
 end Mod_
-

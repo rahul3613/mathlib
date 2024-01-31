@@ -58,19 +58,18 @@ instance has_forget_to_Lat : has_forget₂ Frm Lat :=
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps] def iso.mk {α β : Frm.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := e,
- inv := e.symm,
- hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
- inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+  inv := e.symm,
+  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 end Frm
 
 /-- The forgetful functor from `Topᵒᵖ` to `Frm`. -/
 @[simps] def Top_op_to_Frame : Topᵒᵖ ⥤ Frm :=
 { obj := λ X, Frm.of (opens (unop X : Top)),
- map := λ X Y f, opens.comap $ quiver.hom.unop f,
- map_id' := λ X, opens.comap_id }
+  map := λ X Y f, opens.comap $ quiver.hom.unop f,
+  map_id' := λ X, opens.comap_id }
 
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHaus_op_to_Frame.faithful : faithful (CompHaus_to_Top.op ⋙ Top_op_to_Frame.{u}) :=
 ⟨λ X Y f g h, quiver.hom.unop_inj $ opens.comap_injective h⟩
-

@@ -36,8 +36,8 @@ def center [has_mul M] : set M := {z | ∀ m, m * z = z * m}
 @[to_additive mem_add_center]
 lemma mem_center_iff [has_mul M] {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g := iff.rfl
 
-instance decidable_mem_center [has_mul M] [∀ a : M, decidable $ ∀ b : M, b * a = a * b] :
- decidable_pred (∈ center M) :=
+instance decidable_mem_center [has_mul M]  [∀ a : M, decidable $ ∀ b : M, b * a = a * b] :
+  decidable_pred (∈ center M) :=
 λ _, decidable_of_iff' _ (mem_center_iff M)
 
 @[simp, to_additive zero_mem_add_center]
@@ -50,64 +50,64 @@ variables {M}
 
 @[simp, to_additive add_mem_add_center]
 lemma mul_mem_center [semigroup M] {a b : M}
- (ha : a ∈ set.center M) (hb : b ∈ set.center M) : a * b ∈ set.center M :=
-λ g, by rw [mul_assoc]; rw [ ←hb g]; rw [ ← mul_assoc]; rw [ ha g]; rw [ mul_assoc]
+  (ha : a ∈ set.center M) (hb : b ∈ set.center M) : a * b ∈ set.center M :=
+λ g, by rw [mul_assoc, ←hb g, ← mul_assoc, ha g, mul_assoc]
 
 @[simp, to_additive neg_mem_add_center]
 lemma inv_mem_center [group M] {a : M} (ha : a ∈ set.center M) : a⁻¹ ∈ set.center M :=
-λ g, by rw [← inv_inj]; rw [ mul_inv_rev]; rw [ inv_inv]; rw [ ← ha]; rw [ mul_inv_rev]; rw [ inv_inv]
+λ g, by rw [← inv_inj, mul_inv_rev, inv_inv, ← ha, mul_inv_rev, inv_inv]
 
 @[simp]
 lemma add_mem_center [distrib M] {a b : M}
- (ha : a ∈ set.center M) (hb : b ∈ set.center M) : a + b ∈ set.center M :=
-λ c, by rw [add_mul]; rw [ mul_add]; rw [ ha c]; rw [ hb c]
+  (ha : a ∈ set.center M) (hb : b ∈ set.center M) : a + b ∈ set.center M :=
+λ c, by rw [add_mul, mul_add, ha c, hb c]
 
 @[simp]
 lemma neg_mem_center [ring M] {a : M} (ha : a ∈ set.center M) : -a ∈ set.center M :=
-λ c, by rw [←neg_mul_comm]; rw [ ha (-c)]; rw [ neg_mul_comm]
+λ c, by rw [←neg_mul_comm, ha (-c), neg_mul_comm]
 
 @[to_additive subset_add_center_add_units]
 lemma subset_center_units [monoid M] :
- (coe : Mˣ → M) ⁻¹' center M ⊆ set.center Mˣ :=
+  (coe : Mˣ → M) ⁻¹' center M ⊆ set.center Mˣ :=
 λ a ha b, units.ext $ ha _
 
 lemma center_units_subset [group_with_zero M] :
- set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M :=
+  set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M :=
 λ a ha b, begin
- obtain rfl | hb := eq_or_ne b 0,
- { rw [zero_mul]; rw [ mul_zero], },
- { exact units.ext_iff.mp (ha (units.mk0 _ hb)) }
+  obtain rfl | hb := eq_or_ne b 0,
+  { rw [zero_mul, mul_zero], },
+  { exact units.ext_iff.mp (ha (units.mk0 _ hb)) }
 end
 
 /-- In a group with zero, the center of the units is the preimage of the center. -/
 lemma center_units_eq [group_with_zero M] :
- set.center Mˣ = (coe : Mˣ → M) ⁻¹' center M :=
+  set.center Mˣ = (coe : Mˣ → M) ⁻¹' center M :=
 subset.antisymm center_units_subset subset_center_units
 
 @[simp]
 lemma inv_mem_center₀ [group_with_zero M] {a : M} (ha : a ∈ set.center M) : a⁻¹ ∈ set.center M :=
 begin
- obtain rfl | ha0 := eq_or_ne a 0,
- { rw inv_zero, exact zero_mem_center M },
- rcases is_unit.mk0 _ ha0 with ⟨a, rfl⟩,
- rw ←units.coe_inv,
- exact center_units_subset (inv_mem_center (subset_center_units ha)),
+  obtain rfl | ha0 := eq_or_ne a 0,
+  { rw inv_zero, exact zero_mem_center M },
+  rcases is_unit.mk0 _ ha0 with ⟨a, rfl⟩,
+  rw ←units.coe_inv,
+  exact center_units_subset (inv_mem_center (subset_center_units ha)),
 end
 
 @[simp, to_additive sub_mem_add_center]
 lemma div_mem_center [group M] {a b : M} (ha : a ∈ set.center M) (hb : b ∈ set.center M) :
- a / b ∈ set.center M :=
+  a / b ∈ set.center M :=
 begin
- rw [div_eq_mul_inv],
- exact mul_mem_center ha (inv_mem_center hb),
+  rw [div_eq_mul_inv],
+  exact mul_mem_center ha (inv_mem_center hb),
 end
 
 @[simp]
 lemma div_mem_center₀ [group_with_zero M] {a b : M} (ha : a ∈ set.center M)
- (hb : b ∈ set.center M) : a / b ∈ set.center M :=
+  (hb : b ∈ set.center M) : a / b ∈ set.center M :=
 begin
- rw div_eq_mul_inv,
- exact mul_mem_center ha (inv_mem_center₀ hb),
+  rw div_eq_mul_inv,
+  exact mul_mem_center ha (inv_mem_center₀ hb),
 end
 
 variables (M)
@@ -127,7 +127,7 @@ variables (M) [semigroup M]
 `M`"]
 def center : subsemigroup M :=
 { carrier := set.center M,
- mul_mem' := λ a b, set.mul_mem_center }
+  mul_mem' := λ a b, set.mul_mem_center }
 
 @[to_additive] lemma coe_center : ↑(center M) = set.center M := rfl
 
@@ -137,14 +137,14 @@ variables {M}
 
 @[to_additive]
 instance decidable_mem_center (a) [decidable $ ∀ b : M, b * a = a * b] :
- decidable (a ∈ center M) :=
+  decidable (a ∈ center M) :=
 decidable_of_iff' _ mem_center_iff
 
 /-- The center of a semigroup is commutative. -/
 @[to_additive "The center of an additive semigroup is commutative."]
 instance : comm_semigroup (center M) :=
 { mul_comm := λ a b, subtype.ext $ b.prop _,
- .. mul_mem_class.to_semigroup (center M) }
+  .. mul_mem_class.to_semigroup (center M) }
 
 end
 
@@ -160,4 +160,3 @@ end subsemigroup
 
 -- Guard against import creep
 assert_not_exists finset
-

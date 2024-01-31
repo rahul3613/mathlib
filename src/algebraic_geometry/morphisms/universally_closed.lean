@@ -42,62 +42,61 @@ class universally_closed (f : X ⟶ Y) : Prop :=
 (out : universally (topologically @is_closed_map) f)
 
 lemma universally_closed_eq :
- @universally_closed = universally (topologically @is_closed_map) :=
+  @universally_closed = universally (topologically @is_closed_map) :=
 begin
- ext X Y f, rw universally_closed_iff
+  ext X Y f, rw universally_closed_iff
 end
 
 lemma universally_closed_respects_iso :
- respects_iso @universally_closed :=
+  respects_iso @universally_closed :=
 universally_closed_eq.symm ▸ universally_respects_iso (topologically @is_closed_map)
 
 lemma universally_closed_stable_under_base_change :
- stable_under_base_change @universally_closed :=
+  stable_under_base_change @universally_closed :=
 universally_closed_eq.symm ▸ universally_stable_under_base_change (topologically @is_closed_map)
 
 lemma universally_closed_stable_under_composition :
- stable_under_composition @universally_closed :=
+  stable_under_composition @universally_closed :=
 begin
- rw universally_closed_eq,
- exact stable_under_composition.universally (λ X Y Z f g hf hg, is_closed_map.comp hg hf),
+  rw universally_closed_eq,
+  exact stable_under_composition.universally (λ X Y Z f g hf hg, is_closed_map.comp hg hf),
 end
 
 instance universally_closed_type_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
- [hf : universally_closed f] [hg : universally_closed g] :
- universally_closed (f ≫ g) :=
+  [hf : universally_closed f] [hg : universally_closed g] :
+  universally_closed (f ≫ g) :=
 universally_closed_stable_under_composition f g hf hg
 
 instance universally_closed_fst {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z)
- [hg : universally_closed g] :
- universally_closed (pullback.fst : pullback f g ⟶ _) :=
+  [hg : universally_closed g] :
+  universally_closed (pullback.fst : pullback f g ⟶ _) :=
 universally_closed_stable_under_base_change.fst f g hg
 
 instance universally_closed_snd {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z)
- [hf : universally_closed f] :
- universally_closed (pullback.snd : pullback f g ⟶ _) :=
+  [hf : universally_closed f] :
+  universally_closed (pullback.snd : pullback f g ⟶ _) :=
 universally_closed_stable_under_base_change.snd f g hf
 
 lemma morphism_restrict_base {X Y : Scheme} (f : X ⟶ Y) (U : opens Y.carrier) :
- ⇑(f ∣_ U).1.base = U.1.restrict_preimage f.1 :=
+  ⇑(f ∣_ U).1.base = U.1.restrict_preimage f.1 :=
 funext (λ x, subtype.ext $ morphism_restrict_base_coe f U x)
 
 lemma universally_closed_is_local_at_target :
- property_is_local_at_target @universally_closed :=
+  property_is_local_at_target @universally_closed :=
 begin
- rw universally_closed_eq,
- apply universally_is_local_at_target_of_morphism_restrict,
- { exact stable_under_composition.respects_iso (λ X Y Z f g hf hg, is_closed_map.comp hg hf)
- (λ X Y f, (Top.homeo_of_iso (Scheme.forget_to_Top.map_iso f)).is_closed_map) },
- { intros X Y f ι U hU H,
- simp_rw [topologically, morphism_restrict_base] at H,
- exact (is_closed_map_iff_is_closed_map_of_supr_eq_top hU).mpr H }
+  rw universally_closed_eq,
+  apply universally_is_local_at_target_of_morphism_restrict,
+  { exact stable_under_composition.respects_iso (λ X Y Z f g hf hg, is_closed_map.comp hg hf)
+      (λ X Y f, (Top.homeo_of_iso (Scheme.forget_to_Top.map_iso f)).is_closed_map) },
+  { intros X Y f ι U hU H,
+    simp_rw [topologically, morphism_restrict_base] at H,
+    exact (is_closed_map_iff_is_closed_map_of_supr_eq_top hU).mpr H }
 end
 
 lemma universally_closed.open_cover_iff {X Y : Scheme.{u}} (f : X ⟶ Y)
- (𝒰 : Scheme.open_cover.{u} Y) :
- universally_closed f ↔
- (∀ i, universally_closed (pullback.snd : pullback f (𝒰.map i) ⟶ _)) :=
+  (𝒰 : Scheme.open_cover.{u} Y) :
+  universally_closed f ↔
+    (∀ i, universally_closed (pullback.snd : pullback f (𝒰.map i) ⟶ _)) :=
 universally_closed_is_local_at_target.open_cover_iff f 𝒰
 
 end algebraic_geometry
-

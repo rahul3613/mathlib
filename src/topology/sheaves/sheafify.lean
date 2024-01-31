@@ -49,7 +49,7 @@ The prelocal predicate on functions into the stalks, asserting that the function
 -/
 def is_germ : prelocal_predicate (λ x, F.stalk x) :=
 { pred := λ U f, ∃ (g : F.obj (op U)), ∀ x : U, f x = F.germ x g,
- res := λ V U i f ⟨g, p⟩, ⟨F.map i.op g, λ x, (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩, }
+  res := λ V U i f ⟨g, p⟩, ⟨F.map i.op g, λ x, (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩, }
 
 /--
 The local predicate on functions into the stalks,
@@ -73,7 +73,7 @@ sending each section to its germs.
 -/
 def to_sheafify : F ⟶ F.sheafify.1 :=
 { app := λ U f, ⟨λ x, F.germ x f, prelocal_predicate.sheafify_of ⟨f, λ x, rfl⟩⟩,
- naturality' := λ U U' f, by { ext x ⟨u, m⟩, exact germ_res_apply F f.unop ⟨u, m⟩ x } }
+  naturality' := λ U U' f, by { ext x ⟨u, m⟩, exact germ_res_apply F f.unop ⟨u, m⟩ x } }
 
 /--
 The natural morphism from the stalk of the sheafification to the original stalk.
@@ -84,40 +84,41 @@ stalk_to_fiber (sheafify.is_locally_germ F) x
 
 lemma stalk_to_fiber_surjective (x : X) : function.surjective (F.stalk_to_fiber x) :=
 begin
- apply stalk_to_fiber_surjective,
- intro t,
- obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t,
- { use ⟨U, m⟩,
- fsplit,
- { exact λ y, F.germ y s, },
- { exact ⟨prelocal_predicate.sheafify_of ⟨s, (λ _, rfl)⟩, rfl⟩, }, },
+  apply stalk_to_fiber_surjective,
+  intro t,
+  obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t,
+  { use ⟨U, m⟩,
+    fsplit,
+    { exact λ y, F.germ y s, },
+    { exact ⟨prelocal_predicate.sheafify_of ⟨s, (λ _, rfl)⟩, rfl⟩, }, },
 end
 
 lemma stalk_to_fiber_injective (x : X) : function.injective (F.stalk_to_fiber x) :=
 begin
- apply stalk_to_fiber_injective,
- intros,
- rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩,
- rcases hV ⟨x, V.2⟩ with ⟨V', mV, iV, gV, wV⟩,
- have wUx := wU ⟨x, mU⟩,
- dsimp at wUx, erw wUx at e, clear wUx,
- have wVx := wV ⟨x, mV⟩,
- dsimp at wVx, erw wVx at e, clear wVx,
- rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', e'⟩,
- dsimp at e',
- use ⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩,
- refine ⟨_, _, _⟩,
- { change W ⊓ (U' ⊓ V') ⟶ U.obj,
- exact (opens.inf_le_right _ _) ≫ (opens.inf_le_left _ _) ≫ iU, },
- { change W ⊓ (U' ⊓ V') ⟶ V.obj,
- exact (opens.inf_le_right _ _) ≫ (opens.inf_le_right _ _) ≫ iV, },
- { intro w,
- dsimp,
- specialize wU ⟨w.1, w.2.2.1⟩,
- dsimp at wU,
- specialize wV ⟨w.1, w.2.2.2⟩,
- dsimp at wV,
- erw [wU]; erw [ ←F.germ_res iU' ⟨w, w.2.1⟩]; erw [ wV]; erw [ ←F.germ_res iV' ⟨w, w.2.1⟩]; erw [ category_theory.types_comp_apply]; erw [ category_theory.types_comp_apply]; erw [ e'] },
+  apply stalk_to_fiber_injective,
+  intros,
+  rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩,
+  rcases hV ⟨x, V.2⟩ with ⟨V', mV, iV, gV, wV⟩,
+  have wUx := wU ⟨x, mU⟩,
+  dsimp at wUx, erw wUx at e, clear wUx,
+  have wVx := wV ⟨x, mV⟩,
+  dsimp at wVx, erw wVx at e, clear wVx,
+  rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', e'⟩,
+  dsimp at e',
+  use ⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩,
+  refine ⟨_, _, _⟩,
+  { change W ⊓ (U' ⊓ V') ⟶ U.obj,
+    exact (opens.inf_le_right _ _) ≫ (opens.inf_le_left _ _) ≫ iU, },
+  { change W ⊓ (U' ⊓ V') ⟶ V.obj,
+    exact (opens.inf_le_right _ _) ≫ (opens.inf_le_right _ _) ≫ iV, },
+  { intro w,
+    dsimp,
+    specialize wU ⟨w.1, w.2.2.1⟩,
+    dsimp at wU,
+    specialize wV ⟨w.1, w.2.2.2⟩,
+    dsimp at wV,
+    erw [wU, ←F.germ_res iU' ⟨w, w.2.1⟩, wV, ←F.germ_res iV' ⟨w, w.2.1⟩,
+      category_theory.types_comp_apply, category_theory.types_comp_apply, e'] },
 end
 
 /--
@@ -129,4 +130,3 @@ def sheafify_stalk_iso (x : X) : F.sheafify.presheaf.stalk x ≅ F.stalk x :=
 -- PROJECT functoriality, and that sheafification is the left adjoint of the forgetful functor.
 
 end Top.presheaf
-

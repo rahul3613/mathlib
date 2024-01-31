@@ -18,12 +18,12 @@ We show a type `F` with a `fun_like F α β` is finite if both `α` and `β` are
 This corresponds to the following two pairs of declarations:
 
  * `fun_like.fintype` is a definition stating all `fun_like`s are finite if their domain and
- codomain are.
+   codomain are.
  * `fun_like.finite` is a lemma stating all `fun_like`s are finite if their domain and
- codomain are.
+   codomain are.
  * `fun_like.fintype'` is a non-dependent version of `fun_like.fintype` and
  * `fun_like.finite` is a non-dependent version of `fun_like.finite`, because dependent instances
- are harder to infer.
+   are harder to infer.
 
 You can use these to produce instances for specific `fun_like` types.
 (Although there might be options for `fintype` instances with better definitional behaviour.)
@@ -73,4 +73,3 @@ lemma fun_like.finite' [finite α] [finite γ] : finite G :=
 fun_like.finite G
 
 end sort
-

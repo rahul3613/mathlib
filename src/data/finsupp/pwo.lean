@@ -19,7 +19,7 @@ It is in a separate file for now so as to not add imports to the file `order.wel
 ## Main statements
 
 * `finsupp.is_pwo` - finitely supported functions from a fintype are partially well ordered when
- the codomain is a linear order that is well ordered
+  the codomain is a linear order that is well ordered
 
 ## Tags
 
@@ -31,7 +31,6 @@ ordered, when `σ` is `finite` and `α` is a linear well order.
 This version uses finsupps on a finite type as it is intended for use with `mv_power_series`.
 -/
 lemma finsupp.is_pwo {α σ : Type*} [has_zero α] [linear_order α] [is_well_order α (<)] [finite σ]
- (S : set (σ →₀ α)) : S.is_pwo :=
+  (S : set (σ →₀ α)) : S.is_pwo :=
 finsupp.equiv_fun_on_finite.symm_image_image S ▸
- set.partially_well_ordered_on.image_of_monotone_on (pi.is_pwo _) (λ a b ha hb, id)
-
+  set.partially_well_ordered_on.image_of_monotone_on (pi.is_pwo _) (λ a b ha hb, id)

@@ -30,4 +30,3 @@ instance equiv_functor_finset : equiv_functor finset :=
 
 instance equiv_functor_fintype : equiv_functor fintype :=
 { map := λ α β e s, by exactI fintype.of_bijective e e.bijective, }
-

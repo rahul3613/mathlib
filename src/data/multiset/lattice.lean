@@ -30,7 +30,7 @@ def sup (s : multiset α) : α := s.fold (⊔) ⊥
 fold_zero _ _
 
 @[simp] lemma sup_cons (a : α) (s : multiset α) :
- (a ::ₘ s).sup = a ⊔ s.sup :=
+  (a ::ₘ s).sup = a ⊔ s.sup :=
 fold_cons_left _ _ _ _
 
 @[simp] lemma sup_singleton {a : α} : ({a} : multiset α).sup = a :=
@@ -41,7 +41,7 @@ eq.trans (by simp [sup]) (fold_add _ _ _ _ _)
 
 @[simp] lemma sup_le {s : multiset α} {a : α} : s.sup ≤ a ↔ (∀b ∈ s, b ≤ a) :=
 multiset.induction_on s (by simp)
- (by simp [or_imp_distrib, forall_and_distrib] {contextual := tt})
+  (by simp [or_imp_distrib, forall_and_distrib] {contextual := tt})
 
 lemma le_sup {s : multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
 sup_le.1 le_rfl _ h
@@ -55,24 +55,24 @@ variables [decidable_eq α]
 fold_dedup_idem _ _ _
 
 @[simp] lemma sup_ndunion (s₁ s₂ : multiset α) :
- (ndunion s₁ s₂).sup = s₁.sup ⊔ s₂.sup :=
-by rw [← sup_dedup]; rw [ dedup_ext.2]; rw [ sup_dedup]; rw [ sup_add]; simp
+  (ndunion s₁ s₂).sup = s₁.sup ⊔ s₂.sup :=
+by rw [← sup_dedup, dedup_ext.2, sup_dedup, sup_add]; simp
 
 @[simp] lemma sup_union (s₁ s₂ : multiset α) :
- (s₁ ∪ s₂).sup = s₁.sup ⊔ s₂.sup :=
-by rw [← sup_dedup]; rw [ dedup_ext.2]; rw [ sup_dedup]; rw [ sup_add]; simp
+  (s₁ ∪ s₂).sup = s₁.sup ⊔ s₂.sup :=
+by rw [← sup_dedup, dedup_ext.2, sup_dedup, sup_add]; simp
 
 @[simp] lemma sup_ndinsert (a : α) (s : multiset α) :
- (ndinsert a s).sup = a ⊔ s.sup :=
-by rw [← sup_dedup]; rw [ dedup_ext.2]; rw [ sup_dedup]; rw [ sup_cons]; simp
+  (ndinsert a s).sup = a ⊔ s.sup :=
+by rw [← sup_dedup, dedup_ext.2, sup_dedup, sup_cons]; simp
 
 lemma nodup_sup_iff {α : Type*} [decidable_eq α] {m : multiset (multiset α) } :
- m.sup.nodup ↔ ∀ (a : multiset α), a ∈ m → a.nodup :=
+  m.sup.nodup ↔ ∀ (a : multiset α), a ∈ m → a.nodup :=
 begin
- apply m.induction_on,
- { simp },
- { intros a s h,
- simp [h] }
+  apply m.induction_on,
+  { simp },
+  { intros a s h,
+    simp [h] }
 end
 
 end sup
@@ -91,7 +91,7 @@ def inf (s : multiset α) : α := s.fold (⊓) ⊤
 fold_zero _ _
 
 @[simp] lemma inf_cons (a : α) (s : multiset α) :
- (a ::ₘ s).inf = a ⊓ s.inf :=
+  (a ::ₘ s).inf = a ⊓ s.inf :=
 fold_cons_left _ _ _ _
 
 @[simp] lemma inf_singleton {a : α} : ({a} : multiset α).inf = a :=
@@ -102,7 +102,7 @@ eq.trans (by simp [inf]) (fold_add _ _ _ _ _)
 
 lemma le_inf {s : multiset α} {a : α} : a ≤ s.inf ↔ (∀b ∈ s, a ≤ b) :=
 multiset.induction_on s (by simp)
- (by simp [or_imp_distrib, forall_and_distrib] {contextual := tt})
+  (by simp [or_imp_distrib, forall_and_distrib] {contextual := tt})
 
 lemma inf_le {s : multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=
 le_inf.1 le_rfl _ h
@@ -116,18 +116,17 @@ variables [decidable_eq α]
 fold_dedup_idem _ _ _
 
 @[simp] lemma inf_ndunion (s₁ s₂ : multiset α) :
- (ndunion s₁ s₂).inf = s₁.inf ⊓ s₂.inf :=
-by rw [← inf_dedup]; rw [ dedup_ext.2]; rw [ inf_dedup]; rw [ inf_add]; simp
+  (ndunion s₁ s₂).inf = s₁.inf ⊓ s₂.inf :=
+by rw [← inf_dedup, dedup_ext.2, inf_dedup, inf_add]; simp
 
 @[simp] lemma inf_union (s₁ s₂ : multiset α) :
- (s₁ ∪ s₂).inf = s₁.inf ⊓ s₂.inf :=
-by rw [← inf_dedup]; rw [ dedup_ext.2]; rw [ inf_dedup]; rw [ inf_add]; simp
+  (s₁ ∪ s₂).inf = s₁.inf ⊓ s₂.inf :=
+by rw [← inf_dedup, dedup_ext.2, inf_dedup, inf_add]; simp
 
 @[simp] lemma inf_ndinsert (a : α) (s : multiset α) :
- (ndinsert a s).inf = a ⊓ s.inf :=
-by rw [← inf_dedup]; rw [ dedup_ext.2]; rw [ inf_dedup]; rw [ inf_cons]; simp
+  (ndinsert a s).inf = a ⊓ s.inf :=
+by rw [← inf_dedup, dedup_ext.2, inf_dedup, inf_cons]; simp
 
 end inf
 
 end multiset
-

@@ -23,4 +23,3 @@ quotient.fintype _
 
 instance [decidable_eq α] [fintype α] {n : ℕ} : fintype (sym α n) :=
 fintype.of_equiv _ sym.sym_equiv_sym'.symm
-

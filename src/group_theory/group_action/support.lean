@@ -41,17 +41,16 @@ variables {G}
 end has_smul
 
 variables [group H] [has_smul G α] [has_smul G β] [mul_action H α] [has_smul H β]
- [smul_comm_class G H β] [smul_comm_class G H α] {s t : set α} {b : β}
+  [smul_comm_class G H β] [smul_comm_class G H α] {s t : set α} {b : β}
 
 -- TODO: This should work without `smul_comm_class`
 @[to_additive] lemma supports.smul (g : H) (h : supports G s b) : supports G (g • s) (g • b) :=
 begin
- rintro g' hg',
- rw [smul_comm]; rw [ h],
- rintro a ha,
- have := set.ball_image_iff.1 hg' a ha,
- rwa [smul_comm] at this; rwa [ smul_left_cancel_iff] at this,
+  rintro g' hg',
+  rw [smul_comm, h],
+  rintro a ha,
+  have := set.ball_image_iff.1 hg' a ha,
+  rwa [smul_comm, smul_left_cancel_iff] at this,
 end
 
 end mul_action
-

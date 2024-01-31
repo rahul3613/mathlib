@@ -33,22 +33,22 @@ namespace nat
 /-- `coe : ℕ → α` as an `add_monoid_hom`. -/
 def cast_add_monoid_hom (α : Type*) [add_monoid_with_one α] : ℕ →+ α :=
 { to_fun := coe,
- map_add' := cast_add,
- map_zero' := cast_zero }
+  map_add' := cast_add,
+  map_zero' := cast_zero }
 
 @[simp] lemma coe_cast_add_monoid_hom [add_monoid_with_one α] :
- (cast_add_monoid_hom α : ℕ → α) = coe := rfl
+  (cast_add_monoid_hom α : ℕ → α) = coe := rfl
 
 @[simp, norm_cast] theorem cast_mul [non_assoc_semiring α] (m n : ℕ) :
- ((m * n : ℕ) : α) = m * n :=
+  ((m * n : ℕ) : α) = m * n :=
 by induction n; simp [mul_succ, mul_add, *]
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def cast_ring_hom (α : Type*) [non_assoc_semiring α] : ℕ →+* α :=
 { to_fun := coe,
- map_one' := cast_one,
- map_mul' := cast_mul,
- .. cast_add_monoid_hom α }
+  map_one' := cast_one,
+  map_mul' := cast_mul,
+  .. cast_add_monoid_hom α }
 
 @[simp] lemma coe_cast_ring_hom [non_assoc_semiring α] : (cast_ring_hom α : ℕ → α) = coe := rfl
 
@@ -93,39 +93,39 @@ order_embedding.of_strict_mono coe nat.strict_mono_cast
 @[simp, norm_cast] lemma cast_le : (m : α) ≤ n ↔ m ≤ n := strict_mono_cast.le_iff_le
 @[simp, norm_cast, mono] lemma cast_lt : (m : α) < n ↔ m < n := strict_mono_cast.lt_iff_lt
 
-@[simp, norm_cast] lemma one_lt_cast : 1 < (n : α) ↔ 1 < n := by rw [←cast_one]; rw [ cast_lt]
-@[simp, norm_cast] lemma one_le_cast : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [←cast_one]; rw [ cast_le]
+@[simp, norm_cast] lemma one_lt_cast : 1 < (n : α) ↔ 1 < n := by rw [←cast_one, cast_lt]
+@[simp, norm_cast] lemma one_le_cast : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [←cast_one, cast_le]
 
 @[simp, norm_cast] lemma cast_lt_one : (n : α) < 1 ↔ n = 0 :=
-by rw [←cast_one]; rw [ cast_lt]; rw [ lt_succ_iff]; rw [ ←bot_eq_zero]; rw [ le_bot_iff]
+by rw [←cast_one, cast_lt, lt_succ_iff, ←bot_eq_zero, le_bot_iff]
 
-@[simp, norm_cast] lemma cast_le_one : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [←cast_one]; rw [ cast_le]
+@[simp, norm_cast] lemma cast_le_one : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [←cast_one, cast_le]
 
 end ordered_semiring
 
 /-- A version of `nat.cast_sub` that works for `ℝ≥0` and `ℚ≥0`. Note that this proof doesn't work
 for `ℕ∞` and `ℝ≥0∞`, so we use type-specific lemmas for these types. -/
 @[simp, norm_cast] lemma cast_tsub [canonically_ordered_comm_semiring α] [has_sub α]
- [has_ordered_sub α] [contravariant_class α α (+) (≤)] (m n : ℕ) :
- ↑(m - n) = (m - n : α) :=
+  [has_ordered_sub α] [contravariant_class α α (+) (≤)] (m n : ℕ) :
+  ↑(m - n) = (m - n : α) :=
 begin
- cases le_total m n with h h,
- { rw [tsub_eq_zero_of_le h]; rw [ cast_zero]; rw [ tsub_eq_zero_of_le],
- exact mono_cast h },
- { rcases le_iff_exists_add'.mp h with ⟨m, rfl⟩,
- rw [add_tsub_cancel_right]; rw [ cast_add]; rw [ add_tsub_cancel_right] }
+  cases le_total m n with h h,
+  { rw [tsub_eq_zero_of_le h, cast_zero, tsub_eq_zero_of_le],
+    exact mono_cast h },
+  { rcases le_iff_exists_add'.mp h with ⟨m, rfl⟩,
+    rw [add_tsub_cancel_right, cast_add, add_tsub_cancel_right] }
 end
 
 @[simp, norm_cast] theorem cast_min [linear_ordered_semiring α] {a b : ℕ} :
- (↑(min a b) : α) = min a b :=
+  (↑(min a b) : α) = min a b :=
 (@mono_cast α _).map_min
 
 @[simp, norm_cast] theorem cast_max [linear_ordered_semiring α] {a b : ℕ} :
- (↑(max a b) : α) = max a b :=
+  (↑(max a b) : α) = max a b :=
 (@mono_cast α _).map_max
 
 @[simp, norm_cast] theorem abs_cast [linear_ordered_ring α] (a : ℕ) :
- |(a : α)| = a :=
+  |(a : α)| = a :=
 abs_of_nonneg (cast_nonneg a)
 
 lemma coe_nat_dvd [semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
@@ -141,9 +141,9 @@ variables {A B F : Type*} [add_monoid_with_one B]
 
 lemma ext_nat' [add_monoid A] [add_monoid_hom_class F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
 fun_like.ext f g $ begin
- apply nat.rec,
- { simp only [nat.nat_zero_eq_zero, map_zero] },
- simp [nat.succ_eq_add_one, h] {contextual := tt}
+  apply nat.rec,
+  { simp only [nat.nat_zero_eq_zero, map_zero] },
+  simp [nat.succ_eq_add_one, h] {contextual := tt}
 end
 
 @[ext] lemma add_monoid_hom.ext_nat [add_monoid A] : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
@@ -153,14 +153,14 @@ variable [add_monoid_with_one A]
 
 -- these versions are primed so that the `ring_hom_class` versions aren't
 lemma eq_nat_cast' [add_monoid_hom_class F ℕ A] (f : F) (h1 : f 1 = 1) :
- ∀ n : ℕ, f n = n
-| 0 := by simp
-| (n+1) := by rw [map_add]; rw [ h1]; rw [ eq_nat_cast' n]; rw [ nat.cast_add_one]
+  ∀ n : ℕ, f n = n
+| 0     := by simp
+| (n+1) := by rw [map_add, h1, eq_nat_cast' n, nat.cast_add_one]
 
 lemma map_nat_cast' {A} [add_monoid_with_one A] [add_monoid_hom_class F A B]
- (f : F) (h : f 1 = 1) : ∀ (n : ℕ), f n = n
-| 0 := by simp
-| (n+1) := by rw [nat.cast_add]; rw [ map_add]; rw [ nat.cast_add]; rw [ map_nat_cast']; rw [ nat.cast_one]; rw [ h]; rw [ nat.cast_one]
+                    (f : F) (h : f 1 = 1) : ∀ (n : ℕ), f n = n
+| 0     := by simp
+| (n+1) := by rw [nat.cast_add, map_add, nat.cast_add, map_nat_cast', nat.cast_one, h, nat.cast_one]
 
 end add_monoid_hom_class
 
@@ -170,16 +170,16 @@ variables {A F : Type*} [mul_zero_one_class A]
 
 /-- If two `monoid_with_zero_hom`s agree on the positive naturals they are equal. -/
 theorem ext_nat'' [monoid_with_zero_hom_class F ℕ A] (f g : F)
- (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) : f = g :=
+  (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) : f = g :=
 begin
- apply fun_like.ext,
- rintro (_|n),
- { simp },
- exact h_pos n.succ_pos
+  apply fun_like.ext,
+  rintro (_|n),
+  { simp },
+  exact h_pos n.succ_pos
 end
 
 @[ext] theorem monoid_with_zero_hom.ext_nat :
- ∀ {f g : ℕ →*₀ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g := ext_nat''
+  ∀ {f g : ℕ →*₀ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g := ext_nat''
 
 end monoid_with_zero_hom_class
 
@@ -197,11 +197,11 @@ lemma ext_nat [ring_hom_class F ℕ R] (f g : F) : f = g :=
 ext_nat' f g $ by simp only [map_one]
 
 lemma ne_zero.nat_of_injective {n : ℕ} [h : ne_zero (n : R)]
- [ring_hom_class F R S] {f : F} (hf : function.injective f) : ne_zero (n : S) :=
+  [ring_hom_class F R S] {f : F} (hf : function.injective f) : ne_zero (n : S) :=
 ⟨λ h, (ne_zero.nat_cast_ne n R) $ hf $ by simpa only [map_nat_cast, map_zero]⟩
 
 lemma ne_zero.nat_of_ne_zero {R S} [semiring R] [semiring S] {F} [ring_hom_class F R S] (f : F)
- {n : ℕ} [hn : ne_zero (n : S)] : ne_zero (n : R) :=
+  {n : ℕ} [hn : ne_zero (n : S)] : ne_zero (n : R) :=
 by { apply ne_zero.of_map f, simp only [map_nat_cast, hn] }
 
 end ring_hom_class
@@ -236,7 +236,7 @@ lemma nat_apply (n : ℕ) (a : α) : (n : Π a, π a) a = n := rfl
 end pi
 
 lemma sum.elim_nat_cast_nat_cast {α β γ : Type*} [has_nat_cast γ] (n : ℕ) :
- sum.elim (n : α → γ) (n : β → γ) = n :=
+  sum.elim (n : α → γ) (n : β → γ) = n :=
 @sum.elim_lam_const_lam_const α β γ n
 
 namespace pi
@@ -266,4 +266,3 @@ instance [h : add_comm_monoid_with_one α] : add_comm_monoid_with_one (lex α) :
 
 @[simp] lemma to_lex_nat_cast [has_nat_cast α] (n : ℕ) : to_lex (n : α) = n := rfl
 @[simp] lemma of_lex_nat_cast [has_nat_cast α] (n : ℕ) : (of_lex n : α) = n := rfl
-

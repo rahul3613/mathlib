@@ -100,11 +100,11 @@ steps there.
 The components of `linarith` are spread between a number of files for the sake of organization.
 
 * `lemmas.lean` contains proofs of some arithmetic lemmas that are used in preprocessing and in
- verification.
+  verification.
 * `datatypes.lean` contains data structures that are used across multiple files, along with some
- useful auxiliary functions.
+  useful auxiliary functions.
 * `preprocessing.lean` contains functions used at the beginning of the tactic to transform
- hypotheses into a shape suitable for the main routine.
+  hypotheses into a shape suitable for the main routine.
 * `parsing.lean` contains functions used to compute the linear structure of an expression.
 * `elimination.lean` contains the Fourier-Motzkin elimination routine.
 * `verification.lean` contains the certificate checking functions that produce a proof of `false`.
@@ -152,11 +152,11 @@ Otherwise returns `none`.
 -/
 meta def apply_contr_lemma : tactic (option (expr × expr)) :=
 do t ← target >>= instantiate_mvars,
- match get_contr_lemma_name_and_type t with
- | some (nm, tp) :=
- do refine ((expr.const nm []) pexpr.mk_placeholder), v ← intro1, return $ some (tp, v)
- | none := return none
- end
+   match get_contr_lemma_name_and_type t with
+   | some (nm, tp) :=
+     do refine ((expr.const nm []) pexpr.mk_placeholder), v ← intro1, return $ some (tp, v)
+   | none := return none
+   end
 
 /--
 `partition_by_type l` takes a list `l` of proofs of comparisons. It sorts these proofs by
@@ -180,24 +180,24 @@ preprocesses `hyps` according to the list of preprocessors in `cfg`.
 This results in a list of branches (typically only one),
 each of which must succeed in order to close the goal.
 
-In each branch, we partition the list of hypotheses by type, and run `linarith` on each class
+In each branch, we partition the  list of hypotheses by type, and run `linarith` on each class
 in the partition; one of these must succeed in order for `linarith` to succeed on this branch.
 If `pref_type` is given, it will first use the class of proofs of comparisons over that type.
 -/
 meta def run_linarith_on_pfs (cfg : linarith_config) (hyps : list expr) (pref_type : option expr) :
- tactic unit :=
+  tactic unit :=
 let single_process := λ hyps : list expr, do
- linarith_trace_proofs
- ("after preprocessing, linarith has " ++ to_string hyps.length ++ " facts:") hyps,
- hyp_set ← partition_by_type hyps,
- linarith_trace format!"hypotheses appear in {hyp_set.size} different types",
- match pref_type with
- | some t := prove_false_by_linarith cfg (hyp_set.ifind t) <|>
- try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t))
- | none := try_linarith_on_lists cfg (rb_map.values hyp_set)
- end in
+   linarith_trace_proofs
+     ("after preprocessing, linarith has " ++ to_string hyps.length ++ " facts:") hyps,
+   hyp_set ← partition_by_type hyps,
+   linarith_trace format!"hypotheses appear in {hyp_set.size} different types",
+   match pref_type with
+   | some t := prove_false_by_linarith cfg (hyp_set.ifind t) <|>
+               try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t))
+   | none := try_linarith_on_lists cfg (rb_map.values hyp_set)
+   end in
 let preprocessors := cfg.preprocessors.get_or_else default_preprocessors,
- preprocessors := if cfg.split_ne then linarith.remove_ne::preprocessors else preprocessors in
+    preprocessors := if cfg.split_ne then linarith.remove_ne::preprocessors else preprocessors in
 do hyps ← preprocess preprocessors hyps,
 hyps.mmap' $ λ hs, do set_goals [hs.1], single_process hs.2 >>= exact
 
@@ -207,17 +207,17 @@ to only those that are comparisons over the type `restr_type`.
 -/
 meta def filter_hyps_to_type (restr_type : expr) (hyps : list expr) : tactic (list expr) :=
 hyps.mfilter $ λ h, do
- ht ← infer_type h >>= instantiate_mvars,
- match get_contr_lemma_name_and_type ht with
- | some (_, htype) := succeeds $ unify htype restr_type
- | none := return ff
- end
+  ht ← infer_type h >>= instantiate_mvars,
+  match get_contr_lemma_name_and_type ht with
+  | some (_, htype) := succeeds $ unify htype restr_type
+  | none := return ff
+  end
 
 /-- A hack to allow users to write `{restr_type := ℚ}` in configuration structures. -/
 meta def get_restrict_type (e : expr) : tactic expr :=
 do m ← mk_mvar,
- unify `(some %%m : option Type) e,
- instantiate_mvars m
+   unify `(some %%m : option Type) e,
+   instantiate_mvars m
 
 end linarith
 
@@ -233,38 +233,38 @@ if it does not succeed at doing this.
 expressions.
 * `hyps` is a list of proofs of comparisons to include in the search.
 * If `only_on` is true, the search will be restricted to `hyps`. Otherwise it will use all
- comparisons in the local context.
+  comparisons in the local context.
 -/
 meta def tactic.linarith (reduce_semi : bool) (only_on : bool) (hyps : list pexpr)
- (cfg : linarith_config := {}) : tactic unit :=
+  (cfg : linarith_config := {}) : tactic unit :=
 focus1 $
 do t ← target >>= instantiate_mvars,
 -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
 if t.is_eq.is_some then
- linarith_trace "target is an equality: splitting" >>
- seq' (applyc ``eq_of_not_lt_of_not_gt) tactic.linarith else
+  linarith_trace "target is an equality: splitting" >>
+    seq' (applyc ``eq_of_not_lt_of_not_gt) tactic.linarith else
 do hyps ← hyps.mmap $ λ e, i_to_expr e >>= note_anon none,
- when cfg.split_hypotheses (linarith_trace "trying to split hypotheses" >> try auto.split_hyps),
+   when cfg.split_hypotheses (linarith_trace "trying to split hypotheses" >> try auto.split_hyps),
 /- If we are proving a comparison goal (and not just `false`), we consider the type of the
- elements in the comparison to be the "preferred" type. That is, if we find comparison
- hypotheses in multiple types, we will run `linarith` on the goal type first.
- In this case we also recieve a new variable from moving the goal to a hypothesis.
- Otherwise, there is no preferred type and no new variable; we simply change the goal to `false`.
+   elements in the comparison to be the "preferred" type. That is, if we find comparison
+   hypotheses in multiple types, we will run `linarith` on the goal type first.
+   In this case we also recieve a new variable from moving the goal to a hypothesis.
+   Otherwise, there is no preferred type and no new variable; we simply change the goal to `false`.
 -/
- pref_type_and_new_var_from_tgt ← apply_contr_lemma,
- when pref_type_and_new_var_from_tgt.is_none $
- if cfg.exfalso then linarith_trace "using exfalso" >> exfalso
- else fail "linarith failed: target is not a valid comparison",
- let cfg := cfg.update_reducibility reduce_semi,
- let (pref_type, new_var) :=
- pref_type_and_new_var_from_tgt.elim (none, none) (prod.map some some),
- -- set up the list of hypotheses, considering the `only_on` and `restrict_type` options
- hyps ← if only_on then return (new_var.elim [] singleton ++ hyps)
- else (++ hyps) <$> local_context,
- hyps ← (do t ← get_restrict_type cfg.restrict_type_reflect, filter_hyps_to_type t hyps) <|>
- return hyps,
- linarith_trace_proofs "linarith is running on the following hypotheses:" hyps,
- run_linarith_on_pfs cfg hyps pref_type
+   pref_type_and_new_var_from_tgt ← apply_contr_lemma,
+   when pref_type_and_new_var_from_tgt.is_none $
+     if cfg.exfalso then linarith_trace "using exfalso" >> exfalso
+     else fail "linarith failed: target is not a valid comparison",
+   let cfg := cfg.update_reducibility reduce_semi,
+   let (pref_type, new_var) :=
+     pref_type_and_new_var_from_tgt.elim (none, none) (prod.map some some),
+   -- set up the list of hypotheses, considering the `only_on` and `restrict_type` options
+   hyps ← if only_on then return (new_var.elim [] singleton ++ hyps)
+          else (++ hyps) <$> local_context,
+   hyps ← (do t ← get_restrict_type cfg.restrict_type_reflect, filter_hyps_to_type t hyps) <|>
+     return hyps,
+   linarith_trace_proofs "linarith is running on the following hypotheses:" hyps,
+   run_linarith_on_pfs cfg hyps pref_type
 
 setup_tactic_parser
 
@@ -277,19 +277,19 @@ hypotheses.
 * `linarith` will use all relevant hypotheses in the local context.
 * `linarith [t1, t2, t3]` will add proof terms t1, t2, t3 to the local context.
 * `linarith only [h1, h2, h3, t1, t2, t3]` will use only the goal (if relevant), local hypotheses
- `h1`, `h2`, `h3`, and proofs `t1`, `t2`, `t3`. It will ignore the rest of the local context.
+  `h1`, `h2`, `h3`, and proofs `t1`, `t2`, `t3`. It will ignore the rest of the local context.
 * `linarith!` will use a stronger reducibility setting to identify atoms.
 
 Config options:
 * `linarith {exfalso := ff}` will fail on a goal that is neither an inequality nor `false`
 * `linarith {restrict_type := T}` will run only on hypotheses that are inequalities over `T`
 * `linarith {discharger := tac}` will use `tac` instead of `ring` for normalization.
- Options: `ring2`, `ring SOP`, `simp`
+  Options: `ring2`, `ring SOP`, `simp`
 * `linarith {split_hypotheses := ff}` will not destruct conjunctions in the context.
 -/
 meta def tactic.interactive.linarith (red : parse ((tk "!")?))
- (restr : parse ((tk "only")?)) (hyps : parse pexpr_list?)
- (cfg : linarith_config := {}) : tactic unit :=
+  (restr : parse ((tk "only")?)) (hyps : parse pexpr_list?)
+  (cfg : linarith_config := {}) : tactic unit :=
 tactic.linarith red.is_some restr.is_some (hyps.get_or_else []) cfg
 
 add_hint_tactic "linarith"
@@ -305,8 +305,8 @@ goals over arbitrary types that instantiate `linear_ordered_comm_ring`.
 
 An example:
 ```lean
-example (x y z : ℚ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0)
- (h3 : 12*y - 4* z < 0) : false :=
+example (x y z : ℚ) (h1 : 2*x  < 3*y) (h2 : -4*x + 2*z < 0)
+        (h3 : 12*y - 4* z < 0)  : false :=
 by linarith
 ```
 
@@ -328,17 +328,17 @@ This can sometimes be expensive.
 `linarith {discharger := tac, restrict_type := tp, exfalso := ff}` takes a config object with five
 optional arguments:
 * `discharger` specifies a tactic to be used for reducing an algebraic equation in the
- proof stage. The default is `ring`. Other options currently include `ring SOP` or `simp` for basic
- problems.
+  proof stage. The default is `ring`. Other options currently include `ring SOP` or `simp` for basic
+  problems.
 * `restrict_type` will only use hypotheses that are inequalities over `tp`. This is useful
- if you have e.g. both integer and rational valued inequalities in the local context, which can
- sometimes confuse the tactic.
+  if you have e.g. both integer and rational valued inequalities in the local context, which can
+  sometimes confuse the tactic.
 * `transparency` controls how hard `linarith` will try to match atoms to each other. By default
- it will only unfold `reducible` definitions.
+  it will only unfold `reducible` definitions.
 * If `split_hypotheses` is true, `linarith` will split conjunctions in the context into separate
- hypotheses.
+  hypotheses.
 * If `exfalso` is false, `linarith` will fail when the goal is neither an inequality nor `false`.
- (True by default.)
+  (True by default.)
 
 A variant, `nlinarith`, does some basic preprocessing to handle some nonlinear goals.
 
@@ -346,10 +346,10 @@ The option `set_option trace.linarith true` will trace certain intermediate stag
 routine.
 -/
 add_tactic_doc
-{ name := "linarith",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.linarith],
- tags := ["arithmetic", "decision procedure", "finishing"] }
+{ name       := "linarith",
+  category   := doc_category.tactic,
+  decl_names := [`tactic.interactive.linarith],
+  tags       := ["arithmetic", "decision procedure", "finishing"] }
 
 /--
 An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
@@ -358,23 +358,22 @@ which are inherited by `nlinarith`; that is, `nlinarith!` and `nlinarith only [h
 in `linarith`. The preprocessing is as follows:
 
 * For every subterm `a ^ 2` or `a * a` in a hypothesis or the goal,
- the assumption `0 ≤ a ^ 2` or `0 ≤ a * a` is added to the context.
+  the assumption `0 ≤ a ^ 2` or `0 ≤ a * a` is added to the context.
 * For every pair of hypotheses `a1 R1 b1`, `a2 R2 b2` in the context, `R1, R2 ∈ {<, ≤, =}`,
- the assumption `0 R' (b1 - a1) * (b2 - a2)` is added to the context (non-recursively),
- where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
+  the assumption `0 R' (b1 - a1) * (b2 - a2)` is added to the context (non-recursively),
+  where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
 -/
 meta def tactic.interactive.nlinarith (red : parse ((tk "!")?))
- (restr : parse ((tk "only")?)) (hyps : parse pexpr_list?)
- (cfg : linarith_config := {}) : tactic unit :=
+  (restr : parse ((tk "only")?)) (hyps : parse pexpr_list?)
+  (cfg : linarith_config := {}) : tactic unit :=
 tactic.linarith red.is_some restr.is_some (hyps.get_or_else [])
- { cfg with preprocessors := some $
- cfg.preprocessors.get_or_else default_preprocessors ++ [nlinarith_extras] }
+  { cfg with preprocessors := some $
+      cfg.preprocessors.get_or_else default_preprocessors ++ [nlinarith_extras] }
 
 add_hint_tactic "nlinarith"
 
 add_tactic_doc
-{ name := "nlinarith",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.nlinarith],
- tags := ["arithmetic", "decision procedure", "finishing"] }
-
+{ name       := "nlinarith",
+  category   := doc_category.tactic,
+  decl_names := [`tactic.interactive.nlinarith],
+  tags       := ["arithmetic", "decision procedure", "finishing"] }

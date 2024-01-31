@@ -7,7 +7,7 @@ import tactic.doc_commands
 /-!
 # User command to register `simp` attributes
 
-In this file we define a command `mk_simp_attribute` that can be used to register `simp` sets. We
+In this file we define a command `mk_simp_attribute` that can be used to register `simp` sets.  We
 also define all `simp` attributes that are used in the library and tag lemmas from Lean core with
 these attributes.
 -/
@@ -41,18 +41,18 @@ run_cmd add_doc_string `simp_attr.simp_name "Description of the simp set here"
 @[user_command]
 meta def mk_simp_attribute_cmd (_ : parse $ tk "mk_simp_attribute") : lean.parser unit :=
 do n ← ident,
- d ← parser.pexpr,
- d ← to_expr ``(%%d : option string),
- descr ← eval_expr (option string) d,
- with_list ← (tk "with" *> many ident) <|> return [],
- mk_simp_attr n with_list,
- add_doc_string (name.append `simp_attr n) $ descr.get_or_else $ "simp set for " ++ to_string n
+   d ← parser.pexpr,
+   d ← to_expr ``(%%d : option string),
+   descr ← eval_expr (option string) d,
+   with_list ← (tk "with" *> many ident) <|> return [],
+   mk_simp_attr n with_list,
+   add_doc_string (name.append `simp_attr n) $ descr.get_or_else $ "simp set for " ++ to_string n
 
 add_tactic_doc
-{ name := "mk_simp_attribute",
- category := doc_category.cmd,
- decl_names := [`tactic.mk_simp_attribute_cmd],
- tags := ["simplification"] }
+{ name                     := "mk_simp_attribute",
+  category                 := doc_category.cmd,
+  decl_names               := [`tactic.mk_simp_attribute_cmd],
+  tags                     := ["simplification"] }
 
 end tactic
 
@@ -92,7 +92,7 @@ enough.
 "
 
 attribute [mfld_simps] id.def function.comp.left_id set.mem_set_of_eq and_true true_and
- function.comp_app and_self eq_self_iff_true function.comp.right_id not_false_iff true_or or_true
+  function.comp_app and_self eq_self_iff_true function.comp.right_id not_false_iff true_or or_true
 
 mk_simp_attribute monad_norm none with functor_norm
 
@@ -104,7 +104,7 @@ mk_simp_attribute push_cast "The `push_cast` simp attribute uses `norm_cast` lem
 to move casts toward the leaf nodes of the expression."
 
 mk_simp_attribute split_if_reduction
- "Simp set for if-then-else statements, used in the `split_ifs` tactic"
+  "Simp set for if-then-else statements, used in the `split_ifs` tactic"
 
 attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg if_congr
 
@@ -117,4 +117,3 @@ It's probably best not to adjust it without understanding the algorithm used by 
 attribute [transport_simps] cast_eq
 
 mk_simp_attribute typevec "simp set for the manipulation of typevec and arrow expressions"
-

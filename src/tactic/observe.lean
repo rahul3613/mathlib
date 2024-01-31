@@ -25,19 +25,18 @@ If `hp` is omitted, then the placeholder `this` is used.
 The variant `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
 This may be particularly useful to speed up proofs. -/
 meta def tactic.interactive.observe (trc : parse $ optional (tk "?"))
- (h : parse ident?) (t : parse (tk ":" *> texpr)) : tactic unit := do
- let h' := h.get_or_else `this,
- t ← to_expr ``(%%t : Prop),
- assert h' t,
- s ← focus1 (tactic.library_search { try_this := ff }) <|> fail "observe failed",
- s ← s.get_rest "Try this: exact ",
- ppt ← pp t,
- let pph : string := (h.map (λ n : name, n.to_string ++ " ")).get_or_else "",
- when trc.is_some $ trace! "Try this: have {pph}: {ppt} := {s}"
+  (h : parse ident?) (t : parse (tk ":" *> texpr)) : tactic unit := do
+  let h' := h.get_or_else `this,
+  t ← to_expr ``(%%t : Prop),
+  assert h' t,
+  s ← focus1 (tactic.library_search { try_this := ff }) <|> fail "observe failed",
+  s ← s.get_rest "Try this: exact ",
+  ppt ← pp t,
+  let pph : string := (h.map (λ n : name, n.to_string ++ " ")).get_or_else "",
+  when trc.is_some $ trace! "Try this: have {pph}: {ppt} := {s}"
 
 add_tactic_doc
-{ name := "observe",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.observe],
- tags := ["search", "Try this"] }
-
+{ name       := "observe",
+  category   := doc_category.tactic,
+  decl_names := [`tactic.interactive.observe],
+  tags       := ["search", "Try this"] }

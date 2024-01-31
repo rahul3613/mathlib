@@ -30,7 +30,7 @@ variables [monoid R] [mul_action R M] [has_one M]
 
 instance : has_one (sub_mul_action R M) :=
 { one := { carrier := set.range (λ r : R, r • (1 : M)),
- smul_mem' := λ r m ⟨r', hr'⟩, hr' ▸ ⟨r * r', mul_smul _ _ _⟩ } }
+           smul_mem' := λ r m ⟨r', hr'⟩, hr' ▸ ⟨r * r', mul_smul _ _ _⟩ } }
 
 lemma coe_one : ↑(1 : sub_mul_action R M) = set.range (λ r : R, r • (1 : M)) := rfl
 
@@ -46,8 +46,8 @@ variables [monoid R] [mul_action R M] [has_mul M] [is_scalar_tower R M M]
 
 instance : has_mul (sub_mul_action R M) :=
 { mul := λ p q, { carrier := set.image2 (*) p q,
- smul_mem' := λ r m ⟨m₁, m₂, hm₁, hm₂, h⟩,
- h ▸ smul_mul_assoc r m₁ m₂ ▸ set.mul_mem_mul (p.smul_mem _ hm₁) hm₂ } }
+                  smul_mem' := λ r m ⟨m₁, m₂, hm₁, hm₂, h⟩,
+                    h ▸ smul_mul_assoc r m₁ m₂ ▸ set.mul_mem_mul (p.smul_mem _ hm₁) hm₂ } }
 
 @[norm_cast] lemma coe_mul (p q : sub_mul_action R M) : ↑(p * q) = (p * q : set M) := rfl
 
@@ -58,29 +58,29 @@ end has_mul
 
 section mul_one_class
 variables [monoid R] [mul_action R M] [mul_one_class M] [is_scalar_tower R M M]
- [smul_comm_class R M M]
+  [smul_comm_class R M M]
 
 instance : mul_one_class (sub_mul_action R M) :=
 { mul := (*),
- one := 1,
- mul_one := λ a, begin
- ext,
- simp only [mem_mul, mem_one, mul_smul_comm, exists_and_distrib_left, exists_exists_eq_and,
- mul_one],
- split,
- { rintros ⟨y, hy, r, rfl⟩,
- exact smul_mem _ _ hy },
- { intro hx,
- exact ⟨x, hx, 1, one_smul _ _⟩ },
- end,
- one_mul := λ a, begin
- ext,
- simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_distrib_left, exists_exists_eq_and,
- one_mul],
- refine ⟨_, λ hx, ⟨1, x, hx, one_smul _ _⟩⟩,
- rintro ⟨r, y, hy, rfl⟩,
- exact smul_mem _ _ hy,
- end, }
+  one := 1,
+  mul_one := λ a, begin
+    ext,
+    simp only [mem_mul, mem_one, mul_smul_comm, exists_and_distrib_left, exists_exists_eq_and,
+      mul_one],
+    split,
+    { rintros ⟨y, hy, r, rfl⟩,
+      exact smul_mem _ _ hy },
+    { intro hx,
+      exact ⟨x, hx, 1, one_smul _ _⟩ },
+  end,
+  one_mul := λ a, begin
+    ext,
+    simp only [mem_mul, mem_one, smul_mul_assoc, exists_and_distrib_left, exists_exists_eq_and,
+      one_mul],
+    refine ⟨_, λ hx, ⟨1, x, hx, one_smul _ _⟩⟩,
+    rintro ⟨r, y, hy, rfl⟩,
+    exact smul_mem _ _ hy,
+  end, }
 
 end mul_one_class
 
@@ -89,7 +89,7 @@ variables [monoid R] [mul_action R M] [semigroup M] [is_scalar_tower R M M]
 
 instance : semigroup (sub_mul_action R M) :=
 { mul := (*),
- mul_assoc := λ a b c, set_like.coe_injective (mul_assoc (_ : set _) _ _), }
+  mul_assoc := λ a b c, set_like.coe_injective (mul_assoc (_ : set _) _ _), }
 
 end semigroup
 
@@ -98,21 +98,20 @@ variables [monoid R] [mul_action R M] [monoid M] [is_scalar_tower R M M] [smul_c
 
 instance : monoid (sub_mul_action R M) :=
 { mul := (*),
- one := 1,
- ..sub_mul_action.semigroup,
- ..sub_mul_action.mul_one_class }
+  one := 1,
+  ..sub_mul_action.semigroup,
+  ..sub_mul_action.mul_one_class }
 
 lemma coe_pow (p : sub_mul_action R M) : ∀ {n : ℕ} (hn : n ≠ 0), ↑(p ^ n) = (p ^ n : set M)
 | 0 hn := (hn rfl).elim
-| 1 hn := by rw [pow_one]; rw [ pow_one]
-| (n + 2) hn := by rw [pow_succ _ (n + 1)]; rw [ pow_succ _ (n + 1)]; rw [ coe_mul]; rw [ coe_pow (n.succ_ne_zero)]
+| 1 hn := by rw [pow_one, pow_one]
+| (n + 2) hn := by rw [pow_succ _ (n + 1), pow_succ _ (n + 1), coe_mul, coe_pow (n.succ_ne_zero)]
 
 lemma subset_coe_pow (p : sub_mul_action R M) : ∀ {n : ℕ},
- (p ^ n : set M) ⊆ ↑(p ^ n)
-| 0 := by { rw [pow_zero]; rw [ pow_zero], exact subset_coe_one }
+   (p ^ n : set M) ⊆ ↑(p ^ n)
+| 0 := by { rw [pow_zero, pow_zero], exact subset_coe_one }
 | (n + 1) := (coe_pow p n.succ_ne_zero).superset
 
 end monoid
 
 end sub_mul_action
-

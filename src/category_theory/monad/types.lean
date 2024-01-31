@@ -31,12 +31,12 @@ A lawful `control.monad` gives a category theory `monad` on the category of type
 -/
 @[simps]
 def of_type_monad : monad (Type u) :=
-{ to_functor := of_type_functor m,
- η' := ⟨@pure m _, assume α β f, (is_lawful_applicative.map_comp_pure f).symm ⟩,
- μ' := ⟨@mjoin m _, assume α β (f : α → β), funext $ assume a, mjoin_map_map f a ⟩,
- assoc' := assume α, funext $ assume a, mjoin_map_mjoin a,
- left_unit' := assume α, funext $ assume a, mjoin_pure a,
- right_unit' := assume α, funext $ assume a, mjoin_map_pure a }
+{ to_functor  := of_type_functor m,
+  η'          := ⟨@pure m _, assume α β f, (is_lawful_applicative.map_comp_pure f).symm ⟩,
+  μ'          := ⟨@mjoin m _, assume α β (f : α → β), funext $ assume a, mjoin_map_map f a ⟩,
+  assoc'      := assume α, funext $ assume a, mjoin_map_mjoin a,
+  left_unit'  := assume α, funext $ assume a, mjoin_pure a,
+  right_unit' := assume α, funext $ assume a, mjoin_map_pure a }
 
 /--
 The `Kleisli` category of a `control.monad` is equivalent to the `kleisli` category of its
@@ -45,36 +45,35 @@ category-theoretic version, provided the monad is lawful.
 @[simps]
 def eq : Kleisli m ≌ kleisli (of_type_monad m) :=
 { functor :=
- { obj := λ X, X,
- map := λ X Y f, f,
- map_id' := λ X, rfl,
- map_comp' := λ X Y Z f g,
- begin
- unfold_projs,
- ext,
- dsimp,
- simp [mjoin, seq_bind_eq],
- end },
- inverse :=
- { obj := λ X, X,
- map := λ X Y f, f,
- map_id' := λ X, rfl,
- map_comp' := λ X Y Z f g,
- begin
- unfold_projs,
- ext,
- dsimp,
- simp [mjoin, seq_bind_eq],
- end },
- unit_iso :=
- begin
- refine nat_iso.of_components (λ X, iso.refl X) (λ X Y f, _),
- change f >=> pure = pure >=> f,
- simp with functor_norm,
- end,
- counit_iso := nat_iso.of_components (λ X, iso.refl X) (λ X Y f, by tidy) }
+  { obj := λ X, X,
+    map := λ X Y f, f,
+    map_id' := λ X, rfl,
+    map_comp' := λ X Y Z f g,
+    begin
+      unfold_projs,
+      ext,
+      dsimp,
+      simp [mjoin, seq_bind_eq],
+    end },
+  inverse :=
+  { obj := λ X, X,
+    map := λ X Y f, f,
+    map_id' := λ X, rfl,
+    map_comp' := λ X Y Z f g,
+    begin
+      unfold_projs,
+      ext,
+      dsimp,
+      simp [mjoin, seq_bind_eq],
+    end },
+  unit_iso :=
+  begin
+    refine nat_iso.of_components (λ X, iso.refl X) (λ X Y f, _),
+    change f >=> pure = pure >=> f,
+    simp with functor_norm,
+  end,
+  counit_iso := nat_iso.of_components (λ X, iso.refl X) (λ X Y f, by tidy) }
 
 end
 
 end category_theory
-

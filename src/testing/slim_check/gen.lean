@@ -20,7 +20,7 @@ to specify the desired size of the result.
 This is a port of the Haskell QuickCheck library.
 
 ## Main definitions
- * `gen` monad
+  * `gen` monad
 
 ## Local notation
 
@@ -32,7 +32,7 @@ random testing
 
 ## References
 
- * https://hackage.haskell.org/package/QuickCheck
+  * https://hackage.haskell.org/package/QuickCheck
 
 -/
 
@@ -80,11 +80,11 @@ choose x y p
 /-- Generate a `nat` example between `x` and `y`. -/
 def choose_nat' (x y : ℕ) (p : x < y) : gen (set.Ico x y) :=
 have ∀ i, x < i → i ≤ y → i.pred < y,
- from λ i h₀ h₁,
- show i.pred.succ ≤ y,
- by rwa succ_pred_eq_of_pos; apply lt_of_le_of_lt (nat.zero_le _) h₀,
+  from λ i h₀ h₁,
+     show i.pred.succ ≤ y,
+     by rwa succ_pred_eq_of_pos; apply lt_of_le_of_lt (nat.zero_le _) h₀,
 subtype.map pred (λ i (h : x+1 ≤ i ∧ i ≤ y), ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$>
- choose (x+1) y p
+  choose (x+1) y p
 
 open nat
 
@@ -93,8 +93,8 @@ reader_t.uliftable' (equiv.ulift.trans equiv.ulift.symm)
 
 instance : has_orelse gen.{u} :=
 ⟨ λ α x y, do
- b ← uliftable.up $ choose_any bool,
- if b.down then x else y ⟩
+  b ← uliftable.up $ choose_any bool,
+  if b.down then x else y ⟩
 
 variable {α}
 
@@ -118,8 +118,8 @@ by the size parameter of `gen`. -/
 def list_of (cmd : gen α) : gen (list α) :=
 sized $ λ sz, do
 do ⟨ n ⟩ ← uliftable.up $ choose_nat 0 (sz + 1) dec_trivial,
- v ← vector_of n.val cmd,
- return v.to_list
+   v ← vector_of n.val cmd,
+   return v.to_list
 
 open ulift
 
@@ -144,10 +144,10 @@ number in the list of generators. Then, we check which interval 4 falls into: it
 def freq_aux : Π (xs : list (ℕ+ × gen α)) i, i < (xs.map (subtype.val ∘ prod.fst)).sum → gen α
 | [] i h := false.elim (nat.not_lt_zero _ h)
 | ((i, x) :: xs) j h :=
- if h' : j < i then x
- else freq_aux xs (j - i)
- (by { rw tsub_lt_iff_right (le_of_not_gt h'),
- simpa [list.sum_cons, add_comm] using h })
+  if h' : j < i then x
+  else freq_aux xs (j - i)
+    (by { rw tsub_lt_iff_right (le_of_not_gt h'),
+      simpa [list.sum_cons, add_comm] using h })
 
 /--
 `freq [(1, gena), (3, genb), (5, genc)] _` will choose one of `gena`, `genb`, `genc` with
@@ -158,9 +158,9 @@ and `genc` with probability 5/9.
 def freq (xs : list (ℕ+ × gen α)) (pos : 0 < xs.length) : gen α :=
 let s := (xs.map (subtype.val ∘ prod.fst)).sum in
 have ha : 1 ≤ s, from
- (le_trans pos $
- list.length_map (subtype.val ∘ prod.fst) xs ▸
- (list.length_le_sum_of_one_le _ (λ i, by { simp, intros, assumption }))),
+  (le_trans pos $
+    list.length_map (subtype.val ∘ prod.fst) xs ▸
+      (list.length_le_sum_of_one_le _ (λ i, by { simp, intros, assumption }))),
 have 0 ≤ s - 1, from le_tsub_of_add_le_right ha,
 uliftable.adapt_up gen.{0} gen.{u} (choose_nat 0 (s-1) this) $ λ i,
 freq_aux xs i.1 (by rcases i with ⟨i,h₀,h₁⟩; rwa le_tsub_iff_right at h₁; exact ha)
@@ -172,10 +172,9 @@ def permutation_of {α : Type u} : Π xs : list α, gen (subtype $ list.perm xs)
 ⟨xs',h⟩ ← permutation_of xs,
 ⟨⟨n,_,h'⟩⟩ ← uliftable.up $ choose_nat 0 xs'.length dec_trivial,
 pure ⟨list.insert_nth n x xs',
- list.perm.trans (list.perm.cons _ h)
- (list.perm_insert_nth _ _ h').symm ⟩
+  list.perm.trans (list.perm.cons _ h)
+    (list.perm_insert_nth _ _ h').symm ⟩
 
 end gen
 
 end slim_check
-

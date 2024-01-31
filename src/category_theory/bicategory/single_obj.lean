@@ -45,21 +45,21 @@ open monoidal_category
 
 instance : bicategory (monoidal_single_obj C) :=
 { hom := λ _ _, C,
- id := λ _, 𝟙_ C,
- comp := λ _ _ _ X Y, X ⊗ Y,
- whisker_left := λ _ _ _ X Y Z f, 𝟙 X ⊗ f,
- whisker_right := λ _ _ _ X Y f Z, f ⊗ 𝟙 Z,
- associator := λ _ _ _ _ X Y Z, α_ X Y Z,
- left_unitor := λ _ _ X, λ_ X,
- right_unitor := λ _ _ X, ρ_ X,
- comp_whisker_left' :=
- by { intros, rw [associator_inv_naturality]; rw [ iso.hom_inv_id_assoc]; rw [ tensor_id], },
- whisker_assoc' := by { intros, rw [associator_inv_naturality]; rw [ iso.hom_inv_id_assoc], },
- whisker_right_comp' :=
- by { intros, rw [←tensor_id]; rw [ associator_naturality]; rw [ iso.inv_hom_id_assoc], },
- id_whisker_left' := by { intros, rw [left_unitor_inv_naturality]; rw [ iso.hom_inv_id_assoc], },
- whisker_right_id' := by { intros, rw [right_unitor_inv_naturality]; rw [ iso.hom_inv_id_assoc], },
- pentagon' := by { intros, rw [pentagon], }, }
+  id := λ _, 𝟙_ C,
+  comp := λ _ _ _ X Y, X ⊗ Y,
+  whisker_left := λ _ _ _ X Y Z f, 𝟙 X ⊗ f,
+  whisker_right := λ _ _ _ X Y f Z, f ⊗ 𝟙 Z,
+  associator := λ _ _ _ _ X Y Z, α_ X Y Z,
+  left_unitor := λ _ _ X, λ_ X,
+  right_unitor := λ _ _ X, ρ_ X,
+  comp_whisker_left' :=
+    by { intros, rw [associator_inv_naturality, iso.hom_inv_id_assoc, tensor_id], },
+  whisker_assoc' := by { intros, rw [associator_inv_naturality, iso.hom_inv_id_assoc], },
+  whisker_right_comp' :=
+    by { intros, rw [←tensor_id, associator_naturality, iso.inv_hom_id_assoc], },
+  id_whisker_left' := by { intros, rw [left_unitor_inv_naturality, iso.hom_inv_id_assoc], },
+  whisker_right_id' := by { intros, rw [right_unitor_inv_naturality, iso.hom_inv_id_assoc], },
+  pentagon' := by { intros, rw [pentagon], }, }
 
 namespace monoidal_single_obj
 
@@ -77,15 +77,15 @@ We subsequently show this is an equivalence.
 @[simps]
 def End_monoidal_star_functor : monoidal_functor (End_monoidal (monoidal_single_obj.star C)) C :=
 { obj := λ X, X,
- map := λ X Y f, f,
- ε := 𝟙 _,
- μ := λ X Y, 𝟙 _,
- μ_natural' := λ X Y X' Y' f g, begin
- dsimp,
- simp only [category.id_comp, category.comp_id],
- -- Should we provide further simp lemmas so this goal becomes visible?
- exact (tensor_id_comp_id_tensor _ _).symm,
- end, }
+  map := λ X Y f, f,
+  ε := 𝟙 _,
+  μ := λ X Y, 𝟙 _,
+  μ_natural' := λ X Y X' Y' f g, begin
+    dsimp,
+    simp only [category.id_comp, category.comp_id],
+    -- Should we provide further simp lemmas so this goal becomes visible?
+    exact (tensor_id_comp_id_tensor _ _).symm,
+  end, }
 
 noncomputable theory
 
@@ -95,14 +95,13 @@ when we promote a monoidal category to a single object bicategory,
 and the original monoidal category.
 -/
 def End_monoidal_star_functor_is_equivalence :
- is_equivalence (End_monoidal_star_functor C).to_functor :=
+  is_equivalence (End_monoidal_star_functor C).to_functor :=
 { inverse :=
- { obj := λ X, X,
- map := λ X Y f, f, },
- unit_iso := nat_iso.of_components (λ X, as_iso (𝟙 _)) (by tidy),
- counit_iso := nat_iso.of_components (λ X, as_iso (𝟙 _)) (by tidy), }
+  { obj := λ X, X,
+    map := λ X Y f, f, },
+  unit_iso := nat_iso.of_components (λ X, as_iso (𝟙 _)) (by tidy),
+  counit_iso := nat_iso.of_components (λ X, as_iso (𝟙 _)) (by tidy), }
 
 end monoidal_single_obj
 
 end category_theory
-

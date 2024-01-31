@@ -20,6 +20,5 @@ variables {α : Type*}
 { .. order_dual.ordered_comm_monoid, .. order_dual.group }
 
 @[to_additive] instance [linear_ordered_comm_group α] :
- linear_ordered_comm_group αᵒᵈ :=
+  linear_ordered_comm_group αᵒᵈ :=
 { .. order_dual.ordered_comm_group, .. order_dual.linear_order α }
-

@@ -69,7 +69,7 @@ ext (mul_zero r).symm (mul_one r).symm
 
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
 @[ext] lemma alg_hom_ext {A} [comm_semiring R] [semiring A] [algebra R A]
- ⦃f g : R[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
+  ⦃f g : R[ε] →ₐ[R] A⦄ (h : f ε = g ε) : f = g :=
 alg_hom_ext' $ linear_map.ext_ring $ h
 
 variables {A : Type*} [comm_semiring R] [semiring A] [algebra R A]
@@ -81,13 +81,13 @@ This isomorphism is named to match the very similar `complex.lift`. -/
 @[simps {attrs := []}]
 def lift : {e : A // e * e = 0} ≃ (R[ε] →ₐ[R] A) :=
 equiv.trans
- (show {e : A // e * e = 0} ≃ {f : R →ₗ[R] A // ∀ x y, f x * f y = 0}, from
- (linear_map.ring_lmap_equiv_self R ℕ A).symm.to_equiv.subtype_equiv $ λ a, begin
- dsimp,
- simp_rw smul_mul_smul,
- refine ⟨λ h x y, h.symm ▸ smul_zero _, λ h, by simpa using h 1 1⟩,
- end)
- triv_sq_zero_ext.lift
+  (show {e : A // e * e = 0} ≃ {f : R →ₗ[R] A // ∀ x y, f x * f y = 0}, from
+    (linear_map.ring_lmap_equiv_self R ℕ A).symm.to_equiv.subtype_equiv $ λ a, begin
+      dsimp,
+      simp_rw smul_mul_smul,
+      refine ⟨λ h x y, h.symm ▸ smul_zero _, λ h, by simpa using h 1 1⟩,
+    end)
+  triv_sq_zero_ext.lift
 
 /- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0. -/
 @[simp]
@@ -100,4 +100,3 @@ lemma lift_eps : lift ⟨ε, by exact eps_mul_eps⟩ = alg_hom.id R R[ε] :=
 alg_hom_ext $ lift_apply_eps _
 
 end dual_number
-

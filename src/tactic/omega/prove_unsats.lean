@@ -23,7 +23,7 @@ meta def prove_neg : int → tactic expr
 | -[1+ m] := return `(int.neg_succ_lt_zero %%`(m))
 
 lemma forall_mem_replicate_zero_eq_zero (m : nat) :
- (∀ x ∈ (list.replicate m (0 : int)), x = (0 : int)) :=
+  (∀ x ∈ (list.replicate m (0 : int)), x = (0 : int)) :=
 λ x, list.eq_of_mem_replicate
 
 /-- Return expr of proof that elements of (replicate is.length 0) are all 0 -/
@@ -31,34 +31,33 @@ meta def prove_forall_mem_eq_zero (is : list int) : tactic expr :=
 return `(forall_mem_replicate_zero_eq_zero is.length)
 
 /-- Return expr of proof that the combination of linear constraints
- represented by ks and ts is unsatisfiable -/
+    represented by ks and ts is unsatisfiable -/
 meta def prove_unsat_lin_comb (ks : list nat) (ts : list term) : tactic expr :=
 let ⟨b,as⟩ := lin_comb ks ts in
 do x1 ← prove_neg b,
- x2 ← prove_forall_mem_eq_zero as,
- to_expr ``(unsat_lin_comb_of %%`(ks) %%`(ts) %%x1 %%x2)
+   x2 ← prove_forall_mem_eq_zero as,
+   to_expr ``(unsat_lin_comb_of %%`(ks) %%`(ts) %%x1 %%x2)
 
 /-- Given a (([],les) : clause), return the expr of a term (t : clause.unsat ([],les)). -/
 meta def prove_unsat_ef : clause → tactic expr
 | ((_::_), _) := failed
 | ([], les) :=
- do ks ← find_scalars les,
- x ← prove_unsat_lin_comb ks les,
- return `(unsat_of_unsat_lin_comb %%`(ks) %%`(les) %%x)
+  do ks ← find_scalars les,
+     x ← prove_unsat_lin_comb ks les,
+     return `(unsat_of_unsat_lin_comb %%`(ks) %%`(les) %%x)
 
-/-- Given a (c : clause), return the expr of a term (t : clause.unsat c) -/
+/-- Given a (c : clause), return the expr of a term (t : clause.unsat c)  -/
 meta def prove_unsat (c : clause) : tactic expr :=
 do ee ← find_ees c,
- x ← prove_unsat_ef (eq_elim ee c),
- return `(unsat_of_unsat_eq_elim %%`(ee) %%`(c) %%x)
+   x ← prove_unsat_ef (eq_elim ee c),
+   return `(unsat_of_unsat_eq_elim %%`(ee) %%`(c) %%x)
 
-/-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs) -/
+/-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs)  -/
 meta def prove_unsats : list clause → tactic expr
 | [] := return `(clauses.unsat_nil)
 | (p::ps) :=
- do x ← prove_unsat p,
- xs ← prove_unsats ps,
- to_expr ``(clauses.unsat_cons %%`(p) %%`(ps) %%x %%xs)
+  do x ← prove_unsat p,
+     xs ← prove_unsats ps,
+     to_expr ``(clauses.unsat_cons %%`(p) %%`(ps) %%x %%xs)
 
 end omega
-

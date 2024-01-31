@@ -15,9 +15,9 @@ import linear_algebra.tensor_product
 ## Main definitions
 
 * `bilin_form.tensor_distrib (B₁ ⊗ₜ B₂)`: the bilinear form on `M₁ ⊗ M₂` constructed by applying
- `B₁` on `M₁` and `B₂` on `M₂`.
+  `B₁` on `M₁` and `B₂` on `M₂`.
 * `bilin_form.tensor_distrib_equiv`: `bilin_form.tensor_distrib` as an equivalence on finite free
- modules.
+  modules.
 
 -/
 
@@ -36,16 +36,16 @@ variables [module R M₁] [module R M₂]
 /-- The tensor product of two bilinear forms injects into bilinear forms on tensor products. -/
 def tensor_distrib : bilin_form R M₁ ⊗[R] bilin_form R M₂ →ₗ[R] bilin_form R (M₁ ⊗[R] M₂) :=
 ((tensor_product.tensor_tensor_tensor_comm R _ _ _ _).dual_map
- ≪≫ₗ (tensor_product.lift.equiv R _ _ _).symm
- ≪≫ₗ linear_map.to_bilin).to_linear_map
- ∘ₗ tensor_product.dual_distrib R _ _
- ∘ₗ (tensor_product.congr
- (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)
- (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)).to_linear_map
+  ≪≫ₗ (tensor_product.lift.equiv R _ _ _).symm
+  ≪≫ₗ linear_map.to_bilin).to_linear_map
+  ∘ₗ tensor_product.dual_distrib R _ _
+  ∘ₗ (tensor_product.congr
+    (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)
+    (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)).to_linear_map
 
 @[simp] lemma tensor_distrib_tmul (B₁ : bilin_form R M₁) (B₂ : bilin_form R M₂)
- (m₁ : M₁) (m₂ : M₂) (m₁' : M₁) (m₂' : M₂) :
- tensor_distrib (B₁ ⊗ₜ B₂) (m₁ ⊗ₜ m₂) (m₁' ⊗ₜ m₂') = B₁ m₁ m₁' * B₂ m₂ m₂' :=
+  (m₁ : M₁) (m₂ : M₂) (m₁' : M₁) (m₂' : M₂) :
+  tensor_distrib (B₁ ⊗ₜ B₂) (m₁ ⊗ₜ m₂) (m₁' ⊗ₜ m₂') = B₁ m₁ m₁' * B₂ m₂ m₂' :=
 rfl
 
 /-- The tensor product of two bilinear forms, a shorthand for dot notation. -/
@@ -65,22 +65,21 @@ variables [nontrivial R]
 
 /-- `tensor_distrib` as an equivalence. -/
 noncomputable def tensor_distrib_equiv :
- bilin_form R M₁ ⊗[R] bilin_form R M₂ ≃ₗ[R] bilin_form R (M₁ ⊗[R] M₂) :=
+  bilin_form R M₁ ⊗[R] bilin_form R M₂ ≃ₗ[R] bilin_form R (M₁ ⊗[R] M₂) :=
 -- the same `linear_equiv`s as from `tensor_distrib`, but with the inner linear map also as an
 -- equiv
 tensor_product.congr
- (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)
- (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)
- ≪≫ₗ tensor_product.dual_distrib_equiv R (M₁ ⊗ M₁) (M₂ ⊗ M₂)
- ≪≫ₗ (tensor_product.tensor_tensor_tensor_comm R _ _ _ _).dual_map
- ≪≫ₗ (tensor_product.lift.equiv R _ _ _).symm
- ≪≫ₗ linear_map.to_bilin
+    (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)
+    (bilin_form.to_lin ≪≫ₗ tensor_product.lift.equiv R _ _ _)
+  ≪≫ₗ tensor_product.dual_distrib_equiv R (M₁ ⊗ M₁) (M₂ ⊗ M₂)
+  ≪≫ₗ (tensor_product.tensor_tensor_tensor_comm R _ _ _ _).dual_map
+  ≪≫ₗ (tensor_product.lift.equiv R _ _ _).symm
+  ≪≫ₗ linear_map.to_bilin
 
 @[simp]
 lemma tensor_distrib_equiv_apply (B : bilin_form R M₁ ⊗ bilin_form R M₂) :
- tensor_distrib_equiv B = tensor_distrib B := rfl
+  tensor_distrib_equiv B = tensor_distrib B := rfl
 
 end comm_ring
 
 end bilin_form
-

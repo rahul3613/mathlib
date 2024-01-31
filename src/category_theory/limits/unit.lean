@@ -52,4 +52,3 @@ instance : has_colimits_of_size.{v' v} (discrete punit) :=
 by tidy
 
 end category_theory.limits
-

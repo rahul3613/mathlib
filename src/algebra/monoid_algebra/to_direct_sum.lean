@@ -24,10 +24,10 @@ Note that since `direct_sum.has_mul` combines indices additively, there is no eq
 * `add_monoid_algebra.to_direct_sum : add_monoid_algebra M ι → (⨁ i : ι, M)`
 * `direct_sum.to_add_monoid_algebra : (⨁ i : ι, M) → add_monoid_algebra M ι`
 * Bundled equiv versions of the above:
- * `add_monoid_algebra_equiv_direct_sum : add_monoid_algebra M ι ≃ (⨁ i : ι, M)`
- * `add_monoid_algebra_add_equiv_direct_sum : add_monoid_algebra M ι ≃+ (⨁ i : ι, M)`
- * `add_monoid_algebra_ring_equiv_direct_sum R : add_monoid_algebra M ι ≃+* (⨁ i : ι, M)`
- * `add_monoid_algebra_alg_equiv_direct_sum R : add_monoid_algebra A ι ≃ₐ[R] (⨁ i : ι, A)`
+  * `add_monoid_algebra_equiv_direct_sum : add_monoid_algebra M ι ≃ (⨁ i : ι, M)`
+  * `add_monoid_algebra_add_equiv_direct_sum : add_monoid_algebra M ι ≃+ (⨁ i : ι, M)`
+  * `add_monoid_algebra_ring_equiv_direct_sum R : add_monoid_algebra M ι ≃+* (⨁ i : ι, M)`
+  * `add_monoid_algebra_alg_equiv_direct_sum R : add_monoid_algebra A ι ≃ₐ[R] (⨁ i : ι, A)`
 
 ## Theorems
 
@@ -72,26 +72,26 @@ section
 variables [decidable_eq ι] [semiring M]
 
 @[simp] lemma add_monoid_algebra.to_direct_sum_single (i : ι) (m : M) :
- add_monoid_algebra.to_direct_sum (finsupp.single i m) = direct_sum.of _ i m :=
+  add_monoid_algebra.to_direct_sum (finsupp.single i m) = direct_sum.of _ i m :=
 finsupp.to_dfinsupp_single i m
 
 variables [Π m : M, decidable (m ≠ 0)]
 
 /-- Interpret a homogenous `direct_sum` as a `add_monoid_algebra`. -/
 def direct_sum.to_add_monoid_algebra (f : ⨁ i : ι, M) :
- add_monoid_algebra M ι :=
+  add_monoid_algebra M ι :=
 dfinsupp.to_finsupp f
 
 @[simp] lemma direct_sum.to_add_monoid_algebra_of (i : ι) (m : M) :
- (direct_sum.of _ i m : ⨁ i : ι, M).to_add_monoid_algebra = finsupp.single i m :=
+  (direct_sum.of _ i m : ⨁ i : ι, M).to_add_monoid_algebra = finsupp.single i m :=
 dfinsupp.to_finsupp_single i m
 
 @[simp] lemma add_monoid_algebra.to_direct_sum_to_add_monoid_algebra (f : add_monoid_algebra M ι) :
- f.to_direct_sum.to_add_monoid_algebra = f :=
+  f.to_direct_sum.to_add_monoid_algebra = f :=
 finsupp.to_dfinsupp_to_finsupp f
 
 @[simp] lemma direct_sum.to_add_monoid_algebra_to_direct_sum (f : ⨁ i : ι, M) :
- f.to_add_monoid_algebra.to_direct_sum = f :=
+  f.to_add_monoid_algebra.to_direct_sum = f :=
 dfinsupp.to_finsupp_to_dfinsupp f
 
 end
@@ -104,26 +104,26 @@ section lemmas
 namespace add_monoid_algebra
 
 @[simp] lemma to_direct_sum_zero [semiring M] :
- (0 : add_monoid_algebra M ι).to_direct_sum = 0 := finsupp.to_dfinsupp_zero
+  (0 : add_monoid_algebra M ι).to_direct_sum = 0 := finsupp.to_dfinsupp_zero
 
 @[simp] lemma to_direct_sum_add [semiring M] (f g : add_monoid_algebra M ι) :
- (f + g).to_direct_sum = f.to_direct_sum + g.to_direct_sum := finsupp.to_dfinsupp_add _ _
+  (f + g).to_direct_sum = f.to_direct_sum + g.to_direct_sum := finsupp.to_dfinsupp_add _ _
 
 @[simp] lemma to_direct_sum_mul [decidable_eq ι] [add_monoid ι] [semiring M]
- (f g : add_monoid_algebra M ι) :
- (f * g).to_direct_sum = f.to_direct_sum * g.to_direct_sum :=
+  (f g : add_monoid_algebra M ι) :
+  (f * g).to_direct_sum = f.to_direct_sum * g.to_direct_sum :=
 begin
- let to_hom : add_monoid_algebra M ι →+ (⨁ i : ι, M) :=
- ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩,
- show to_hom (f * g) = to_hom f * to_hom g,
- revert f g,
- rw add_monoid_hom.map_mul_iff,
- ext xi xv yi yv : 4,
- dsimp only [add_monoid_hom.comp_apply, add_monoid_hom.compl₂_apply,
- add_monoid_hom.compr₂_apply, add_monoid_hom.mul_apply, add_equiv.coe_to_add_monoid_hom,
- finsupp.single_add_hom_apply],
- simp only [add_monoid_algebra.single_mul_single, to_hom, add_monoid_hom.coe_mk,
- add_monoid_algebra.to_direct_sum_single, direct_sum.of_mul_of, has_mul.ghas_mul_mul]
+  let to_hom : add_monoid_algebra M ι →+ (⨁ i : ι, M) :=
+    ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩,
+  show to_hom (f * g) = to_hom f * to_hom g,
+  revert f g,
+  rw add_monoid_hom.map_mul_iff,
+  ext xi xv yi yv : 4,
+  dsimp only [add_monoid_hom.comp_apply, add_monoid_hom.compl₂_apply,
+    add_monoid_hom.compr₂_apply, add_monoid_hom.mul_apply, add_equiv.coe_to_add_monoid_hom,
+    finsupp.single_add_hom_apply],
+  simp only [add_monoid_algebra.single_mul_single, to_hom, add_monoid_hom.coe_mk,
+      add_monoid_algebra.to_direct_sum_single, direct_sum.of_mul_of, has_mul.ghas_mul_mul]
 end
 
 end add_monoid_algebra
@@ -132,21 +132,21 @@ namespace direct_sum
 variables [decidable_eq ι]
 
 @[simp] lemma to_add_monoid_algebra_zero [semiring M] [Π m : M, decidable (m ≠ 0)] :
- to_add_monoid_algebra 0 = (0 : add_monoid_algebra M ι) := dfinsupp.to_finsupp_zero
+  to_add_monoid_algebra 0 = (0 : add_monoid_algebra M ι) := dfinsupp.to_finsupp_zero
 
 @[simp] lemma to_add_monoid_algebra_add [semiring M] [Π m : M, decidable (m ≠ 0)]
- (f g : ⨁ i : ι, M) :
- (f + g).to_add_monoid_algebra = to_add_monoid_algebra f + to_add_monoid_algebra g :=
+  (f g : ⨁ i : ι, M) :
+  (f + g).to_add_monoid_algebra = to_add_monoid_algebra f + to_add_monoid_algebra g :=
 dfinsupp.to_finsupp_add _ _
 
 @[simp] lemma to_add_monoid_algebra_mul [add_monoid ι] [semiring M] [Π m : M, decidable (m ≠ 0)]
- (f g : ⨁ i : ι, M) :
- (f * g).to_add_monoid_algebra = to_add_monoid_algebra f * to_add_monoid_algebra g :=
+  (f g : ⨁ i : ι, M) :
+  (f * g).to_add_monoid_algebra = to_add_monoid_algebra f * to_add_monoid_algebra g :=
 begin
- apply_fun add_monoid_algebra.to_direct_sum,
- { simp },
- { apply function.left_inverse.injective,
- apply add_monoid_algebra.to_direct_sum_to_add_monoid_algebra }
+  apply_fun add_monoid_algebra.to_direct_sum,
+  { simp },
+  { apply function.left_inverse.injective,
+    apply add_monoid_algebra.to_direct_sum_to_add_monoid_algebra }
 end
 
 end direct_sum
@@ -161,41 +161,40 @@ section equivs
 equiv. -/
 @[simps {fully_applied := ff}]
 def add_monoid_algebra_equiv_direct_sum [decidable_eq ι] [semiring M] [Π m : M, decidable (m ≠ 0)] :
- add_monoid_algebra M ι ≃ (⨁ i : ι, M) :=
+  add_monoid_algebra M ι ≃ (⨁ i : ι, M) :=
 { to_fun := add_monoid_algebra.to_direct_sum, inv_fun := direct_sum.to_add_monoid_algebra,
- ..finsupp_equiv_dfinsupp }
+  ..finsupp_equiv_dfinsupp }
 
 /-- The additive version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps {fully_applied := ff}]
 def add_monoid_algebra_add_equiv_direct_sum
- [decidable_eq ι] [semiring M] [Π m : M, decidable (m ≠ 0)] :
- add_monoid_algebra M ι ≃+ (⨁ i : ι, M) :=
+  [decidable_eq ι] [semiring M] [Π m : M, decidable (m ≠ 0)] :
+  add_monoid_algebra M ι ≃+ (⨁ i : ι, M) :=
 { to_fun := add_monoid_algebra.to_direct_sum, inv_fun := direct_sum.to_add_monoid_algebra,
- map_add' := add_monoid_algebra.to_direct_sum_add,
- .. add_monoid_algebra_equiv_direct_sum}
+  map_add' := add_monoid_algebra.to_direct_sum_add,
+  .. add_monoid_algebra_equiv_direct_sum}
 
 /-- The ring version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps {fully_applied := ff}]
 def add_monoid_algebra_ring_equiv_direct_sum
- [decidable_eq ι] [add_monoid ι] [semiring M]
- [Π m : M, decidable (m ≠ 0)] :
- add_monoid_algebra M ι ≃+* ⨁ i : ι, M :=
+  [decidable_eq ι] [add_monoid ι] [semiring M]
+  [Π m : M, decidable (m ≠ 0)] :
+  add_monoid_algebra M ι ≃+* ⨁ i : ι, M :=
 { to_fun := add_monoid_algebra.to_direct_sum, inv_fun := direct_sum.to_add_monoid_algebra,
- map_mul' := add_monoid_algebra.to_direct_sum_mul,
- ..(add_monoid_algebra_add_equiv_direct_sum : add_monoid_algebra M ι ≃+ ⨁ i : ι, M) }
+  map_mul' := add_monoid_algebra.to_direct_sum_mul,
+  ..(add_monoid_algebra_add_equiv_direct_sum : add_monoid_algebra M ι ≃+ ⨁ i : ι, M) }
 
 /-- The algebra version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps {fully_applied := ff}]
 def add_monoid_algebra_alg_equiv_direct_sum
- [decidable_eq ι] [add_monoid ι] [comm_semiring R] [semiring A] [algebra R A]
- [Π m : A, decidable (m ≠ 0)] :
- add_monoid_algebra A ι ≃ₐ[R] ⨁ i : ι, A :=
+  [decidable_eq ι] [add_monoid ι] [comm_semiring R] [semiring A] [algebra R A]
+  [Π m : A, decidable (m ≠ 0)] :
+  add_monoid_algebra A ι ≃ₐ[R] ⨁ i : ι, A :=
 { to_fun := add_monoid_algebra.to_direct_sum, inv_fun := direct_sum.to_add_monoid_algebra,
- commutes' := λ r, add_monoid_algebra.to_direct_sum_single _ _,
- ..(add_monoid_algebra_ring_equiv_direct_sum : add_monoid_algebra A ι ≃+* ⨁ i : ι, A) }
+  commutes' := λ r, add_monoid_algebra.to_direct_sum_single _ _,
+  ..(add_monoid_algebra_ring_equiv_direct_sum : add_monoid_algebra A ι ≃+* ⨁ i : ι, A) }
 
 end equivs
-

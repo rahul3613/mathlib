@@ -79,10 +79,10 @@ variables [monoid G]
 `G`-representation. -/
 abbreviation linear_yoneda_obj_resolution (A : Rep k G) : cochain_complex (Module.{u} k) ℕ :=
 homological_complex.unop
- ((((linear_yoneda k (Rep k G)).obj A).right_op.map_homological_complex _).obj (resolution k G))
+  ((((linear_yoneda k (Rep k G)).obj A).right_op.map_homological_complex _).obj (resolution k G))
 
 lemma linear_yoneda_obj_resolution_d_apply {A : Rep k G} (i j : ℕ) (x : (resolution k G).X i ⟶ A) :
- (linear_yoneda_obj_resolution A).d i j x = (resolution k G).d j i ≫ x :=
+  (linear_yoneda_obj_resolution A).d i j x = (resolution k G).d j i ≫ x :=
 rfl
 
 end group_cohomology
@@ -92,20 +92,20 @@ open Rep group_cohomology
 /-- The differential in the complex of inhomogeneous cochains used to
 calculate group cohomology. -/
 @[simps] def d [monoid G] (n : ℕ) (A : Rep k G) :
- ((fin n → G) → A) →ₗ[k] (fin (n + 1) → G) → A :=
+  ((fin n → G) → A) →ₗ[k] (fin (n + 1) → G) → A :=
 { to_fun := λ f g, A.ρ (g 0) (f (λ i, g i.succ))
- + finset.univ.sum (λ j : fin (n + 1), (-1 : k) ^ ((j : ℕ) + 1) • f (fin.contract_nth j (*) g)),
- map_add' := λ f g,
- begin
- ext x,
- simp only [pi.add_apply, map_add, smul_add, finset.sum_add_distrib, add_add_add_comm],
- end,
- map_smul' := λ r f,
- begin
- ext x,
- simp only [pi.smul_apply, ring_hom.id_apply, map_smul, smul_add, finset.smul_sum,
- ←smul_assoc, smul_eq_mul, mul_comm r],
- end }
+    + finset.univ.sum (λ j : fin (n + 1), (-1 : k) ^ ((j : ℕ) + 1) • f (fin.contract_nth j (*) g)),
+  map_add' := λ f g,
+  begin
+    ext x,
+    simp only [pi.add_apply, map_add, smul_add, finset.sum_add_distrib, add_add_add_comm],
+  end,
+  map_smul' := λ r f,
+  begin
+    ext x,
+    simp only [pi.smul_apply, ring_hom.id_apply, map_smul, smul_add, finset.smul_sum,
+      ←smul_assoc, smul_eq_mul, mul_comm r],
+  end }
 
 variables [group G] (n) (A : Rep k G)
 
@@ -113,27 +113,27 @@ variables [group G] (n) (A : Rep k G)
 morphisms in `Rep k G`) commutes with the differentials in the complex of inhomogeneous cochains
 and the homogeneous `linear_yoneda_obj_resolution`. -/
 lemma d_eq :
- d n A = ((diagonal_hom_equiv n A).to_Module_iso.inv
- ≫ (linear_yoneda_obj_resolution A).d n (n + 1)
- ≫ (diagonal_hom_equiv (n + 1) A).to_Module_iso.hom) :=
+  d n A = ((diagonal_hom_equiv n A).to_Module_iso.inv
+    ≫ (linear_yoneda_obj_resolution A).d n (n + 1)
+    ≫ (diagonal_hom_equiv (n + 1) A).to_Module_iso.hom) :=
 begin
- ext f g,
- simp only [Module.coe_comp, linear_equiv.coe_coe, function.comp_app,
- linear_equiv.to_Module_iso_inv, linear_yoneda_obj_resolution_d_apply,
- linear_equiv.to_Module_iso_hom, diagonal_hom_equiv_apply, Action.comp_hom,
- resolution.d_eq k G n, resolution.d_of (fin.partial_prod g), linear_map.map_sum,
- ←finsupp.smul_single_one _ ((-1 : k) ^ _), map_smul, d_apply],
- simp only [@fin.sum_univ_succ _ _ (n + 1), fin.coe_zero, pow_zero, one_smul, fin.succ_above_zero,
- diagonal_hom_equiv_symm_apply f (fin.partial_prod g ∘ @fin.succ (n + 1)), function.comp_app,
- fin.partial_prod_succ, fin.cast_succ_zero, fin.partial_prod_zero, one_mul],
- congr' 1,
- { congr,
- ext,
- have := fin.partial_prod_right_inv g (fin.cast_succ x),
- simp only [mul_inv_rev, fin.cast_succ_fin_succ] at *,
- rw [mul_assoc]; rw [ ←mul_assoc _ _ (g x.succ)]; rw [ this]; rw [ inv_mul_cancel_left] },
- { exact finset.sum_congr rfl (λ j hj,
- by rw [diagonal_hom_equiv_symm_partial_prod_succ]; rw [ fin.coe_succ]) }
+  ext f g,
+  simp only [Module.coe_comp, linear_equiv.coe_coe, function.comp_app,
+    linear_equiv.to_Module_iso_inv, linear_yoneda_obj_resolution_d_apply,
+    linear_equiv.to_Module_iso_hom, diagonal_hom_equiv_apply, Action.comp_hom,
+    resolution.d_eq k G n, resolution.d_of (fin.partial_prod g), linear_map.map_sum,
+    ←finsupp.smul_single_one _ ((-1 : k) ^ _), map_smul, d_apply],
+  simp only [@fin.sum_univ_succ _ _ (n + 1), fin.coe_zero, pow_zero, one_smul, fin.succ_above_zero,
+    diagonal_hom_equiv_symm_apply f (fin.partial_prod g ∘ @fin.succ (n + 1)), function.comp_app,
+    fin.partial_prod_succ, fin.cast_succ_zero, fin.partial_prod_zero, one_mul],
+  congr' 1,
+  { congr,
+    ext,
+    have := fin.partial_prod_right_inv g (fin.cast_succ x),
+    simp only [mul_inv_rev, fin.cast_succ_fin_succ] at *,
+    rw [mul_assoc, ←mul_assoc _ _ (g x.succ), this, inv_mul_cancel_left] },
+  { exact finset.sum_congr rfl (λ j hj,
+      by rw [diagonal_hom_equiv_symm_partial_prod_succ, fin.coe_succ]) }
 end
 
 end inhomogeneous_cochains
@@ -149,25 +149,25 @@ noncomputable abbreviation inhomogeneous_cochains : cochain_complex (Module k) �
 cochain_complex.of (λ n, Module.of k ((fin n → G) → A))
 (λ n, inhomogeneous_cochains.d n A) (λ n,
 begin
- ext x y,
- have := linear_map.ext_iff.1 ((linear_yoneda_obj_resolution A).d_comp_d n (n + 1) (n + 2)),
- simp only [Module.coe_comp, function.comp_app] at this,
- simp only [Module.coe_comp, function.comp_app, d_eq, linear_equiv.to_Module_iso_hom,
- linear_equiv.to_Module_iso_inv, linear_equiv.coe_coe, linear_equiv.symm_apply_apply,
- this, linear_map.zero_apply, map_zero, pi.zero_apply],
+  ext x y,
+  have := linear_map.ext_iff.1 ((linear_yoneda_obj_resolution A).d_comp_d n (n + 1) (n + 2)),
+  simp only [Module.coe_comp, function.comp_app] at this,
+  simp only [Module.coe_comp, function.comp_app, d_eq, linear_equiv.to_Module_iso_hom,
+    linear_equiv.to_Module_iso_inv, linear_equiv.coe_coe, linear_equiv.symm_apply_apply,
+    this, linear_map.zero_apply, map_zero, pi.zero_apply],
 end)
 
 /-- Given a `k`-linear `G`-representation `A`, the complex of inhomogeneous cochains is isomorphic
 to `Hom(P, A)`, where `P` is the standard resolution of `k` as a trivial `G`-representation. -/
 def inhomogeneous_cochains_iso :
- inhomogeneous_cochains A ≅ linear_yoneda_obj_resolution A :=
+  inhomogeneous_cochains A ≅ linear_yoneda_obj_resolution A :=
 homological_complex.hom.iso_of_components
- (λ i, (Rep.diagonal_hom_equiv i A).to_Module_iso.symm) $
+  (λ i, (Rep.diagonal_hom_equiv i A).to_Module_iso.symm) $
 begin
- rintros i j (h : i + 1 = j),
- subst h,
- simp only [cochain_complex.of_d, d_eq, category.assoc, iso.symm_hom,
- iso.hom_inv_id, category.comp_id],
+  rintros i j (h : i + 1 = j),
+  subst h,
+  simp only [cochain_complex.of_d, d_eq, category.assoc, iso.symm_hom,
+    iso.hom_inv_id, category.comp_id],
 end
 
 end group_cohomology
@@ -181,8 +181,7 @@ def group_cohomology [group G] (A : Rep k G) (n : ℕ) : Module k :=
 /-- The `n`th group cohomology of a `k`-linear `G`-representation `A` is isomorphic to
 `Extⁿ(k, A)` (taken in `Rep k G`), where `k` is a trivial `k`-linear `G`-representation. -/
 def group_cohomology_iso_Ext [group G] (A : Rep k G) (n : ℕ) :
- group_cohomology A n ≅ ((Ext k (Rep k G) n).obj
- (opposite.op $ Rep.trivial k G k)).obj A :=
+  group_cohomology A n ≅ ((Ext k (Rep k G) n).obj
+    (opposite.op $ Rep.trivial k G k)).obj A :=
 (homology_obj_iso_of_homotopy_equiv (homotopy_equiv.of_iso (inhomogeneous_cochains_iso _)) _)
- ≪≫ (homological_complex.homology_unop _ _) ≪≫ (Ext_iso k G A n).symm
-
+  ≪≫ (homological_complex.homology_unop _ _) ≪≫ (Ext_iso k G A n).symm

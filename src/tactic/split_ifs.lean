@@ -49,16 +49,16 @@ lctx ← local_context, lctx ← lctx.mmap infer_type,
 return $ c ∈ lctx ∨ `(¬%%c) ∈ lctx
 
 private meta def split_ifs_core (at_ : loc) (names : ref (list name)) :
- list expr → tactic unit | done := do
+  list expr → tactic unit | done := do
 some cond ← find_if_cond_at at_ | fail "no if-then-else expressions to split",
 let cond := match cond with `(¬%%p) := p | p := p end,
 if cond ∈ done then skip else do
 no_split ← value_known cond,
 if no_split then
- reduce_ifs_at at_; try (split_ifs_core (cond :: done))
+    reduce_ifs_at at_; try (split_ifs_core (cond :: done))
 else do
- n ← get_next_name names,
- split_if1 cond n at_; try (split_ifs_core (cond :: done))
+    n ← get_next_name names,
+    split_if1 cond n at_; try (split_ifs_core (cond :: done))
 
 meta def split_ifs (names : list name) (at_ : loc := loc.ns [none]) :=
 using_new_ref names $ λ names, split_ifs_core at_ names []
@@ -86,11 +86,10 @@ add_hint_tactic "split_ifs"
 
 add_tactic_doc
 { name := "split_ifs",
- category := doc_category.tactic,
- decl_names := [``split_ifs],
- tags := ["case bashing"] }
+  category := doc_category.tactic,
+  decl_names := [``split_ifs],
+  tags := ["case bashing"] }
 
 end interactive
 
 end tactic
-

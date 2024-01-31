@@ -34,7 +34,7 @@ lemma Inf_def {s : set ℕ} (h : s.nonempty) : Inf s = @nat.find (λn, n ∈ s) 
 dif_pos _
 
 lemma Sup_def {s : set ℕ} (h : ∃n, ∀a∈s, a ≤ n) :
- Sup s = @nat.find (λn, ∀a∈s, a ≤ n) _ h :=
+  Sup s = @nat.find (λn, ∀a∈s, a ≤ n) _ h :=
 dif_pos _
 
 lemma _root_.set.infinite.nat.Sup_eq_zero {s : set ℕ} (h : s.infinite) : Sup s = 0 :=
@@ -42,26 +42,26 @@ dif_neg $ λ ⟨n, hn⟩, let ⟨k, hks, hk⟩ := h.exists_gt n in (hn k hks).no
 
 @[simp] lemma Inf_eq_zero {s : set ℕ} : Inf s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
 begin
- cases eq_empty_or_nonempty s,
- { subst h, simp only [or_true, eq_self_iff_true, iff_true, Inf, has_Inf.Inf,
- mem_empty_iff_false, exists_false, dif_neg, not_false_iff] },
- { simp only [h.ne_empty, or_false, nat.Inf_def, h, nat.find_eq_zero] }
+  cases eq_empty_or_nonempty s,
+  { subst h, simp only [or_true, eq_self_iff_true, iff_true, Inf, has_Inf.Inf,
+      mem_empty_iff_false, exists_false, dif_neg, not_false_iff] },
+  { simp only [h.ne_empty, or_false, nat.Inf_def, h, nat.find_eq_zero] }
 end
 
 @[simp] lemma Inf_empty : Inf ∅ = 0 :=
 by { rw Inf_eq_zero, right, refl }
 
 @[simp] lemma infi_of_empty {ι : Sort*} [is_empty ι] (f : ι → ℕ) : infi f = 0 :=
-by rw [infi_of_empty']; rw [ Inf_empty]
+by rw [infi_of_empty', Inf_empty]
 
 lemma Inf_mem {s : set ℕ} (h : s.nonempty) : Inf s ∈ s :=
 by { rw [nat.Inf_def h], exact nat.find_spec h }
 
 lemma not_mem_of_lt_Inf {s : set ℕ} {m : ℕ} (hm : m < Inf s) : m ∉ s :=
 begin
- cases eq_empty_or_nonempty s,
- { subst h, apply not_mem_empty },
- { rw [nat.Inf_def h] at hm, exact nat.find_min h hm }
+  cases eq_empty_or_nonempty s,
+  { subst h, apply not_mem_empty },
+  { rw [nat.Inf_def h] at hm, exact nat.find_min h hm }
 end
 
 protected lemma Inf_le {s : set ℕ} {m : ℕ} (hm : m ∈ s) : Inf s ≤ m :=
@@ -69,29 +69,29 @@ by { rw [nat.Inf_def ⟨m, hm⟩], exact nat.find_min' ⟨m, hm⟩ hm }
 
 lemma nonempty_of_pos_Inf {s : set ℕ} (h : 0 < Inf s) : s.nonempty :=
 begin
- by_contradiction contra, rw set.not_nonempty_iff_eq_empty at contra,
- have h' : Inf s ≠ 0, { exact ne_of_gt h, }, apply h',
- rw nat.Inf_eq_zero, right, assumption,
+  by_contradiction contra, rw set.not_nonempty_iff_eq_empty at contra,
+  have h' : Inf s ≠ 0, { exact ne_of_gt h, }, apply h',
+  rw nat.Inf_eq_zero, right, assumption,
 end
 
 lemma nonempty_of_Inf_eq_succ {s : set ℕ} {k : ℕ} (h : Inf s = k + 1) : s.nonempty :=
 nonempty_of_pos_Inf (h.symm ▸ (succ_pos k) : Inf s > 0)
 
 lemma eq_Ici_of_nonempty_of_upward_closed {s : set ℕ} (hs : s.nonempty)
- (hs' : ∀ (k₁ k₂ : ℕ), k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = Ici (Inf s) :=
+  (hs' : ∀ (k₁ k₂ : ℕ), k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = Ici (Inf s) :=
 ext (λ n, ⟨λ H, nat.Inf_le H, λ H, hs' (Inf s) n H (Inf_mem hs)⟩)
 
 lemma Inf_upward_closed_eq_succ_iff {s : set ℕ}
- (hs : ∀ (k₁ k₂ : ℕ), k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) (k : ℕ) :
- Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s :=
+  (hs : ∀ (k₁ k₂ : ℕ), k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) (k : ℕ) :
+  Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s :=
 begin
- split,
- { intro H,
- rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs]; rw [ H]; rw [ mem_Ici]; rw [ mem_Ici],
- exact ⟨le_rfl, k.not_succ_le_self⟩, },
- { rintro ⟨H, H'⟩,
- rw [Inf_def (⟨_, H⟩ : s.nonempty)]; rw [ find_eq_iff],
- exact ⟨H, λ n hnk hns, H' $ hs n k (lt_succ_iff.mp hnk) hns⟩, },
+  split,
+  { intro H,
+    rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs, H, mem_Ici, mem_Ici],
+    exact ⟨le_rfl, k.not_succ_le_self⟩, },
+  { rintro ⟨H, H'⟩,
+    rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff],
+    exact ⟨H, λ n hnk hns, H' $ hs n k (lt_succ_iff.mp hnk) hns⟩, },
 end
 
 /-- This instance is necessary, otherwise the lattice operations would be derived via
@@ -100,52 +100,52 @@ instance : lattice ℕ := linear_order.to_lattice
 
 noncomputable instance : conditionally_complete_linear_order_bot ℕ :=
 { Sup := Sup, Inf := Inf,
- le_cSup := assume s a hb ha, by rw [Sup_def hb]; revert a ha; exact @nat.find_spec _ _ hb,
- cSup_le := assume s a hs ha, by rw [Sup_def ⟨a, ha⟩]; exact nat.find_min' _ ha,
- le_cInf := assume s a hs hb,
- by rw [Inf_def hs]; exact hb (@nat.find_spec (λn, n ∈ s) _ _),
- cInf_le := assume s a hb ha, by rw [Inf_def ⟨a, ha⟩]; exact nat.find_min' _ ha,
- cSup_empty :=
- begin
- simp only [Sup_def, set.mem_empty_iff_false, forall_const, forall_prop_of_false, not_false_iff,
- exists_const],
- apply bot_unique (nat.find_min' _ _),
- trivial
- end,
- .. (infer_instance : order_bot ℕ), .. (linear_order.to_lattice : lattice ℕ),
- .. (infer_instance : linear_order ℕ) }
+  le_cSup    := assume s a hb ha, by rw [Sup_def hb]; revert a ha; exact @nat.find_spec _ _ hb,
+  cSup_le    := assume s a hs ha, by rw [Sup_def ⟨a, ha⟩]; exact nat.find_min' _ ha,
+  le_cInf    := assume s a hs hb,
+    by rw [Inf_def hs]; exact hb (@nat.find_spec (λn, n ∈ s) _ _),
+  cInf_le    := assume s a hb ha, by rw [Inf_def ⟨a, ha⟩]; exact nat.find_min' _ ha,
+  cSup_empty :=
+  begin
+    simp only [Sup_def, set.mem_empty_iff_false, forall_const, forall_prop_of_false, not_false_iff,
+      exists_const],
+    apply bot_unique (nat.find_min' _ _),
+    trivial
+  end,
+  .. (infer_instance : order_bot ℕ), .. (linear_order.to_lattice : lattice ℕ),
+  .. (infer_instance : linear_order ℕ) }
 
 lemma Sup_mem {s : set ℕ} (h₁ : s.nonempty) (h₂ : bdd_above s) : Sup s ∈ s :=
 let ⟨k, hk⟩ := h₂ in h₁.cSup_mem ((finite_le_nat k).subset hk)
 
 lemma Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ Inf {m | p m}) :
- Inf {m | p (m + n)} + n = Inf {m | p m} :=
+  Inf {m | p (m + n)} + n = Inf {m | p m} :=
 begin
- obtain h | ⟨m, hm⟩ := {m | p (m + n)}.eq_empty_or_nonempty,
- { rw [h]; rw [ nat.Inf_empty]; rw [ zero_add],
- obtain hnp | hnp := hn.eq_or_lt,
- { exact hnp },
- suffices hp : p (Inf {m | p m} - n + n),
- { exact (h.subset hp).elim },
- rw tsub_add_cancel_of_le hn,
- exact Inf_mem (nonempty_of_pos_Inf $ n.zero_le.trans_lt hnp) },
- { have hp : ∃ n, n ∈ {m | p m} := ⟨_, hm⟩,
- rw [nat.Inf_def ⟨m, hm⟩]; rw [ nat.Inf_def hp],
- rw [nat.Inf_def hp] at hn,
- exact find_add hn }
+  obtain h | ⟨m, hm⟩ := {m | p (m + n)}.eq_empty_or_nonempty,
+  { rw [h, nat.Inf_empty, zero_add],
+    obtain hnp | hnp := hn.eq_or_lt,
+    { exact hnp },
+    suffices hp : p (Inf {m | p m} - n + n),
+    { exact (h.subset hp).elim },
+    rw tsub_add_cancel_of_le hn,
+    exact Inf_mem (nonempty_of_pos_Inf $ n.zero_le.trans_lt hnp) },
+  { have hp : ∃ n, n ∈ {m | p m} := ⟨_, hm⟩,
+    rw [nat.Inf_def ⟨m, hm⟩, nat.Inf_def hp],
+    rw [nat.Inf_def hp] at hn,
+    exact find_add hn }
 end
 
 lemma Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < Inf {m | p m}) :
- Inf {m | p m} + n = Inf {m | p (m - n)} :=
+  Inf {m | p m} + n = Inf {m | p (m - n)} :=
 begin
- convert Inf_add _,
- { simp_rw add_tsub_cancel_right },
- obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h,
- refine le_cInf ⟨m + n, _⟩ (λ b hb, le_of_not_lt $ λ hbn,
- ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)),
- { dsimp,
- rwa add_tsub_cancel_right },
- { exact hb }
+  convert Inf_add _,
+  { simp_rw add_tsub_cancel_right },
+  obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h,
+  refine le_cInf ⟨m + n, _⟩ (λ b hb, le_of_not_lt $ λ hbn,
+    ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)),
+  { dsimp,
+    rwa add_tsub_cancel_right },
+  { exact hb }
 end
 
 section
@@ -185,4 +185,3 @@ lemma bInter_lt_succ' (u : ℕ → set α) (n : ℕ) : (⋂ k < n + 1, u k) = u 
 nat.infi_lt_succ' u n
 
 end set
-

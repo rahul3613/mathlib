@@ -23,7 +23,7 @@ coalgebras over `G`.
 
 * Prove the dual result about the structure map of the terminal coalgebra of an endofunctor.
 * Prove that if the countable infinite product over the powers of the endofunctor exists, then
- algebras over the endofunctor coincide with algebras over the free monad on the endofunctor.
+  algebras over the endofunctor coincide with algebras over the free monad on the endofunctor.
 -/
 
 universes v u
@@ -46,13 +46,13 @@ variables {F : C ⥤ C} (A : algebra F) {A₀ A₁ A₂ : algebra F}
 
 /-
 ```
- str
- F A₀ -----> A₀
- | |
-F f | | f
- V V
- F A₁ -----> A₁
- str
+        str
+   F A₀ -----> A₀
+    |          |
+F f |          | f
+    V          V
+   F A₁ -----> A₁
+        str
 ```
 -/
 /-- A morphism between algebras of endofunctor `F` -/
@@ -76,8 +76,8 @@ end hom
 
 instance (F : C ⥤ C) : category_struct (algebra F) :=
 { hom := hom,
- id := hom.id,
- comp := @hom.comp _ _ _ }
+  id := hom.id,
+  comp := @hom.comp _ _ _ }
 
 @[simp] lemma id_eq_id : algebra.hom.id A = 𝟙 A := rfl
 
@@ -99,19 +99,19 @@ commutes with the structure morphisms.
 @[simps]
 def iso_mk (h : A₀.1 ≅ A₁.1) (w : F.map h.hom ≫ A₁.str = A₀.str ≫ h.hom) : A₀ ≅ A₁ :=
 { hom := { f := h.hom },
- inv :=
- { f := h.inv,
- h' := by { rw [h.eq_comp_inv]; rw [ category.assoc]; rw [ ←w]; rw [ ←functor.map_comp_assoc], simp } } }
+  inv :=
+  { f := h.inv,
+    h' := by { rw [h.eq_comp_inv, category.assoc, ←w, ←functor.map_comp_assoc], simp } } }
 
 /-- The forgetful functor from the category of algebras, forgetting the algebraic structure. -/
 @[simps] def forget (F : C ⥤ C) : algebra F ⥤ C :=
 { obj := λ A, A.1,
- map := λ A B f, f.1 }
+  map := λ A B f, f.1 }
 
 /-- An algebra morphism with an underlying isomorphism hom in `C` is an algebra isomorphism. -/
 lemma iso_of_iso (f : A₀ ⟶ A₁) [is_iso f.1] : is_iso f :=
 ⟨⟨{ f := inv f.1,
- h' := by { rw [is_iso.eq_comp_inv f.1]; rw [ category.assoc]; rw [ ← f.h], simp } }, by tidy⟩⟩
+    h' := by { rw [is_iso.eq_comp_inv f.1, category.assoc, ← f.h], simp } }, by tidy⟩⟩
 
 instance forget_reflects_iso : reflects_isomorphisms (forget F) :=
 { reflects := λ A B, iso_of_iso }
@@ -133,27 +133,27 @@ algebras of `F` to algebras of `G`.
 @[simps]
 def functor_of_nat_trans {F G : C ⥤ C} (α : G ⟶ F) : algebra F ⥤ algebra G :=
 { obj := λ A,
- { A := A.1,
- str := α.app A.1 ≫ A.str },
- map := λ A₀ A₁ f,
- { f := f.1 } }
+  { A := A.1,
+    str := α.app A.1 ≫ A.str },
+  map := λ A₀ A₁ f,
+  { f := f.1 } }
 
 /-- The identity transformation induces the identity endofunctor on the category of algebras. -/
 @[simps {rhs_md := semireducible}]
 def functor_of_nat_trans_id :
- functor_of_nat_trans (𝟙 F) ≅ 𝟭 _ :=
+  functor_of_nat_trans (𝟙 F) ≅ 𝟭 _ :=
 nat_iso.of_components
- (λ X, iso_mk (iso.refl _) (by { dsimp, simp, }))
- (λ X Y f, by { ext, dsimp, simp })
+  (λ X, iso_mk (iso.refl _) (by { dsimp, simp, }))
+  (λ X Y f, by { ext, dsimp, simp })
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
 @[simps {rhs_md := semireducible}]
 def functor_of_nat_trans_comp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : F₁ ⟶ F₂) :
- functor_of_nat_trans (α ≫ β) ≅
- functor_of_nat_trans β ⋙ functor_of_nat_trans α :=
+  functor_of_nat_trans (α ≫ β) ≅
+    functor_of_nat_trans β ⋙ functor_of_nat_trans α :=
 nat_iso.of_components
- (λ X, iso_mk (iso.refl _) (by { dsimp, simp }))
- (λ X Y f, by { ext, dsimp, simp })
+  (λ X, iso_mk (iso.refl _) (by { dsimp, simp }))
+  (λ X Y f, by { ext, dsimp, simp })
 
 /--
 If `α` and `β` are two equal natural transformations, then the functors of algebras induced by them
@@ -163,10 +163,10 @@ lemmas about.
 -/
 @[simps {rhs_md := semireducible}]
 def functor_of_nat_trans_eq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
- functor_of_nat_trans α ≅ functor_of_nat_trans β :=
+  functor_of_nat_trans α ≅ functor_of_nat_trans β :=
 nat_iso.of_components
- (λ X, iso_mk (iso.refl _) (by { dsimp, simp [h] }))
- (λ X Y f, by { ext, dsimp, simp })
+  (λ X, iso_mk (iso.refl _) (by { dsimp, simp [h] }))
+  (λ X Y f, by { ext, dsimp, simp })
 
 /--
 Naturally isomorphic endofunctors give equivalent categories of algebras.
@@ -175,17 +175,17 @@ we have `equiv_of_nat_iso h ⋙ forget = forget`.
 -/
 @[simps]
 def equiv_of_nat_iso {F G : C ⥤ C} (α : F ≅ G) :
- algebra F ≌ algebra G :=
+  algebra F ≌ algebra G :=
 { functor := functor_of_nat_trans α.inv,
- inverse := functor_of_nat_trans α.hom,
- unit_iso :=
- functor_of_nat_trans_id.symm ≪≫
- functor_of_nat_trans_eq (by simp) ≪≫
- functor_of_nat_trans_comp _ _,
- counit_iso :=
- (functor_of_nat_trans_comp _ _).symm ≪≫
- functor_of_nat_trans_eq (by simp) ≪≫
- functor_of_nat_trans_id }.
+  inverse := functor_of_nat_trans α.hom,
+  unit_iso :=
+    functor_of_nat_trans_id.symm ≪≫
+    functor_of_nat_trans_eq (by simp) ≪≫
+    functor_of_nat_trans_comp _ _,
+  counit_iso :=
+    (functor_of_nat_trans_comp _ _).symm ≪≫
+    functor_of_nat_trans_eq (by simp) ≪≫
+    functor_of_nat_trans_id }.
 
 namespace initial
 
@@ -200,7 +200,8 @@ limits.is_initial.hom_ext h _ (𝟙 A)
 lemma left_inv : str_inv h ≫ A.str = 𝟙 _ := congr_arg hom.f (left_inv' h)
 
 lemma right_inv : A.str ≫ str_inv h = 𝟙 _ :=
-by { rw [str_inv]; rw [ ← (h.to ⟨ F.obj A.1 , F.map A.str ⟩).h]; rw [ ← F.map_id]; rw [ ← F.map_comp], congr, exact (left_inv h) }
+by { rw [str_inv, ← (h.to ⟨ F.obj A.1 , F.map A.str ⟩).h,
+  ← F.map_id, ← F.map_comp], congr, exact (left_inv h) }
 
 /--
 The structure map of the inital algebra is an isomorphism,
@@ -225,13 +226,13 @@ variables {F : C ⥤ C} (V : coalgebra F) {V₀ V₁ V₂ : coalgebra F}
 
 /-
 ```
- str
- V₀ -----> F V₀
- | |
- f | | F f
- V V
- V₁ -----> F V₁
- str
+        str
+    V₀ -----> F V₀
+    |          |
+  f |          | F f
+    V          V
+    V₁ -----> F V₁
+        str
 ```
 -/
 /-- A morphism between coalgebras of an endofunctor `F` -/
@@ -255,8 +256,8 @@ end hom
 
 instance (F : C ⥤ C) : category_struct (coalgebra F) :=
 { hom := hom,
- id := hom.id,
- comp := @hom.comp _ _ _ }
+  id := hom.id,
+  comp := @hom.comp _ _ _ }
 
 @[simp] lemma id_eq_id : coalgebra.hom.id V = 𝟙 V := rfl
 
@@ -278,21 +279,21 @@ commutes with the structure morphisms.
 @[simps]
 def iso_mk (h : V₀.1 ≅ V₁.1) (w : V₀.str ≫ F.map h.hom = h.hom ≫ V₁.str ) : V₀ ≅ V₁ :=
 { hom := { f := h.hom },
- inv :=
- { f := h.inv,
- h' := by { rw [h.eq_inv_comp]; rw [ ← category.assoc]; rw [ ←w]; rw [ category.assoc]; rw [ ← functor.map_comp],
- simp only [iso.hom_inv_id, functor.map_id, category.comp_id] } } }
+  inv :=
+  { f := h.inv,
+    h' := by { rw [h.eq_inv_comp, ← category.assoc, ←w, category.assoc, ← functor.map_comp],
+               simp only [iso.hom_inv_id, functor.map_id, category.comp_id] } } }
 
 /-- The forgetful functor from the category of coalgebras, forgetting the coalgebraic structure. -/
 @[simps] def forget (F : C ⥤ C) : coalgebra F ⥤ C :=
 { obj := λ A, A.1,
- map := λ A B f, f.1 }
+  map := λ A B f, f.1 }
 
 /-- A coalgebra morphism with an underlying isomorphism hom in `C` is a coalgebra isomorphism. -/
 lemma iso_of_iso (f : V₀ ⟶ V₁) [is_iso f.1] : is_iso f :=
 ⟨⟨{ f := inv f.1,
- h' := by { rw [is_iso.eq_inv_comp f.1]; rw [ ← category.assoc]; rw [ ← f.h]; rw [ category.assoc], simp } },
- by tidy⟩⟩
+    h' := by { rw [is_iso.eq_inv_comp f.1, ← category.assoc, ← f.h, category.assoc], simp } },
+          by tidy⟩⟩
 
 instance forget_reflects_iso : reflects_isomorphisms (forget F) :=
 { reflects := λ A B, iso_of_iso }
@@ -314,27 +315,27 @@ coalgebras of `F` to coalgebras of `G`.
 @[simps]
 def functor_of_nat_trans {F G : C ⥤ C} (α : F ⟶ G) : coalgebra F ⥤ coalgebra G :=
 { obj := λ V,
- { V := V.1,
- str := V.str ≫ α.app V.1 },
- map := λ V₀ V₁ f, { f := f.1,
- h' := by rw [category.assoc]; rw [ ← α.naturality]; rw [ ← category.assoc]; rw [ f.h]; rw [ category.assoc] } }
+  { V := V.1,
+    str := V.str ≫ α.app V.1 },
+  map := λ V₀ V₁ f, { f := f.1,
+      h' := by rw [category.assoc, ← α.naturality, ← category.assoc, f.h, category.assoc] } }
 
 /-- The identity transformation induces the identity endofunctor on the category of coalgebras. -/
 @[simps {rhs_md := semireducible}]
 def functor_of_nat_trans_id :
- functor_of_nat_trans (𝟙 F) ≅ 𝟭 _ :=
+  functor_of_nat_trans (𝟙 F) ≅ 𝟭 _ :=
 nat_iso.of_components
- (λ X, iso_mk (iso.refl _) (by { dsimp, simp, }))
- (λ X Y f, by { ext, dsimp, simp })
+  (λ X, iso_mk (iso.refl _) (by { dsimp, simp, }))
+  (λ X Y f, by { ext, dsimp, simp })
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
 @[simps {rhs_md := semireducible}]
 def functor_of_nat_trans_comp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : F₁ ⟶ F₂) :
- functor_of_nat_trans (α ≫ β) ≅
- functor_of_nat_trans α ⋙ functor_of_nat_trans β :=
+  functor_of_nat_trans (α ≫ β) ≅
+    functor_of_nat_trans α ⋙ functor_of_nat_trans β :=
 nat_iso.of_components
- (λ X, iso_mk (iso.refl _) (by { dsimp, simp }))
- (λ X Y f, by { ext, dsimp, simp })
+  (λ X, iso_mk (iso.refl _) (by { dsimp, simp }))
+  (λ X Y f, by { ext, dsimp, simp })
 
 /--
 If `α` and `β` are two equal natural transformations, then the functors of coalgebras induced by
@@ -344,10 +345,10 @@ lemmas about.
 -/
 @[simps {rhs_md := semireducible}]
 def functor_of_nat_trans_eq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
- functor_of_nat_trans α ≅ functor_of_nat_trans β :=
+  functor_of_nat_trans α ≅ functor_of_nat_trans β :=
 nat_iso.of_components
- (λ X, iso_mk (iso.refl _) (by { dsimp, simp [h] }))
- (λ X Y f, by { ext, dsimp, simp })
+  (λ X, iso_mk (iso.refl _) (by { dsimp, simp [h] }))
+  (λ X Y f, by { ext, dsimp, simp })
 
 /--
 Naturally isomorphic endofunctors give equivalent categories of coalgebras.
@@ -356,17 +357,17 @@ we have `equiv_of_nat_iso h ⋙ forget = forget`.
 -/
 @[simps]
 def equiv_of_nat_iso {F G : C ⥤ C} (α : F ≅ G) :
- coalgebra F ≌ coalgebra G :=
+  coalgebra F ≌ coalgebra G :=
 { functor := functor_of_nat_trans α.hom,
- inverse := functor_of_nat_trans α.inv,
- unit_iso :=
- functor_of_nat_trans_id.symm ≪≫
- functor_of_nat_trans_eq (by simp) ≪≫
- functor_of_nat_trans_comp _ _,
- counit_iso :=
- (functor_of_nat_trans_comp _ _).symm ≪≫
- functor_of_nat_trans_eq (by simp) ≪≫
- functor_of_nat_trans_id }.
+  inverse := functor_of_nat_trans α.inv,
+  unit_iso :=
+    functor_of_nat_trans_id.symm ≪≫
+    functor_of_nat_trans_eq (by simp) ≪≫
+    functor_of_nat_trans_comp _ _,
+  counit_iso :=
+    (functor_of_nat_trans_comp _ _).symm ≪≫
+    functor_of_nat_trans_eq (by simp) ≪≫
+    functor_of_nat_trans_id }.
 
 end coalgebra
 
@@ -375,83 +376,83 @@ namespace adjunction
 variables {F : C ⥤ C} {G : C ⥤ C}
 
 lemma algebra.hom_equiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : algebra F)
- (f : A₁ ⟶ A₂) : (adj.hom_equiv A₁.A A₁.A) A₁.str ≫ G.map f.f =
- f.f ≫ (adj.hom_equiv A₂.A A₂.A) A₂.str :=
-by { rw [← adjunction.hom_equiv_naturality_right]; rw [ ← adjunction.hom_equiv_naturality_left]; rw [ f.h] }
+  (f : A₁ ⟶ A₂) : (adj.hom_equiv A₁.A A₁.A) A₁.str ≫ G.map f.f =
+  f.f ≫ (adj.hom_equiv A₂.A A₂.A) A₂.str :=
+by { rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h] }
 
 lemma coalgebra.hom_equiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : coalgebra G)
- (f : V₁ ⟶ V₂) : F.map f.f ≫ ((adj.hom_equiv V₂.V V₂.V).symm) V₂.str =
- ((adj.hom_equiv V₁.V V₁.V).symm) V₁.str ≫ f.f :=
-by { rw [← adjunction.hom_equiv_naturality_left_symm]; rw [ ← adjunction.hom_equiv_naturality_right_symm]; rw [ f.h] }
+  (f : V₁ ⟶ V₂) :  F.map f.f ≫ ((adj.hom_equiv V₂.V V₂.V).symm) V₂.str =
+  ((adj.hom_equiv V₁.V V₁.V).symm) V₁.str ≫ f.f :=
+by { rw [← adjunction.hom_equiv_naturality_left_symm, ← adjunction.hom_equiv_naturality_right_symm,
+     f.h] }
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to an algebra over `F` a
 coalgebra over `G` defined via adjunction applied to the structure map. -/
 def algebra.to_coalgebra_of (adj : F ⊣ G) : algebra F ⥤ coalgebra G :=
 { obj := λ A, { V := A.1,
- str := (adj.hom_equiv A.1 A.1).to_fun A.2 },
- map := λ A₁ A₂ f, { f := f.1,
- h' := (algebra.hom_equiv_naturality_str adj A₁ A₂ f) } }
+                    str := (adj.hom_equiv A.1 A.1).to_fun A.2 },
+      map := λ A₁ A₂ f, { f := f.1,
+                          h' := (algebra.hom_equiv_naturality_str adj A₁ A₂ f) } }
 
 /-- Given an adjunction `F ⊣ G`, the functor that associates to a coalgebra over `G` an algebra over
 `F` defined via adjunction applied to the structure map. -/
 def coalgebra.to_algebra_of (adj : F ⊣ G) : coalgebra G ⥤ algebra F :=
 { obj := λ V, { A := V.1,
- str := (adj.hom_equiv V.1 V.1).inv_fun V.2 },
- map := λ V₁ V₂ f, { f := f.1,
- h' := (coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f) } }
+                    str := (adj.hom_equiv V.1 V.1).inv_fun V.2 },
+      map := λ V₁ V₂ f, { f := f.1,
+                          h' := (coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f) } }
 
 /-- Given an adjunction, assigning to an algebra over the left adjoint a coalgebra over its right
 adjoint and going back is isomorphic to the identity functor. -/
 def alg_coalg_equiv.unit_iso (adj : F ⊣ G) :
- 𝟭 (algebra F) ≅ (algebra.to_coalgebra_of adj) ⋙ (coalgebra.to_algebra_of adj) :=
+  𝟭 (algebra F) ≅ (algebra.to_coalgebra_of adj) ⋙ (coalgebra.to_algebra_of adj) :=
 { hom :=
- { app := λ A,
- { f := (𝟙 A.1),
- h' := by { erw [F.map_id]; erw [ category.id_comp]; erw [ category.comp_id],
- apply (adj.hom_equiv _ _).left_inv A.str } },
- naturality' := λ A₁ A₂ f, by { ext1, dsimp, erw [category.id_comp]; erw [ category.comp_id], refl } },
- inv :=
- { app := λ A,
- { f := (𝟙 A.1),
- h' := by { erw [F.map_id]; erw [ category.id_comp]; erw [ category.comp_id],
- apply ((adj.hom_equiv _ _).left_inv A.str).symm } },
- naturality' := λ A₁ A₂ f,
- by { ext1, dsimp, erw [category.comp_id]; erw [ category.id_comp], refl } },
- hom_inv_id' := by { ext, exact category.comp_id _ },
- inv_hom_id' := by { ext, exact category.comp_id _ } }
+  { app := λ A,
+    { f := (𝟙 A.1),
+      h' := by { erw [F.map_id, category.id_comp, category.comp_id],
+                 apply (adj.hom_equiv _ _).left_inv A.str } },
+    naturality' := λ A₁ A₂ f, by { ext1, dsimp, erw [category.id_comp, category.comp_id], refl } },
+  inv :=
+  { app := λ A,
+    { f := (𝟙 A.1),
+      h' := by { erw [F.map_id, category.id_comp, category.comp_id],
+                 apply ((adj.hom_equiv _ _).left_inv A.str).symm } },
+    naturality' := λ A₁ A₂ f,
+      by { ext1, dsimp, erw [category.comp_id, category.id_comp], refl } },
+  hom_inv_id' := by { ext, exact category.comp_id _ },
+  inv_hom_id' := by { ext, exact category.comp_id _ } }
 
 /-- Given an adjunction, assigning to a coalgebra over the right adjoint an algebra over the left
 adjoint and going back is isomorphic to the identity functor. -/
 def alg_coalg_equiv.counit_iso (adj : F ⊣ G) :
- (coalgebra.to_algebra_of adj) ⋙ (algebra.to_coalgebra_of adj) ≅ 𝟭 (coalgebra G) :=
+  (coalgebra.to_algebra_of adj) ⋙ (algebra.to_coalgebra_of adj) ≅ 𝟭 (coalgebra G) :=
 { hom :=
- { app := λ V,
- { f := (𝟙 V.1),
- h' := by { dsimp, erw [G.map_id]; erw [ category.id_comp]; erw [ category.comp_id],
- apply (adj.hom_equiv _ _).right_inv V.str } },
- naturality' := λ V₁ V₂ f,
- by { ext1, dsimp, erw [category.comp_id]; erw [ category.id_comp], refl, } },
- inv :=
- { app := λ V,
- { f := (𝟙 V.1),
- h' := by { dsimp, rw [G.map_id]; rw [ category.comp_id]; rw [ category.id_comp],
- apply ((adj.hom_equiv _ _).right_inv V.str).symm } },
- naturality' := λ V₁ V₂ f,
- by { ext1, dsimp, erw [category.comp_id]; erw [ category.id_comp], refl } },
- hom_inv_id' := by { ext, exact category.comp_id _ },
- inv_hom_id' := by { ext, exact category.comp_id _ } }
+  { app := λ V,
+    { f := (𝟙 V.1),
+      h' := by { dsimp, erw [G.map_id, category.id_comp, category.comp_id],
+                 apply (adj.hom_equiv _ _).right_inv V.str } },
+    naturality' := λ V₁ V₂ f,
+      by { ext1, dsimp, erw [category.comp_id, category.id_comp], refl, } },
+  inv :=
+  { app := λ V,
+    { f := (𝟙 V.1),
+      h' := by { dsimp, rw [G.map_id, category.comp_id, category.id_comp],
+                 apply ((adj.hom_equiv _ _).right_inv V.str).symm } },
+    naturality' := λ V₁ V₂ f,
+      by { ext1, dsimp, erw [category.comp_id, category.id_comp], refl } },
+  hom_inv_id' := by { ext, exact category.comp_id _ },
+  inv_hom_id' := by { ext, exact category.comp_id _ } }
 
 /-- If `F` is left adjoint to `G`, then the category of algebras over `F` is equivalent to the
 category of coalgebras over `G`. -/
 def algebra_coalgebra_equiv (adj : F ⊣ G) : algebra F ≌ coalgebra G :=
 { functor := algebra.to_coalgebra_of adj,
- inverse := coalgebra.to_algebra_of adj,
- unit_iso := alg_coalg_equiv.unit_iso adj,
- counit_iso := alg_coalg_equiv.counit_iso adj,
- functor_unit_iso_comp' := λ A, by { ext, exact category.comp_id _ } }
+  inverse := coalgebra.to_algebra_of adj,
+  unit_iso := alg_coalg_equiv.unit_iso adj,
+  counit_iso := alg_coalg_equiv.counit_iso adj,
+  functor_unit_iso_comp' := λ A, by { ext, exact category.comp_id _ } }
 
 end adjunction
 
 end endofunctor
 end category_theory
-

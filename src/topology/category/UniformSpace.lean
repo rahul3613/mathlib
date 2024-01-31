@@ -51,19 +51,19 @@ instance (X Y : UniformSpace) : has_coe_to_fun (X ⟶ Y) (λ _, X → Y) :=
 ⟨category_theory.functor.map (forget UniformSpace)⟩
 
 @[simp] lemma coe_comp {X Y Z : UniformSpace} (f : X ⟶ Y) (g : Y ⟶ Z) :
- (f ≫ g : X → Z) = g ∘ f := rfl
+  (f ≫ g : X → Z) = g ∘ f := rfl
 @[simp] lemma coe_id (X : UniformSpace) : (𝟙 X : X → X) = id := rfl
 @[simp] lemma coe_mk {X Y : UniformSpace} (f : X → Y) (hf : uniform_continuous f) :
- ((⟨f, hf⟩ : X ⟶ Y) : X → Y) = f := rfl
+  ((⟨f, hf⟩ : X ⟶ Y) : X → Y) = f := rfl
 
 lemma hom_ext {X Y : UniformSpace} {f g : X ⟶ Y} : (f : X → Y) = g → f = g := subtype.eq
 
 /-- The forgetful functor from uniform spaces to topological spaces. -/
 instance has_forget_to_Top : has_forget₂ UniformSpace.{u} Top.{u} :=
 { forget₂ :=
- { obj := λ X, Top.of X,
- map := λ X Y f, { to_fun := f,
- continuous_to_fun := uniform_continuous.continuous f.property }, }, }
+  { obj := λ X, Top.of X,
+    map := λ X Y f, { to_fun := f,
+                      continuous_to_fun := uniform_continuous.continuous f.property }, }, }
 
 end UniformSpace
 
@@ -95,12 +95,12 @@ def of (X : Type u) [uniform_space X] [complete_space X] [separated_space X] :
 CpltSepUniformSpace := ⟨X⟩
 
 @[simp] lemma coe_of (X : Type u) [uniform_space X] [complete_space X] [separated_space X] :
- (of X : Type u) = X := rfl
+  (of X : Type u) = X := rfl
 
 instance : inhabited CpltSepUniformSpace :=
 begin
- haveI : separated_space empty := separated_iff_t2.mpr (by apply_instance),
- exact ⟨CpltSepUniformSpace.of empty⟩
+  haveI : separated_space empty := separated_iff_t2.mpr (by apply_instance),
+  exact ⟨CpltSepUniformSpace.of empty⟩
 end
 
 /-- The category instance on `CpltSepUniformSpace`. -/
@@ -124,29 +124,29 @@ open CpltSepUniformSpace
 /-- The functor turning uniform spaces into complete separated uniform spaces. -/
 noncomputable def completion_functor : UniformSpace ⥤ CpltSepUniformSpace :=
 { obj := λ X, CpltSepUniformSpace.of (completion X),
- map := λ X Y f, ⟨completion.map f.1, completion.uniform_continuous_map⟩,
- map_id' := λ X, subtype.eq completion.map_id,
- map_comp' := λ X Y Z f g, subtype.eq (completion.map_comp g.property f.property).symm, }.
+  map := λ X Y f, ⟨completion.map f.1, completion.uniform_continuous_map⟩,
+  map_id' := λ X, subtype.eq completion.map_id,
+  map_comp' := λ X Y Z f g, subtype.eq (completion.map_comp g.property f.property).symm, }.
 
 /-- The inclusion of a uniform space into its completion. -/
 def completion_hom (X : UniformSpace) :
- X ⟶ (forget₂ CpltSepUniformSpace UniformSpace).obj (completion_functor.obj X) :=
+  X ⟶ (forget₂ CpltSepUniformSpace UniformSpace).obj (completion_functor.obj X) :=
 { val := (coe : X → completion X),
- property := completion.uniform_continuous_coe X }
+  property := completion.uniform_continuous_coe X }
 
 @[simp] lemma completion_hom_val (X : UniformSpace) (x) :
- (completion_hom X) x = (x : completion X) := rfl
+  (completion_hom X) x = (x : completion X) := rfl
 
 /-- The mate of a morphism from a `UniformSpace` to a `CpltSepUniformSpace`. -/
 noncomputable def extension_hom {X : UniformSpace} {Y : CpltSepUniformSpace}
- (f : X ⟶ (forget₂ CpltSepUniformSpace UniformSpace).obj Y) :
- completion_functor.obj X ⟶ Y :=
+  (f : X ⟶ (forget₂ CpltSepUniformSpace UniformSpace).obj Y) :
+  completion_functor.obj X ⟶ Y :=
 { val := completion.extension f,
- property := completion.uniform_continuous_extension }
+  property := completion.uniform_continuous_extension }
 
 @[simp] lemma extension_hom_val {X : UniformSpace} {Y : CpltSepUniformSpace}
- (f : X ⟶ (forget₂ _ _).obj Y) (x) :
- (extension_hom f) x = completion.extension f x := rfl.
+  (f : X ⟶ (forget₂ _ _).obj Y) (x) :
+  (extension_hom f) x = completion.extension f x := rfl.
 
 @[simp] lemma extension_comp_coe {X : UniformSpace} {Y : CpltSepUniformSpace}
 (f : to_UniformSpace (CpltSepUniformSpace.of (completion X)) ⟶ to_UniformSpace Y) :
@@ -157,20 +157,20 @@ by { apply subtype.eq, funext x, exact congr_fun (completion.extension_comp_coe 
 noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace UniformSpace :=
 adjunction.mk_of_hom_equiv
 { hom_equiv := λ X Y,
- { to_fun := λ f, completion_hom X ≫ f,
- inv_fun := λ f, extension_hom f,
- left_inv := λ f, by { dsimp, erw extension_comp_coe },
- right_inv := λ f,
- begin
- apply subtype.eq, funext x, cases f,
- exact @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpace.separated_space _) f_property _
- end },
- hom_equiv_naturality_left_symm' := λ X X' Y f g,
- begin
- apply hom_ext, funext x, dsimp,
- erw [coe_comp]; erw [ ←completion.extension_map],
- refl, exact g.property, exact f.property,
- end }
+  { to_fun := λ f, completion_hom X ≫ f,
+    inv_fun := λ f, extension_hom f,
+    left_inv := λ f, by { dsimp, erw extension_comp_coe },
+    right_inv := λ f,
+    begin
+      apply subtype.eq, funext x, cases f,
+      exact @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpace.separated_space _) f_property _
+    end },
+  hom_equiv_naturality_left_symm' := λ X X' Y f g,
+  begin
+    apply hom_ext, funext x, dsimp,
+    erw [coe_comp, ←completion.extension_map],
+    refl, exact g.property, exact f.property,
+  end }
 
 noncomputable instance : is_right_adjoint (forget₂ CpltSepUniformSpace UniformSpace) :=
 ⟨completion_functor, adj⟩
@@ -183,4 +183,3 @@ example [has_limits.{u} UniformSpace.{u}] : has_limits.{u} CpltSepUniformSpace.{
 has_limits_of_reflective $ forget₂ CpltSepUniformSpace UniformSpace.{u}
 
 end UniformSpace
-

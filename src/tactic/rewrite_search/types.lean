@@ -50,9 +50,9 @@ meta instance how.has_to_format : has_to_format how := ⟨how.to_string⟩
 
 /-- `rewrite` represents a single step of rewriting, that proves `exp` using `proof`. -/
 meta structure rewrite :=
-(exp : expr)
+(exp   : expr)
 (proof : tactic expr) -- we defer constructing the proofs until they are needed
-(how : how)
+(how   : how)
 
 /--
 `proof_unit` represents a sequence of steps that can be applied to one side of the
@@ -60,7 +60,7 @@ equation to prove a particular expression.
 -/
 meta structure proof_unit :=
 (proof : expr)
-(side : side)
+(side  : side)
 (steps : list how)
 
 /--
@@ -70,9 +70,8 @@ Configuration options for a rewrite search.
 `explain_using_conv` changes the nature of the explanation.
 -/
 meta structure config extends tactic.nth_rewrite.cfg :=
-(max_iterations : ℕ := 5000)
+(max_iterations     : ℕ := 5000)
 (explain_using_conv : bool := tt)
 
 end tactic.rewrite_search
-
 

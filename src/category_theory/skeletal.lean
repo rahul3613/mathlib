@@ -52,7 +52,7 @@ local attribute [instance] is_isomorphic_setoid
 variables {C D}
 /-- If `C` is thin and skeletal, then any naturally isomorphic functors to `C` are equal. -/
 lemma functor.eq_of_iso {F₁ F₂ : D ⥤ C} [quiver.is_thin C] (hC : skeletal C)
- (hF : F₁ ≅ F₂) : F₁ = F₂ :=
+  (hF : F₁ ≅ F₂) : F₁ = F₂ :=
 functor.ext (λ X, hC ⟨hF.app X⟩) (λ _ _ _, subsingleton.elim _ _)
 
 /--
@@ -88,15 +88,15 @@ noncomputable def skeleton_equivalence : skeleton C ≌ C :=
 
 lemma skeleton_skeletal : skeletal (skeleton C) :=
 begin
- rintro X Y ⟨h⟩,
- have : X.out ≈ Y.out := ⟨(from_skeleton C).map_iso h⟩,
- simpa using quotient.sound this,
+  rintro X Y ⟨h⟩,
+  have : X.out ≈ Y.out := ⟨(from_skeleton C).map_iso h⟩,
+  simpa using quotient.sound this,
 end
 
 /-- The `skeleton` of `C` given by choice is a skeleton of `C`. -/
 noncomputable def skeleton_is_skeleton : is_skeleton_of C (skeleton C) (from_skeleton C) :=
 { skel := skeleton_skeletal C,
- eqv := from_skeleton.is_equivalence C }
+  eqv := from_skeleton.is_equivalence C }
 
 section
 variables {C D}
@@ -108,9 +108,9 @@ noncomputable
 def equivalence.skeleton_equiv (e : C ≌ D) : skeleton C ≃ skeleton D :=
 let f := ((skeleton_equivalence C).trans e).trans (skeleton_equivalence D).symm in
 { to_fun := f.functor.obj,
- inv_fun := f.inverse.obj,
- left_inv := λ X, skeleton_skeletal C ⟨(f.unit_iso.app X).symm⟩,
- right_inv := λ Y, skeleton_skeletal D ⟨(f.counit_iso.app Y)⟩, }
+  inv_fun := f.inverse.obj,
+  left_inv := λ X, skeleton_skeletal C ⟨(f.unit_iso.app X).symm⟩,
+  right_inv := λ Y, skeleton_skeletal D ⟨(f.counit_iso.app Y)⟩, }
 
 end
 
@@ -126,23 +126,23 @@ instance inhabited_thin_skeleton [inhabited C] : inhabited (thin_skeleton C) :=
 
 instance thin_skeleton.preorder : preorder (thin_skeleton C) :=
 { le := quotient.lift₂ (λ X Y, nonempty (X ⟶ Y))
- begin
- rintros _ _ _ _ ⟨i₁⟩ ⟨i₂⟩,
- exact propext ⟨nonempty.map (λ f, i₁.inv ≫ f ≫ i₂.hom),
- nonempty.map (λ f, i₁.hom ≫ f ≫ i₂.inv)⟩,
- end,
- le_refl :=
- begin
- refine quotient.ind (λ a, _),
- exact ⟨𝟙 _⟩,
- end,
- le_trans := λ a b c, quotient.induction_on₃ a b c $ λ A B C, nonempty.map2 (≫) }
+  begin
+    rintros _ _ _ _ ⟨i₁⟩ ⟨i₂⟩,
+    exact propext ⟨nonempty.map (λ f, i₁.inv ≫ f ≫ i₂.hom),
+      nonempty.map (λ f, i₁.hom ≫ f ≫ i₂.inv)⟩,
+  end,
+  le_refl :=
+  begin
+    refine quotient.ind (λ a, _),
+    exact ⟨𝟙 _⟩,
+  end,
+  le_trans := λ a b c, quotient.induction_on₃ a b c $ λ A B C, nonempty.map2 (≫) }
 
 /-- The functor from a category to its thin skeleton. -/
 @[simps]
 def to_thin_skeleton : C ⥤ thin_skeleton C :=
 { obj := quotient.mk,
- map := λ X Y f, hom_of_le (nonempty.intro f) }
+  map := λ X Y f, hom_of_le (nonempty.intro f) }
 
 /-!
 The constructions here are intended to be used when the category `C` is thin, even though
@@ -160,8 +160,8 @@ variables {C} {D}
 @[simps]
 def map (F : C ⥤ D) : thin_skeleton C ⥤ thin_skeleton D :=
 { obj := quotient.map F.obj $ λ X₁ X₂ ⟨hX⟩, ⟨F.map_iso hX⟩,
- map := λ X Y, quotient.rec_on_subsingleton₂ X Y $
- λ x y k, hom_of_le (k.le.elim (λ t, ⟨F.map t⟩)) }
+  map := λ X Y, quotient.rec_on_subsingleton₂ X Y $
+           λ x y k, hom_of_le (k.le.elim (λ t, ⟨F.map t⟩)) }
 
 lemma comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ to_thin_skeleton D = to_thin_skeleton C ⋙ map F :=
 rfl
@@ -175,17 +175,17 @@ def map_nat_trans {F₁ F₂ : C ⥤ D} (k : F₁ ⟶ F₂) : map F₁ ⟶ map F
 `thin_skeleton C ⥤ thin_skeleton D ⥤ thin_skeleton E` -/
 @[simps]
 def map₂ (F : C ⥤ D ⥤ E) :
- thin_skeleton C ⥤ thin_skeleton D ⥤ thin_skeleton E :=
+  thin_skeleton C ⥤ thin_skeleton D ⥤ thin_skeleton E :=
 { obj := λ x,
- { obj := λ y, quotient.map₂ (λ X Y, (F.obj X).obj Y)
- (λ X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩, ⟨(F.obj X₁).map_iso hY ≪≫ (F.map_iso hX).app Y₂⟩) x y,
- map := λ y₁ y₂, quotient.rec_on_subsingleton x $
- λ X, quotient.rec_on_subsingleton₂ y₁ y₂ $
- λ Y₁ Y₂ hY, hom_of_le (hY.le.elim (λ g, ⟨(F.obj X).map g⟩)) },
- map := λ x₁ x₂, quotient.rec_on_subsingleton₂ x₁ x₂ $
- λ X₁ X₂ f,
- { app := λ y, quotient.rec_on_subsingleton y
- (λ Y, hom_of_le (f.le.elim (λ f', ⟨(F.map f').app Y⟩))) } }
+  { obj := λ y, quotient.map₂ (λ X Y, (F.obj X).obj Y)
+                (λ X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩, ⟨(F.obj X₁).map_iso hY ≪≫ (F.map_iso hX).app Y₂⟩) x y,
+    map := λ y₁ y₂, quotient.rec_on_subsingleton x $
+            λ X, quotient.rec_on_subsingleton₂ y₁ y₂ $
+              λ Y₁ Y₂ hY, hom_of_le (hY.le.elim (λ g, ⟨(F.obj X).map g⟩)) },
+  map := λ x₁ x₂, quotient.rec_on_subsingleton₂ x₁ x₂ $
+           λ X₁ X₂ f,
+           { app := λ y, quotient.rec_on_subsingleton y
+              (λ Y, hom_of_le (f.le.elim (λ f', ⟨(F.map f').app Y⟩))) } }
 
 variables (C)
 
@@ -198,20 +198,20 @@ instance to_thin_skeleton_faithful : faithful (to_thin_skeleton C) := {}
 @[simps]
 noncomputable def from_thin_skeleton : thin_skeleton C ⥤ C :=
 { obj := quotient.out,
- map := λ x y, quotient.rec_on_subsingleton₂ x y $
- λ X Y f,
- (nonempty.some (quotient.mk_out X)).hom
- ≫ f.le.some
- ≫ (nonempty.some (quotient.mk_out Y)).inv }
+  map := λ x y, quotient.rec_on_subsingleton₂ x y $
+    λ X Y f,
+            (nonempty.some (quotient.mk_out X)).hom
+          ≫ f.le.some
+          ≫ (nonempty.some (quotient.mk_out Y)).inv }
 
 noncomputable instance from_thin_skeleton_equivalence : is_equivalence (from_thin_skeleton C) :=
 { inverse := to_thin_skeleton C,
- counit_iso := nat_iso.of_components (λ X, (nonempty.some (quotient.mk_out X))) (by tidy),
- unit_iso :=
- nat_iso.of_components
- (λ x, quotient.rec_on_subsingleton x
- (λ X, eq_to_iso (quotient.sound ⟨(nonempty.some (quotient.mk_out X)).symm⟩)))
- (by tidy) }
+  counit_iso := nat_iso.of_components (λ X, (nonempty.some (quotient.mk_out X))) (by tidy),
+  unit_iso :=
+    nat_iso.of_components
+      (λ x, quotient.rec_on_subsingleton x
+        (λ X, eq_to_iso (quotient.sound ⟨(nonempty.some (quotient.mk_out X)).symm⟩)))
+      (by tidy) }
 
 /-- The equivalence between the thin skeleton and the category itself. -/
 noncomputable def equivalence : thin_skeleton C ≌ C :=
@@ -224,34 +224,34 @@ lemma equiv_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≈ Y :=
 
 instance thin_skeleton_partial_order : partial_order (thin_skeleton C) :=
 { le_antisymm := quotient.ind₂
- begin
- rintros _ _ ⟨f⟩ ⟨g⟩,
- apply quotient.sound (equiv_of_both_ways f g),
- end,
- ..category_theory.thin_skeleton.preorder C }
+  begin
+    rintros _ _ ⟨f⟩ ⟨g⟩,
+    apply quotient.sound (equiv_of_both_ways f g),
+  end,
+  ..category_theory.thin_skeleton.preorder C }
 
 lemma skeletal : skeletal (thin_skeleton C) :=
 λ X Y, quotient.induction_on₂ X Y $ λ x y h, h.elim $ λ i, i.1.le.antisymm i.2.le
 
 lemma map_comp_eq (F : E ⥤ D) (G : D ⥤ C) : map (F ⋙ G) = map F ⋙ map G :=
 functor.eq_of_iso skeletal $
- nat_iso.of_components (λ X, quotient.rec_on_subsingleton X (λ x, iso.refl _)) (by tidy)
+  nat_iso.of_components (λ X, quotient.rec_on_subsingleton X (λ x, iso.refl _)) (by tidy)
 
 lemma map_id_eq : map (𝟭 C) = 𝟭 (thin_skeleton C) :=
 functor.eq_of_iso skeletal $
- nat_iso.of_components (λ X, quotient.rec_on_subsingleton X (λ x, iso.refl _)) (by tidy)
+  nat_iso.of_components (λ X, quotient.rec_on_subsingleton X (λ x, iso.refl _)) (by tidy)
 
 lemma map_iso_eq {F₁ F₂ : D ⥤ C} (h : F₁ ≅ F₂) : map F₁ = map F₂ :=
 functor.eq_of_iso skeletal { hom := map_nat_trans h.hom, inv := map_nat_trans h.inv }
 
 /-- `from_thin_skeleton C` exhibits the thin skeleton as a skeleton. -/
 noncomputable def thin_skeleton_is_skeleton : is_skeleton_of C (thin_skeleton C)
- (from_thin_skeleton C) :=
+  (from_thin_skeleton C) :=
 { skel := skeletal,
- eqv := thin_skeleton.from_thin_skeleton_equivalence C }
+  eqv := thin_skeleton.from_thin_skeleton_equivalence C }
 
 noncomputable instance is_skeleton_of_inhabited :
- inhabited (is_skeleton_of C (thin_skeleton C) (from_thin_skeleton C)) :=
+  inhabited (is_skeleton_of C (thin_skeleton C) (from_thin_skeleton C)) :=
 ⟨thin_skeleton_is_skeleton⟩
 
 end
@@ -260,22 +260,22 @@ variables {C}
 
 /-- An adjunction between thin categories gives an adjunction between their thin skeletons. -/
 def lower_adjunction
- (R : D ⥤ C) (L : C ⥤ D) (h : L ⊣ R) :
- thin_skeleton.map L ⊣ thin_skeleton.map R :=
+  (R : D ⥤ C) (L : C ⥤ D) (h : L ⊣ R) :
+  thin_skeleton.map L ⊣ thin_skeleton.map R :=
 adjunction.mk_of_unit_counit
 { unit :=
- { app := λ X,
- begin
- letI := is_isomorphic_setoid C,
- refine quotient.rec_on_subsingleton X (λ x, hom_of_le ⟨h.unit.app x⟩),
- -- TODO: make quotient.rec_on_subsingleton' so the letI isn't needed
- end },
- counit :=
- { app := λ X,
- begin
- letI := is_isomorphic_setoid D,
- refine quotient.rec_on_subsingleton X (λ x, hom_of_le ⟨h.counit.app x⟩),
- end } }
+  { app := λ X,
+    begin
+      letI := is_isomorphic_setoid C,
+      refine quotient.rec_on_subsingleton X (λ x, hom_of_le ⟨h.unit.app x⟩),
+      -- TODO: make quotient.rec_on_subsingleton' so the letI isn't needed
+    end },
+  counit :=
+  { app := λ X,
+    begin
+      letI := is_isomorphic_setoid D,
+      refine quotient.rec_on_subsingleton X (λ x, hom_of_le ⟨h.counit.app x⟩),
+    end } }
 
 end thin_skeleton
 
@@ -290,10 +290,9 @@ the `thin_skeleton C` is order isomorphic to `α`.
 -/
 noncomputable
 def equivalence.thin_skeleton_order_iso
- [quiver.is_thin C] (e : C ≌ α) : thin_skeleton C ≃o α :=
+  [quiver.is_thin C] (e : C ≌ α) : thin_skeleton C ≃o α :=
 ((thin_skeleton.equivalence C).trans e).to_order_iso
 
 end
 
 end category_theory
-

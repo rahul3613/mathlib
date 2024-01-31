@@ -36,8 +36,7 @@ then revert_target_deps; tactic.exact_dec_trivial
 else tactic.exact_dec_trivial
 
 add_tactic_doc
-{ name := "dec_trivial",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.dec_trivial],
- tags := ["basic", "finishing"] }
-
+{ name       := "dec_trivial",
+  category   := doc_category.tactic,
+  decl_names := [`tactic.interactive.dec_trivial],
+  tags       := ["basic", "finishing"] }

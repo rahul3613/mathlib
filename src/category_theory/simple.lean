@@ -52,39 +52,39 @@ class simple (X : C) : Prop :=
 
 /-- A nonzero monomorphism to a simple object is an isomorphism. -/
 lemma is_iso_of_mono_of_nonzero {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : f ≠ 0) :
- is_iso f :=
+  is_iso f :=
 (simple.mono_is_iso_iff_nonzero f).mpr w
 
 lemma simple.of_iso {X Y : C} [simple Y] (i : X ≅ Y) : simple X :=
 { mono_is_iso_iff_nonzero := λ Z f m, begin
- resetI,
- haveI : mono (f ≫ i.hom) := mono_comp _ _,
- split,
- { introsI h w,
- haveI j : is_iso (f ≫ i.hom), apply_instance,
- rw simple.mono_is_iso_iff_nonzero at j,
- unfreezingI { subst w, },
- simpa using j, },
- { intro h,
- haveI j : is_iso (f ≫ i.hom),
- { apply is_iso_of_mono_of_nonzero,
- intro w, apply h,
- simpa using (cancel_mono i.inv).2 w, },
- rw [←category.comp_id f]; rw [ ←i.hom_inv_id]; rw [ ←category.assoc],
- apply_instance, },
- end }
+    resetI,
+    haveI : mono (f ≫ i.hom) := mono_comp _ _,
+    split,
+    { introsI h w,
+      haveI j : is_iso (f ≫ i.hom), apply_instance,
+      rw simple.mono_is_iso_iff_nonzero at j,
+      unfreezingI { subst w, },
+      simpa using j, },
+    { intro h,
+      haveI j : is_iso (f ≫ i.hom),
+      { apply is_iso_of_mono_of_nonzero,
+        intro w, apply h,
+        simpa using (cancel_mono i.inv).2 w, },
+      rw [←category.comp_id f, ←i.hom_inv_id, ←category.assoc],
+      apply_instance, },
+  end }
 
 lemma simple.iff_of_iso {X Y : C} (i : X ≅ Y) : simple X ↔ simple Y :=
 ⟨λ h, by exactI simple.of_iso i.symm, λ h, by exactI simple.of_iso i⟩
 
 lemma kernel_zero_of_nonzero_from_simple
- {X Y : C} [simple X] {f : X ⟶ Y} [has_kernel f] (w : f ≠ 0) :
- kernel.ι f = 0 :=
+  {X Y : C} [simple X] {f : X ⟶ Y} [has_kernel f] (w : f ≠ 0) :
+  kernel.ι f = 0 :=
 begin
- classical,
- by_contra,
- haveI := is_iso_of_mono_of_nonzero h,
- exact w (eq_zero_of_epi_kernel f),
+  classical,
+  by_contra,
+  haveI := is_iso_of_mono_of_nonzero h,
+  exact w (eq_zero_of_epi_kernel f),
 end
 
 /--
@@ -93,19 +93,19 @@ A nonzero morphism `f` to a simple object is an epimorphism
 -/
 -- See also `mono_of_nonzero_from_simple`, which requires `preadditive C`.
 lemma epi_of_nonzero_to_simple [has_equalizers C] {X Y : C} [simple Y]
- {f : X ⟶ Y} [has_image f] (w : f ≠ 0) : epi f :=
+  {f : X ⟶ Y} [has_image f] (w : f ≠ 0) : epi f :=
 begin
- rw ←image.fac f,
- haveI : is_iso (image.ι f) := is_iso_of_mono_of_nonzero (λ h, w (eq_zero_of_image_eq_zero h)),
- apply epi_comp,
+  rw ←image.fac f,
+  haveI : is_iso (image.ι f) := is_iso_of_mono_of_nonzero (λ h, w (eq_zero_of_image_eq_zero h)),
+  apply epi_comp,
 end
 
 lemma mono_to_simple_zero_of_not_iso
- {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : is_iso f → false) : f = 0 :=
+  {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : is_iso f → false) : f = 0 :=
 begin
- classical,
- by_contra,
- exact w (is_iso_of_mono_of_nonzero h)
+  classical,
+  by_contra,
+  exact w (is_iso_of_mono_of_nonzero h)
 end
 
 lemma id_nonzero (X : C) [simple.{v} X] : 𝟙 X ≠ 0 :=
@@ -136,52 +136,52 @@ section abelian
 variables [abelian C]
 
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
- simple. -/
+    simple. -/
 lemma simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [epi f], is_iso f ↔ (f ≠ 0)) :
- simple X :=
+  simple X :=
 ⟨λ Y f I,
  begin
- classical,
- fsplit,
- { introsI,
- have hx := cokernel.π_of_epi f,
- by_contra,
- substI h,
- exact (h _).mp (cokernel.π_of_zero _ _) hx },
- { intro hf,
- suffices : epi f,
- { exactI is_iso_of_mono_of_epi _ },
- apply preadditive.epi_of_cokernel_zero,
- by_contra h',
- exact cokernel_not_iso_of_nonzero hf ((h _).mpr h') }
+  classical,
+  fsplit,
+  { introsI,
+    have hx := cokernel.π_of_epi f,
+    by_contra,
+    substI h,
+    exact (h _).mp (cokernel.π_of_zero _ _) hx },
+  { intro hf,
+    suffices : epi f,
+    { exactI is_iso_of_mono_of_epi _ },
+    apply preadditive.epi_of_cokernel_zero,
+    by_contra h',
+    exact cokernel_not_iso_of_nonzero hf ((h _).mpr h') }
  end⟩
 
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
 lemma is_iso_of_epi_of_nonzero {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : f ≠ 0) :
- is_iso f :=
+  is_iso f :=
 begin
- -- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
- haveI : mono f :=
- preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w)),
- exact is_iso_of_mono_of_epi f,
+  -- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
+  haveI : mono f :=
+    preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w)),
+  exact is_iso_of_mono_of_epi f,
 end
 
 lemma cokernel_zero_of_nonzero_to_simple
- {X Y : C} [simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
- cokernel.π f = 0 :=
+  {X Y : C} [simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
+  cokernel.π f = 0 :=
 begin
- classical,
- by_contradiction h,
- haveI := is_iso_of_epi_of_nonzero h,
- exact w (eq_zero_of_mono_cokernel f),
+  classical,
+  by_contradiction h,
+  haveI := is_iso_of_epi_of_nonzero h,
+  exact w (eq_zero_of_mono_cokernel f),
 end
 
 lemma epi_from_simple_zero_of_not_iso
- {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : is_iso f → false) : f = 0 :=
+  {X Y : C} [simple X] {f : X ⟶ Y} [epi f] (w : is_iso f → false) : f = 0 :=
 begin
- classical,
- by_contra,
- exact w (is_iso_of_epi_of_nonzero h),
+  classical,
+  by_contra,
+  exact w (is_iso_of_epi_of_nonzero h),
 end
 
 end abelian
@@ -193,25 +193,25 @@ variables [preadditive C] [has_binary_biproducts C]
 -- but as any one suffices to prove `indecomposable_of_simple` we will not give them all.
 lemma biprod.is_iso_inl_iff_is_zero (X Y : C) : is_iso (biprod.inl : X ⟶ X ⊞ Y) ↔ is_zero Y :=
 begin
- rw [biprod.is_iso_inl_iff_id_eq_fst_comp_inl]; rw [ ←biprod.total]; rw [ add_right_eq_self],
- split,
- { intro h, replace h := h =≫ biprod.snd,
- simpa [←is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h, },
- { intro h, rw is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y) at h,
- rw [h]; rw [ zero_comp], },
+  rw [biprod.is_iso_inl_iff_id_eq_fst_comp_inl, ←biprod.total, add_right_eq_self],
+  split,
+  { intro h, replace h := h =≫ biprod.snd,
+    simpa [←is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h, },
+  { intro h, rw is_zero.iff_is_split_epi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y) at h,
+    rw [h, zero_comp], },
 end
 
 /-- Any simple object in a preadditive category is indecomposable. -/
 lemma indecomposable_of_simple (X : C) [simple X] : indecomposable X :=
 ⟨simple.not_is_zero X,
 λ Y Z i, begin
- refine or_iff_not_imp_left.mpr (λ h, _),
- rw is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z) at h,
- change biprod.inl ≠ 0 at h,
- rw ←(simple.mono_is_iso_iff_nonzero biprod.inl) at h,
- { rwa biprod.is_iso_inl_iff_is_zero at h, },
- { exact simple.of_iso i.symm, },
- { apply_instance, },
+  refine or_iff_not_imp_left.mpr (λ h, _),
+  rw is_zero.iff_is_split_mono_eq_zero (biprod.inl : Y ⟶ Y ⊞ Z) at h,
+  change biprod.inl ≠ 0 at h,
+  rw ←(simple.mono_is_iso_iff_nonzero biprod.inl) at h,
+  { rwa biprod.is_iso_inl_iff_is_zero at h, },
+  { exact simple.of_iso i.symm, },
+  { apply_instance, },
 end⟩
 
 end indecomposable
@@ -227,27 +227,27 @@ nontrivial_of_not_is_zero (simple.not_is_zero X)
 
 instance {X : C} [simple X] : is_simple_order (subobject X) :=
 { eq_bot_or_eq_top := begin
- rintro ⟨⟨⟨(Y : C), ⟨⟨⟩⟩, (f : Y ⟶ X)⟩, (m : mono f)⟩⟩, resetI,
- change mk f = ⊥ ∨ mk f = ⊤,
- by_cases h : f = 0,
- { exact or.inl (mk_eq_bot_iff_zero.mpr h), },
- { refine or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h)), }
+  rintro ⟨⟨⟨(Y : C), ⟨⟨⟩⟩, (f : Y ⟶ X)⟩, (m : mono f)⟩⟩, resetI,
+  change mk f = ⊥ ∨ mk f = ⊤,
+  by_cases h : f = 0,
+  { exact or.inl (mk_eq_bot_iff_zero.mpr h), },
+  { refine or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h)), }
 end, }
 
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
 lemma simple_of_is_simple_order_subobject (X : C) [is_simple_order (subobject X)] : simple X :=
 begin
- split, introsI, split,
- { introI i,
- rw subobject.is_iso_iff_mk_eq_top at i,
- intro w,
- rw ←subobject.mk_eq_bot_iff_zero at w,
- exact is_simple_order.bot_ne_top (w.symm.trans i), },
- { intro i,
- rcases is_simple_order.eq_bot_or_eq_top (subobject.mk f) with h|h,
- { rw subobject.mk_eq_bot_iff_zero at h,
- exact false.elim (i h), },
- { exact (subobject.is_iso_iff_mk_eq_top _).mpr h, }, }
+  split, introsI, split,
+  { introI i,
+    rw subobject.is_iso_iff_mk_eq_top at i,
+    intro w,
+    rw ←subobject.mk_eq_bot_iff_zero at w,
+    exact is_simple_order.bot_ne_top (w.symm.trans i), },
+  { intro i,
+    rcases is_simple_order.eq_bot_or_eq_top (subobject.mk f) with h|h,
+    { rw subobject.mk_eq_bot_iff_zero at h,
+      exact false.elim (i h), },
+    { exact (subobject.is_iso_iff_mk_eq_top _).mpr h, }, }
 end
 
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
@@ -258,10 +258,9 @@ lemma simple_iff_subobject_is_simple_order (X : C) : simple X ↔ is_simple_orde
 /-- A subobject is simple iff it is an atom in the subobject lattice. -/
 lemma subobject_simple_iff_is_atom {X : C} (Y : subobject X) : simple (Y : C) ↔ is_atom Y :=
 (simple_iff_subobject_is_simple_order _).trans
- ((order_iso.is_simple_order_iff (subobject_order_iso Y)).trans
- set.is_simple_order_Iic_iff_is_atom)
+  ((order_iso.is_simple_order_iff (subobject_order_iso Y)).trans
+    set.is_simple_order_Iic_iff_is_atom)
 
 end subobject
 
 end category_theory
-

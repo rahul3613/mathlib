@@ -41,7 +41,7 @@ iff.rfl
 
 @[to_additive decidable_mem_add_centralizer]
 instance decidable_mem_centralizer [has_mul M] [∀ a : M, decidable $ ∀ b ∈ S, b * a = a * b] :
- decidable_pred (∈ centralizer S) :=
+  decidable_pred (∈ centralizer S) :=
 λ _, decidable_of_iff' _ (mem_centralizer_iff)
 
 variables (S)
@@ -58,42 +58,42 @@ variables {S} {a b : M}
 
 @[simp, to_additive add_mem_add_centralizer]
 lemma mul_mem_centralizer [semigroup M] (ha : a ∈ centralizer S) (hb : b ∈ centralizer S) :
- a * b ∈ centralizer S :=
-λ g hg, by rw [mul_assoc]; rw [ ←hb g hg]; rw [ ← mul_assoc]; rw [ ha g hg]; rw [ mul_assoc]
+  a * b ∈ centralizer S :=
+λ g hg, by rw [mul_assoc, ←hb g hg, ← mul_assoc, ha g hg, mul_assoc]
 
 @[simp, to_additive neg_mem_add_centralizer]
 lemma inv_mem_centralizer [group M] (ha : a ∈ centralizer S) : a⁻¹ ∈ centralizer S :=
-λ g hg, by rw [mul_inv_eq_iff_eq_mul]; rw [ mul_assoc]; rw [ eq_inv_mul_iff_mul_eq]; rw [ ha g hg]
+λ g hg, by rw [mul_inv_eq_iff_eq_mul, mul_assoc, eq_inv_mul_iff_mul_eq, ha g hg]
 
 @[simp]
 lemma add_mem_centralizer [distrib M] (ha : a ∈ centralizer S) (hb : b ∈ centralizer S) :
- a + b ∈ centralizer S :=
-λ c hc, by rw [add_mul]; rw [ mul_add]; rw [ ha c hc]; rw [ hb c hc]
+  a + b ∈ centralizer S :=
+λ c hc, by rw [add_mul, mul_add, ha c hc, hb c hc]
 
 @[simp]
 lemma neg_mem_centralizer [has_mul M] [has_distrib_neg M] (ha : a ∈ centralizer S) :
- -a ∈ centralizer S :=
-λ c hc, by rw [mul_neg]; rw [ ha c hc]; rw [ neg_mul]
+  -a ∈ centralizer S :=
+λ c hc, by rw [mul_neg, ha c hc, neg_mul]
 
 @[simp]
 lemma inv_mem_centralizer₀ [group_with_zero M] (ha : a ∈ centralizer S) : a⁻¹ ∈ centralizer S :=
-(eq_or_ne a 0).elim (λ h, by { rw [h]; rw [ inv_zero], exact zero_mem_centralizer S })
- (λ ha0 c hc, by rw [mul_inv_eq_iff_eq_mul₀ ha0]; rw [ mul_assoc]; rw [ eq_inv_mul_iff_mul_eq₀ ha0]; rw [ ha c hc])
+(eq_or_ne a 0).elim (λ h, by { rw [h, inv_zero], exact zero_mem_centralizer S })
+  (λ ha0 c hc, by rw [mul_inv_eq_iff_eq_mul₀ ha0, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha0, ha c hc])
 
 @[simp, to_additive sub_mem_add_centralizer]
 lemma div_mem_centralizer [group M] (ha : a ∈ centralizer S) (hb : b ∈ centralizer S) :
- a / b ∈ centralizer S :=
+  a / b ∈ centralizer S :=
 begin
- rw [div_eq_mul_inv],
- exact mul_mem_centralizer ha (inv_mem_centralizer hb),
+  rw [div_eq_mul_inv],
+  exact mul_mem_centralizer ha (inv_mem_centralizer hb),
 end
 
 @[simp]
 lemma div_mem_centralizer₀ [group_with_zero M] (ha : a ∈ centralizer S) (hb : b ∈ centralizer S) :
- a / b ∈ centralizer S :=
+  a / b ∈ centralizer S :=
 begin
- rw div_eq_mul_inv,
- exact mul_mem_centralizer ha (inv_mem_centralizer₀ hb),
+  rw div_eq_mul_inv,
+  exact mul_mem_centralizer ha (inv_mem_centralizer₀ hb),
 end
 
 @[to_additive add_centralizer_subset]
@@ -106,9 +106,9 @@ lemma center_subset_centralizer [has_mul M] (S : set M) : set.center M ⊆ S.cen
 
 @[simp, to_additive add_centralizer_eq_top_iff_subset]
 lemma centralizer_eq_top_iff_subset {s : set M} [has_mul M] :
- centralizer s = set.univ ↔ s ⊆ center M :=
+  centralizer s = set.univ ↔ s ⊆ center M :=
 eq_top_iff.trans $ ⟨λ h x hx g, (h trivial _ hx).symm,
- λ h x _ m hm, (h hm x).symm⟩
+                    λ h x _ m hm, (h hm x).symm⟩
 
 variables (M)
 
@@ -133,7 +133,7 @@ variables {M} [semigroup M] (S)
 @[to_additive "The centralizer of a subset of an additive semigroup."]
 def centralizer : subsemigroup M :=
 { carrier := S.centralizer,
- mul_mem' := λ a b, set.mul_mem_centralizer }
+  mul_mem' := λ a b, set.mul_mem_centralizer }
 
 @[simp, norm_cast, to_additive] lemma coe_centralizer : ↑(centralizer S) = S.centralizer := rfl
 
@@ -143,7 +143,7 @@ variables {S}
 iff.rfl
 
 @[to_additive] instance decidable_mem_centralizer (a) [decidable $ ∀ b ∈ S, b * a = a * b] :
- decidable (a ∈ centralizer S) :=
+  decidable (a ∈ centralizer S) :=
 decidable_of_iff' _ mem_centralizer_iff
 
 @[to_additive]
@@ -169,4 +169,3 @@ end subsemigroup
 
 -- Guard against import creep
 assert_not_exists finset
-

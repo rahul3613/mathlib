@@ -32,9 +32,9 @@ then there exists a continuous function `f : X → ℝ` such that
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
 lemma exists_bounded_zero_one_of_closed {X : Type*} [topological_space X] [normal_space X]
- {s t : set X} (hs : is_closed s) (ht : is_closed t)
- (hd : disjoint s t) :
- ∃ f : X →ᵇ ℝ, eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
+  {s t : set X} (hs : is_closed s) (ht : is_closed t)
+  (hd : disjoint s t) :
+  ∃ f : X →ᵇ ℝ, eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
 let ⟨f, hfs, hft, hf⟩ := exists_continuous_zero_one_of_closed hs ht hd
 in ⟨⟨f, 1, λ x y, real.dist_le_of_mem_Icc_01 (hf _) (hf _)⟩, hfs, hft, hf⟩
 
@@ -46,11 +46,10 @@ and `a ≤ b` are two real numbers, then there exists a continuous function `f :
 * `a ≤ f x ≤ b` for all `x`.
 -/
 lemma exists_bounded_mem_Icc_of_closed_of_le {X : Type*} [topological_space X] [normal_space X]
- {s t : set X} (hs : is_closed s) (ht : is_closed t) (hd : disjoint s t)
- {a b : ℝ} (hle : a ≤ b) :
- ∃ f : X →ᵇ ℝ, eq_on f (const X a) s ∧ eq_on f (const X b) t ∧ ∀ x, f x ∈ Icc a b :=
+  {s t : set X} (hs : is_closed s) (ht : is_closed t) (hd : disjoint s t)
+  {a b : ℝ} (hle : a ≤ b) :
+  ∃ f : X →ᵇ ℝ, eq_on f (const X a) s ∧ eq_on f (const X b) t ∧ ∀ x, f x ∈ Icc a b :=
 let ⟨f, hfs, hft, hf01⟩ := exists_bounded_zero_one_of_closed hs ht hd
 in ⟨bounded_continuous_function.const X a + (b - a) • f,
- λ x hx, by simp [hfs hx], λ x hx, by simp [hft hx],
- λ x, ⟨by dsimp; nlinarith [(hf01 x).1], by dsimp; nlinarith [(hf01 x).2]⟩⟩
-
+  λ x hx, by simp [hfs hx], λ x hx, by simp [hft hx],
+  λ x, ⟨by dsimp; nlinarith [(hf01 x).1], by dsimp; nlinarith [(hf01 x).2]⟩⟩

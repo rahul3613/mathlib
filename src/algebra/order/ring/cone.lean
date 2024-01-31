@@ -34,7 +34,7 @@ add_decl_doc positive_cone.to_positive_cone
 /-- A total positive cone in a nontrivial ring induces a linear order. -/
 @[nolint has_nonempty_instance]
 structure total_positive_cone (α : Type*) [ring α]
- extends positive_cone α, add_comm_group.total_positive_cone α
+  extends positive_cone α, add_comm_group.total_positive_cone α
 
 /-- Forget that a `total_positive_cone` in a ring is total. -/
 add_decl_doc total_positive_cone.to_positive_cone
@@ -52,18 +52,17 @@ open ring
 /-- Construct a `strict_ordered_ring` by designating a positive cone in an existing `ring`. -/
 def strict_ordered_ring.mk_of_positive_cone (C : positive_cone α) : strict_ordered_ring α :=
 { exists_pair_ne := ⟨0, 1, λ h, by simpa [←h, C.pos_iff] using C.one_pos⟩,
- zero_le_one := by { change C.nonneg (1 - 0), convert C.one_nonneg, simp, },
- mul_pos := λ x y xp yp, begin
- change C.pos (x*y - 0),
- convert C.mul_pos x y (by { convert xp, simp, }) (by { convert yp, simp, }),
- simp,
- end,
- ..‹ring α›,
- ..ordered_add_comm_group.mk_of_positive_cone C.to_positive_cone }
+  zero_le_one := by { change C.nonneg (1 - 0), convert C.one_nonneg, simp, },
+  mul_pos := λ x y xp yp, begin
+    change C.pos (x*y - 0),
+    convert C.mul_pos x y (by { convert xp, simp, }) (by { convert yp, simp, }),
+    simp,
+  end,
+  ..‹ring α›,
+  ..ordered_add_comm_group.mk_of_positive_cone C.to_positive_cone }
 
 /-- Construct a `linear_ordered_ring` by
 designating a positive cone in an existing `ring`. -/
 def linear_ordered_ring.mk_of_positive_cone (C : total_positive_cone α) : linear_ordered_ring α :=
 { ..strict_ordered_ring.mk_of_positive_cone C.to_positive_cone,
- ..linear_ordered_add_comm_group.mk_of_positive_cone C.to_total_positive_cone, }
-
+  ..linear_ordered_add_comm_group.mk_of_positive_cone C.to_total_positive_cone, }

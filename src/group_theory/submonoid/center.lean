@@ -30,8 +30,8 @@ variables (M : Type*) [monoid M]
 `M`"]
 def center : submonoid M :=
 { carrier := set.center M,
- one_mem' := set.one_mem_center M,
- mul_mem' := λ a b, set.mul_mem_center }
+  one_mem' := set.one_mem_center M,
+  mul_mem' := λ a b, set.mul_mem_center }
 
 @[to_additive] lemma coe_center : ↑(center M) = set.center M := rfl
 
@@ -39,7 +39,7 @@ def center : submonoid M :=
 lemma center_to_subsemigroup : (center M).to_subsemigroup = subsemigroup.center M := rfl
 
 lemma _root_.add_submonoid.center_to_add_subsemigroup (M) [add_monoid M] :
- (add_submonoid.center M).to_add_subsemigroup = add_subsemigroup.center M := rfl
+  (add_submonoid.center M).to_add_subsemigroup = add_subsemigroup.center M := rfl
 
 attribute [to_additive add_submonoid.center_to_add_subsemigroup] submonoid.center_to_subsemigroup
 
@@ -48,13 +48,13 @@ variables {M}
 @[to_additive] lemma mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g := iff.rfl
 
 @[to_additive] instance decidable_mem_center (a) [decidable $ ∀ b : M, b * a = a * b] :
- decidable (a ∈ center M) :=
+  decidable (a ∈ center M) :=
 decidable_of_iff' _ mem_center_iff
 
 /-- The center of a monoid is commutative. -/
 instance : comm_monoid (center M) :=
 { mul_comm := λ a b, subtype.ext $ b.prop _,
- .. (center M).to_monoid }
+  .. (center M).to_monoid }
 
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smul_comm_class_left : smul_comm_class (center M) M M :=
@@ -82,4 +82,3 @@ end submonoid
 
 -- Guard against import creep
 assert_not_exists finset
-

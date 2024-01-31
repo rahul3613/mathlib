@@ -12,7 +12,7 @@ namespace nth_rewrite
 
 /-- Configuration options for nth_rewrite. -/
 meta structure cfg extends rewrite_cfg :=
-(try_simp : bool := ff)
+(try_simp   : bool := ff)
 (discharger : tactic unit := skip)
  -- Warning: rewrite_search can't produce tactic scripts when the simplifier is used.
 (simplifier : expr → tactic (expr × expr) := λ e, failed)
@@ -33,11 +33,10 @@ namespace tracked_rewrite
 of a rewritten expression and a proof witness of the rewrite. -/
 meta def eval (rw : tracked_rewrite) : tactic (expr × expr) :=
 do prf ← rw.proof,
- return (rw.exp, prf)
+   return (rw.exp, prf)
 
 end tracked_rewrite
 
 end nth_rewrite
 
 end tactic
-

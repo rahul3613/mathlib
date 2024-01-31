@@ -14,18 +14,18 @@ import order.rel_iso.basic
 -/
 
 variables {α: Type*}
- {r : α → α → Prop}
+  {r : α → α → Prop}
 
 namespace rel_iso
 
 instance : group (r ≃r r) :=
 { one := rel_iso.refl r,
- mul := λ f₁ f₂, f₂.trans f₁,
- inv := rel_iso.symm,
- mul_assoc := λ f₁ f₂ f₃, rfl,
- one_mul := λ f, ext $ λ _, rfl,
- mul_one := λ f, ext $ λ _, rfl,
- mul_left_inv := λ f, ext f.symm_apply_apply }
+  mul := λ f₁ f₂, f₂.trans f₁,
+  inv := rel_iso.symm,
+  mul_assoc := λ f₁ f₂ f₃, rfl,
+  one_mul := λ f, ext $ λ _, rfl,
+  mul_one := λ f, ext $ λ _, rfl,
+  mul_left_inv := λ f, ext f.symm_apply_apply }
 
 @[simp] lemma coe_one : ⇑(1 : r ≃r r) = id := rfl
 
@@ -38,4 +38,3 @@ lemma mul_apply (e₁ e₂ : r ≃r r) (x : α) : (e₁ * e₂) x = e₁ (e₂ x
 @[simp] lemma apply_inv_self (e : r ≃r r) (x) : e (e⁻¹ x) = x := e.apply_symm_apply x
 
 end rel_iso
-

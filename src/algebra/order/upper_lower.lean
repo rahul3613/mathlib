@@ -41,12 +41,12 @@ hs.image $ order_iso.mul_left _
 
 @[to_additive] lemma set.ord_connected.smul (hs : s.ord_connected) : (a • s).ord_connected :=
 begin
- rw [←hs.upper_closure_inter_lower_closure]; rw [ smul_set_inter],
- exact (upper_closure _).upper.smul.ord_connected.inter (lower_closure _).lower.smul.ord_connected,
+  rw [←hs.upper_closure_inter_lower_closure, smul_set_inter],
+  exact (upper_closure _).upper.smul.ord_connected.inter (lower_closure _).lower.smul.ord_connected,
 end
 
 @[to_additive] lemma is_upper_set.mul_left (ht : is_upper_set t) : is_upper_set (s * t) :=
-by { rw [←smul_eq_mul]; rw [ ←bUnion_smul_set], exact is_upper_set_Union₂ (λ x hx, ht.smul) }
+by { rw [←smul_eq_mul, ←bUnion_smul_set], exact is_upper_set_Union₂ (λ x hx, ht.smul) }
 
 @[to_additive] lemma is_upper_set.mul_right (hs : is_upper_set s) : is_upper_set (s * t) :=
 by { rw mul_comm, exact hs.mul_left }
@@ -97,18 +97,18 @@ lemma coe_div (s t : upper_set α) : (↑(s / t) : set α) = s / t := rfl
 @[to_additive]
 instance : comm_semigroup (upper_set α) :=
 { mul := (*),
- ..(set_like.coe_injective.comm_semigroup _ coe_mul : comm_semigroup (upper_set α)) }
+  ..(set_like.coe_injective.comm_semigroup _ coe_mul : comm_semigroup (upper_set α)) }
 
 @[to_additive]
 private lemma one_mul (s : upper_set α) : 1 * s = s :=
 set_like.coe_injective $ (subset_mul_right _ left_mem_Ici).antisymm' $
- by { rw [←smul_eq_mul]; rw [ ←bUnion_smul_set], exact Union₂_subset (λ _, s.upper.smul_subset) }
+    by { rw [←smul_eq_mul, ←bUnion_smul_set], exact Union₂_subset (λ _, s.upper.smul_subset) }
 
 @[to_additive] instance : comm_monoid (upper_set α) :=
 { one := 1,
- one_mul := one_mul,
- mul_one := λ s, by { rw mul_comm, exact one_mul _ },
- ..upper_set.comm_semigroup }
+  one_mul := one_mul,
+  mul_one := λ s, by { rw mul_comm, exact one_mul _ },
+  ..upper_set.comm_semigroup }
 
 end upper_set
 
@@ -133,18 +133,18 @@ lemma coe_div (s t : lower_set α) : (↑(s / t) : set α) = s / t := rfl
 @[to_additive]
 instance : comm_semigroup (lower_set α) :=
 { mul := (*),
- ..(set_like.coe_injective.comm_semigroup _ coe_mul : comm_semigroup (lower_set α)) }
+  ..(set_like.coe_injective.comm_semigroup _ coe_mul : comm_semigroup (lower_set α)) }
 
 @[to_additive]
 private lemma one_mul (s : lower_set α) : 1 * s = s :=
 set_like.coe_injective $ (subset_mul_right _ right_mem_Iic).antisymm' $
- by { rw [←smul_eq_mul]; rw [ ←bUnion_smul_set], exact Union₂_subset (λ _, s.lower.smul_subset) }
+    by { rw [←smul_eq_mul, ←bUnion_smul_set], exact Union₂_subset (λ _, s.lower.smul_subset) }
 
 @[to_additive] instance : comm_monoid (lower_set α) :=
 { one := 1,
- one_mul := one_mul,
- mul_one := λ s, by { rw mul_comm, exact one_mul _ },
- ..lower_set.comm_semigroup }
+  one_mul := one_mul,
+  mul_one := λ s, by { rw mul_comm, exact one_mul _ },
+  ..lower_set.comm_semigroup }
 
 end lower_set
 
@@ -163,10 +163,12 @@ upper_closure_image $ order_iso.mul_left a
 lower_closure_image $ order_iso.mul_left a
 
 @[to_additive] lemma mul_upper_closure : s * upper_closure t = upper_closure (s * t) :=
-by simp_rw [←smul_eq_mul, ←bUnion_smul_set, upper_closure_Union, upper_closure_smul, upper_set.coe_infi₂, upper_set.coe_smul]
+by simp_rw [←smul_eq_mul, ←bUnion_smul_set, upper_closure_Union, upper_closure_smul,
+  upper_set.coe_infi₂, upper_set.coe_smul]
 
 @[to_additive] lemma mul_lower_closure : s * lower_closure t = lower_closure (s * t) :=
-by simp_rw [←smul_eq_mul, ←bUnion_smul_set, lower_closure_Union, lower_closure_smul, lower_set.coe_supr₂, lower_set.coe_smul]
+by simp_rw [←smul_eq_mul, ←bUnion_smul_set, lower_closure_Union, lower_closure_smul,
+  lower_set.coe_supr₂, lower_set.coe_smul]
 
 @[to_additive] lemma upper_closure_mul : ↑(upper_closure s) * t = upper_closure (s * t) :=
 by { simp_rw mul_comm _ t, exact mul_upper_closure _ _ }
@@ -177,12 +179,11 @@ by { simp_rw mul_comm _ t, exact mul_lower_closure _ _ }
 @[simp, to_additive]
 lemma upper_closure_mul_distrib : upper_closure (s * t) = upper_closure s * upper_closure t :=
 set_like.coe_injective $
- by rw [upper_set.coe_mul]; rw [ mul_upper_closure]; rw [ upper_closure_mul]; rw [ upper_set.upper_closure]
+  by rw [upper_set.coe_mul, mul_upper_closure, upper_closure_mul, upper_set.upper_closure]
 
 @[simp, to_additive]
 lemma lower_closure_mul_distrib : lower_closure (s * t) = lower_closure s * lower_closure t :=
 set_like.coe_injective $
- by rw [lower_set.coe_mul]; rw [ mul_lower_closure]; rw [ lower_closure_mul]; rw [ lower_set.lower_closure]
+  by rw [lower_set.coe_mul, mul_lower_closure, lower_closure_mul, lower_set.lower_closure]
 
 end ordered_comm_group
-

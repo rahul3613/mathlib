@@ -48,11 +48,11 @@ There are currently two variants of these in mathlib, the bundled version
 predicate `is_bounded_linear_map`). We give statements for both versions. -/
 
 protected theorem continuous_linear_map.has_strict_fderiv_at {x : E} :
- has_strict_fderiv_at e e x :=
+  has_strict_fderiv_at e e x :=
 (is_o_zero _ _).congr_left $ λ x, by simp only [e.map_sub, sub_self]
 
 protected lemma continuous_linear_map.has_fderiv_at_filter :
- has_fderiv_at_filter e e x L :=
+  has_fderiv_at_filter e e x L :=
 (is_o_zero _ _).congr_left $ λ x, by simp only [e.map_sub, sub_self]
 
 protected lemma continuous_linear_map.has_fderiv_within_at : has_fderiv_within_at e e s x :=
@@ -71,10 +71,10 @@ e.differentiable_at.differentiable_within_at
 e.has_fderiv_at.fderiv
 
 protected lemma continuous_linear_map.fderiv_within (hxs : unique_diff_within_at 𝕜 s x) :
- fderiv_within 𝕜 e s x = e :=
+  fderiv_within 𝕜 e s x = e :=
 begin
- rw differentiable_at.fderiv_within e.differentiable_at hxs,
- exact e.fderiv
+  rw differentiable_at.fderiv_within e.differentiable_at hxs,
+  exact e.fderiv
 end
 
 @[simp] protected lemma continuous_linear_map.differentiable : differentiable 𝕜 e :=
@@ -84,45 +84,44 @@ protected lemma continuous_linear_map.differentiable_on : differentiable_on 𝕜
 e.differentiable.differentiable_on
 
 lemma is_bounded_linear_map.has_fderiv_at_filter (h : is_bounded_linear_map 𝕜 f) :
- has_fderiv_at_filter f h.to_continuous_linear_map x L :=
+  has_fderiv_at_filter f h.to_continuous_linear_map x L :=
 h.to_continuous_linear_map.has_fderiv_at_filter
 
 lemma is_bounded_linear_map.has_fderiv_within_at (h : is_bounded_linear_map 𝕜 f) :
- has_fderiv_within_at f h.to_continuous_linear_map s x :=
+  has_fderiv_within_at f h.to_continuous_linear_map s x :=
 h.has_fderiv_at_filter
 
 lemma is_bounded_linear_map.has_fderiv_at (h : is_bounded_linear_map 𝕜 f) :
- has_fderiv_at f h.to_continuous_linear_map x :=
+  has_fderiv_at f h.to_continuous_linear_map x  :=
 h.has_fderiv_at_filter
 
 lemma is_bounded_linear_map.differentiable_at (h : is_bounded_linear_map 𝕜 f) :
- differentiable_at 𝕜 f x :=
+  differentiable_at 𝕜 f x :=
 h.has_fderiv_at.differentiable_at
 
 lemma is_bounded_linear_map.differentiable_within_at (h : is_bounded_linear_map 𝕜 f) :
- differentiable_within_at 𝕜 f s x :=
+  differentiable_within_at 𝕜 f s x :=
 h.differentiable_at.differentiable_within_at
 
 lemma is_bounded_linear_map.fderiv (h : is_bounded_linear_map 𝕜 f) :
- fderiv 𝕜 f x = h.to_continuous_linear_map :=
+  fderiv 𝕜 f x = h.to_continuous_linear_map :=
 has_fderiv_at.fderiv (h.has_fderiv_at)
 
 lemma is_bounded_linear_map.fderiv_within (h : is_bounded_linear_map 𝕜 f)
- (hxs : unique_diff_within_at 𝕜 s x) : fderiv_within 𝕜 f s x = h.to_continuous_linear_map :=
+  (hxs : unique_diff_within_at 𝕜 s x) : fderiv_within 𝕜 f s x = h.to_continuous_linear_map :=
 begin
- rw differentiable_at.fderiv_within h.differentiable_at hxs,
- exact h.fderiv
+  rw differentiable_at.fderiv_within h.differentiable_at hxs,
+  exact h.fderiv
 end
 
 lemma is_bounded_linear_map.differentiable (h : is_bounded_linear_map 𝕜 f) :
- differentiable 𝕜 f :=
+  differentiable 𝕜 f :=
 λx, h.differentiable_at
 
 lemma is_bounded_linear_map.differentiable_on (h : is_bounded_linear_map 𝕜 f) :
- differentiable_on 𝕜 f s :=
+  differentiable_on 𝕜 f s :=
 h.differentiable.differentiable_on
 
 end continuous_linear_map
 
 end
-

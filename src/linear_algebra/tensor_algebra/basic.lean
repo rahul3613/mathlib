@@ -23,16 +23,16 @@ This is the free `R`-algebra generated (`R`-linearly) by the module `M`.
 1. `tensor_algebra R M` is the tensor algebra itself. It is endowed with an R-algebra structure.
 2. `tensor_algebra.ι R` is the canonical R-linear map `M → tensor_algebra R M`.
 3. Given a linear map `f : M → A` to an R-algebra `A`, `lift R f` is the lift of `f` to an
- `R`-algebra morphism `tensor_algebra R M → A`.
+  `R`-algebra morphism `tensor_algebra R M → A`.
 
 ## Theorems
 
 1. `ι_comp_lift` states that the composition `(lift R f) ∘ (ι R)` is identical to `f`.
 2. `lift_unique` states that whenever an R-algebra morphism `g : tensor_algebra R M → A` is
- given whose composition with `ι R` is `f`, then one has `g = lift R f`.
+  given whose composition with `ι R` is `f`, then one has `g = lift R f`.
 3. `hom_ext` is a variant of `lift_unique` in the form of an extensionality theorem.
 4. `lift_comp_ι` is a combination of `ι_comp_lift` and `lift_unique`. It states that the lift
- of the composition of an algebra morphism with `ι` is the algebra morphism itself.
+  of the composition of an algebra morphism with `ι` is the algebra morphism itself.
 
 ## Implementation details
 
@@ -52,9 +52,9 @@ the associated quotient.
 inductive rel : free_algebra R M → free_algebra R M → Prop
 -- force `ι` to be linear
 | add {a b : M} :
- rel (free_algebra.ι R (a+b)) (free_algebra.ι R a + free_algebra.ι R b)
+  rel (free_algebra.ι R (a+b)) (free_algebra.ι R a + free_algebra.ι R b)
 | smul {r : R} {a : M} :
- rel (free_algebra.ι R (r • a)) (algebra_map R (free_algebra R M) r * free_algebra.ι R a)
+  rel (free_algebra.ι R (r • a)) (algebra_map R (free_algebra R M) r * free_algebra.ι R a)
 
 end tensor_algebra
 
@@ -75,11 +75,11 @@ The canonical linear map `M →ₗ[R] tensor_algebra R M`.
 -/
 @[irreducible] def ι : M →ₗ[R] (tensor_algebra R M) :=
 { to_fun := λ m, (ring_quot.mk_alg_hom R _ (free_algebra.ι R m)),
- map_add' := λ x y, by { rw [←alg_hom.map_add], exact ring_quot.mk_alg_hom_rel R rel.add, },
- map_smul' := λ r x, by { rw [←alg_hom.map_smul], exact ring_quot.mk_alg_hom_rel R rel.smul, } }
+  map_add' := λ x y, by { rw [←alg_hom.map_add], exact ring_quot.mk_alg_hom_rel R rel.add, },
+  map_smul' := λ r x, by { rw [←alg_hom.map_smul], exact ring_quot.mk_alg_hom_rel R rel.smul, } }
 
 lemma ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) :
- ring_quot.mk_alg_hom R (rel R M) (free_algebra.ι R m) = ι R m :=
+  ring_quot.mk_alg_hom R (rel R M) (free_algebra.ι R m) = ι R m :=
 by { rw [ι], refl }
 
 /--
@@ -89,35 +89,35 @@ of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 @[irreducible, simps symm_apply]
 def lift {A : Type*} [semiring A] [algebra R A] : (M →ₗ[R] A) ≃ (tensor_algebra R M →ₐ[R] A) :=
 { to_fun := ring_quot.lift_alg_hom R ∘ λ f,
- ⟨free_algebra.lift R ⇑f, λ x y (h : rel R M x y), by induction h;
- simp only [algebra.smul_def, free_algebra.lift_ι_apply, linear_map.map_smulₛₗ,
- ring_hom.id_apply, map_mul, alg_hom.commutes, map_add]⟩,
- inv_fun := λ F, F.to_linear_map.comp (ι R),
- left_inv := λ f, begin
- rw [ι],
- ext1 x,
- exact (ring_quot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (free_algebra.lift_ι_apply f x),
- end,
- right_inv := λ F, ring_quot.ring_quot_ext' _ _ _ $ free_algebra.hom_ext $ funext $ λ x, begin
- rw [ι],
- exact (ring_quot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (free_algebra.lift_ι_apply _ _)
- end }
+    ⟨free_algebra.lift R ⇑f, λ x y (h : rel R M x y), by induction h;
+        simp only [algebra.smul_def, free_algebra.lift_ι_apply, linear_map.map_smulₛₗ,
+          ring_hom.id_apply, map_mul, alg_hom.commutes, map_add]⟩,
+  inv_fun := λ F, F.to_linear_map.comp (ι R),
+  left_inv := λ f, begin
+    rw [ι],
+    ext1 x,
+    exact (ring_quot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (free_algebra.lift_ι_apply f x),
+  end,
+  right_inv := λ F, ring_quot.ring_quot_ext' _ _ _ $ free_algebra.hom_ext $ funext $ λ x, begin
+    rw [ι],
+    exact (ring_quot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (free_algebra.lift_ι_apply _ _)
+  end }
 
 variables {R}
 
 @[simp]
 theorem ι_comp_lift {A : Type*} [semiring A] [algebra R A] (f : M →ₗ[R] A) :
- (lift R f).to_linear_map.comp (ι R) = f :=
+  (lift R f).to_linear_map.comp (ι R) = f :=
 by { convert (lift R).symm_apply_apply f, simp only [lift, equiv.coe_fn_symm_mk] }
 
 @[simp]
 theorem lift_ι_apply {A : Type*} [semiring A] [algebra R A] (f : M →ₗ[R] A) (x) :
- lift R f (ι R x) = f x :=
+  lift R f (ι R x) = f x :=
 by { conv_rhs { rw ← ι_comp_lift f}, refl }
 
 @[simp]
 theorem lift_unique {A : Type*} [semiring A] [algebra R A] (f : M →ₗ[R] A)
- (g : tensor_algebra R M →ₐ[R] A) : g.to_linear_map.comp (ι R) = f ↔ g = lift R f :=
+  (g : tensor_algebra R M →ₐ[R] A) : g.to_linear_map.comp (ι R) = f ↔ g = lift R f :=
 by { rw ← (lift R).symm_apply_eq, simp only [lift, equiv.coe_fn_symm_mk] }
 
 -- Marking `tensor_algebra` irreducible makes `ring` instances inaccessible on quotients.
@@ -126,16 +126,16 @@ by { rw ← (lift R).symm_apply_eq, simp only [lift, equiv.coe_fn_symm_mk] }
 
 @[simp]
 theorem lift_comp_ι {A : Type*} [semiring A] [algebra R A] (g : tensor_algebra R M →ₐ[R] A) :
- lift R (g.to_linear_map.comp (ι R)) = g :=
+  lift R (g.to_linear_map.comp (ι R)) = g :=
 by { rw ←lift_symm_apply, exact (lift R).apply_symm_apply g }
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem hom_ext {A : Type*} [semiring A] [algebra R A] {f g : tensor_algebra R M →ₐ[R] A}
- (w : f.to_linear_map.comp (ι R) = g.to_linear_map.comp (ι R)) : f = g :=
+  (w : f.to_linear_map.comp (ι R) = g.to_linear_map.comp (ι R)) : f = g :=
 begin
- rw [←lift_symm_apply] at w; rw [ ←lift_symm_apply] at w,
- exact (lift R).symm.injective w,
+  rw [←lift_symm_apply, ←lift_symm_apply] at w,
+  exact (lift R).symm.injective w,
 end
 
 /-- If `C` holds for the `algebra_map` of `r : R` into `tensor_algebra R M`, the `ι` of `x : M`,
@@ -144,27 +144,27 @@ and is preserved under addition and muliplication, then it holds for all of `ten
 -- This proof closely follows `free_algebra.induction`
 @[elab_as_eliminator]
 lemma induction {C : tensor_algebra R M → Prop}
- (h_grade0 : ∀ r, C (algebra_map R (tensor_algebra R M) r))
- (h_grade1 : ∀ x, C (ι R x))
- (h_mul : ∀ a b, C a → C b → C (a * b))
- (h_add : ∀ a b, C a → C b → C (a + b))
- (a : tensor_algebra R M) :
- C a :=
+  (h_grade0 : ∀ r, C (algebra_map R (tensor_algebra R M) r))
+  (h_grade1 : ∀ x, C (ι R x))
+  (h_mul : ∀ a b, C a → C b → C (a * b))
+  (h_add : ∀ a b, C a → C b → C (a + b))
+  (a : tensor_algebra R M) :
+  C a :=
 begin
- -- the arguments are enough to construct a subalgebra, and a mapping into it from M
- let s : subalgebra R (tensor_algebra R M) :=
- { carrier := C,
- mul_mem' := h_mul,
- add_mem' := h_add,
- algebra_map_mem' := h_grade0, },
- let of : M →ₗ[R] s := (ι R).cod_restrict s.to_submodule h_grade1,
- -- the mapping through the subalgebra is the identity
- have of_id : alg_hom.id R (tensor_algebra R M) = s.val.comp (lift R of),
- { ext,
- simp [of], },
- -- finding a proof is finding an element of the subalgebra
- convert subtype.prop (lift R of a),
- exact alg_hom.congr_fun of_id a,
+  -- the arguments are enough to construct a subalgebra, and a mapping into it from M
+  let s : subalgebra R (tensor_algebra R M) :=
+  { carrier := C,
+    mul_mem' := h_mul,
+    add_mem' := h_add,
+    algebra_map_mem' := h_grade0, },
+  let of : M →ₗ[R] s := (ι R).cod_restrict s.to_submodule h_grade1,
+  -- the mapping through the subalgebra is the identity
+  have of_id : alg_hom.id R (tensor_algebra R M) = s.val.comp (lift R of),
+  { ext,
+    simp [of], },
+  -- finding a proof is finding an element of the subalgebra
+  convert subtype.prop (lift R of a),
+  exact alg_hom.congr_fun of_id a,
 end
 
 /-- The left-inverse of `algebra_map`. -/
@@ -174,11 +174,11 @@ lift R (0 : M →ₗ[R] R)
 variables (M)
 
 lemma algebra_map_left_inverse :
- function.left_inverse algebra_map_inv (algebra_map R $ tensor_algebra R M) :=
+  function.left_inverse algebra_map_inv (algebra_map R $ tensor_algebra R M) :=
 λ x, by simp [algebra_map_inv]
 
 @[simp] lemma algebra_map_inj (x y : R) :
- algebra_map R (tensor_algebra R M) x = algebra_map R (tensor_algebra R M) y ↔ x = y :=
+  algebra_map R (tensor_algebra R M) x = algebra_map R (tensor_algebra R M) y ↔ x = y :=
 (algebra_map_left_inverse M).injective.eq_iff
 
 @[simp] lemma algebra_map_eq_zero_iff (x : R) : algebra_map R (tensor_algebra R M) x = 0 ↔ x = 0 :=
@@ -192,11 +192,11 @@ variables {M}
 /-- The canonical map from `tensor_algebra R M` into `triv_sq_zero_ext R M` that sends
 `tensor_algebra.ι` to `triv_sq_zero_ext.inr`. -/
 def to_triv_sq_zero_ext [module Rᵐᵒᵖ M] [is_central_scalar R M] :
- tensor_algebra R M →ₐ[R] triv_sq_zero_ext R M :=
+  tensor_algebra R M →ₐ[R] triv_sq_zero_ext R M :=
 lift R (triv_sq_zero_ext.inr_hom R M)
 
 @[simp] lemma to_triv_sq_zero_ext_ι (x : M) [module Rᵐᵒᵖ M] [is_central_scalar R M] :
- to_triv_sq_zero_ext (ι R x) = triv_sq_zero_ext.inr x :=
+   to_triv_sq_zero_ext (ι R x) = triv_sq_zero_ext.inr x :=
 lift_ι_apply _ _
 
 /-- The left-inverse of `ι`.
@@ -205,9 +205,9 @@ As an implementation detail, we implement this using `triv_sq_zero_ext` which ha
 algebra structure. -/
 def ι_inv : tensor_algebra R M →ₗ[R] M :=
 begin
- letI : module Rᵐᵒᵖ M := module.comp_hom _ ((ring_hom.id R).from_opposite mul_comm),
- haveI : is_central_scalar R M := ⟨λ r m, rfl⟩,
- exact (triv_sq_zero_ext.snd_hom R M).comp to_triv_sq_zero_ext.to_linear_map
+  letI : module Rᵐᵒᵖ M := module.comp_hom _ ((ring_hom.id R).from_opposite mul_comm),
+  haveI : is_central_scalar R M := ⟨λ r m, rfl⟩,
+  exact (triv_sq_zero_ext.snd_hom R M).comp to_triv_sq_zero_ext.to_linear_map
 end
 
 lemma ι_left_inverse : function.left_inverse ι_inv (ι R : M → tensor_algebra R M) :=
@@ -219,37 +219,37 @@ variables (R)
 ι_left_inverse.injective.eq_iff
 
 @[simp] lemma ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 :=
-by rw [←ι_inj R x 0]; rw [ linear_map.map_zero]
+by rw [←ι_inj R x 0, linear_map.map_zero]
 
 variables {R}
 
 @[simp] lemma ι_eq_algebra_map_iff (x : M) (r : R) : ι R x = algebra_map R _ r ↔ x = 0 ∧ r = 0 :=
 begin
- refine ⟨λ h, _, _⟩,
- { letI : module Rᵐᵒᵖ M := module.comp_hom _ ((ring_hom.id R).from_opposite mul_comm),
- haveI : is_central_scalar R M := ⟨λ r m, rfl⟩,
- have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x), from lift_ι_apply _ _,
- rw [h] at hf0; rw [ alg_hom.commutes] at hf0,
- have : r = 0 ∧ 0 = x := prod.ext_iff.1 hf0,
- exact this.symm.imp_left eq.symm, },
- { rintro ⟨rfl, rfl⟩,
- rw [linear_map.map_zero]; rw [ ring_hom.map_zero] }
+  refine ⟨λ h, _, _⟩,
+  { letI : module Rᵐᵒᵖ M := module.comp_hom _ ((ring_hom.id R).from_opposite mul_comm),
+    haveI : is_central_scalar R M := ⟨λ r m, rfl⟩,
+    have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x), from lift_ι_apply _ _,
+    rw [h, alg_hom.commutes] at hf0,
+    have : r = 0 ∧ 0 = x := prod.ext_iff.1 hf0,
+    exact this.symm.imp_left eq.symm, },
+  { rintro ⟨rfl, rfl⟩,
+    rw [linear_map.map_zero, ring_hom.map_zero] }
 end
 
 @[simp] lemma ι_ne_one [nontrivial R] (x : M) : ι R x ≠ 1 :=
 begin
- rw [←(algebra_map R (tensor_algebra R M)).map_one]; rw [ ne.def]; rw [ ι_eq_algebra_map_iff],
- exact one_ne_zero ∘ and.right,
+  rw [←(algebra_map R (tensor_algebra R M)).map_one, ne.def, ι_eq_algebra_map_iff],
+  exact one_ne_zero ∘ and.right,
 end
 
 /-- The generators of the tensor algebra are disjoint from its scalars. -/
 lemma ι_range_disjoint_one : disjoint (linear_map.range (ι R : M →ₗ[R] tensor_algebra R M))
- (1 : submodule R (tensor_algebra R M)) :=
+  (1 : submodule R (tensor_algebra R M)) :=
 begin
- rw submodule.disjoint_def,
- rintros _ ⟨x, hx⟩ ⟨r, (rfl : algebra_map _ _ _ = _)⟩,
- rw ι_eq_algebra_map_iff x at hx,
- rw [hx.2]; rw [ ring_hom.map_zero]
+  rw submodule.disjoint_def,
+  rintros _ ⟨x, hx⟩ ⟨r, (rfl : algebra_map _ _ _ = _)⟩,
+  rw ι_eq_algebra_map_iff x at hx,
+  rw [hx.2, ring_hom.map_zero]
 end
 
 variables (R M)
@@ -261,7 +261,7 @@ def tprod (n : ℕ) : multilinear_map R (λ i : fin n, M) (tensor_algebra R M) :
 (multilinear_map.mk_pi_algebra_fin R n (tensor_algebra R M)).comp_linear_map $ λ _, ι R
 
 @[simp] lemma tprod_apply {n : ℕ} (x : fin n → M) :
- tprod R M n x = (list.of_fn (λ i, ι R (x i))).prod := rfl
+  tprod R M n x = (list.of_fn (λ i, ι R (x i))).prod := rfl
 
 variables {R M}
 
@@ -280,4 +280,3 @@ free_algebra.lift R (tensor_algebra.ι R)
 by simp [to_tensor]
 
 end free_algebra
-

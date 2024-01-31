@@ -61,4 +61,3 @@ instance [no_max_order α] {a : α} : infinite (Ici a) := no_max_order.infinite
 lemma Ici_infinite [no_max_order α] (a : α) : (Ici a).infinite := infinite_coe_iff.1 Ici.infinite
 
 end set
-

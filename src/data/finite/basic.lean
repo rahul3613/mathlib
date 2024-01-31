@@ -22,8 +22,8 @@ defined.
 ## Main definitions
 
 * `fintype.finite`, `finite.of_fintype` creates a `finite` instance from a `fintype` instance. The
- former lemma takes `fintype α` as an explicit argument while the latter takes it as an instance
- argument.
+  former lemma takes `fintype α` as an explicit argument while the latter takes it as an instance
+  argument.
 * `fintype.of_finite` noncomputably creates a `fintype` instance from a `finite` instance.
 
 ## Implementation notes
@@ -94,10 +94,10 @@ finite.of_injective coe subtype.coe_injective
 
 instance pi.finite {α : Sort*} {β : α → Sort*} [finite α] [∀ a, finite (β a)] : finite (Π a, β a) :=
 begin
- haveI := fintype.of_finite (plift α),
- haveI := λ a, fintype.of_finite (plift (β a)),
- exact finite.of_equiv (Π (a : plift α), plift (β (equiv.plift a)))
- (equiv.Pi_congr equiv.plift (λ _, equiv.plift)),
+  haveI := fintype.of_finite (plift α),
+  haveI := λ a, fintype.of_finite (plift (β a)),
+  exact finite.of_equiv (Π (a : plift α), plift (β (equiv.plift a)))
+    (equiv.Pi_congr equiv.plift (λ _, equiv.plift)),
 end
 
 instance vector.finite {α : Type*} [finite α] {n : ℕ} : finite (vector α n) :=
@@ -111,20 +111,19 @@ quot.finite _
 
 instance function.embedding.finite {α β : Sort*} [finite β] : finite (α ↪ β) :=
 begin
- casesI is_empty_or_nonempty (α ↪ β) with _ h,
- { apply_instance, },
- { refine h.elim (λ f, _),
- haveI : finite α := finite.of_injective _ f.injective,
- exact finite.of_injective _ fun_like.coe_injective },
+  casesI is_empty_or_nonempty (α ↪ β) with _ h,
+  { apply_instance, },
+  { refine h.elim (λ f, _),
+    haveI : finite α := finite.of_injective _ f.injective,
+    exact finite.of_injective _ fun_like.coe_injective },
 end
 
 instance equiv.finite_right {α β : Sort*} [finite β] : finite (α ≃ β) :=
 finite.of_injective equiv.to_embedding $ λ e₁ e₂ h, equiv.ext $
- by convert fun_like.congr_fun h
+  by convert fun_like.congr_fun h
 
 instance equiv.finite_left {α β : Sort*} [finite α] : finite (α ≃ β) :=
 finite.of_equiv _ ⟨equiv.symm, equiv.symm, equiv.symm_symm, equiv.symm_symm⟩
 
 instance [finite α] {n : ℕ} : finite (sym α n) :=
 by { haveI := fintype.of_finite α, apply_instance }
-

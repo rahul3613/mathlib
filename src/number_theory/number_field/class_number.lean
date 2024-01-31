@@ -40,7 +40,7 @@ variables {K}
 
 /-- The class number of a number field is `1` iff the ring of integers is a PID. -/
 theorem class_number_eq_one_iff :
- class_number K = 1 ↔ is_principal_ideal_ring (ring_of_integers K) :=
+  class_number K = 1 ↔ is_principal_ideal_ring (ring_of_integers K) :=
 card_class_group_eq_one_iff
 
 end number_field
@@ -51,8 +51,7 @@ open number_field
 
 theorem class_number_eq : number_field.class_number ℚ = 1 :=
 class_number_eq_one_iff.mpr $ by convert is_principal_ideal_ring.of_surjective
- (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
- (rat.ring_of_integers_equiv.symm.surjective)
+  (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
+  (rat.ring_of_integers_equiv.symm.surjective)
 
 end rat
-

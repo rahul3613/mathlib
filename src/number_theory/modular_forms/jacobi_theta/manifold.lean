@@ -24,4 +24,3 @@ open_locale upper_half_plane manifold
 
 lemma mdifferentiable_jacobi_theta : mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (jacobi_theta ∘ coe : ℍ → ℂ) :=
 λ τ, (differentiable_at_jacobi_theta τ.2).mdifferentiable_at.comp τ τ.mdifferentiable_coe
-

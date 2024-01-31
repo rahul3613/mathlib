@@ -35,9 +35,9 @@ instance [division_semiring α] : division_semiring αᵐᵒᵖ :=
 
 instance [division_ring α] : division_ring αᵐᵒᵖ :=
 { rat_cast := λ q, op q,
- rat_cast_mk := λ a b hb h, by { rw [rat.cast_def]; rw [ op_div]; rw [ op_nat_cast]; rw [ op_int_cast],
- exact int.commute_cast _ _ },
- ..mul_opposite.division_semiring α, ..mul_opposite.ring α }
+  rat_cast_mk := λ a b hb h, by { rw [rat.cast_def, op_div, op_nat_cast, op_int_cast],
+    exact int.commute_cast _ _ },
+  ..mul_opposite.division_semiring α, ..mul_opposite.ring α }
 
 instance [semifield α] : semifield αᵐᵒᵖ :=
 { .. mul_opposite.division_semiring α, .. mul_opposite.comm_semiring α }
@@ -54,7 +54,7 @@ instance [division_semiring α] : division_semiring αᵃᵒᵖ :=
 
 instance [division_ring α] : division_ring αᵃᵒᵖ :=
 { rat_cast_mk := λ a b hb h, by rw ←div_eq_mul_inv; exact congr_arg op (rat.cast_def _),
- ..add_opposite.ring α, ..add_opposite.group_with_zero α, ..add_opposite.has_rat_cast α }
+  ..add_opposite.ring α, ..add_opposite.group_with_zero α, ..add_opposite.has_rat_cast α }
 
 instance [semifield α] : semifield αᵃᵒᵖ :=
 { ..add_opposite.division_semiring α, ..add_opposite.comm_semiring α }
@@ -63,4 +63,3 @@ instance [field α] : field αᵃᵒᵖ :=
 { ..add_opposite.division_ring α, ..add_opposite.comm_ring α }
 
 end add_opposite
-

@@ -66,4 +66,3 @@ def Iic_Inf_hom : Inf_hom α (lower_set α) := ⟨Iic, λ s, (Iic_Inf s).trans I
 @[simp] lemma Iic_Inf_hom_apply (a : α) : Iic_Inf_hom a = Iic a := rfl
 
 end lower_set
-

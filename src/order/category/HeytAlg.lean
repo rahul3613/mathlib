@@ -36,24 +36,23 @@ instance : inhabited HeytAlg := ⟨of punit⟩
 
 instance bundled_hom : bundled_hom heyting_hom :=
 { to_fun := λ α β [heyting_algebra α] [heyting_algebra β],
- by exactI (coe_fn : heyting_hom α β → α → β),
- id := heyting_hom.id,
- comp := @heyting_hom.comp,
- hom_ext := λ α β [heyting_algebra α] [heyting_algebra β], by exactI fun_like.coe_injective }
+    by exactI (coe_fn : heyting_hom α β → α → β),
+  id := heyting_hom.id,
+  comp := @heyting_hom.comp,
+  hom_ext := λ α β [heyting_algebra α] [heyting_algebra β], by exactI fun_like.coe_injective }
 
 attribute [derive [large_category, concrete_category]] HeytAlg
 
 @[simps]
 instance has_forget_to_Lat : has_forget₂ HeytAlg BddDistLat :=
 { forget₂ := { obj := λ X, BddDistLat.of X,
- map := λ X Y f, (f : bounded_lattice_hom X Y) } }
+               map := λ X Y f, (f : bounded_lattice_hom X Y) } }
 
 /-- Constructs an isomorphism of Heyting algebras from an order isomorphism between them. -/
 @[simps] def iso.mk {α β : HeytAlg.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := e,
- inv := e.symm,
- hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
- inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+  inv := e.symm,
+  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 end HeytAlg
-

@@ -48,50 +48,51 @@ variables [ordered_ring k] [ordered_add_comm_group E] [module k E] [ordered_smul
 variables {a a' b b' : E} {r r' : k}
 
 lemma line_map_mono_left (ha : a ≤ a') (hr : r ≤ 1) :
- line_map a b r ≤ line_map a' b r :=
+  line_map a b r ≤ line_map a' b r :=
 begin
- simp only [line_map_apply_module],
- exact add_le_add_right (smul_le_smul_of_nonneg ha (sub_nonneg.2 hr)) _
+  simp only [line_map_apply_module],
+  exact add_le_add_right (smul_le_smul_of_nonneg ha (sub_nonneg.2 hr)) _
 end
 
 lemma line_map_strict_mono_left (ha : a < a') (hr : r < 1) :
- line_map a b r < line_map a' b r :=
+  line_map a b r < line_map a' b r :=
 begin
- simp only [line_map_apply_module],
- exact add_lt_add_right (smul_lt_smul_of_pos ha (sub_pos.2 hr)) _
+  simp only [line_map_apply_module],
+  exact add_lt_add_right (smul_lt_smul_of_pos ha (sub_pos.2 hr)) _
 end
 
 lemma line_map_mono_right (hb : b ≤ b') (hr : 0 ≤ r) :
- line_map a b r ≤ line_map a b' r :=
+  line_map a b r ≤ line_map a b' r :=
 begin
- simp only [line_map_apply_module],
- exact add_le_add_left (smul_le_smul_of_nonneg hb hr) _
+  simp only [line_map_apply_module],
+  exact add_le_add_left (smul_le_smul_of_nonneg hb hr) _
 end
 
 lemma line_map_strict_mono_right (hb : b < b') (hr : 0 < r) :
- line_map a b r < line_map a b' r :=
+  line_map a b r < line_map a b' r :=
 begin
- simp only [line_map_apply_module],
- exact add_lt_add_left (smul_lt_smul_of_pos hb hr) _
+  simp only [line_map_apply_module],
+  exact add_lt_add_left (smul_lt_smul_of_pos hb hr) _
 end
 
 lemma line_map_mono_endpoints (ha : a ≤ a') (hb : b ≤ b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
- line_map a b r ≤ line_map a' b' r :=
+  line_map a b r ≤ line_map a' b' r :=
 (line_map_mono_left ha h₁).trans (line_map_mono_right hb h₀)
 
 lemma line_map_strict_mono_endpoints (ha : a < a') (hb : b < b') (h₀ : 0 ≤ r) (h₁ : r ≤ 1) :
- line_map a b r < line_map a' b' r :=
+  line_map a b r < line_map a' b' r :=
 begin
- rcases h₀.eq_or_lt with (rfl|h₀), { simpa },
- exact (line_map_mono_left ha.le h₁).trans_lt (line_map_strict_mono_right hb h₀)
+  rcases h₀.eq_or_lt with (rfl|h₀), { simpa },
+  exact (line_map_mono_left ha.le h₁).trans_lt (line_map_strict_mono_right hb h₀)
 end
 
 lemma line_map_lt_line_map_iff_of_lt (h : r < r') :
- line_map a b r < line_map a b r' ↔ a < b :=
+  line_map a b r < line_map a b r' ↔ a < b :=
 begin
- simp only [line_map_apply_module],
- rw [← lt_sub_iff_add_lt]; rw [ add_sub_assoc]; rw [ ← sub_lt_iff_lt_add']; rw [ ← sub_smul]; rw [ ← sub_smul]; rw [ sub_sub_sub_cancel_left]; rw [ smul_lt_smul_iff_of_pos (sub_pos.2 h)],
- apply_instance,
+  simp only [line_map_apply_module],
+  rw [← lt_sub_iff_add_lt, add_sub_assoc, ← sub_lt_iff_lt_add', ← sub_smul, ← sub_smul,
+    sub_sub_sub_cancel_left, smul_lt_smul_iff_of_pos (sub_pos.2 h)],
+  apply_instance,
 end
 
 lemma left_lt_line_map_iff_lt (h : 0 < r) : a < line_map a b r ↔ a < b :=
@@ -111,12 +112,12 @@ end ordered_ring
 section linear_ordered_ring
 
 variables [linear_ordered_ring k] [ordered_add_comm_group E] [module k E]
- [ordered_smul k E] [invertible (2:k)] {a a' b b' : E} {r r' : k}
+  [ordered_smul k E] [invertible (2:k)] {a a' b b' : E} {r r' : k}
 
 lemma midpoint_le_midpoint (ha : a ≤ a') (hb : b ≤ b') :
- midpoint k a b ≤ midpoint k a' b' :=
+  midpoint k a b ≤ midpoint k a' b' :=
 line_map_mono_endpoints ha hb (inv_of_nonneg.2 zero_le_two) $
- inv_of_le_one one_le_two
+  inv_of_le_one one_le_two
 
 end linear_ordered_ring
 
@@ -130,11 +131,12 @@ section
 variables {a b : E} {r r' : k}
 
 lemma line_map_le_line_map_iff_of_lt (h : r < r') :
- line_map a b r ≤ line_map a b r' ↔ a ≤ b :=
+  line_map a b r ≤ line_map a b r' ↔ a ≤ b :=
 begin
- simp only [line_map_apply_module],
- rw [← le_sub_iff_add_le]; rw [ add_sub_assoc]; rw [ ← sub_le_iff_le_add']; rw [ ← sub_smul]; rw [ ← sub_smul]; rw [ sub_sub_sub_cancel_left]; rw [ smul_le_smul_iff_of_pos (sub_pos.2 h)],
- apply_instance,
+  simp only [line_map_apply_module],
+  rw [← le_sub_iff_add_le, add_sub_assoc, ← sub_le_iff_le_add', ← sub_smul, ← sub_smul,
+    sub_sub_sub_cancel_left, smul_le_smul_iff_of_pos (sub_pos.2 h)],
+  apply_instance,
 end
 
 lemma left_le_line_map_iff_le (h : 0 < r) : a ≤ line_map a b r ↔ a ≤ b :=
@@ -179,7 +181,7 @@ readable, we introduce local notation `c = line_map a b r`. Then we prove lemmas
 
 ```
 lemma map_le_line_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
- f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f a b :=
+  f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f a b :=
 ```
 
 For each inequality between `f c` and `line_map (f a) (f b) r` we provide 3 lemmas:
@@ -198,91 +200,98 @@ local notation `c` := line_map a b r
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c ≤ slope f a b`. -/
 lemma map_le_line_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
- f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f a b :=
+  f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f a b :=
 begin
- rw [line_map_apply]; rw [ line_map_apply]; rw [ slope]; rw [ slope]; rw [ vsub_eq_sub]; rw [ vsub_eq_sub]; rw [ vsub_eq_sub]; rw [ vadd_eq_add]; rw [ vadd_eq_add]; rw [ smul_eq_mul]; rw [ add_sub_cancel]; rw [ smul_sub]; rw [ smul_sub]; rw [ smul_sub]; rw [ sub_le_iff_le_add]; rw [ mul_inv_rev]; rw [ mul_smul]; rw [ mul_smul]; rw [ ←smul_sub]; rw [ ←smul_sub]; rw [ ←smul_add]; rw [ smul_smul]; rw [ ← mul_inv_rev]; rw [ inv_smul_le_iff h]; rw [ smul_smul]; rw [ mul_inv_cancel_right₀ (right_ne_zero_of_mul h.ne')]; rw [ smul_add]; rw [ smul_inv_smul₀ (left_ne_zero_of_mul h.ne')],
- apply_instance
+  rw [line_map_apply, line_map_apply, slope, slope,
+  vsub_eq_sub, vsub_eq_sub, vsub_eq_sub, vadd_eq_add, vadd_eq_add,
+  smul_eq_mul, add_sub_cancel, smul_sub, smul_sub, smul_sub,
+  sub_le_iff_le_add, mul_inv_rev, mul_smul, mul_smul, ←smul_sub, ←smul_sub, ←smul_add, smul_smul,
+  ← mul_inv_rev, inv_smul_le_iff h, smul_smul,
+  mul_inv_cancel_right₀ (right_ne_zero_of_mul h.ne'), smul_add,
+  smul_inv_smul₀ (left_ne_zero_of_mul h.ne')],
+  apply_instance
 end
 
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b ≤ slope f a c`. -/
 lemma line_map_le_map_iff_slope_le_slope_left (h : 0 < r * (b - a)) :
- line_map (f a) (f b) r ≤ f c ↔ slope f a b ≤ slope f a c :=
+  line_map (f a) (f b) r ≤ f c ↔ slope f a b ≤ slope f a c :=
 @map_le_line_map_iff_slope_le_slope_left k Eᵒᵈ _ _ _ _ f a b r h
 
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f a b`. -/
 lemma map_lt_line_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
- f c < line_map (f a) (f b) r ↔ slope f a c < slope f a b :=
+  f c < line_map (f a) (f b) r ↔ slope f a c < slope f a b :=
 lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope_left h)
- (map_le_line_map_iff_slope_le_slope_left h)
+  (map_le_line_map_iff_slope_le_slope_left h)
 
 /-- Given `c = line_map a b r`, `a < c`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f a c`. -/
 lemma line_map_lt_map_iff_slope_lt_slope_left (h : 0 < r * (b - a)) :
- line_map (f a) (f b) r < f c ↔ slope f a b < slope f a c :=
+  line_map (f a) (f b) r < f c ↔ slope f a b < slope f a c :=
 @map_lt_line_map_iff_slope_lt_slope_left k Eᵒᵈ _ _ _ _ f a b r h
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b ≤ slope f c b`. -/
 lemma map_le_line_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
- f c ≤ line_map (f a) (f b) r ↔ slope f a b ≤ slope f c b :=
+  f c ≤ line_map (f a) (f b) r ↔ slope f a b ≤ slope f c b :=
 begin
- rw [← line_map_apply_one_sub]; rw [ ← line_map_apply_one_sub _ _ r],
- revert h, generalize : 1 - r = r', clear r, intro h,
- simp_rw [line_map_apply, slope, vsub_eq_sub, vadd_eq_add, smul_eq_mul],
- rw [sub_add_eq_sub_sub_swap]; rw [ sub_self]; rw [ zero_sub]; rw [ neg_mul_eq_mul_neg]; rw [ neg_sub]; rw [ le_inv_smul_iff h]; rw [ smul_smul]; rw [ mul_inv_cancel_right₀]; rw [ le_sub_comm]; rw [ ← neg_sub (f b)]; rw [ smul_neg]; rw [ neg_add_eq_sub],
- { exact right_ne_zero_of_mul h.ne' },
- { apply_instance }
+  rw [← line_map_apply_one_sub, ← line_map_apply_one_sub _ _ r],
+  revert h, generalize : 1 - r = r', clear r, intro h,
+  simp_rw [line_map_apply, slope, vsub_eq_sub, vadd_eq_add, smul_eq_mul],
+  rw [sub_add_eq_sub_sub_swap, sub_self, zero_sub, neg_mul_eq_mul_neg, neg_sub, le_inv_smul_iff h,
+    smul_smul, mul_inv_cancel_right₀, le_sub_comm, ← neg_sub (f b), smul_neg, neg_add_eq_sub],
+  { exact right_ne_zero_of_mul h.ne' },
+  { apply_instance }
 end
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b ≤ slope f a b`. -/
 lemma line_map_le_map_iff_slope_le_slope_right (h : 0 < (1 - r) * (b - a)) :
- line_map (f a) (f b) r ≤ f c ↔ slope f c b ≤ slope f a b :=
+  line_map (f a) (f b) r ≤ f c ↔ slope f c b ≤ slope f a b :=
 @map_le_line_map_iff_slope_le_slope_right k Eᵒᵈ _ _ _ _ f a b r h
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a b < slope f c b`. -/
 lemma map_lt_line_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
- f c < line_map (f a) (f b) r ↔ slope f a b < slope f c b :=
+  f c < line_map (f a) (f b) r ↔ slope f a b < slope f c b :=
 lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope_right h)
- (map_le_line_map_iff_slope_le_slope_right h)
+  (map_le_line_map_iff_slope_le_slope_right h)
 
 /-- Given `c = line_map a b r`, `c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a b`. -/
 lemma line_map_lt_map_iff_slope_lt_slope_right (h : 0 < (1 - r) * (b - a)) :
- line_map (f a) (f b) r < f c ↔ slope f c b < slope f a b :=
+  line_map (f a) (f b) r < f c ↔ slope f c b < slope f a b :=
 @map_lt_line_map_iff_slope_lt_slope_right k Eᵒᵈ _ _ _ _ f a b r h
 
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c ≤ slope f c b`. -/
 lemma map_le_line_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
- f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f c b :=
+  f c ≤ line_map (f a) (f b) r ↔ slope f a c ≤ slope f c b :=
 begin
- rw [map_le_line_map_iff_slope_le_slope_left (mul_pos h₀ (sub_pos.2 hab))]; rw [ ← line_map_slope_line_map_slope_line_map f a b r]; rw [ right_le_line_map_iff_le h₁],
- apply_instance,
- apply_instance,
+  rw [map_le_line_map_iff_slope_le_slope_left (mul_pos h₀ (sub_pos.2 hab)),
+    ← line_map_slope_line_map_slope_line_map f a b r, right_le_line_map_iff_le h₁],
+  apply_instance,
+  apply_instance,
 end
 
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is non-strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b ≤ slope f a c`. -/
 lemma line_map_le_map_iff_slope_le_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
- line_map (f a) (f b) r ≤ f c ↔ slope f c b ≤ slope f a c :=
+  line_map (f a) (f b) r ≤ f c ↔ slope f c b ≤ slope f a c :=
 @map_le_line_map_iff_slope_le_slope k Eᵒᵈ _ _ _ _ _ _ _ _ hab h₀ h₁
 
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly below the
 segment `[(a, f a), (b, f b)]` if and only if `slope f a c < slope f c b`. -/
 lemma map_lt_line_map_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
- f c < line_map (f a) (f b) r ↔ slope f a c < slope f c b :=
+  f c < line_map (f a) (f b) r ↔ slope f a c < slope f c b :=
 lt_iff_lt_of_le_iff_le' (line_map_le_map_iff_slope_le_slope hab h₀ h₁)
- (map_le_line_map_iff_slope_le_slope hab h₀ h₁)
+  (map_le_line_map_iff_slope_le_slope hab h₀ h₁)
 
 /-- Given `c = line_map a b r`, `a < c < b`, the point `(c, f c)` is strictly above the
 segment `[(a, f a), (b, f b)]` if and only if `slope f c b < slope f a c`. -/
 lemma line_map_lt_map_iff_slope_lt_slope (hab : a < b) (h₀ : 0 < r) (h₁ : r < 1) :
- line_map (f a) (f b) r < f c ↔ slope f c b < slope f a c :=
+  line_map (f a) (f b) r < f c ↔ slope f c b < slope f a c :=
 @map_lt_line_map_iff_slope_lt_slope k Eᵒᵈ _ _ _ _ _ _ _ _ hab h₀ h₁
 
 end linear_ordered_field
-

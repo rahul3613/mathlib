@@ -18,6 +18,5 @@ import data.bracket
 instance commutator_element {G : Type*} [group G] : has_bracket G G :=
 ⟨λ g₁ g₂, g₁ * g₂ * g₁⁻¹ * g₂⁻¹⟩
 
-lemma commutator_element_def {G : Type*} [group G] (g₁ g₂ : G) :
- ⁅g₁, g₂⁆ = g₁ * g₂ * g₁⁻¹ * g₂⁻¹ := rfl
-
+lemma commutator_element_def  {G : Type*} [group G] (g₁ g₂ : G) :
+  ⁅g₁, g₂⁆ = g₁ * g₂ * g₁⁻¹ * g₂⁻¹ := rfl

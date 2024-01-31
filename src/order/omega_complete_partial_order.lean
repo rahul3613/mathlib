@@ -37,16 +37,16 @@ supremum helps define the meaning of recursive procedures.
  * product types
  * `monotone_hom`
  * `continuous_hom` (with notation →𝒄)
- * an instance of `omega_complete_partial_order (α →𝒄 β)`
+   * an instance of `omega_complete_partial_order (α →𝒄 β)`
  * `continuous_hom.of_fun`
  * `continuous_hom.of_mono`
  * continuous functions:
- * `id`
- * `ite`
- * `const`
- * `part.bind`
- * `part.map`
- * `part.seq`
+   * `id`
+   * `ite`
+   * `const`
+   * `part.bind`
+   * `part.map`
+   * `part.seq`
 
 ## References
 
@@ -73,14 +73,14 @@ variables {α} {α' : Type*} {β' : Type*} [preorder α'] [preorder β']
 @[simps]
 def bind {β γ} (f : α →o part β) (g : α →o β → part γ) : α →o part γ :=
 { to_fun := λ x, f x >>= g x,
- monotone' :=
- begin
- intros x y h a,
- simp only [and_imp, exists_prop, part.bind_eq_bind, part.mem_bind_iff,
- exists_imp_distrib],
- intros b hb ha,
- refine ⟨b, f.monotone h _ hb, g.monotone h _ _ ha⟩,
- end }
+  monotone' :=
+  begin
+    intros x y h a,
+    simp only [and_imp, exists_prop, part.bind_eq_bind, part.mem_bind_iff,
+               exists_imp_distrib],
+    intros b hb ha,
+    refine ⟨b, f.monotone h _ hb, g.monotone h _ _ ha⟩,
+  end }
 
 end order_hom
 
@@ -158,9 +158,9 @@ semi-lattices as only ω-sized totally ordered sets have a supremum.
 
 See the definition on page 114 of [gunter1992]. -/
 class omega_complete_partial_order (α : Type*) extends partial_order α :=
-(ωSup : chain α → α)
-(le_ωSup : ∀(c:chain α), ∀ i, c i ≤ ωSup c)
-(ωSup_le : ∀(c:chain α) x, (∀ i, c i ≤ x) → ωSup c ≤ x)
+(ωSup     : chain α → α)
+(le_ωSup  : ∀(c:chain α), ∀ i, c i ≤ ωSup c)
+(ωSup_le  : ∀(c:chain α) x, (∀ i, c i ≤ x) → ωSup c ≤ x)
 
 end prio
 
@@ -173,25 +173,25 @@ using a strictly monotone function `f : β →o α`, a definition of ωSup and a
 continuous with regard to the provided `ωSup` and the ωCPO on `α`. -/
 @[reducible]
 protected def lift [partial_order β] (f : β →o α)
- (ωSup₀ : chain β → β)
- (h : ∀ x y, f x ≤ f y → x ≤ y)
- (h' : ∀ c, f (ωSup₀ c) = ωSup (c.map f)) : omega_complete_partial_order β :=
+  (ωSup₀ : chain β → β)
+  (h : ∀ x y, f x ≤ f y → x ≤ y)
+  (h' : ∀ c, f (ωSup₀ c) = ωSup (c.map f)) : omega_complete_partial_order β :=
 { ωSup := ωSup₀,
- ωSup_le := λ c x hx, h _ _ (by rw h'; apply ωSup_le; intro; apply f.monotone (hx i)),
- le_ωSup := λ c i, h _ _ (by rw h'; apply le_ωSup (c.map f)) }
+  ωSup_le := λ c x hx, h _ _ (by rw h'; apply ωSup_le; intro; apply f.monotone (hx i)),
+  le_ωSup := λ c i, h _ _ (by rw h'; apply le_ωSup (c.map f)) }
 
 lemma le_ωSup_of_le {c : chain α} {x : α} (i : ℕ) (h : x ≤ c i) : x ≤ ωSup c :=
 le_trans h (le_ωSup c _)
 
 lemma ωSup_total {c : chain α} {x : α} (h : ∀ i, c i ≤ x ∨ x ≤ c i) : ωSup c ≤ x ∨ x ≤ ωSup c :=
 classical.by_cases
- (assume : ∀ i, c i ≤ x, or.inl (ωSup_le _ _ this))
- (assume : ¬ ∀ i, c i ≤ x,
- have ∃ i, ¬ c i ≤ x,
- by simp only [not_forall] at this ⊢; assumption,
- let ⟨i, hx⟩ := this in
- have x ≤ c i, from (h i).resolve_left hx,
- or.inr $ le_ωSup_of_le _ this)
+  (assume : ∀ i, c i ≤ x, or.inl (ωSup_le _ _ this))
+  (assume : ¬ ∀ i, c i ≤ x,
+    have ∃ i, ¬ c i ≤ x,
+      by simp only [not_forall] at this ⊢; assumption,
+    let ⟨i, hx⟩ := this in
+    have x ≤ c i, from (h i).resolve_left hx,
+    or.inr $ le_ωSup_of_le _ this)
 
 @[mono]
 lemma ωSup_le_ωSup_of_le {c₀ c₁ : chain α} (h : c₀ ≤ c₁) : ωSup c₀ ≤ ωSup c₁ :=
@@ -201,22 +201,22 @@ lemma ωSup_le_ωSup_of_le {c₀ c₁ : chain α} (h : c₀ ≤ c₁) : ωSup c�
 
 lemma ωSup_le_iff (c : chain α) (x : α) : ωSup c ≤ x ↔ (∀ i, c i ≤ x) :=
 begin
- split; intros,
- { transitivity ωSup c,
- exact le_ωSup _ _, assumption },
- exact ωSup_le _ _ ‹_›,
+  split; intros,
+  { transitivity ωSup c,
+    exact le_ωSup _ _, assumption },
+  exact ωSup_le _ _ ‹_›,
 end
 
 /-- A subset `p : α → Prop` of the type closed under `ωSup` induces an
 `omega_complete_partial_order` on the subtype `{a : α // p a}`. -/
 def subtype {α : Type*} [omega_complete_partial_order α] (p : α → Prop)
- (hp : ∀ (c : chain α), (∀ i ∈ c, p i) → p (ωSup c)) :
- omega_complete_partial_order (subtype p) :=
+  (hp : ∀ (c : chain α), (∀ i ∈ c, p i) → p (ωSup c)) :
+  omega_complete_partial_order (subtype p) :=
 omega_complete_partial_order.lift
- (order_hom.subtype.val p)
- (λ c, ⟨ωSup _, hp (c.map (order_hom.subtype.val p)) (λ i ⟨n, q⟩, q.symm ▸ (c n).2)⟩)
- (λ x y h, h)
- (λ c, rfl)
+  (order_hom.subtype.val p)
+  (λ c, ⟨ωSup _, hp (c.map (order_hom.subtype.val p)) (λ i ⟨n, q⟩, q.symm ▸ (c n).2)⟩)
+  (λ x y h, h)
+  (λ c, rfl)
 
 section continuity
 open chain
@@ -240,13 +240,13 @@ def continuous' (f : α → β) : Prop :=
 lemma continuous'.to_monotone {f : α → β} (hf : continuous' f) : monotone f := hf.fst
 
 lemma continuous.of_bundled (f : α → β) (hf : monotone f)
- (hf' : continuous ⟨f, hf⟩) : continuous' f := ⟨hf, hf'⟩
+  (hf' : continuous ⟨f, hf⟩) : continuous' f := ⟨hf, hf'⟩
 
 lemma continuous.of_bundled' (f : α →o β) (hf' : continuous f) : continuous' f :=
 ⟨f.mono, hf'⟩
 
 lemma continuous'.to_bundled (f : α → β) (hf : continuous' f) :
- continuous ⟨f, hf.to_monotone⟩ := hf.snd
+  continuous ⟨f, hf.to_monotone⟩ := hf.snd
 
 @[simp, norm_cast] lemma continuous'_coe : ∀ {f : α →o β}, continuous' f ↔ continuous f
 | ⟨f, hf⟩ := ⟨λ ⟨hf', hc⟩, hc, λ hc, ⟨hf, hc⟩⟩
@@ -258,8 +258,8 @@ by intro; rw c.map_id; refl
 
 lemma continuous_comp (hfc : continuous f) (hgc : continuous g) : continuous (g.comp f):=
 begin
- dsimp [continuous] at *, intro,
- rw [hfc]; rw [hgc]; rw [chain.map_comp]
+  dsimp [continuous] at *, intro,
+  rw [hfc,hgc,chain.map_comp]
 end
 
 lemma id_continuous' : continuous' (@id α) :=
@@ -282,11 +282,11 @@ open omega_complete_partial_order
 
 lemma eq_of_chain {c : chain (part α)} {a b : α} (ha : some a ∈ c) (hb : some b ∈ c) : a = b :=
 begin
- cases ha with i ha, replace ha := ha.symm,
- cases hb with j hb, replace hb := hb.symm,
- wlog h : i ≤ j, { exact (this j hb i ha (le_of_not_le h)).symm },
- rw [eq_some_iff] at ha hb,
- have := c.monotone h _ ha, apply mem_unique this hb
+  cases ha with i ha, replace ha := ha.symm,
+  cases hb with j hb, replace hb := hb.symm,
+  wlog h : i ≤ j, { exact (this j hb i ha (le_of_not_le h)).symm },
+  rw [eq_some_iff] at ha hb,
+  have := c.monotone h _ ha, apply mem_unique this hb
 end
 
 /-- The (noncomputable) `ωSup` definition for the `ω`-CPO structure on `part α`. -/
@@ -297,39 +297,39 @@ lemma ωSup_eq_some {c : chain (part α)} {a : α} (h : some a ∈ c) : part.ωS
 have ∃a, some a ∈ c, from ⟨a, h⟩,
 have a' : some (classical.some this) ∈ c, from classical.some_spec this,
 calc part.ωSup c = some (classical.some this) : dif_pos this
- ... = some a : congr_arg _ (eq_of_chain a' h)
+                ... = some a : congr_arg _ (eq_of_chain a' h)
 
 lemma ωSup_eq_none {c : chain (part α)} (h : ¬∃a, some a ∈ c) : part.ωSup c = none :=
 dif_neg h
 
 lemma mem_chain_of_mem_ωSup {c : chain (part α)} {a : α} (h : a ∈ part.ωSup c) : some a ∈ c :=
 begin
- simp [part.ωSup] at h, split_ifs at h,
- { have h' := classical.some_spec h_1,
- rw ← eq_some_iff at h, rw ← h, exact h' },
- { rcases h with ⟨ ⟨ ⟩ ⟩ }
+  simp [part.ωSup] at h, split_ifs at h,
+  { have h' := classical.some_spec h_1,
+    rw ← eq_some_iff at h, rw ← h, exact h' },
+  { rcases h with ⟨ ⟨ ⟩ ⟩ }
 end
 
 noncomputable instance omega_complete_partial_order : omega_complete_partial_order (part α) :=
-{ ωSup := part.ωSup,
- le_ωSup := λ c i, by { intros x hx, rw ← eq_some_iff at hx ⊢,
- rw [ωSup_eq_some]; rw [ ← hx], rw ← hx, exact ⟨i,rfl⟩ },
- ωSup_le := by { rintros c x hx a ha, replace ha := mem_chain_of_mem_ωSup ha,
- cases ha with i ha, apply hx i, rw ← ha, apply mem_some } }
+{ ωSup    := part.ωSup,
+  le_ωSup := λ c i, by { intros x hx, rw ← eq_some_iff at hx ⊢,
+                         rw [ωSup_eq_some, ← hx], rw ← hx, exact ⟨i,rfl⟩ },
+  ωSup_le := by { rintros c x hx a ha, replace ha := mem_chain_of_mem_ωSup ha,
+                  cases ha with i ha, apply hx i, rw ← ha, apply mem_some } }
 
 section inst
 
 lemma mem_ωSup (x : α) (c : chain (part α)) : x ∈ ωSup c ↔ some x ∈ c :=
 begin
- simp [omega_complete_partial_order.ωSup,part.ωSup],
- split,
- { split_ifs, swap, rintro ⟨⟨⟩⟩,
- intro h', have hh := classical.some_spec h,
- simp at h', subst x, exact hh },
- { intro h,
- have h' : ∃ (a : α), some a ∈ c := ⟨_,h⟩,
- rw dif_pos h', have hh := classical.some_spec h',
- rw eq_of_chain hh h, simp }
+  simp [omega_complete_partial_order.ωSup,part.ωSup],
+  split,
+  { split_ifs, swap, rintro ⟨⟨⟩⟩,
+    intro h', have hh := classical.some_spec h,
+    simp at h', subst x, exact hh },
+  { intro h,
+    have h' : ∃ (a : α), some a ∈ c := ⟨_,h⟩,
+    rw dif_pos h', have hh := classical.some_spec h',
+    rw eq_of_chain hh h, simp }
 end
 
 end inst
@@ -343,9 +343,9 @@ variables {α : Type*} {β : α → Type*} {γ : Type*}
 open omega_complete_partial_order omega_complete_partial_order.chain
 
 instance [∀a, omega_complete_partial_order (β a)] : omega_complete_partial_order (Πa, β a) :=
-{ ωSup := λc a, ωSup (c.map (pi.eval_order_hom a)),
- ωSup_le := assume c f hf a, ωSup_le _ _ $ by { rintro i, apply hf },
- le_ωSup := assume c i x, le_ωSup_of_le _ $ le_rfl }
+{ ωSup    := λc a, ωSup (c.map (pi.eval_order_hom a)),
+  ωSup_le := assume c f hf a, ωSup_le _ _ $ by { rintro i, apply hf },
+  le_ωSup := assume c i x, le_ωSup_of_le _ $ le_rfl }
 
 namespace omega_complete_partial_order
 
@@ -353,17 +353,17 @@ variables [∀ x, omega_complete_partial_order $ β x]
 variables [omega_complete_partial_order γ]
 
 lemma flip₁_continuous'
- (f : ∀ x : α, γ → β x) (a : α) (hf : continuous' (λ x y, f y x)) :
- continuous' (f a) :=
+  (f : ∀ x : α, γ → β x) (a : α) (hf : continuous' (λ x y, f y x)) :
+  continuous' (f a) :=
 continuous.of_bundled _
- (λ x y h, hf.to_monotone h a)
- (λ c, congr_fun (hf.to_bundled _ c) a)
+  (λ x y h, hf.to_monotone h a)
+  (λ c, congr_fun (hf.to_bundled _ c) a)
 
 lemma flip₂_continuous'
- (f : γ → Π x, β x) (hf : ∀ x, continuous' (λ g, f g x)) : continuous' f :=
+  (f : γ → Π x, β x) (hf : ∀ x, continuous' (λ g, f g x)) : continuous' f :=
 continuous.of_bundled _
- (λ x y h a, (hf a).to_monotone h)
- (by intro c; ext a; apply (hf a).to_bundled _ c)
+  (λ x y h a, (hf a).to_monotone h)
+  (by intro c; ext a; apply (hf a).to_bundled _ c)
 
 end omega_complete_partial_order
 
@@ -385,15 +385,15 @@ protected def ωSup (c : chain (α × β)) : α × β :=
 @[simps ωSup_fst ωSup_snd]
 instance : omega_complete_partial_order (α × β) :=
 { ωSup := prod.ωSup,
- ωSup_le := λ c ⟨x,x'⟩ h, ⟨ωSup_le _ _ $ λ i, (h i).1, ωSup_le _ _ $ λ i, (h i).2⟩,
- le_ωSup := λ c i,
- ⟨le_ωSup (c.map order_hom.fst) i, le_ωSup (c.map order_hom.snd) i⟩ }
+  ωSup_le := λ c ⟨x,x'⟩ h, ⟨ωSup_le _ _ $ λ i, (h i).1, ωSup_le _ _ $ λ i, (h i).2⟩,
+  le_ωSup := λ c i,
+    ⟨le_ωSup (c.map order_hom.fst) i, le_ωSup (c.map order_hom.snd) i⟩ }
 
 lemma ωSup_zip (c₀ : chain α) (c₁ : chain β) :
- ωSup (c₀.zip c₁) = (ωSup c₀, ωSup c₁) :=
+  ωSup (c₀.zip c₁) = (ωSup c₀, ωSup c₁) :=
 begin
- apply eq_of_forall_ge_iff, rintro ⟨z₁,z₂⟩,
- simp [ωSup_le_iff, forall_and_distrib],
+  apply eq_of_forall_ge_iff, rintro ⟨z₁,z₂⟩,
+  simp [ωSup_le_iff, forall_and_distrib],
 end
 
 end prod
@@ -408,56 +408,56 @@ of arbitrary suprema. -/
 
 @[priority 100] -- see Note [lower instance priority]
 instance [complete_lattice α] : omega_complete_partial_order α :=
-{ ωSup := λc, ⨆ i, c i,
- ωSup_le := λ ⟨c, _⟩ s hs, by simp only [supr_le_iff, order_hom.coe_fun_mk] at ⊢ hs;
- intros i; apply hs i,
- le_ωSup := assume ⟨c, _⟩ i, by simp only [order_hom.coe_fun_mk]; apply le_supr_of_le i; refl }
+{ ωSup    := λc, ⨆ i, c i,
+  ωSup_le := λ ⟨c, _⟩ s hs, by simp only [supr_le_iff, order_hom.coe_fun_mk] at ⊢ hs;
+    intros i; apply hs i,
+  le_ωSup := assume ⟨c, _⟩ i, by simp only [order_hom.coe_fun_mk]; apply le_supr_of_le i; refl }
 
 variables {α} {β : Type v} [omega_complete_partial_order α] [complete_lattice β]
 
 lemma Sup_continuous (s : set $ α →o β) (hs : ∀ f ∈ s, continuous f) :
- continuous (Sup s) :=
+  continuous (Sup s) :=
 begin
- intro c, apply eq_of_forall_ge_iff, intro z,
- suffices : (∀ (f ∈ s) n, (f : _) (c n) ≤ z) ↔ (∀ n (f ∈ s), (f : _) (c n) ≤ z),
- by simpa [ωSup_le_iff, hs _ _ _] { contextual := tt },
- exact ⟨λ H n f hf, H f hf n, λ H f hf n, H n f hf⟩
+  intro c, apply eq_of_forall_ge_iff, intro z,
+  suffices : (∀ (f ∈ s) n, (f : _) (c n) ≤ z) ↔ (∀ n (f ∈ s), (f : _) (c n) ≤ z),
+    by simpa [ωSup_le_iff, hs _ _ _] { contextual := tt },
+  exact ⟨λ H n f hf, H f hf n, λ H f hf n, H n f hf⟩
 end
 
 lemma supr_continuous {ι : Sort*} {f : ι → α →o β} (h : ∀ i, continuous (f i)) :
- continuous (⨆ i, f i) :=
+  continuous (⨆ i, f i) :=
 Sup_continuous _ $ set.forall_range_iff.2 h
 
 theorem Sup_continuous' (s : set (α → β)) (hc : ∀ f ∈ s, continuous' f) :
- continuous' (Sup s) :=
+  continuous' (Sup s) :=
 begin
- lift s to set (α →o β) using λ f hf, (hc f hf).to_monotone,
- simp only [set.ball_image_iff, continuous'_coe] at hc,
- rw [Sup_image],
- norm_cast,
- exact supr_continuous (λ f, supr_continuous (λ hf, hc f hf)),
+  lift s to set (α →o β) using λ f hf, (hc f hf).to_monotone,
+  simp only [set.ball_image_iff, continuous'_coe] at hc,
+  rw [Sup_image],
+  norm_cast,
+  exact supr_continuous (λ f, supr_continuous (λ hf, hc f hf)),
 end
 
 lemma sup_continuous {f g : α →o β} (hf : continuous f) (hg : continuous g) :
- continuous (f ⊔ g) :=
+  continuous (f ⊔ g) :=
 begin
- rw ← Sup_pair, apply Sup_continuous,
- rintro f (rfl|rfl|_); assumption
+  rw ← Sup_pair, apply Sup_continuous,
+  rintro f (rfl|rfl|_); assumption
 end
 
 lemma top_continuous :
- continuous (⊤ : α →o β) :=
+  continuous (⊤ : α →o β) :=
 begin
- intro c, apply eq_of_forall_ge_iff, intro z,
- simp only [ωSup_le_iff, forall_const, chain.map_coe, (∘), function.const,
- order_hom.has_top_top, order_hom.const_coe_coe],
+  intro c, apply eq_of_forall_ge_iff, intro z,
+  simp only [ωSup_le_iff, forall_const, chain.map_coe, (∘), function.const,
+             order_hom.has_top_top, order_hom.const_coe_coe],
 end
 
 lemma bot_continuous :
- continuous (⊥ : α →o β) :=
+  continuous (⊥ : α →o β) :=
 begin
- rw ← Sup_empty,
- exact Sup_continuous _ (λ f hf, hf.elim),
+  rw ← Sup_empty,
+  exact Sup_continuous _ (λ f hf, hf.elim),
 end
 
 end complete_lattice
@@ -467,15 +467,15 @@ variables {α β : Type*} [omega_complete_partial_order α] [complete_linear_ord
 
 lemma inf_continuous (f g : α →o β) (hf : continuous f) (hg : continuous g) : continuous (f ⊓ g) :=
 begin
- refine λ c, eq_of_forall_ge_iff (λ z, _),
- simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ←forall_or_distrib_left, ←forall_or_distrib_right,
- function.comp_app, chain.map_coe, order_hom.has_inf_inf_coe],
- exact ⟨λ h _, h _ _, λ h i j, (h (max i j)).imp (le_trans $ f.mono $ c.mono $ le_max_left _ _)
- (le_trans $ g.mono $ c.mono $ le_max_right _ _)⟩,
+  refine λ c, eq_of_forall_ge_iff (λ z, _),
+  simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ←forall_or_distrib_left, ←forall_or_distrib_right,
+             function.comp_app, chain.map_coe, order_hom.has_inf_inf_coe],
+  exact ⟨λ h _, h _ _, λ h i j, (h (max i j)).imp (le_trans $ f.mono $ c.mono $ le_max_left _ _)
+    (le_trans $ g.mono $ c.mono $ le_max_right _ _)⟩,
 end
 
 lemma inf_continuous' {f g : α → β} (hf : continuous' f) (hg : continuous' g) :
- continuous' (f ⊓ g) :=
+  continuous' (f ⊓ g) :=
 ⟨_, inf_continuous _ _ hf.snd hg.snd⟩
 
 end complete_lattice
@@ -494,12 +494,12 @@ namespace order_hom
 @[simps]
 protected def ωSup (c : chain (α →o β)) : α →o β :=
 { to_fun := λ a, ωSup (c.map (order_hom.apply a)),
- monotone' := λ x y h, ωSup_le_ωSup_of_le (chain.map_le_map _ $ λ a, a.monotone h) }
+  monotone' := λ x y h, ωSup_le_ωSup_of_le (chain.map_le_map _ $ λ a, a.monotone h) }
 
 @[simps ωSup_coe]
 instance omega_complete_partial_order : omega_complete_partial_order (α →o β) :=
 omega_complete_partial_order.lift order_hom.coe_fn_hom order_hom.ωSup
- (λ x y h, h) (λ c, rfl)
+  (λ x y h, h) (λ c, rfl)
 
 end order_hom
 
@@ -519,17 +519,17 @@ infixr ` →𝒄 `:25 := continuous_hom -- Input: \r\MIc
 instance : has_coe_to_fun (α →𝒄 β) (λ _, α → β) := ⟨λ f, f.to_order_hom.to_fun⟩
 
 instance : has_coe (α →𝒄 β) (α →o β) :=
-{ coe := continuous_hom.to_order_hom }
+{ coe :=  continuous_hom.to_order_hom }
 
 instance : partial_order (α →𝒄 β) :=
 partial_order.lift (λ f, f.to_order_hom.to_fun) $ by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ h; congr; exact h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
- because it is a composition of multiple projections. -/
+  because it is a composition of multiple projections. -/
 def continuous_hom.simps.apply (h : α →𝒄 β) : α → β := h
 
 initialize_simps_projections continuous_hom
- (to_order_hom_to_fun → apply, -to_order_hom)
+  (to_order_hom_to_fun → apply, -to_order_hom)
 
 end
 
@@ -547,57 +547,57 @@ protected lemma monotone (f : α →𝒄 β) : monotone f := f.monotone'
 order_hom.apply_mono (show (f : α →o β) ≤ g, from h₁) h₂
 
 lemma ite_continuous' {p : Prop} [hp : decidable p] (f g : α → β)
- (hf : continuous' f) (hg : continuous' g) : continuous' (λ x, if p then f x else g x) :=
+  (hf : continuous' f) (hg : continuous' g) : continuous' (λ x, if p then f x else g x) :=
 by split_ifs; simp *
 
 lemma ωSup_bind {β γ : Type v} (c : chain α) (f : α →o part β) (g : α →o β → part γ) :
- ωSup (c.map (f.bind g)) = ωSup (c.map f) >>= ωSup (c.map g) :=
+  ωSup (c.map (f.bind g)) = ωSup (c.map f) >>= ωSup (c.map g) :=
 begin
- apply eq_of_forall_ge_iff, intro x,
- simp only [ωSup_le_iff, part.bind_le, chain.mem_map_iff, and_imp, order_hom.bind_coe,
- exists_imp_distrib],
- split; intro h''',
- { intros b hb, apply ωSup_le _ _ _,
- rintros i y hy, simp only [part.mem_ωSup] at hb,
- rcases hb with ⟨j,hb⟩, replace hb := hb.symm,
- simp only [part.eq_some_iff, chain.map_coe, function.comp_app, order_hom.apply_coe]
- at hy hb,
- replace hb : b ∈ f (c (max i j)) := f.mono (c.mono (le_max_right i j)) _ hb,
- replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_left i j)) _ _ hy,
- apply h''' (max i j),
- simp only [exists_prop, part.bind_eq_bind, part.mem_bind_iff, chain.map_coe,
- function.comp_app, order_hom.bind_coe],
- exact ⟨_,hb,hy⟩, },
- { intros i, intros y hy,
- simp only [exists_prop, part.bind_eq_bind, part.mem_bind_iff, chain.map_coe,
- function.comp_app, order_hom.bind_coe] at hy,
- rcases hy with ⟨b,hb₀,hb₁⟩,
- apply h''' b _,
- { apply le_ωSup (c.map g) _ _ _ hb₁ },
- { apply le_ωSup (c.map f) i _ hb₀ } },
+  apply eq_of_forall_ge_iff, intro x,
+  simp only [ωSup_le_iff, part.bind_le, chain.mem_map_iff, and_imp, order_hom.bind_coe,
+    exists_imp_distrib],
+  split; intro h''',
+  { intros b hb, apply ωSup_le _ _ _,
+    rintros i y hy, simp only [part.mem_ωSup] at hb,
+    rcases hb with ⟨j,hb⟩, replace hb := hb.symm,
+    simp only [part.eq_some_iff, chain.map_coe, function.comp_app, order_hom.apply_coe]
+      at hy hb,
+    replace hb : b ∈ f (c (max i j))   := f.mono (c.mono (le_max_right i j)) _ hb,
+    replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_left i j)) _ _ hy,
+    apply h''' (max i j),
+    simp only [exists_prop, part.bind_eq_bind, part.mem_bind_iff, chain.map_coe,
+               function.comp_app, order_hom.bind_coe],
+    exact ⟨_,hb,hy⟩, },
+  { intros i, intros y hy,
+    simp only [exists_prop, part.bind_eq_bind, part.mem_bind_iff, chain.map_coe,
+               function.comp_app, order_hom.bind_coe] at hy,
+    rcases hy with ⟨b,hb₀,hb₁⟩,
+    apply h''' b _,
+    { apply le_ωSup (c.map g) _ _ _ hb₁ },
+    { apply le_ωSup (c.map f) i _ hb₀ } },
 end
 
 lemma bind_continuous' {β γ : Type v} (f : α → part β) (g : α → β → part γ) :
- continuous' f → continuous' g →
- continuous' (λ x, f x >>= g x)
+  continuous' f → continuous' g →
+  continuous' (λ x, f x >>= g x)
 | ⟨hf,hf'⟩ ⟨hg,hg'⟩ :=
 continuous.of_bundled' (order_hom.bind ⟨f,hf⟩ ⟨g,hg⟩)
- (by intro c; rw [ωSup_bind]; rw [ ← hf']; rw [ ← hg']; refl)
+  (by intro c; rw [ωSup_bind, ← hf', ← hg']; refl)
 
 lemma map_continuous' {β γ : Type v} (f : β → γ) (g : α → part β)
- (hg : continuous' g) :
- continuous' (λ x, f <$> g x) :=
+  (hg : continuous' g) :
+  continuous' (λ x, f <$> g x) :=
 by simp only [map_eq_bind_pure_comp];
- apply bind_continuous' _ _ hg;
- apply const_continuous'
+   apply bind_continuous' _ _ hg;
+   apply const_continuous'
 
 lemma seq_continuous' {β γ : Type v} (f : α → part (β → γ)) (g : α → part β)
- (hf : continuous' f) (hg : continuous' g) :
- continuous' (λ x, f x <*> g x) :=
+  (hf : continuous' f) (hg : continuous' g) :
+  continuous' (λ x, f x <*> g x) :=
 by simp only [seq_eq_bind_map];
- apply bind_continuous' _ _ hf;
- apply pi.omega_complete_partial_order.flip₂_continuous'; intro;
- apply map_continuous' _ _ hg
+   apply bind_continuous' _ _ hf;
+   apply pi.omega_complete_partial_order.flip₂_continuous'; intro;
+   apply map_continuous' _ _ hg
 
 lemma continuous (F : α →𝒄 β) (C : chain α) : F (ωSup C) = ωSup (C.map F) :=
 continuous_hom.cont _ _
@@ -612,8 +612,8 @@ by refine {to_order_hom := {to_fun := f, ..}, ..}; subst h; rcases g with ⟨⟨
 @[simps, reducible]
 def of_mono (f : α →o β) (h : ∀ c : chain α, f (ωSup c) = ωSup (c.map f)) : α →𝒄 β :=
 { to_fun := f,
- monotone' := f.monotone,
- cont := h }
+  monotone' := f.monotone,
+  cont := h }
 
 /-- The identity as a continuous function. -/
 @[simps]
@@ -659,7 +659,7 @@ instance [inhabited β] : inhabited (α →𝒄 β) :=
 @[simps]
 def to_mono : (α →𝒄 β) →o (α →o β) :=
 { to_fun := λ f, f,
- monotone' := λ x y h, h }
+  monotone' := λ x y h, h }
 
 /-- When proving that a chain of applications is below a bound `z`, it suffices to consider the
 functions and values being selected from the same index in the chains.
@@ -668,20 +668,20 @@ This lemma is more specific than necessary, i.e. `c₀` only needs to be a
 chain of monotone functions, but it is only used with continuous functions. -/
 @[simp]
 lemma forall_forall_merge (c₀ : chain (α →𝒄 β)) (c₁ : chain α) (z : β) :
- (∀ (i j : ℕ), (c₀ i) (c₁ j) ≤ z) ↔ ∀ (i : ℕ), (c₀ i) (c₁ i) ≤ z :=
+  (∀ (i j : ℕ), (c₀ i) (c₁ j) ≤ z) ↔ ∀ (i : ℕ), (c₀ i) (c₁ i) ≤ z :=
 begin
- split; introv h,
- { apply h },
- { apply le_trans _ (h (max i j)),
- transitivity c₀ i (c₁ (max i j)),
- { apply (c₀ i).monotone, apply c₁.monotone, apply le_max_right },
- { apply c₀.monotone, apply le_max_left } }
+  split; introv h,
+  { apply h },
+  { apply le_trans _ (h (max i j)),
+    transitivity c₀ i (c₁ (max i j)),
+    { apply (c₀ i).monotone, apply c₁.monotone, apply le_max_right },
+    { apply c₀.monotone, apply le_max_left } }
 end
 
 @[simp]
 lemma forall_forall_merge' (c₀ : chain (α →𝒄 β)) (c₁ : chain α) (z : β) :
- (∀ (j i : ℕ), (c₀ i) (c₁ j) ≤ z) ↔ ∀ (i : ℕ), (c₀ i) (c₁ i) ≤ z :=
-by rw [forall_swap]; rw [forall_forall_merge]
+  (∀ (j i : ℕ), (c₀ i) (c₁ j) ≤ z) ↔ ∀ (i : ℕ), (c₀ i) (c₁ i) ≤ z :=
+by rw [forall_swap,forall_forall_merge]
 
 /-- The `ωSup` operator for continuous functions, which takes the pointwise countable supremum
 of the functions in the `ω`-chain. -/
@@ -689,66 +689,66 @@ of the functions in the `ω`-chain. -/
 protected def ωSup (c : chain (α →𝒄 β)) : α →𝒄 β :=
 continuous_hom.of_mono (ωSup $ c.map to_mono)
 begin
- intro c',
- apply eq_of_forall_ge_iff, intro z,
- simp only [ωSup_le_iff, (c _).continuous, chain.map_coe, order_hom.apply_coe,
- to_mono_coe, coe_apply, order_hom.omega_complete_partial_order_ωSup_coe,
- forall_forall_merge, forall_forall_merge', (∘), function.eval],
+  intro c',
+  apply eq_of_forall_ge_iff, intro z,
+  simp only [ωSup_le_iff, (c _).continuous, chain.map_coe, order_hom.apply_coe,
+    to_mono_coe, coe_apply, order_hom.omega_complete_partial_order_ωSup_coe,
+    forall_forall_merge, forall_forall_merge', (∘), function.eval],
 end
 
 @[simps ωSup]
 instance : omega_complete_partial_order (α →𝒄 β) :=
 omega_complete_partial_order.lift continuous_hom.to_mono continuous_hom.ωSup
- (λ x y h, h) (λ c, rfl)
+  (λ x y h, h) (λ c, rfl)
 
 namespace prod
 
-/-- The application of continuous functions as a continuous function. -/
+/-- The application of continuous functions as a continuous function.  -/
 @[simps]
 def apply : (α →𝒄 β) × α →𝒄 β :=
 { to_fun := λ f, f.1 f.2,
- monotone' := λ x y h, by {dsimp, transitivity y.fst x.snd; [apply h.1, apply y.1.monotone h.2]},
- cont := begin
- intro c,
- apply le_antisymm,
- { apply ωSup_le, intros i,
- dsimp,
- rw (c _).fst.continuous,
- apply ωSup_le, intros j,
- apply le_ωSup_of_le (max i j),
- apply apply_mono,
- exact monotone_fst (order_hom.mono _ (le_max_left _ _)),
- exact monotone_snd (order_hom.mono _ (le_max_right _ _)), },
- { apply ωSup_le, intros i,
- apply le_ωSup_of_le i,
- dsimp,
- apply order_hom.mono _,
- apply le_ωSup_of_le i,
- reflexivity, }
- end }
+  monotone' := λ x y h, by {dsimp, transitivity y.fst x.snd; [apply h.1, apply y.1.monotone h.2]},
+  cont := begin
+    intro c,
+    apply le_antisymm,
+    { apply ωSup_le, intros i,
+      dsimp,
+      rw (c _).fst.continuous,
+      apply ωSup_le, intros j,
+      apply le_ωSup_of_le (max i j),
+      apply apply_mono,
+      exact monotone_fst (order_hom.mono _ (le_max_left _ _)),
+      exact monotone_snd (order_hom.mono _ (le_max_right _ _)), },
+    { apply ωSup_le, intros i,
+      apply le_ωSup_of_le i,
+      dsimp,
+      apply order_hom.mono _,
+      apply le_ωSup_of_le i,
+      reflexivity, }
+  end }
 
 end prod
 
 lemma ωSup_def (c : chain (α →𝒄 β)) (x : α) : ωSup c x = continuous_hom.ωSup c x := rfl
 
 lemma ωSup_apply_ωSup (c₀ : chain (α →𝒄 β)) (c₁ : chain α) :
- ωSup c₀ (ωSup c₁) = prod.apply (ωSup (c₀.zip c₁)) :=
+  ωSup c₀ (ωSup c₁) = prod.apply (ωSup (c₀.zip c₁)) :=
 by simp [prod.apply_apply, prod.ωSup_zip]
 
 /-- A family of continuous functions yields a continuous family of functions. -/
 @[simps]
 def flip {α : Type*} (f : α → β →𝒄 γ) : β →𝒄 α → γ :=
 { to_fun := λ x y, f y x,
- monotone' := λ x y h a, (f a).monotone h,
- cont := by intro; ext; change f x _ = _; rw [(f x).continuous ]; refl, }
+  monotone' := λ x y h a, (f a).monotone h,
+  cont := by intro; ext; change f x _ = _; rw [(f x).continuous ]; refl, }
 
 /-- `part.bind` as a continuous function. -/
 @[simps { rhs_md := reducible }]
 noncomputable def bind {β γ : Type v}
- (f : α →𝒄 part β) (g : α →𝒄 β → part γ) : α →𝒄 part γ :=
+  (f : α →𝒄 part β) (g : α →𝒄 β → part γ) : α →𝒄 part γ :=
 of_mono (order_hom.bind (↑f) (↑g)) $ λ c, begin
- rw [order_hom.bind]; rw [ ← order_hom.bind]; rw [ ωSup_bind]; rw [ ← f.continuous]; rw [ ← g.continuous],
- refl
+  rw [order_hom.bind, ← order_hom.bind, ωSup_bind, ← f.continuous, ← g.continuous],
+  refl
 end
 
 /-- `part.map` as a continuous function. -/
@@ -756,17 +756,16 @@ end
 noncomputable def map {β γ : Type v} (f : β → γ) (g : α →𝒄 part β) : α →𝒄 part γ :=
 of_fun (λ x, f <$> g x) (bind g (const (pure ∘ f))) $
 by ext; simp only [map_eq_bind_pure_comp, bind_apply, order_hom.bind_coe, const_apply,
- order_hom.const_coe_coe, coe_apply]
+  order_hom.const_coe_coe, coe_apply]
 
 /-- `part.seq` as a continuous function. -/
 @[simps {rhs_md := reducible}]
 noncomputable def seq {β γ : Type v} (f : α →𝒄 part (β → γ)) (g : α →𝒄 part β) :
- α →𝒄 part γ :=
+  α →𝒄 part γ :=
 of_fun (λ x, f x <*> g x) (bind f $ (flip $ _root_.flip map g))
- (by ext; simp only [seq_eq_bind_map, flip, part.bind_eq_bind, map_apply, part.mem_bind_iff,
- bind_apply, order_hom.bind_coe, coe_apply, flip_apply]; refl)
+  (by ext; simp only [seq_eq_bind_map, flip, part.bind_eq_bind, map_apply, part.mem_bind_iff,
+                      bind_apply, order_hom.bind_coe, coe_apply, flip_apply]; refl)
 
 end continuous_hom
 
 end omega_complete_partial_order
-

@@ -52,16 +52,16 @@ For example:
 
 ```lean
 example (f g : ℤ → ℤ) (S : finset ℤ) (h : ∀ m ∈ S, f m = g m) :
- finset.sum S f = finset.sum S g :=
+  finset.sum S f = finset.sum S g :=
 begin
- conv_lhs
- { -- If we just call `congr` here, in the second goal we're helpless,
- -- because we are only given the opportunity to rewrite `f`.
- -- However `apply_congr` uses the appropriate `@[congr]` lemma,
- -- so we get to rewrite `f x`, in the presence of the crucial `H : x ∈ S` hypothesis.
- apply_congr,
- skip,
- simp [h, H], }
+  conv_lhs
+  { -- If we just call `congr` here, in the second goal we're helpless,
+    -- because we are only given the opportunity to rewrite `f`.
+    -- However `apply_congr` uses the appropriate `@[congr]` lemma,
+    -- so we get to rewrite `f x`, in the presence of the crucial `H : x ∈ S` hypothesis.
+    apply_congr,
+    skip,
+    simp [h, H], }
 end
 ```
 
@@ -70,30 +70,29 @@ which is then used to rewrite the `f x` to `g x`.
 -/
 meta def apply_congr (q : parse texpr?) : conv unit :=
 do
- congr_lemmas ← match q with
- -- If the user specified a lemma, use that one,
- | some e := do
- gs ← get_goals,
- e ← to_expr e, -- to_expr messes with the goals? (see tests)
- set_goals gs,
- return [e]
- -- otherwise, look up everything tagged `@[congr]`
- | none := do
- congr_lemma_names ← attribute.get_instances `congr,
- congr_lemma_names.mmap mk_const
- end,
- -- For every lemma:
- congr_lemmas.any_of (λ n,
- -- Call tactic.eapply
- seq' (tactic.eapply n >> tactic.skip)
- -- and then call `intros` on each resulting goal, and require that afterwards it's an equation.
- (tactic.intros >> (do `(_ = _) ← target, tactic.skip)))
+  congr_lemmas ← match q with
+  -- If the user specified a lemma, use that one,
+  | some e := do
+    gs ← get_goals,
+    e ← to_expr e, -- to_expr messes with the goals? (see tests)
+    set_goals gs,
+    return [e]
+  -- otherwise, look up everything tagged `@[congr]`
+  | none := do
+    congr_lemma_names ← attribute.get_instances `congr,
+    congr_lemma_names.mmap mk_const
+  end,
+  -- For every lemma:
+  congr_lemmas.any_of (λ n,
+    -- Call tactic.eapply
+    seq' (tactic.eapply n >> tactic.skip)
+    -- and then call `intros` on each resulting goal, and require that afterwards it's an equation.
+        (tactic.intros >> (do `(_ = _) ← target, tactic.skip)))
 
 add_tactic_doc
 { name := "apply_congr",
- category := doc_category.tactic,
- decl_names := [`conv.interactive.apply_congr],
- tags := ["conv", "congruence", "rewriting"] }
+  category := doc_category.tactic,
+  decl_names := [`conv.interactive.apply_congr],
+  tags := ["conv", "congruence", "rewriting"] }
 
 end conv.interactive
-

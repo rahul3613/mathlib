@@ -15,13 +15,13 @@ import tactic.ring
 ## Main definitions
 
 * `quaternion_algebra.basis A c₁ c₂`: a basis for a subspace of an `R`-algebra `A` that has the
- same algebra structure as `ℍ[R,c₁,c₂]`.
+  same algebra structure as `ℍ[R,c₁,c₂]`.
 * `quaternion_algebra.basis.self R`: the canonical basis for `ℍ[R,c₁,c₂]`.
 * `quaternion_algebra.basis.comp_hom b f`: transform a basis `b` by an alg_hom `f`.
 * `quaternion_algebra.lift`: Define an `alg_hom` out of `ℍ[R,c₁,c₂]` by its action on the basis
- elements `i`, `j`, and `k`. In essence, this is a universal property. Analogous to `complex.lift`,
- but takes a bundled `quaternion_algebra.basis` instead of just a `subtype` as the amount of
- data / proves is non-negligeable.
+  elements `i`, `j`, and `k`. In essence, this is a universal property. Analogous to `complex.lift`,
+  but takes a bundled `quaternion_algebra.basis` instead of just a `subtype` as the amount of
+  data / proves is non-negligeable.
 -/
 
 open_locale quaternion
@@ -49,13 +49,13 @@ namespace basis
 /-- Since `k` is redundant, it is not necessary to show `q₁.k = q₂.k` when showing `q₁ = q₂`. -/
 @[ext]
 protected lemma ext ⦃q₁ q₂ : basis A c₁ c₂⦄ (hi : q₁.i = q₂.i) (hj : q₁.j = q₂.j) :
- q₁ = q₂ :=
+  q₁ = q₂ :=
 begin
- cases q₁,
- cases q₂,
- congr',
- rw [←q₁_i_mul_j]; rw [ ←q₂_i_mul_j],
- congr'
+  cases q₁,
+  cases q₂,
+  congr',
+  rw [←q₁_i_mul_j, ←q₂_i_mul_j],
+  congr'
 end
 
 variables (R)
@@ -64,12 +64,12 @@ variables (R)
 @[simps i j k]
 protected def self : basis ℍ[R,c₁,c₂] c₁ c₂ :=
 { i := ⟨0, 1, 0, 0⟩,
- i_mul_i := by { ext; simp },
- j := ⟨0, 0, 1, 0⟩,
- j_mul_j := by { ext; simp },
- k := ⟨0, 0, 0, 1⟩,
- i_mul_j := by { ext; simp },
- j_mul_i := by { ext; simp } }
+  i_mul_i := by { ext; simp },
+  j := ⟨0, 0, 1, 0⟩,
+  j_mul_j := by { ext; simp },
+  k := ⟨0, 0, 0, 1⟩,
+  i_mul_j := by { ext; simp },
+  j_mul_i := by { ext; simp } }
 
 variables {R}
 
@@ -81,19 +81,21 @@ include q
 attribute [simp] i_mul_i j_mul_j i_mul_j j_mul_i
 
 @[simp] lemma i_mul_k : q.i * q.k = c₁ • q.j :=
-by rw [←i_mul_j]; rw [ ←mul_assoc]; rw [ i_mul_i]; rw [ smul_mul_assoc]; rw [ one_mul]
+by rw [←i_mul_j, ←mul_assoc, i_mul_i, smul_mul_assoc, one_mul]
 
 @[simp] lemma k_mul_i : q.k * q.i = -c₁ • q.j :=
-by rw [←i_mul_j]; rw [ mul_assoc]; rw [ j_mul_i]; rw [ mul_neg]; rw [ i_mul_k]; rw [ neg_smul]
+by rw [←i_mul_j, mul_assoc, j_mul_i, mul_neg, i_mul_k, neg_smul]
 
 @[simp] lemma k_mul_j : q.k * q.j = c₂ • q.i :=
-by rw [←i_mul_j]; rw [ mul_assoc]; rw [ j_mul_j]; rw [ mul_smul_comm]; rw [ mul_one]
+by rw [←i_mul_j, mul_assoc, j_mul_j, mul_smul_comm, mul_one]
 
 @[simp] lemma j_mul_k : q.j * q.k = -c₂ • q.i :=
-by rw [←i_mul_j]; rw [ ←mul_assoc]; rw [ j_mul_i]; rw [ neg_mul]; rw [ k_mul_j]; rw [ neg_smul]
+by rw [←i_mul_j, ←mul_assoc, j_mul_i, neg_mul, k_mul_j, neg_smul]
 
 @[simp] lemma k_mul_k : q.k * q.k = -((c₁ * c₂) • 1) :=
-by rw [←i_mul_j]; rw [ mul_assoc]; rw [ ←mul_assoc q.j _ _]; rw [ j_mul_i]; rw [ ←i_mul_j]; rw [ ←mul_assoc]; rw [ mul_neg]; rw [ ←mul_assoc]; rw [ i_mul_i]; rw [ smul_mul_assoc]; rw [ one_mul]; rw [ neg_mul]; rw [ smul_mul_assoc]; rw [ j_mul_j]; rw [ smul_smul]
+by rw [←i_mul_j, mul_assoc, ←mul_assoc q.j _ _, j_mul_i, ←i_mul_j,
+  ←mul_assoc, mul_neg, ←mul_assoc, i_mul_i, smul_mul_assoc, one_mul,
+  neg_mul, smul_mul_assoc, j_mul_j, smul_smul]
 
 /-- Intermediate result used to define `quaternion_algebra.basis.lift_hom`. -/
 def lift (x : ℍ[R,c₁,c₂]) : A :=
@@ -105,19 +107,19 @@ lemma lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y :
 by { simp [lift, add_smul], abel }
 lemma lift_mul (x y : ℍ[R,c₁,c₂]) : q.lift (x * y) = q.lift x * q.lift y :=
 begin
- simp only [lift, algebra.algebra_map_eq_smul_one],
- simp only [add_mul],
- simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
- ←algebra.smul_def, smul_add, smul_smul],
- simp only [i_mul_i, j_mul_j, i_mul_j, j_mul_i, i_mul_k, k_mul_i, k_mul_j, j_mul_k, k_mul_k],
- simp only [smul_smul, smul_neg, sub_eq_add_neg, add_smul, ←add_assoc, mul_neg,
- neg_smul],
- simp only [mul_right_comm _ _ (c₁ * c₂), mul_comm _ (c₁ * c₂)],
- simp only [mul_comm _ c₁, mul_right_comm _ _ c₁],
- simp only [mul_comm _ c₂, mul_right_comm _ _ c₂],
- simp only [←mul_comm c₁ c₂, ←mul_assoc],
- simp [sub_eq_add_neg, add_smul, ←add_assoc],
- abel
+  simp only [lift, algebra.algebra_map_eq_smul_one],
+  simp only [add_mul],
+  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one,
+    ←algebra.smul_def, smul_add, smul_smul],
+  simp only [i_mul_i, j_mul_j, i_mul_j, j_mul_i, i_mul_k, k_mul_i, k_mul_j, j_mul_k, k_mul_k],
+  simp only [smul_smul, smul_neg, sub_eq_add_neg, add_smul, ←add_assoc, mul_neg,
+    neg_smul],
+  simp only [mul_right_comm _ _ (c₁ * c₂), mul_comm _ (c₁ * c₂)],
+  simp only [mul_comm _ c₁, mul_right_comm _ _ c₁],
+  simp only [mul_comm _ c₂, mul_right_comm _ _ c₂],
+  simp only [←mul_comm c₁ c₂, ←mul_assoc],
+  simp [sub_eq_add_neg, add_smul, ←add_assoc],
+  abel
 end
 
 lemma lift_smul (r : R) (x : ℍ[R,c₁,c₂]) : q.lift (r • x) = r • q.lift x :=
@@ -127,23 +129,23 @@ by simp [lift, mul_smul, ←algebra.smul_def]
 @[simps]
 def lift_hom : ℍ[R,c₁,c₂] →ₐ[R] A :=
 alg_hom.mk'
- { to_fun := q.lift,
- map_zero' := q.lift_zero,
- map_one' := q.lift_one,
- map_add' := q.lift_add,
- map_mul' := q.lift_mul }
- q.lift_smul
+  { to_fun := q.lift,
+    map_zero' := q.lift_zero,
+    map_one' := q.lift_one,
+    map_add' := q.lift_add,
+    map_mul' := q.lift_mul }
+  q.lift_smul
 
 /-- Transform a `quaternion_algebra.basis` through an `alg_hom`. -/
 @[simps i j k]
 def comp_hom (F : A →ₐ[R] B) : basis B c₁ c₂ :=
 { i := F q.i,
- i_mul_i := by rw [←F.map_mul]; rw [ q.i_mul_i]; rw [ F.map_smul]; rw [ F.map_one],
- j := F q.j,
- j_mul_j := by rw [←F.map_mul]; rw [ q.j_mul_j]; rw [ F.map_smul]; rw [ F.map_one],
- k := F q.k,
- i_mul_j := by rw [←F.map_mul]; rw [ q.i_mul_j],
- j_mul_i := by rw [←F.map_mul]; rw [ q.j_mul_i]; rw [ F.map_neg], }
+  i_mul_i := by rw [←F.map_mul, q.i_mul_i, F.map_smul, F.map_one],
+  j := F q.j,
+  j_mul_j := by rw [←F.map_mul, q.j_mul_j, F.map_smul, F.map_one],
+  k := F q.k,
+  i_mul_j := by rw [←F.map_mul, q.i_mul_j],
+  j_mul_i := by rw [←F.map_mul, q.j_mul_i, F.map_neg], }
 
 end basis
 
@@ -151,19 +153,18 @@ end basis
 @[simps]
 def lift : basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A) :=
 { to_fun := basis.lift_hom,
- inv_fun := (basis.self R).comp_hom,
- left_inv := λ q, begin
- ext;
- simp [basis.lift],
- end,
- right_inv := λ F, begin
- ext,
- dsimp [basis.lift],
- rw ←F.commutes,
- simp only [←F.commutes, ←F.map_smul, ←F.map_add, mk_add_mk, smul_mk, smul_zero, algebra_map_eq],
- congr,
- simp,
- end }
+  inv_fun := (basis.self R).comp_hom,
+  left_inv := λ q, begin
+    ext;
+    simp [basis.lift],
+  end,
+  right_inv := λ F, begin
+    ext,
+    dsimp [basis.lift],
+    rw ←F.commutes,
+    simp only [←F.commutes, ←F.map_smul, ←F.map_add, mk_add_mk, smul_mk, smul_zero, algebra_map_eq],
+    congr,
+    simp,
+  end }
 
 end quaternion_algebra
-

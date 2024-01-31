@@ -24,22 +24,23 @@ open_locale classical
 
 lemma mul_inverse_rev' {a b : M₀} (h : commute a b) : inverse (a * b) = inverse b * inverse a :=
 begin
- by_cases hab : is_unit (a * b),
- { obtain ⟨⟨a, rfl⟩, b, rfl⟩ := h.is_unit_mul_iff.mp hab,
- rw [←units.coe_mul]; rw [ inverse_unit]; rw [ inverse_unit]; rw [ inverse_unit]; rw [ ←units.coe_mul]; rw [ mul_inv_rev], },
- obtain ha | hb := not_and_distrib.mp (mt h.is_unit_mul_iff.mpr hab),
- { rw [inverse_non_unit _ hab]; rw [ inverse_non_unit _ ha]; rw [ mul_zero]},
- { rw [inverse_non_unit _ hab]; rw [ inverse_non_unit _ hb]; rw [ zero_mul]},
+  by_cases hab : is_unit (a * b),
+  { obtain ⟨⟨a, rfl⟩, b, rfl⟩ := h.is_unit_mul_iff.mp hab,
+    rw [←units.coe_mul, inverse_unit, inverse_unit, inverse_unit, ←units.coe_mul,
+      mul_inv_rev], },
+  obtain ha | hb := not_and_distrib.mp (mt h.is_unit_mul_iff.mpr hab),
+  { rw [inverse_non_unit _ hab, inverse_non_unit _ ha, mul_zero]},
+  { rw [inverse_non_unit _ hab, inverse_non_unit _ hb, zero_mul]},
 end
 
 lemma mul_inverse_rev {M₀} [comm_monoid_with_zero M₀] (a b : M₀) :
- ring.inverse (a * b) = inverse b * inverse a :=
+  ring.inverse (a * b) = inverse b * inverse a :=
 mul_inverse_rev' (commute.all _ _)
 
 end ring
 
 lemma commute.ring_inverse_ring_inverse {a b : M₀} (h : commute a b) :
- commute (ring.inverse a) (ring.inverse b) :=
+  commute (ring.inverse a) (ring.inverse b) :=
 (ring.mul_inverse_rev' h.symm).symm.trans $ (congr_arg _ h.symm.eq).trans $ ring.mul_inverse_rev' h
 
 namespace commute
@@ -60,12 +61,11 @@ semiconj_by.inv_right_iff₀
 theorem inv_right₀ (h : commute a b) : commute a b⁻¹ := inv_right_iff₀.2 h
 
 @[simp] theorem div_right (hab : commute a b) (hac : commute a c) :
- commute a (b / c) :=
+  commute a (b / c) :=
 hab.div_right hac
 
 @[simp] theorem div_left (hac : commute a c) (hbc : commute b c) :
- commute (a / b) c :=
+  commute (a / b) c :=
 by { rw div_eq_mul_inv, exact hac.mul_left hbc.inv_left₀ }
 
 end commute
-

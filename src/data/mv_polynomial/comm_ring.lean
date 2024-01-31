@@ -60,16 +60,16 @@ variables (σ a a')
 @[simp] lemma C_neg : (C (-a) : mv_polynomial σ R) = -C a := ring_hom.map_neg _ _
 
 @[simp] lemma coeff_neg (m : σ →₀ ℕ) (p : mv_polynomial σ R) :
- coeff m (-p) = -coeff m p := finsupp.neg_apply _ _
+  coeff m (-p) = -coeff m p := finsupp.neg_apply _ _
 
 @[simp] lemma coeff_sub (m : σ →₀ ℕ) (p q : mv_polynomial σ R) :
- coeff m (p - q) = coeff m p - coeff m q := finsupp.sub_apply _ _ _
+  coeff m (p - q) = coeff m p - coeff m q := finsupp.sub_apply _ _ _
 
 @[simp] lemma support_neg : (- p).support = p.support :=
 finsupp.support_neg p
 
 lemma support_sub [decidable_eq σ] (p q : mv_polynomial σ R) :
- (p - q).support ⊆ p.support ∪ q.support :=
+  (p - q).support ⊆ p.support ∪ q.support :=
 finsupp.support_sub
 
 variables {σ} (p)
@@ -77,10 +77,10 @@ variables {σ} (p)
 section degrees
 
 lemma degrees_neg (p : mv_polynomial σ R) : (- p).degrees = p.degrees :=
-by rw [degrees]; rw [ support_neg]; refl
+by rw [degrees, support_neg]; refl
 
 lemma degrees_sub [decidable_eq σ] (p q : mv_polynomial σ R) :
- (p - q).degrees ≤ p.degrees ⊔ q.degrees :=
+  (p - q).degrees ≤ p.degrees ⊔ q.degrees :=
 by classical; simpa only [sub_eq_add_neg, degrees_neg] using degrees_add p (-q)
 
 end degrees
@@ -99,11 +99,11 @@ variables {p q}
 
 @[simp]
 lemma vars_sub_of_disjoint [decidable_eq σ] (hpq : disjoint p.vars q.vars) :
- (p - q).vars = p.vars ∪ q.vars :=
+  (p - q).vars = p.vars ∪ q.vars :=
 begin
- rw ←vars_neg q at hpq,
- convert vars_add_of_disjoint hpq using 2;
- simp [sub_eq_add_neg]
+  rw ←vars_neg q at hpq,
+  convert vars_add_of_disjoint hpq using 2;
+    simp [sub_eq_add_neg]
 end
 
 end vars
@@ -124,40 +124,40 @@ eq_int_cast (f.comp C) n
 /-- A ring homomorphism f : Z[X_1, X_2, ...] → R
 is determined by the evaluations f(X_1), f(X_2), ... -/
 @[simp] lemma eval₂_hom_X {R : Type u} (c : ℤ →+* S)
- (f : mv_polynomial R ℤ →+* S) (x : mv_polynomial R ℤ) :
- eval₂ c (f ∘ X) x = f x :=
+  (f : mv_polynomial R ℤ →+* S) (x : mv_polynomial R ℤ) :
+  eval₂ c (f ∘ X) x = f x :=
 mv_polynomial.induction_on x
-(λ n, by { rw [hom_C f]; rw [ eval₂_C], exact eq_int_cast c n })
-(λ p q hp hq, by { rw [eval₂_add]; rw [ hp]; rw [ hq], exact (f.map_add _ _).symm })
-(λ p n hp, by { rw [eval₂_mul]; rw [ eval₂_X]; rw [ hp], exact (f.map_mul _ _).symm })
+(λ n, by { rw [hom_C f, eval₂_C], exact eq_int_cast c n })
+(λ p q hp hq, by { rw [eval₂_add, hp, hq], exact (f.map_add _ _).symm })
+(λ p n hp, by { rw [eval₂_mul, eval₂_X, hp], exact (f.map_mul _ _).symm })
 
 /-- Ring homomorphisms out of integer polynomials on a type `σ` are the same as
 functions out of the type `σ`, -/
 def hom_equiv : (mv_polynomial σ ℤ →+* S) ≃ (σ → S) :=
 { to_fun := λ f, ⇑f ∘ X,
- inv_fun := λ f, eval₂_hom (int.cast_ring_hom S) f,
- left_inv := λ f, ring_hom.ext $ eval₂_hom_X _ _,
- right_inv := λ f, funext $ λ x, by simp only [coe_eval₂_hom, function.comp_app, eval₂_X] }
+  inv_fun := λ f, eval₂_hom (int.cast_ring_hom S) f,
+  left_inv := λ f, ring_hom.ext  $ eval₂_hom_X _ _,
+  right_inv := λ f, funext $ λ x, by simp only [coe_eval₂_hom, function.comp_app, eval₂_X] }
 
 end eval₂
 
 section degree_of
 
 lemma degree_of_sub_lt {x : σ} {f g : mv_polynomial σ R} {k : ℕ} (h : 0 < k)
- (hf : ∀ (m : σ →₀ ℕ), m ∈ f.support → (k ≤ m x) → coeff m f = coeff m g)
- (hg : ∀ (m : σ →₀ ℕ), m ∈ g.support → (k ≤ m x) → coeff m f = coeff m g) :
- degree_of x (f - g) < k :=
+  (hf : ∀ (m : σ →₀ ℕ), m ∈ f.support → (k ≤ m x) → coeff m f = coeff m g)
+  (hg : ∀ (m : σ →₀ ℕ), m ∈ g.support → (k ≤ m x) → coeff m f = coeff m g) :
+  degree_of x (f - g) < k :=
 begin
- classical,
- rw degree_of_lt_iff h,
- intros m hm,
- by_contra hc,
- simp only [not_lt] at hc,
- have h := support_sub σ f g hm,
- simp only [mem_support_iff, ne.def, coeff_sub, sub_eq_zero] at hm,
- cases (finset.mem_union).1 h with cf cg,
- { exact hm (hf m cf hc), },
- { exact hm (hg m cg hc), },
+  classical,
+  rw degree_of_lt_iff h,
+  intros m hm,
+  by_contra hc,
+  simp only [not_lt] at hc,
+  have h := support_sub σ f g hm,
+  simp only [mem_support_iff, ne.def, coeff_sub, sub_eq_zero] at hm,
+  cases (finset.mem_union).1 h with cf cg,
+  { exact hm (hf m cf hc), },
+  { exact hm (hg m cg hc), },
 end
 
 end degree_of
@@ -165,16 +165,16 @@ end degree_of
 section total_degree
 
 @[simp] lemma total_degree_neg (a : mv_polynomial σ R) :
- (-a).total_degree = a.total_degree :=
+  (-a).total_degree = a.total_degree :=
 by simp only [total_degree, support_neg]
 
 lemma total_degree_sub (a b : mv_polynomial σ R) :
- (a - b).total_degree ≤ max a.total_degree b.total_degree :=
+  (a - b).total_degree ≤ max a.total_degree b.total_degree :=
 begin
- classical,
- calc (a - b).total_degree = (a + -b).total_degree : by rw sub_eq_add_neg
- ... ≤ max a.total_degree (-b).total_degree : total_degree_add a (-b)
- ... = max a.total_degree b.total_degree : by rw total_degree_neg
+  classical,
+  calc (a - b).total_degree = (a + -b).total_degree                : by rw sub_eq_add_neg
+                        ... ≤ max a.total_degree (-b).total_degree : total_degree_add a (-b)
+                        ... = max a.total_degree b.total_degree    : by rw total_degree_neg
 end
 
 end total_degree
@@ -182,4 +182,3 @@ end total_degree
 end comm_ring
 
 end mv_polynomial
-

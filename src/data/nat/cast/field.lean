@@ -26,20 +26,20 @@ namespace nat
 variables {α : Type*}
 
 @[simp] theorem cast_div [division_semiring α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
- ((m / n : ℕ) : α) = m / n :=
+  ((m / n : ℕ) : α) = m / n :=
 begin
- rcases n_dvd with ⟨k, rfl⟩,
- have : n ≠ 0, {rintro rfl, simpa using n_nonzero},
- rw [nat.mul_div_cancel_left _ this.bot_lt]; rw [ mul_comm n k]; rw [ cast_mul]; rw [ mul_div_cancel _ n_nonzero],
+  rcases n_dvd with ⟨k, rfl⟩,
+  have : n ≠ 0, {rintro rfl, simpa using n_nonzero},
+  rw [nat.mul_div_cancel_left _ this.bot_lt, mul_comm n k, cast_mul, mul_div_cancel _ n_nonzero],
 end
 
 lemma cast_div_div_div_cancel_right [division_semiring α] [char_zero α] {m n d : ℕ}
- (hn : d ∣ n) (hm : d ∣ m) :
- (↑(m / d) : α) / (↑(n / d) : α) = (m : α) / n :=
+  (hn : d ∣ n) (hm : d ∣ m) :
+  (↑(m / d) : α) / (↑(n / d) : α) = (m : α) / n :=
 begin
- rcases eq_or_ne d 0 with rfl | hd, { simp [zero_dvd_iff.mp hm], },
- replace hd : (d : α) ≠ 0, { norm_cast, assumption, },
- simp [hd, hm, hn, div_div_div_cancel_right _ hd],
+  rcases eq_or_ne d 0 with rfl | hd, { simp [zero_dvd_iff.mp hm], },
+  replace hd : (d : α) ≠ 0, { norm_cast, assumption, },
+  simp [hd, hm, hn, div_div_div_cancel_right _ hd],
 end
 
 section linear_ordered_semifield
@@ -48,11 +48,11 @@ variables [linear_ordered_semifield α]
 /-- Natural division is always less than division in the field. -/
 lemma cast_div_le {m n : ℕ} : ((m / n : ℕ) : α) ≤ m / n :=
 begin
- cases n,
- { rw [cast_zero]; rw [ div_zero]; rw [ nat.div_zero]; rw [ cast_zero] },
- rwa [le_div_iff]; rwa [ ←nat.cast_mul],
- exact nat.cast_le.2 (nat.div_mul_le_self m n.succ),
- { exact nat.cast_pos.2 n.succ_pos }
+  cases n,
+  { rw [cast_zero, div_zero, nat.div_zero, cast_zero] },
+  rwa [le_div_iff, ←nat.cast_mul],
+  exact nat.cast_le.2 (nat.div_mul_le_self m n.succ),
+  { exact nat.cast_pos.2 n.succ_pos }
 end
 
 lemma inv_pos_of_nat {n : ℕ} : 0 < ((n : α) + 1)⁻¹ :=
@@ -69,4 +69,3 @@ by { refine one_div_lt_one_div_of_lt _ _, exact nat.cast_add_one_pos _, simpa }
 
 end linear_ordered_semifield
 end nat
-

@@ -38,29 +38,29 @@ lemma gcd_ne_zero_of_right (hp : q ≠ 0) : gcd_monoid.gcd p q ≠ 0 :=
 λ h, hp $ eq_zero_of_zero_dvd (h ▸ gcd_dvd_right p q)
 
 lemma left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) :
- p / gcd_monoid.gcd p q ≠ 0 :=
+  p / gcd_monoid.gcd p q ≠ 0 :=
 begin
- obtain ⟨r, hr⟩ := gcd_monoid.gcd_dvd_left p q,
- obtain ⟨pq0, r0⟩ : gcd_monoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hp),
- rw [hr]; rw [ mul_comm]; rw [ mul_div_cancel _ pq0] { occs := occurrences.pos [1] },
- exact r0,
+  obtain ⟨r, hr⟩ := gcd_monoid.gcd_dvd_left p q,
+  obtain ⟨pq0, r0⟩ : gcd_monoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hp),
+  rw [hr, mul_comm, mul_div_cancel _ pq0] { occs := occurrences.pos [1] },
+  exact r0,
 end
 
 lemma right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) :
- q / gcd_monoid.gcd p q ≠ 0 :=
+  q / gcd_monoid.gcd p q ≠ 0 :=
 begin
- obtain ⟨r, hr⟩ := gcd_monoid.gcd_dvd_right p q,
- obtain ⟨pq0, r0⟩ : gcd_monoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hq),
- rw [hr]; rw [ mul_comm]; rw [ mul_div_cancel _ pq0] { occs := occurrences.pos [1] },
- exact r0,
+  obtain ⟨r, hr⟩ := gcd_monoid.gcd_dvd_right p q,
+  obtain ⟨pq0, r0⟩ : gcd_monoid.gcd p q ≠ 0 ∧ r ≠ 0 := mul_ne_zero_iff.mp (hr ▸ hq),
+  rw [hr, mul_comm, mul_div_cancel _ pq0] { occs := occurrences.pos [1] },
+  exact r0,
 end
 
 lemma is_coprime_div_gcd_div_gcd (hq : q ≠ 0) :
- is_coprime (p / gcd_monoid.gcd p q) (q / gcd_monoid.gcd p q) :=
+  is_coprime (p / gcd_monoid.gcd p q) (q / gcd_monoid.gcd p q) :=
 (gcd_is_unit_iff _ _).1 $ is_unit_gcd_of_eq_mul_gcd
- (euclidean_domain.mul_div_cancel' (gcd_ne_zero_of_right hq) $ gcd_dvd_left _ _).symm
- (euclidean_domain.mul_div_cancel' (gcd_ne_zero_of_right hq) $ gcd_dvd_right _ _).symm $
- gcd_ne_zero_of_right hq
+    (euclidean_domain.mul_div_cancel' (gcd_ne_zero_of_right hq) $ gcd_dvd_left _ _).symm
+    (euclidean_domain.mul_div_cancel' (gcd_ne_zero_of_right hq) $ gcd_dvd_right _ _).symm $
+    gcd_ne_zero_of_right hq
 
 end gcd_monoid
 
@@ -69,46 +69,45 @@ namespace euclidean_domain
 /-- Create a `gcd_monoid` whose `gcd_monoid.gcd` matches `euclidean_domain.gcd`. -/
 def gcd_monoid (R) [euclidean_domain R] : gcd_monoid R :=
 { gcd := gcd,
- lcm := lcm,
- gcd_dvd_left := gcd_dvd_left,
- gcd_dvd_right := gcd_dvd_right,
- dvd_gcd := λ a b c, dvd_gcd,
- gcd_mul_lcm := λ a b, by rw euclidean_domain.gcd_mul_lcm,
- lcm_zero_left := lcm_zero_left,
- lcm_zero_right := lcm_zero_right }
+  lcm := lcm,
+  gcd_dvd_left := gcd_dvd_left,
+  gcd_dvd_right := gcd_dvd_right,
+  dvd_gcd := λ a b c, dvd_gcd,
+  gcd_mul_lcm := λ a b, by rw euclidean_domain.gcd_mul_lcm,
+  lcm_zero_left := lcm_zero_left,
+  lcm_zero_right := lcm_zero_right }
 
 variables {α : Type*} [euclidean_domain α] [decidable_eq α]
 
 theorem span_gcd {α} [euclidean_domain α] (x y : α) :
- span ({gcd x y} : set α) = span ({x, y} : set α) :=
+  span ({gcd x y} : set α) = span ({x, y} : set α) :=
 begin
- letI := euclidean_domain.gcd_monoid α,
- exact span_gcd x y,
+  letI := euclidean_domain.gcd_monoid α,
+  exact span_gcd x y,
 end
 
 theorem gcd_is_unit_iff {α} [euclidean_domain α] {x y : α} :
- is_unit (gcd x y) ↔ is_coprime x y :=
+  is_unit (gcd x y) ↔ is_coprime x y :=
 begin
- letI := euclidean_domain.gcd_monoid α,
- exact gcd_is_unit_iff x y,
+  letI := euclidean_domain.gcd_monoid α,
+  exact gcd_is_unit_iff x y,
 end
 
 -- this should be proved for UFDs surely?
 theorem is_coprime_of_dvd {α} [euclidean_domain α] {x y : α}
- (nonzero : ¬ (x = 0 ∧ y = 0)) (H : ∀ z ∈ nonunits α, z ≠ 0 → z ∣ x → ¬ z ∣ y) :
- is_coprime x y :=
+  (nonzero : ¬ (x = 0 ∧ y = 0)) (H : ∀ z ∈ nonunits α, z ≠ 0 → z ∣ x → ¬ z ∣ y) :
+  is_coprime x y :=
 begin
- letI := euclidean_domain.gcd_monoid α,
- exact is_coprime_of_dvd x y nonzero H,
+  letI := euclidean_domain.gcd_monoid α,
+  exact is_coprime_of_dvd x y nonzero H,
 end
 
 -- this should be proved for UFDs surely?
 theorem dvd_or_coprime {α} [euclidean_domain α] (x y : α)
- (h : irreducible x) : x ∣ y ∨ is_coprime x y :=
+  (h : irreducible x) : x ∣ y ∨ is_coprime x y :=
 begin
- letI := euclidean_domain.gcd_monoid α,
- exact dvd_or_coprime x y h,
+  letI := euclidean_domain.gcd_monoid α,
+  exact dvd_or_coprime x y h,
 end
 
 end euclidean_domain
-

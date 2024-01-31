@@ -29,7 +29,7 @@ Both hold for all (non-minimal) elements in a linear order.
 * `sup_prime a`: Sup-primality, `a` isn't minimal and `a ≤ b ⊔ c → a ≤ b ∨ a ≤ c`
 * `inf_irred a`: Inf-primality, `a` isn't maximal and `a ≥ b ⊓ c → a ≥ b ∨ a ≥ c`
 * `exists_sup_irred_decomposition`/`exists_inf_irred_decomposition`: Decomposition into irreducibles
- in a well-founded semilattice.
+  in a well-founded semilattice.
 -/
 
 open finset order_dual
@@ -56,14 +56,14 @@ lemma is_min.not_sup_prime (ha : is_min a) : ¬ sup_prime a := λ h, h.1 ha
 
 @[simp] lemma not_sup_irred : ¬ sup_irred a ↔ is_min a ∨ ∃ b c, b ⊔ c = a ∧ b < a ∧ c < a :=
 begin
- rw [sup_irred]; rw [ not_and_distrib],
- push_neg,
- rw exists₂_congr,
- simp [@eq_comm _ _ a] { contextual := tt },
+  rw [sup_irred, not_and_distrib],
+  push_neg,
+  rw exists₂_congr,
+  simp [@eq_comm _ _ a] { contextual := tt },
 end
 
 @[simp] lemma not_sup_prime : ¬ sup_prime a ↔ is_min a ∨ ∃ b c, a ≤ b ⊔ c ∧ ¬ a ≤ b ∧ ¬ a ≤ c :=
-by { rw [sup_prime]; rw [ not_and_distrib], push_neg, refl }
+by { rw [sup_prime, not_and_distrib], push_neg, refl }
 
 protected lemma sup_prime.sup_irred : sup_prime a → sup_irred a :=
 and.imp_right $ λ h b c ha, by simpa [←ha] using h ha.ge
@@ -81,20 +81,20 @@ lemma sup_prime.ne_bot (ha : sup_prime a) : a ≠ ⊥ := by { rintro rfl, exact 
 
 lemma sup_irred.finset_sup_eq (ha : sup_irred a) (h : s.sup f = a) : ∃ i ∈ s, f i = a :=
 begin
- classical,
- induction s using finset.induction with i s hi ih,
- { simpa [ha.ne_bot] using h.symm },
- simp only [exists_prop, exists_mem_insert] at ⊢ ih,
- rw sup_insert at h,
- exact (ha.2 h).imp_right ih,
+  classical,
+  induction s using finset.induction with i s hi ih,
+  { simpa [ha.ne_bot] using h.symm },
+  simp only [exists_prop, exists_mem_insert] at ⊢ ih,
+  rw sup_insert at h,
+  exact (ha.2 h).imp_right ih,
 end
 
 lemma sup_prime.le_finset_sup (ha : sup_prime a) : a ≤ s.sup f ↔ ∃ i ∈ s, a ≤ f i :=
 begin
- classical,
- induction s using finset.induction with i s hi ih,
- { simp [ha.ne_bot] },
- { simp only [exists_prop, exists_mem_insert, sup_insert, ha.le_sup, ih] }
+  classical,
+  induction s using finset.induction with i s hi ih,
+  { simp [ha.ne_bot] },
+  { simp only [exists_prop, exists_mem_insert, sup_insert, ha.le_sup, ih] }
 end
 
 variables [well_founded_lt α]
@@ -102,20 +102,20 @@ variables [well_founded_lt α]
 /-- In a well-founded lattice, any element is the supremum of finitely many sup-irreducible
 elements. This is the order-theoretic analogue of prime factorisation. -/
 lemma exists_sup_irred_decomposition (a : α) :
- ∃ s : finset α, s.sup id = a ∧ ∀ ⦃b⦄, b ∈ s → sup_irred b :=
+  ∃ s : finset α, s.sup id = a ∧ ∀ ⦃b⦄, b ∈ s → sup_irred b :=
 begin
- classical,
- apply well_founded_lt.induction a _,
- clear a,
- rintro a ih,
- by_cases ha : sup_irred a,
- { exact ⟨{a}, by simp [ha]⟩ },
- rw not_sup_irred at ha,
- obtain ha | ⟨b, c, rfl, hb, hc⟩ := ha,
- { exact ⟨∅, by simp [ha.eq_bot]⟩ },
- obtain ⟨s, rfl, hs⟩ := ih _ hb,
- obtain ⟨t, rfl, ht⟩ := ih _ hc,
- exact ⟨s ∪ t, sup_union, forall_mem_union.2 ⟨hs, ht⟩⟩,
+  classical,
+  apply well_founded_lt.induction a _,
+  clear a,
+  rintro a ih,
+  by_cases ha : sup_irred a,
+  { exact ⟨{a}, by simp [ha]⟩ },
+  rw not_sup_irred at ha,
+  obtain ha | ⟨b, c, rfl, hb, hc⟩ := ha,
+  { exact ⟨∅, by simp [ha.eq_bot]⟩ },
+  obtain ⟨s, rfl, hs⟩ := ih _ hb,
+  obtain ⟨t, rfl, ht⟩ := ih _ hc,
+  exact ⟨s ∪ t, sup_union, forall_mem_union.2 ⟨hs, ht⟩⟩,
 end
 
 end semilattice_sup
@@ -164,7 +164,7 @@ variables [well_founded_gt α]
 /-- In a cowell-founded lattice, any element is the infimum of finitely many inf-irreducible
 elements. This is the order-theoretic analogue of prime factorisation. -/
 lemma exists_inf_irred_decomposition (a : α) :
- ∃ s : finset α, s.inf id = a ∧ ∀ ⦃b⦄, b ∈ s → inf_irred b :=
+  ∃ s : finset α, s.inf id = a ∧ ∀ ⦃b⦄, b ∈ s → inf_irred b :=
 @exists_sup_irred_decomposition αᵒᵈ _ _ _ _
 
 end semilattice_inf
@@ -204,11 +204,11 @@ variables [distrib_lattice α] {a b c : α}
 
 @[simp] lemma sup_prime_iff_sup_irred : sup_prime a ↔ sup_irred a :=
 ⟨sup_prime.sup_irred, and.imp_right $ λ h b c,
- by { simp_rw [←inf_eq_left, inf_sup_left], exact @h _ _ }⟩
+  by { simp_rw [←inf_eq_left, inf_sup_left], exact @h _ _ }⟩
 
 @[simp] lemma inf_prime_iff_inf_irred : inf_prime a ↔ inf_irred a :=
 ⟨inf_prime.inf_irred, and.imp_right $ λ h b c,
- by { simp_rw [←sup_eq_left, sup_inf_left], exact @h _ _ }⟩
+  by { simp_rw [←sup_eq_left, sup_inf_left], exact @h _ _ }⟩
 
 alias sup_prime_iff_sup_irred ↔ _ sup_irred.sup_prime
 alias inf_prime_iff_inf_irred ↔ _ inf_irred.inf_prime
@@ -230,4 +230,3 @@ and_iff_left $ λ _ _, by simpa only [sup_eq_max, max_eq_iff] using or.imp and.l
 and_iff_left $ λ _ _, by simpa only [inf_eq_min, min_eq_iff] using or.imp and.left and.left
 
 end linear_order
-

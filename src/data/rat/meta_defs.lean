@@ -17,10 +17,10 @@ want to import `data.rat.basic` there.
 ## Main definitions
 
 * `rat.mk_numeral` embeds a rational `q` as a numeral expression into a type supporting the needed
- operations. It does not need a tactic state.
+  operations. It does not need a tactic state.
 * `rat.reflect` specializes `rat.mk_numeral` to `ℚ`.
 * `expr.of_rat` behaves like `rat.mk_numeral`, but uses the tactic state to infer the needed
- structure on the target type.
+  structure on the target type.
 
 * `expr.to_rat` evaluates a normal numeral expression as a rat.
 * `expr.eval_rat` evaluates a numeral expression with arithmetic operations as a rat.
@@ -37,10 +37,10 @@ This function is similar to `expr.of_rat` but takes more hypotheses and is not t
  -/
 meta def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr) : ℚ → expr
 | ⟨num, denom, _, _⟩ :=
- let nume := num.mk_numeral type has_zero has_one has_add has_neg in
- if denom = 1 then nume else
- let dene := denom.mk_numeral type has_zero has_one has_add in
- `(@has_div.div.{0} %%type %%has_div %%nume %%dene)
+  let nume := num.mk_numeral type has_zero has_one has_add has_neg in
+  if denom = 1 then nume else
+    let dene := denom.mk_numeral type has_zero has_one has_add in
+    `(@has_div.div.{0} %%type %%has_div %%nume %%dene)
 
 
 section
@@ -51,8 +51,8 @@ local attribute [semireducible] reflected
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
 meta instance rat.reflect : has_reflect ℚ :=
 rat.mk_numeral `(ℚ) `(by apply_instance : has_zero ℚ)
- `(by apply_instance : has_one ℚ) `(by apply_instance : has_add ℚ)
- `(by apply_instance : has_neg ℚ) `(by apply_instance : has_div ℚ)
+  `(by apply_instance : has_one ℚ) `(by apply_instance : has_add ℚ)
+  `(by apply_instance : has_neg ℚ) `(by apply_instance : has_div ℚ)
 end
 
 /--
@@ -62,7 +62,7 @@ The `pexpr` does not hold any typing information:
 -/
 meta def rat.to_pexpr (q : ℚ) : pexpr :=
 let n := q.num,
- d := q.denom in
+    d := q.denom in
 if d = 1 then n.to_pexpr
 else ``(%%n.to_pexpr / %%d.to_pexpr)
 
@@ -70,11 +70,11 @@ else ``(%%n.to_pexpr / %%d.to_pexpr)
 if that expression represents a numeral or the quotient of two numerals. -/
 protected meta def expr.to_nonneg_rat : expr → option ℚ
 | `(%%e₁ / %%e₂) := do
- m ← e₁.to_nat,
- n ← e₂.to_nat,
- if c : m.coprime n then if h : 1 < n then
- return ⟨m, n, lt_trans zero_lt_one h, c⟩
- else none else none
+  m ← e₁.to_nat,
+  n ← e₂.to_nat,
+  if c : m.coprime n then if h : 1 < n then
+    return ⟨m, n, lt_trans zero_lt_one h, c⟩
+  else none else none
 | e := do n ← e.to_nat, return n
 
 /-- Evaluates an expression as a rational number,
@@ -82,10 +82,10 @@ if that expression represents a numeral, the quotient of two numerals,
 the negation of a numeral, or the negation of the quotient of two numerals. -/
 protected meta def expr.to_rat : expr → option ℚ
 | `(has_neg.neg %%e) := do q ← e.to_nonneg_rat, some (-q)
-| e := e.to_nonneg_rat
+| e                  := e.to_nonneg_rat
 
 /-- Evaluates an expression into a rational number, if that expression is built up from
- numerals, +, -, *, /, ⁻¹ -/
+  numerals, +, -, *, /, ⁻¹  -/
 protected meta def expr.eval_rat : expr → option ℚ
 | `(has_zero.zero) := some 0
 | `(has_one.one) := some 1
@@ -104,17 +104,17 @@ Lean will try to infer the correct type classes on `α`, and the tactic will fai
 This function is similar to `rat.mk_numeral` but it takes fewer hypotheses and is tactic valued.
 -/
 protected meta def expr.of_rat (α : expr) : ℚ → tactic expr
-| ⟨(n:ℕ), d, h, c⟩ := do
- e₁ ← expr.of_nat α n,
- if d = 1 then return e₁ else
- do e₂ ← expr.of_nat α d,
- tactic.mk_app ``has_div.div [e₁, e₂]
+| ⟨(n:ℕ), d, h, c⟩   := do
+  e₁ ← expr.of_nat α n,
+  if d = 1 then return e₁ else
+  do e₂ ← expr.of_nat α d,
+  tactic.mk_app ``has_div.div [e₁, e₂]
 | ⟨-[1+n], d, h, c⟩ := do
- e₁ ← expr.of_nat α (n+1),
- e ← (if d = 1 then return e₁ else do
- e₂ ← expr.of_nat α d,
- tactic.mk_app ``has_div.div [e₁, e₂]),
- tactic.mk_app ``has_neg.neg [e]
+  e₁ ← expr.of_nat α (n+1),
+  e ← (if d = 1 then return e₁ else do
+    e₂ ← expr.of_nat α d,
+    tactic.mk_app ``has_div.div [e₁, e₂]),
+  tactic.mk_app ``has_neg.neg [e]
 
 namespace tactic
 namespace instance_cache
@@ -124,18 +124,17 @@ Lean will try to infer the correct type classes on `c.α`, and the tactic will f
 This function is similar to `rat.mk_numeral` but it takes fewer hypotheses and is tactic valued.
 -/
 protected meta def of_rat (c : instance_cache) : ℚ → tactic (instance_cache × expr)
-| ⟨(n:ℕ), d, _, _⟩ :=
- if d = 1 then c.of_nat n else do
- (c, e₁) ← c.of_nat n,
- (c, e₂) ← c.of_nat d,
- c.mk_app ``has_div.div [e₁, e₂]
+| ⟨(n:ℕ), d, _, _⟩   :=
+  if d = 1 then c.of_nat n else do
+    (c, e₁) ← c.of_nat n,
+    (c, e₂) ← c.of_nat d,
+    c.mk_app ``has_div.div [e₁, e₂]
 | ⟨-[1+n], d, _, _⟩ := do
- (c, e) ← (if d = 1 then c.of_nat (n+1) else do
- (c, e₁) ← c.of_nat (n+1),
- (c, e₂) ← c.of_nat d,
- c.mk_app ``has_div.div [e₁, e₂]),
- c.mk_app ``has_neg.neg [e]
+  (c, e) ← (if d = 1 then c.of_nat (n+1) else do
+    (c, e₁) ← c.of_nat (n+1),
+    (c, e₂) ← c.of_nat d,
+    c.mk_app ``has_div.div [e₁, e₂]),
+  c.mk_app ``has_neg.neg [e]
 
 end instance_cache
 end tactic
-

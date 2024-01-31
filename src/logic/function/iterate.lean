@@ -15,19 +15,19 @@ import tactic.alias
 In this file we prove simple properties of `nat.iterate f n` a.k.a. `f^[n]`:
 
 * `iterate_zero`, `iterate_succ`, `iterate_succ'`, `iterate_add`, `iterate_mul`:
- formulas for `f^[0]`, `f^[n+1]` (two versions), `f^[n+m]`, and `f^[n*m]`;
+  formulas for `f^[0]`, `f^[n+1]` (two versions), `f^[n+m]`, and `f^[n*m]`;
 
 * `iterate_id` : `id^[n]=id`;
 
 * `injective.iterate`, `surjective.iterate`, `bijective.iterate` :
- iterates of an injective/surjective/bijective function belong to the same class;
+  iterates of an injective/surjective/bijective function belong to the same class;
 
 * `left_inverse.iterate`, `right_inverse.iterate`, `commute.iterate_left`, `commute.iterate_right`,
- `commute.iterate_iterate`:
- some properties of pairs of functions survive under iterations
+  `commute.iterate_iterate`:
+  some properties of pairs of functions survive under iterations
 
 * `iterate_fixed`, `semiconj.iterate_*`, `semiconj₂.iterate`:
- if `f` fixes a point (resp., semiconjugates unary/binary operarations), then so does `f^[n]`.
+  if `f` fixes a point (resp., semiconjugates unary/binary operarations), then so does `f^[n]`.
 
 -/
 
@@ -47,11 +47,11 @@ theorem iterate_zero_apply (x : α) : f^[0] x = x := rfl
 theorem iterate_succ_apply (n : ℕ) (x : α) : f^[n.succ] x = (f^[n]) (f x) := rfl
 
 @[simp] theorem iterate_id (n : ℕ) : (id : α → α)^[n] = id :=
-nat.rec_on n rfl $ λ n ihn, by rw [iterate_succ]; rw [ ihn]; rw [ comp.left_id]
+nat.rec_on n rfl $ λ n ihn, by rw [iterate_succ, ihn, comp.left_id]
 
 theorem iterate_add : ∀ (m n : ℕ), f^[m + n] = (f^[m]) ∘ (f^[n])
 | m 0 := rfl
-| m (nat.succ n) := by rw [nat.add_succ]; rw [ iterate_succ]; rw [ iterate_succ]; rw [ iterate_add]
+| m (nat.succ n) := by rw [nat.add_succ, iterate_succ, iterate_succ, iterate_add]
 
 theorem iterate_add_apply (m n : ℕ) (x : α) : f^[m + n] x = (f^[m] (f^[n] x)) :=
 by rw iterate_add
@@ -65,7 +65,7 @@ lemma iterate_mul (m : ℕ) : ∀ n, f^[m * n] = (f^[m]^[n])
 variable {f}
 
 theorem iterate_fixed {x} (h : f x = x) (n : ℕ) : f^[n] x = x :=
-nat.rec_on n rfl $ λ n ihn, by rw [iterate_succ_apply]; rw [ h]; rw [ ihn]
+nat.rec_on n rfl $ λ n ihn, by rw [iterate_succ_apply, h, ihn]
 
 theorem injective.iterate (Hinj : injective f) (n : ℕ) : injective (f^[n]) :=
 nat.rec_on n injective_id $ λ n ihn, ihn.comp Hinj
@@ -79,16 +79,16 @@ theorem bijective.iterate (Hbij : bijective f) (n : ℕ) : bijective (f^[n]) :=
 namespace semiconj
 
 lemma iterate_right {f : α → β} {ga : α → α} {gb : β → β} (h : semiconj f ga gb) (n : ℕ) :
- semiconj f (ga^[n]) (gb^[n]) :=
+  semiconj f (ga^[n]) (gb^[n]) :=
 nat.rec_on n id_right $ λ n ihn, ihn.comp_right h
 
 lemma iterate_left {g : ℕ → α → α} (H : ∀ n, semiconj f (g n) (g $ n + 1)) (n k : ℕ) :
- semiconj (f^[n]) (g k) (g $ n + k) :=
+  semiconj (f^[n]) (g k) (g $ n + k) :=
 begin
- induction n with n ihn generalizing k,
- { rw [nat.zero_add], exact id_left },
- { rw [nat.succ_eq_add_one]; rw [ nat.add_right_comm]; rw [ nat.add_assoc],
- exact (H k).comp_left (ihn (k + 1)) }
+  induction n with n ihn generalizing k,
+  { rw [nat.zero_add], exact id_left },
+  { rw [nat.succ_eq_add_one, nat.add_right_comm, nat.add_assoc],
+    exact (H k).comp_left (ihn (k + 1)) }
 end
 
 end semiconj
@@ -110,9 +110,9 @@ by simp only [iterate_succ_apply, hx, (h.iterate_left n).eq, ihn, ((refl g).iter
 
 lemma comp_iterate (h : commute f g) (n : ℕ) : (f ∘ g)^[n] = (f^[n]) ∘ (g^[n]) :=
 begin
- induction n with n ihn, { refl },
- funext x,
- simp only [ihn, (h.iterate_right n).eq, iterate_succ, comp_app]
+  induction n with n ihn, { refl },
+  funext x,
+  simp only [ihn, (h.iterate_right n).eq, iterate_succ, comp_app]
 end
 
 variable (f)
@@ -126,40 +126,40 @@ lemma iterate_iterate_self (m n : ℕ) : commute (f^[m]) (f^[n]) := (refl f).ite
 end commute
 
 lemma semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : semiconj₂ f op op) (n : ℕ) :
- semiconj₂ (f^[n]) op op :=
+  semiconj₂ (f^[n]) op op :=
 nat.rec_on n (semiconj₂.id_left op) (λ n ihn, ihn.comp hf)
 
 variable (f)
 
 theorem iterate_succ' (n : ℕ) : f^[n.succ] = f ∘ (f^[n]) :=
-by rw [iterate_succ]; rw [ (commute.self_iterate f n).comp_eq]
+by rw [iterate_succ, (commute.self_iterate f n).comp_eq]
 
 theorem iterate_succ_apply' (n : ℕ) (x : α) : f^[n.succ] x = f (f^[n] x) :=
 by rw [iterate_succ']
 
 theorem iterate_pred_comp_of_pos {n : ℕ} (hn : 0 < n) : f^[n.pred] ∘ f = (f^[n]) :=
-by rw [← iterate_succ]; rw [ nat.succ_pred_eq_of_pos hn]
+by rw [← iterate_succ, nat.succ_pred_eq_of_pos hn]
 
 theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ (f^[n.pred]) = (f^[n]) :=
-by rw [← iterate_succ']; rw [ nat.succ_pred_eq_of_pos hn]
+by rw [← iterate_succ', nat.succ_pred_eq_of_pos hn]
 
 /-- A recursor for the iterate of a function. -/
 def iterate.rec (p : α → Sort*) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) :
- p (f^[n] a) :=
+  p (f^[n] a) :=
 nat.rec ha (λ m, by { rw iterate_succ', exact h _ }) n
 
 lemma iterate.rec_zero (p : α → Sort*) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) :
- iterate.rec p h ha 0 = ha :=
+  iterate.rec p h ha 0 = ha :=
 rfl
 
 variables {f} {m n : ℕ} {a : α}
 
 theorem left_inverse.iterate {g : α → α} (hg : left_inverse g f) (n : ℕ) :
- left_inverse (g^[n]) (f^[n]) :=
-nat.rec_on n (λ _, rfl) $ λ n ihn, by { rw [iterate_succ']; rw [ iterate_succ], exact ihn.comp hg }
+  left_inverse (g^[n]) (f^[n]) :=
+nat.rec_on n (λ _, rfl) $ λ n ihn, by { rw [iterate_succ', iterate_succ], exact ihn.comp hg }
 
 theorem right_inverse.iterate {g : α → α} (hg : right_inverse g f) (n : ℕ) :
- right_inverse (g^[n]) (f^[n]) :=
+  right_inverse (g^[n]) (f^[n]) :=
 hg.iterate n
 
 lemma iterate_comm (f : α → α) (m n : ℕ) : f^[n]^[m] = (f^[m]^[n]) :=
@@ -169,15 +169,15 @@ lemma iterate_commute (m n : ℕ) : commute (λ f : α → α, f^[m]) (λ f, f^[
 λ f, iterate_comm f m n
 
 lemma iterate_add_eq_iterate (hf : injective f) : f^[m + n] a = (f^[n] a) ↔ (f^[m] a) = a :=
-iff.trans (by rw [←iterate_add_apply]; rw [ nat.add_comm]) (hf.iterate n).eq_iff
+iff.trans (by rw [←iterate_add_apply, nat.add_comm]) (hf.iterate n).eq_iff
 
 alias iterate_add_eq_iterate ↔ iterate_cancel_of_add _
 
 lemma iterate_cancel (hf : injective f) (ha : f^[m] a = (f^[n] a)) : f^[m - n] a = a :=
 begin
- cases le_total m n,
- { simp [nat.sub_eq_zero_of_le h] },
- { exact iterate_cancel_of_add hf (by rwa nat.sub_add_cancel h) }
+  cases le_total m n,
+  { simp [nat.sub_eq_zero_of_le h] },
+  { exact iterate_cancel_of_add hf (by rwa nat.sub_add_cancel h) }
 end
 
 end function
@@ -187,14 +187,13 @@ open function
 
 theorem foldl_const (f : α → α) (a : α) (l : list β) : l.foldl (λ b _, f b) a = (f^[l.length]) a :=
 begin
- induction l with b l H generalizing a,
- { refl },
- { rw [length_cons]; rw [ foldl]; rw [ iterate_succ_apply]; rw [ H] }
+  induction l with b l H generalizing a,
+  { refl },
+  { rw [length_cons, foldl, iterate_succ_apply, H] }
 end
 
 theorem foldr_const (f : β → β) (b : β) : Π l : list α, l.foldr (λ _, f) b = (f^[l.length]) b
-| [] := rfl
-| (a::l) := by rw [length_cons]; rw [ foldr]; rw [ foldr_const l]; rw [ iterate_succ_apply']
+| []     := rfl
+| (a::l) := by rw [length_cons, foldr, foldr_const l, iterate_succ_apply']
 
 end list
-

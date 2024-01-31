@@ -28,13 +28,13 @@ See note [reducible non-instances]. -/
 @[reducible, to_additive function.injective.ordered_cancel_add_comm_monoid
 "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]
 def function.injective.ordered_cancel_comm_monoid {β : Type*}
- [has_one β] [has_mul β] [has_pow β ℕ]
- (f : β → α) (hf : function.injective f) (one : f 1 = 1)
- (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n) :
- ordered_cancel_comm_monoid β :=
+  [has_one β] [has_mul β] [has_pow β ℕ]
+  (f : β → α) (hf : function.injective f) (one : f 1 = 1)
+  (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n) :
+  ordered_cancel_comm_monoid β :=
 { le_of_mul_le_mul_left := λ a b c (bc : f (a * b) ≤ f (a * c)),
- (mul_le_mul_iff_left (f a)).mp (by rwa [← mul]; rwa [ ← mul]),
- ..hf.ordered_comm_monoid f one mul npow }
+    (mul_le_mul_iff_left (f a)).mp (by rwa [← mul, ← mul]),
+  ..hf.ordered_comm_monoid f one mul npow }
 
 end ordered_cancel_comm_monoid
 
@@ -46,13 +46,12 @@ See note [reducible non-instances]. -/
 @[reducible, to_additive function.injective.linear_ordered_cancel_add_comm_monoid
 "Pullback a `linear_ordered_cancel_add_comm_monoid` under an injective map."]
 def function.injective.linear_ordered_cancel_comm_monoid {β : Type*}
- [has_one β] [has_mul β] [has_pow β ℕ] [has_sup β] [has_inf β]
- (f : β → α) (hf : function.injective f) (one : f 1 = 1)
- (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n)
- (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
- linear_ordered_cancel_comm_monoid β :=
+  [has_one β] [has_mul β] [has_pow β ℕ] [has_sup β] [has_inf β]
+  (f : β → α) (hf : function.injective f) (one : f 1 = 1)
+  (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n)
+  (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
+  linear_ordered_cancel_comm_monoid β :=
 { ..hf.linear_ordered_comm_monoid f one mul npow hsup hinf,
- ..hf.ordered_cancel_comm_monoid f one mul npow }
+  ..hf.ordered_cancel_comm_monoid f one mul npow }
 
 end linear_ordered_cancel_comm_monoid
-

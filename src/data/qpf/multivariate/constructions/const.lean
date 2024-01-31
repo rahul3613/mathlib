@@ -57,19 +57,18 @@ instance : mvfunctor (const n A) :=
 { map := λ α β f, const.map }
 
 lemma map_mk (x : A) :
- f <$$> const.mk x = const.mk x := rfl
+  f <$$> const.mk x = const.mk x := rfl
 
 lemma get_map (x : (const n A) α) :
- const.get (f <$$> x) = const.get x := rfl
+  const.get (f <$$> x) = const.get x := rfl
 
 instance mvqpf : @mvqpf _ (const n A) (mvqpf.const.mvfunctor) :=
-{ P := mvpfunctor.const n A,
- abs := λ α x, mvpfunctor.const.get x,
- repr := λ α x, mvpfunctor.const.mk n x,
- abs_repr := by intros; simp,
- abs_map := by intros; simp; refl, }
+{ P         := mvpfunctor.const n A,
+  abs       := λ α x, mvpfunctor.const.get x,
+  repr      := λ α x, mvpfunctor.const.mk n x,
+  abs_repr  := by intros; simp,
+  abs_map   := by intros; simp; refl, }
 
 end const
 
 end mvqpf
-

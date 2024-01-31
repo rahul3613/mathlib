@@ -51,22 +51,22 @@ def of (C : Type u) [groupoid.{v} C] : Groupoid.{v u} := bundled.of C
 /-- Category structure on `Groupoid` -/
 instance category : large_category.{max v u} Groupoid.{v u} :=
 { hom := λ C D, C ⥤ D,
- id := λ C, 𝟭 C,
- comp := λ C D E F G, F ⋙ G,
- id_comp' := λ C D F, by cases F; refl,
- comp_id' := λ C D F, by cases F; refl,
- assoc' := by intros; refl }
+  id := λ C, 𝟭 C,
+  comp := λ C D E F G, F ⋙ G,
+  id_comp' := λ C D F, by cases F; refl,
+  comp_id' := λ C D F, by cases F; refl,
+  assoc' := by intros; refl }
 
 /-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
 def objects : Groupoid.{v u} ⥤ Type u :=
 { obj := bundled.α,
- map := λ C D F, F.obj }
+  map := λ C D F, F.obj }
 
 /-- Forgetting functor to `Cat` -/
 def forget_to_Cat : Groupoid.{v u} ⥤ Cat.{v u} :=
 { obj := λ C, Cat.of C,
- map := λ C D, id }
+  map := λ C D, id }
 
 instance forget_to_Cat_full : full forget_to_Cat :=
 { preimage := λ C D, id }
@@ -90,15 +90,15 @@ limits.fan.mk (@of (Π j : J, F j) _) (λ j, category_theory.pi.eval _ j)
 
 /-- The product fan over an indexed family of groupoids, is a limit cone. -/
 def pi_limit_fan_is_limit ⦃J : Type u⦄ (F : J → Groupoid.{u u}) :
- limits.is_limit (pi_limit_fan F) :=
+  limits.is_limit (pi_limit_fan F) :=
 limits.mk_fan_limit (pi_limit_fan F)
 (λ s, functor.pi' (λ j, s.proj j))
 (by { intros, dunfold pi_limit_fan, simp [hom_to_functor], })
 begin
- intros s m w,
- apply functor.pi_ext,
- intro j, specialize w j,
- simpa,
+  intros s m w,
+  apply functor.pi_ext,
+  intro j, specialize w j,
+  simpa,
 end
 
 instance has_pi : limits.has_products Groupoid.{u u} :=
@@ -108,12 +108,12 @@ limits.has_products_of_limit_fans pi_limit_fan pi_limit_fan_is_limit
 to the product object in the category of Groupoids -/
 noncomputable def pi_iso_pi (J : Type u) (f : J → Groupoid.{u u}) : @of (Π j, f j) _ ≅ ∏ f :=
 limits.is_limit.cone_point_unique_up_to_iso
- (pi_limit_fan_is_limit f)
- (limits.limit.is_limit (discrete.functor f))
+  (pi_limit_fan_is_limit f)
+  (limits.limit.is_limit (discrete.functor f))
 
 @[simp]
 lemma pi_iso_pi_hom_π (J : Type u) (f : J → Groupoid.{u u}) (j : J) :
- (pi_iso_pi J f).hom ≫ (limits.pi.π f j) = category_theory.pi.eval _ j :=
+  (pi_iso_pi J f).hom ≫ (limits.pi.π f j) = category_theory.pi.eval _ j :=
 by { simp [pi_iso_pi], refl, }
 
 end products
@@ -121,4 +121,3 @@ end products
 end Groupoid
 
 end category_theory
-

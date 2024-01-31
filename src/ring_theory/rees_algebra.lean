@@ -37,86 +37,86 @@ open_locale polynomial big_operators
 falls in `I ^ i`. -/
 def rees_algebra : subalgebra R R[X] :=
 { carrier := { f | ∀ i, f.coeff i ∈ I ^ i },
- mul_mem' := λ f g hf hg i, begin
- rw coeff_mul,
- apply ideal.sum_mem,
- rintros ⟨j, k⟩ e,
- rw [← finset.nat.mem_antidiagonal.mp e]; rw [ pow_add],
- exact ideal.mul_mem_mul (hf j) (hg k)
- end,
- one_mem' := λ i, begin
- rw coeff_one,
- split_ifs,
- { subst h, simp },
- { simp }
- end,
- add_mem' := λ f g hf hg i, begin
- rw coeff_add,
- exact ideal.add_mem _ (hf i) (hg i)
- end,
- zero_mem' := λ i, ideal.zero_mem _,
- algebra_map_mem' := λ r i, begin
- rw [algebra_map_apply]; rw [ coeff_C],
- split_ifs,
- { subst h, simp },
- { simp }
- end }
+  mul_mem' := λ f g hf hg i, begin
+    rw coeff_mul,
+    apply ideal.sum_mem,
+    rintros ⟨j, k⟩ e,
+    rw [← finset.nat.mem_antidiagonal.mp e, pow_add],
+    exact ideal.mul_mem_mul (hf j) (hg k)
+  end,
+  one_mem' := λ i, begin
+    rw coeff_one,
+    split_ifs,
+    { subst h, simp },
+    { simp }
+  end,
+  add_mem' := λ f g hf hg i, begin
+    rw coeff_add,
+    exact ideal.add_mem _ (hf i) (hg i)
+  end,
+  zero_mem' := λ i, ideal.zero_mem _,
+  algebra_map_mem' := λ r i, begin
+    rw [algebra_map_apply, coeff_C],
+    split_ifs,
+    { subst h, simp },
+    { simp }
+  end }
 
 lemma mem_rees_algebra_iff (f : R[X]) :
- f ∈ rees_algebra I ↔ ∀ i, f.coeff i ∈ I ^ i := iff.rfl
+  f ∈ rees_algebra I ↔ ∀ i, f.coeff i ∈ I ^ i := iff.rfl
 
 lemma mem_rees_algebra_iff_support (f : R[X]) :
- f ∈ rees_algebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i :=
+  f ∈ rees_algebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i :=
 begin
- apply forall_congr,
- intro a,
- rw [mem_support_iff]; rw [ iff.comm]; rw [ imp_iff_right_iff]; rw [ ne.def]; rw [ ← imp_iff_not_or],
- exact λ e, e.symm ▸ (I ^ a).zero_mem
+  apply forall_congr,
+  intro a,
+  rw [mem_support_iff, iff.comm, imp_iff_right_iff, ne.def, ← imp_iff_not_or],
+  exact λ e, e.symm ▸ (I ^ a).zero_mem
 end
 
 lemma rees_algebra.monomial_mem {I : ideal R} {i : ℕ} {r : R} :
- monomial i r ∈ rees_algebra I ↔ r ∈ I ^ i :=
+  monomial i r ∈ rees_algebra I ↔ r ∈ I ^ i :=
 by simp [mem_rees_algebra_iff_support, coeff_monomial, ← imp_iff_not_or] { contextual := tt }
 
 lemma monomial_mem_adjoin_monomial {I : ideal R} {n : ℕ} {r : R} (hr : r ∈ I ^ n) :
- monomial n r ∈ algebra.adjoin R (submodule.map (monomial 1 : R →ₗ[R] R[X]) I : set R[X]) :=
+  monomial n r ∈ algebra.adjoin R (submodule.map (monomial 1 : R →ₗ[R] R[X]) I : set R[X]) :=
 begin
- induction n with n hn generalizing r,
- { exact subalgebra.algebra_map_mem _ _ },
- { rw pow_succ at hr,
- apply submodule.smul_induction_on hr,
- { intros r hr s hs,
- rw [nat.succ_eq_one_add]; rw [ smul_eq_mul]; rw [ ← monomial_mul_monomial],
- exact subalgebra.mul_mem _ (algebra.subset_adjoin (set.mem_image_of_mem _ hr)) (hn hs) },
- { intros x y hx hy, rw monomial_add, exact subalgebra.add_mem _ hx hy } }
+  induction n with n hn generalizing r,
+  { exact subalgebra.algebra_map_mem _ _ },
+  { rw pow_succ at hr,
+    apply submodule.smul_induction_on hr,
+    { intros r hr s hs,
+      rw [nat.succ_eq_one_add, smul_eq_mul, ← monomial_mul_monomial],
+      exact subalgebra.mul_mem _ (algebra.subset_adjoin (set.mem_image_of_mem _ hr)) (hn hs) },
+    { intros x y hx hy, rw monomial_add, exact subalgebra.add_mem _ hx hy } }
 end
 
 lemma adjoin_monomial_eq_rees_algebra :
- algebra.adjoin R (submodule.map (monomial 1 : R →ₗ[R] R[X]) I : set R[X]) = rees_algebra I :=
+  algebra.adjoin R (submodule.map (monomial 1 : R →ₗ[R] R[X]) I : set R[X]) = rees_algebra I :=
 begin
- apply le_antisymm,
- { apply algebra.adjoin_le _,
- rintro _ ⟨r, hr, rfl⟩,
- exact rees_algebra.monomial_mem.mpr (by rwa pow_one) },
- { intros p hp,
- rw p.as_sum_support,
- apply subalgebra.sum_mem _ _,
- rintros i -,
- exact monomial_mem_adjoin_monomial (hp i) }
+  apply le_antisymm,
+  { apply algebra.adjoin_le _,
+    rintro _ ⟨r, hr, rfl⟩,
+    exact rees_algebra.monomial_mem.mpr (by rwa pow_one) },
+  { intros p hp,
+    rw p.as_sum_support,
+    apply subalgebra.sum_mem _ _,
+    rintros i -,
+    exact monomial_mem_adjoin_monomial (hp i) }
 end
 
 variables {I}
 
 lemma rees_algebra.fg (hI : I.fg) : (rees_algebra I).fg :=
 begin
- classical,
- obtain ⟨s, hs⟩ := hI,
- rw [← adjoin_monomial_eq_rees_algebra]; rw [ ← hs],
- use s.image (monomial 1),
- rw finset.coe_image,
- change _ = algebra.adjoin R (submodule.map (monomial 1 : R →ₗ[R] R[X])
- (submodule.span R ↑s) : set R[X]),
- rw [submodule.map_span]; rw [ algebra.adjoin_span]
+  classical,
+  obtain ⟨s, hs⟩ := hI,
+  rw [← adjoin_monomial_eq_rees_algebra, ← hs],
+  use s.image (monomial 1),
+  rw finset.coe_image,
+  change _ = algebra.adjoin R (submodule.map (monomial 1 : R →ₗ[R] R[X])
+    (submodule.span R ↑s) : set R[X]),
+  rw [submodule.map_span, algebra.adjoin_span]
 end
 
 instance [is_noetherian_ring R] : algebra.finite_type R (rees_algebra I) :=
@@ -124,4 +124,3 @@ instance [is_noetherian_ring R] : algebra.finite_type R (rees_algebra I) :=
 
 instance [is_noetherian_ring R] : is_noetherian_ring (rees_algebra I) :=
 algebra.finite_type.is_noetherian_ring R _
-

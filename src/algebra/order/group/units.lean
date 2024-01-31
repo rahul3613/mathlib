@@ -20,7 +20,6 @@ variable {α : Type*}
 @[to_additive "The units of an ordered commutative additive monoid form an ordered commutative
 additive group."]
 instance units.ordered_comm_group [ordered_comm_monoid α] : ordered_comm_group αˣ :=
-{ mul_le_mul_left := λ a b h c, (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b),
- .. units.partial_order,
- .. units.comm_group }
-
+{ mul_le_mul_left := λ a b h c, (mul_le_mul_left' (h : (a : α) ≤ b) _ :  (c : α) * a ≤ c * b),
+  .. units.partial_order,
+  .. units.comm_group }

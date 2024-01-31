@@ -32,13 +32,13 @@ variables {α : Type u} {β : Type v} {δ : Type w}
 
 instance : inhabited (lazy_list α) := ⟨nil⟩
 
-/-- The singleton lazy list. -/
+/-- The singleton lazy list.  -/
 def singleton : α → lazy_list α
 | a := cons a nil
 
 /-- Constructs a lazy list from a list. -/
 def of_list : list α → lazy_list α
-| [] := nil
+| []     := nil
 | (h::t) := cons h (of_list t)
 
 /--
@@ -47,7 +47,7 @@ If the lazy list is infinite,
 then this function does not terminate.
 -/
 def to_list : lazy_list α → list α
-| nil := []
+| nil        := []
 | (cons h t) := h :: to_list (t ())
 
 /--
@@ -55,24 +55,24 @@ Returns the first element of the lazy list,
 or `default` if the lazy list is empty.
 -/
 def head [inhabited α] : lazy_list α → α
-| nil := default
+| nil        := default
 | (cons h t) := h
 
 /--
 Removes the first element of the lazy list.
 -/
 def tail : lazy_list α → lazy_list α
-| nil := nil
+| nil        := nil
 | (cons h t) := t ()
 
-/-- Appends two lazy lists. -/
+/-- Appends two lazy lists.  -/
 def append : lazy_list α → thunk (lazy_list α) → lazy_list α
-| nil l := l ()
-| (cons h t) l := cons h (@append (t ()) l)
+| nil        l  := l ()
+| (cons h t) l  := cons h (@append (t ()) l)
 
 /-- Maps a function over a lazy list. -/
 def map (f : α → β) : lazy_list α → lazy_list β
-| nil := nil
+| nil        := nil
 | (cons h t) := cons (f h) (map (t ()))
 
 /--
@@ -80,8 +80,8 @@ Maps a binary function over two lazy list.
 Like `lazy_list.zip`, the result is only as long as the smaller input.
 -/
 def map₂ (f : α → β → δ) : lazy_list α → lazy_list β → lazy_list δ
-| nil _ := nil
-| _ nil := nil
+| nil          _            := nil
+| _            nil          := nil
 | (cons h₁ t₁) (cons h₂ t₂) := cons (f h₁ h₂) (map₂ (t₁ ()) (t₂ ()))
 
 /-- Zips two lazy lists. -/
@@ -90,7 +90,7 @@ map₂ prod.mk
 
 /-- The monadic join operation for lazy lists. -/
 def join : lazy_list (lazy_list α) → lazy_list α
-| nil := nil
+| nil        := nil
 | (cons h t) := append h (join (t ()))
 
 /--
@@ -100,10 +100,10 @@ Same as `lazy_list.map`, but with swapped arguments.
 def for (l : lazy_list α) (f : α → β) : lazy_list β :=
 map f l
 
-/-- The list containing the first `n` elements of a lazy list. -/
+/-- The list containing the first `n` elements of a lazy list.  -/
 def approx : nat → lazy_list α → list α
-| 0 l := []
-| _ nil := []
+| 0     l          := []
+| _     nil        := []
 | (a+1) (cons h t) := h :: approx a (t ())
 
 /--
@@ -112,13 +112,13 @@ If the lazy list is infinite and none of the elements satisfy the predicate,
 then this function will not terminate.
 -/
 def filter (p : α → Prop) [decidable_pred p] : lazy_list α → lazy_list α
-| nil := nil
+| nil        := nil
 | (cons h t) := if p h then cons h (filter (t ())) else filter (t ())
 
 /-- The nth element of a lazy list as an option (like `list.nth`). -/
 def nth : lazy_list α → nat → option α
-| nil n := none
-| (cons a l) 0 := some a
+| nil        n     := none
+| (cons a l) 0     := some a
 | (cons a l) (n+1) := nth (l ()) n
 
 /--
@@ -133,4 +133,3 @@ meta def iota (i : nat) : lazy_list nat :=
 iterates nat.succ i
 
 end lazy_list
-

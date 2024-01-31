@@ -29,17 +29,17 @@ variables {C : Type*} [category C] [monoidal_category C]
 -- See Proposition 2.2.4 of <http://www-math.mit.edu/~etingof/egnobookfinal.pdf>
 @[reassoc]
 lemma left_unitor_tensor' (X Y : C) :
- ((α_ (𝟙_ C) X Y).hom) ≫ ((λ_ (X ⊗ Y)).hom) = ((λ_ X).hom ⊗ (𝟙 Y)) :=
+  ((α_ (𝟙_ C) X Y).hom) ≫ ((λ_ (X ⊗ Y)).hom) = ((λ_ X).hom ⊗ (𝟙 Y)) :=
 by coherence
 
 @[reassoc, simp]
 lemma left_unitor_tensor (X Y : C) :
- ((λ_ (X ⊗ Y)).hom) = ((α_ (𝟙_ C) X Y).inv) ≫ ((λ_ X).hom ⊗ (𝟙 Y)) :=
+  ((λ_ (X ⊗ Y)).hom) = ((α_ (𝟙_ C) X Y).inv) ≫ ((λ_ X).hom ⊗ (𝟙 Y)) :=
 by coherence
 
 @[reassoc]
 lemma left_unitor_tensor_inv (X Y : C) :
- (λ_ (X ⊗ Y)).inv = ((λ_ X).inv ⊗ (𝟙 Y)) ≫ (α_ (𝟙_ C) X Y).hom :=
+  (λ_ (X ⊗ Y)).inv = ((λ_ X).inv ⊗ (𝟙 Y)) ≫ (α_ (𝟙_ C) X Y).hom :=
 by coherence
 
 @[reassoc]
@@ -52,12 +52,12 @@ by coherence
 
 @[reassoc]
 lemma pentagon_inv_inv_hom (W X Y Z : C) :
- (α_ W (X ⊗ Y) Z).inv ≫ ((α_ W X Y).inv ⊗ (𝟙 Z)) ≫ (α_ (W ⊗ X) Y Z).hom
- = ((𝟙 W) ⊗ (α_ X Y Z).hom) ≫ (α_ W X (Y ⊗ Z)).inv :=
+  (α_ W (X ⊗ Y) Z).inv ≫ ((α_ W X Y).inv ⊗ (𝟙 Z)) ≫ (α_ (W ⊗ X) Y Z).hom
+  = ((𝟙 W) ⊗ (α_ X Y Z).hom) ≫ (α_ W X (Y ⊗ Z)).inv :=
 by coherence
 
 @[simp, reassoc] lemma triangle_assoc_comp_right_inv (X Y : C) :
- ((ρ_ X).inv ⊗ 𝟙 Y) ≫ (α_ X (𝟙_ C) Y).hom = ((𝟙 X) ⊗ (λ_ Y).inv) :=
+  ((ρ_ X).inv ⊗ 𝟙 Y) ≫ (α_ X (𝟙_ C) Y).hom = ((𝟙 X) ⊗ (λ_ Y).inv) :=
 by coherence
 
 lemma unitors_equal : (λ_ (𝟙_ C)).hom = (ρ_ (𝟙_ C)).hom :=
@@ -68,15 +68,14 @@ by coherence
 
 @[reassoc]
 lemma pentagon_hom_inv {W X Y Z : C} :
- (α_ W X (Y ⊗ Z)).hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv)
- = (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).hom :=
+  (α_ W X (Y ⊗ Z)).hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv)
+  = (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).hom ⊗ 𝟙 Z) ≫ (α_ W (X ⊗ Y) Z).hom :=
 by coherence
 
 @[reassoc]
 lemma pentagon_inv_hom (W X Y Z : C) :
- (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).hom ⊗ 𝟙 Z)
- = (α_ W X (Y ⊗ Z)).hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv) ≫ (α_ W (X ⊗ Y) Z).inv :=
+  (α_ (W ⊗ X) Y Z).inv ≫ ((α_ W X Y).hom ⊗ 𝟙 Z)
+  = (α_ W X (Y ⊗ Z)).hom ≫ (𝟙 W ⊗ (α_ X Y Z).inv) ≫ (α_ W (X ⊗ Y) Z).inv :=
 by coherence
 
 end category_theory.monoidal_category
-

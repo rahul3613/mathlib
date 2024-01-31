@@ -22,7 +22,7 @@ categories.
 ## Main definitions
 
 * `hom_of_le` and `le_of_hom` provide translations between inequalities in the preorder, and
- morphisms in the associated category.
+  morphisms in the associated category.
 * `monotone.functor` is the functor associated to a monotone function.
 
 -/
@@ -44,9 +44,9 @@ See <https://stacks.math.columbia.edu/tag/00D3>.
 -/
 @[priority 100] -- see Note [lower instance priority]
 instance small_category (α : Type u) [preorder α] : small_category α :=
-{ hom := λ U V, ulift (plift (U ≤ V)),
- id := λ X, ⟨ ⟨ le_refl X ⟩ ⟩,
- comp := λ X Y Z f g, ⟨ ⟨ le_trans _ _ _ f.down.down g.down.down ⟩ ⟩ }
+{ hom  := λ U V, ulift (plift (U ≤ V)),
+  id   := λ X, ⟨ ⟨ le_refl X ⟩ ⟩,
+  comp := λ X Y Z f g, ⟨ ⟨ le_trans _ _ _ f.down.down g.down.down ⟩ ⟩ }
 
 end preorder
 
@@ -65,7 +65,7 @@ alias hom_of_le ← _root_.has_le.le.hom
 
 @[simp] lemma hom_of_le_refl {x : X} : (le_refl x).hom = 𝟙 x := rfl
 @[simp] lemma hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) :
- h.hom ≫ k.hom = (h.trans k).hom := rfl
+  h.hom ≫ k.hom = (h.trans k).hom := rfl
 
 /--
 Extract the underlying inequality from a morphism in a preorder category.
@@ -97,7 +97,7 @@ A monotone function between preorders induces a functor between the associated c
 -/
 def monotone.functor {f : X → Y} (h : monotone f) : X ⥤ Y :=
 { obj := f,
- map := λ x₁ x₂ g, (h g.le).hom }
+  map := λ x₁ x₂ g, (h g.le).hom }
 
 @[simp] lemma monotone.functor_obj {f : X → Y} (h : monotone f) : h.functor.obj = f := rfl
 
@@ -128,24 +128,23 @@ A categorical equivalence between partial orders is just an order isomorphism.
 -/
 def equivalence.to_order_iso (e : X ≌ Y) : X ≃o Y :=
 { to_fun := e.functor.obj,
- inv_fun := e.inverse.obj,
- left_inv := λ a, (e.unit_iso.app a).to_eq.symm,
- right_inv := λ b, (e.counit_iso.app b).to_eq,
- map_rel_iff' := λ a a',
- ⟨λ h, ((equivalence.unit e).app a ≫ e.inverse.map h.hom ≫ (equivalence.unit_inv e).app a').le,
- λ (h : a ≤ a'), (e.functor.map h.hom).le⟩, }
+  inv_fun := e.inverse.obj,
+  left_inv := λ a, (e.unit_iso.app a).to_eq.symm,
+  right_inv := λ b, (e.counit_iso.app b).to_eq,
+  map_rel_iff' := λ a a',
+    ⟨λ h, ((equivalence.unit e).app a ≫ e.inverse.map h.hom ≫ (equivalence.unit_inv e).app a').le,
+     λ (h : a ≤ a'), (e.functor.map h.hom).le⟩, }
 
 -- `@[simps]` on `equivalence.to_order_iso` produces lemmas that fail the `simp_nf` linter,
 -- so we provide them by hand:
 @[simp]
 lemma equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) :
- e.to_order_iso x = e.functor.obj x := rfl
+  e.to_order_iso x = e.functor.obj x := rfl
 
 @[simp]
 lemma equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) :
- e.to_order_iso.symm y = e.inverse.obj y := rfl
+  e.to_order_iso.symm y = e.inverse.obj y := rfl
 
 end partial_order
 
 end category_theory
-

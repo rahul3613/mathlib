@@ -14,7 +14,7 @@ import order.filter.at_top_bot
 > Any changes to this file require a corresponding PR to mathlib4.
 
 If both `a` and `b` tend to some filter `l₁`, sometimes this implies that `Ixx a b` tends to
-`l₂.small_sets`, i.e., for any `s ∈ l₂` eventually `Ixx a b` becomes a subset of `s`. Here and
+`l₂.small_sets`, i.e., for any `s ∈ l₂` eventually `Ixx a b` becomes a subset of `s`.  Here and
 below `Ixx` is one of `Icc`, `Ico`, `Ioc`, and `Ioo`. We define `filter.tendsto_Ixx_class Ixx l₁ l₂`
 to be a typeclass representing this property.
 
@@ -26,20 +26,20 @@ eventually included in `Iio a`.
 The next table shows “output” filters `l₂` for different values of `Ixx` and `l₁`. The instances
 that need topology are defined in `topology/algebra/ordered`.
 
-| Input filter | `Ixx = Icc` | `Ixx = Ico` | `Ixx = Ioc` | `Ixx = Ioo` |
+| Input filter |  `Ixx = Icc`  |  `Ixx = Ico`  |  `Ixx = Ioc`  |  `Ixx = Ioo`  |
 | -----------: | :-----------: | :-----------: | :-----------: | :-----------: |
-| `at_top` | `at_top` | `at_top` | `at_top` | `at_top` |
-| `at_bot` | `at_bot` | `at_bot` | `at_bot` | `at_bot` |
-| `pure a` | `pure a` | `⊥` | `⊥` | `⊥` |
-| `𝓟 (Iic a)` | `𝓟 (Iic a)` | `𝓟 (Iio a)` | `𝓟 (Iic a)` | `𝓟 (Iio a)` |
-| `𝓟 (Ici a)` | `𝓟 (Ici a)` | `𝓟 (Ici a)` | `𝓟 (Ioi a)` | `𝓟 (Ioi a)` |
-| `𝓟 (Ioi a)` | `𝓟 (Ioi a)` | `𝓟 (Ioi a)` | `𝓟 (Ioi a)` | `𝓟 (Ioi a)` |
-| `𝓟 (Iio a)` | `𝓟 (Iio a)` | `𝓟 (Iio a)` | `𝓟 (Iio a)` | `𝓟 (Iio a)` |
-| `𝓝 a` | `𝓝 a` | `𝓝 a` | `𝓝 a` | `𝓝 a` |
-| `𝓝[Iic a] b` | `𝓝[Iic a] b` | `𝓝[Iio a] b` | `𝓝[Iic a] b` | `𝓝[Iio a] b` |
-| `𝓝[Ici a] b` | `𝓝[Ici a] b` | `𝓝[Ici a] b` | `𝓝[Ioi a] b` | `𝓝[Ioi a] b` |
-| `𝓝[Ioi a] b` | `𝓝[Ioi a] b` | `𝓝[Ioi a] b` | `𝓝[Ioi a] b` | `𝓝[Ioi a] b` |
-| `𝓝[Iio a] b` | `𝓝[Iio a] b` | `𝓝[Iio a] b` | `𝓝[Iio a] b` | `𝓝[Iio a] b` |
+|     `at_top` |    `at_top`   |    `at_top`   |    `at_top`   |    `at_top`   |
+|     `at_bot` |    `at_bot`   |    `at_bot`   |    `at_bot`   |    `at_bot`   |
+|     `pure a` |    `pure a`   |      `⊥`      |      `⊥`      |      `⊥`      |
+|  `𝓟 (Iic a)` |  `𝓟 (Iic a)`  |  `𝓟 (Iio a)`  |  `𝓟 (Iic a)`  |  `𝓟 (Iio a)`  |
+|  `𝓟 (Ici a)` |  `𝓟 (Ici a)`  |  `𝓟 (Ici a)`  |  `𝓟 (Ioi a)`  |  `𝓟 (Ioi a)`  |
+|  `𝓟 (Ioi a)` |  `𝓟 (Ioi a)`  |  `𝓟 (Ioi a)`  |  `𝓟 (Ioi a)`  |  `𝓟 (Ioi a)`  |
+|  `𝓟 (Iio a)` |  `𝓟 (Iio a)`  |  `𝓟 (Iio a)`  |  `𝓟 (Iio a)`  |  `𝓟 (Iio a)`  |
+|        `𝓝 a` |     `𝓝 a`     |     `𝓝 a`     |     `𝓝 a`     |     `𝓝 a`     |
+| `𝓝[Iic a] b` |  `𝓝[Iic a] b` |  `𝓝[Iio a] b` |  `𝓝[Iic a] b` |  `𝓝[Iio a] b` |
+| `𝓝[Ici a] b` |  `𝓝[Ici a] b` |  `𝓝[Ici a] b` |  `𝓝[Ioi a] b` |  `𝓝[Ioi a] b` |
+| `𝓝[Ioi a] b` |  `𝓝[Ioi a] b` |  `𝓝[Ioi a] b` |  `𝓝[Ioi a] b` |  `𝓝[Ioi a] b` |
+| `𝓝[Iio a] b` |  `𝓝[Iio a] b` |  `𝓝[Iio a] b` |  `𝓝[Iio a] b` |  `𝓝[Iio a] b` |
 
 -/
 
@@ -68,46 +68,46 @@ class tendsto_Ixx_class (Ixx : α → α → set α) (l₁ : filter α) (l₂ : 
 (tendsto_Ixx : tendsto (λ p : α × α, Ixx p.1 p.2) (l₁ ×ᶠ l₁) l₂.small_sets)
 
 lemma tendsto.Icc {l₁ l₂ : filter α} [tendsto_Ixx_class Icc l₁ l₂]
- {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
- tendsto (λ x, Icc (u₁ x) (u₂ x)) lb l₂.small_sets :=
+  {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
+  tendsto (λ x, Icc (u₁ x) (u₂ x)) lb l₂.small_sets :=
 tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
 
 lemma tendsto.Ioc {l₁ l₂ : filter α} [tendsto_Ixx_class Ioc l₁ l₂]
- {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
- tendsto (λ x, Ioc (u₁ x) (u₂ x)) lb l₂.small_sets :=
+  {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
+  tendsto (λ x, Ioc (u₁ x) (u₂ x)) lb l₂.small_sets :=
 tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
 
 lemma tendsto.Ico {l₁ l₂ : filter α} [tendsto_Ixx_class Ico l₁ l₂]
- {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
- tendsto (λ x, Ico (u₁ x) (u₂ x)) lb l₂.small_sets :=
+  {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
+  tendsto (λ x, Ico (u₁ x) (u₂ x)) lb l₂.small_sets :=
 tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
 
 lemma tendsto.Ioo {l₁ l₂ : filter α} [tendsto_Ixx_class Ioo l₁ l₂]
- {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
- tendsto (λ x, Ioo (u₁ x) (u₂ x)) lb l₂.small_sets :=
+  {lb : filter β} {u₁ u₂ : β → α} (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) :
+  tendsto (λ x, Ioo (u₁ x) (u₂ x)) lb l₂.small_sets :=
 tendsto_Ixx_class.tendsto_Ixx.comp $ h₁.prod_mk h₂
 
 lemma tendsto_Ixx_class_principal {s t : set α} {Ixx : α → α → set α} :
- tendsto_Ixx_class Ixx (𝓟 s) (𝓟 t) ↔ ∀ x y ∈ s, Ixx x y ⊆ t :=
+  tendsto_Ixx_class Ixx (𝓟 s) (𝓟 t) ↔ ∀ x y ∈ s, Ixx x y ⊆ t :=
 iff.trans ⟨λ h, h.1, λ h, ⟨h⟩⟩ $ by simp only [small_sets_principal, prod_principal_principal,
- tendsto_principal_principal, forall_prod_set, mem_powerset_iff, mem_principal]
+  tendsto_principal_principal, forall_prod_set, mem_powerset_iff, mem_principal]
 
 lemma tendsto_Ixx_class_inf {l₁ l₁' l₂ l₂' : filter α} {Ixx}
- [h : tendsto_Ixx_class Ixx l₁ l₂] [h' : tendsto_Ixx_class Ixx l₁' l₂'] :
- tendsto_Ixx_class Ixx (l₁ ⊓ l₁') (l₂ ⊓ l₂') :=
+  [h : tendsto_Ixx_class Ixx l₁ l₂] [h' : tendsto_Ixx_class Ixx l₁' l₂'] :
+  tendsto_Ixx_class Ixx (l₁ ⊓ l₁') (l₂ ⊓ l₂') :=
 ⟨by simpa only [prod_inf_prod, small_sets_inf] using h.1.inf h'.1⟩
 
 lemma tendsto_Ixx_class_of_subset {l₁ l₂ : filter α} {Ixx Ixx' : α → α → set α}
- (h : ∀ a b, Ixx a b ⊆ Ixx' a b) [h' : tendsto_Ixx_class Ixx' l₁ l₂] :
- tendsto_Ixx_class Ixx l₁ l₂ :=
+  (h : ∀ a b, Ixx a b ⊆ Ixx' a b) [h' : tendsto_Ixx_class Ixx' l₁ l₂] :
+  tendsto_Ixx_class Ixx l₁ l₂ :=
 ⟨h'.1.small_sets_mono $ eventually_of_forall $ prod.forall.2 h⟩
 
 lemma has_basis.tendsto_Ixx_class {ι : Type*} {p : ι → Prop} {s} {l : filter α}
- (hl : l.has_basis p s) {Ixx : α → α → set α}
- (H : ∀ i, p i → ∀ (x ∈ s i) (y ∈ s i), Ixx x y ⊆ s i) :
- tendsto_Ixx_class Ixx l l :=
+  (hl : l.has_basis p s) {Ixx : α → α → set α}
+  (H : ∀ i, p i → ∀ (x ∈ s i) (y ∈ s i), Ixx x y ⊆ s i) :
+  tendsto_Ixx_class Ixx l l :=
 ⟨(hl.prod_self.tendsto_iff hl.small_sets).2 $ λ i hi,
- ⟨i, hi, λ x hx, H i hi _ hx.1 _ hx.2⟩⟩
+  ⟨i, hi, λ x hx, H i hi _ hx.1 _ hx.2⟩⟩
 
 instance tendsto_Icc_at_top_at_top : tendsto_Ixx_class Icc (at_top : filter α) at_top :=
 (has_basis_infi_principal_finite _).tendsto_Ixx_class $ λ s hs,
@@ -136,7 +136,7 @@ instance tendsto_Ioo_at_bot_at_bot : tendsto_Ixx_class Ioo (at_bot : filter α) 
 tendsto_Ixx_class_of_subset (λ _ _, Ioo_subset_Icc_self)
 
 instance ord_connected.tendsto_Icc {s : set α} [hs : ord_connected s] :
- tendsto_Ixx_class Icc (𝓟 s) (𝓟 s) :=
+  tendsto_Ixx_class Icc (𝓟 s) (𝓟 s) :=
 tendsto_Ixx_class_principal.2 hs.out
 
 instance tendsto_Ico_Ici_Ici {a : α} : tendsto_Ixx_class Ico (𝓟 (Ici a)) (𝓟 (Ici a)) :=
@@ -176,7 +176,7 @@ instance tendsto_Ioo_Iio_Iio {a : α} : tendsto_Ixx_class Ioo (𝓟 (Iio a)) (�
 tendsto_Ixx_class_of_subset (λ _ _, Ioo_subset_Ioc_self)
 
 instance tendsto_Icc_Icc_Icc {a b : α} :
- tendsto_Ixx_class Icc (𝓟 (Icc a b)) (𝓟 (Icc a b)) :=
+  tendsto_Ixx_class Icc (𝓟 (Icc a b)) (𝓟 (Icc a b)) :=
 tendsto_Ixx_class_principal.mpr $ λ x hx y hy, Icc_subset_Icc hx.1 hy.2
 
 instance tendsto_Ioc_Icc_Icc {a b : α} : tendsto_Ixx_class Ioc (𝓟 (Icc a b)) (𝓟 (Icc a b)) :=
@@ -208,23 +208,22 @@ instance tendsto_Ioc_uIcc_uIcc {a b : α} : tendsto_Ixx_class Ioc (𝓟 [a, b]) 
 filter.tendsto_Ioc_Icc_Icc
 
 instance tendsto_uIcc_of_Icc {l : filter α} [tendsto_Ixx_class Icc l l] :
- tendsto_Ixx_class uIcc l l :=
+  tendsto_Ixx_class uIcc l l :=
 begin
- refine ⟨λ s hs, mem_map.2 $ mem_prod_self_iff.2 _⟩,
- obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀ p ∈ (t : set α) ×ˢ t, Icc (p : α × α).1 p.2 ∈ s,
- from mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs)),
- refine ⟨t, htl, λ p hp, _⟩,
- cases le_total p.1 p.2,
- { rw [mem_preimage]; rw [ uIcc_of_le h], exact hts p hp },
- { rw [mem_preimage]; rw [ uIcc_of_ge h], exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩ }
+  refine ⟨λ s hs, mem_map.2 $ mem_prod_self_iff.2 _⟩,
+  obtain ⟨t, htl, hts⟩ : ∃ t ∈ l, ∀ p ∈ (t : set α) ×ˢ t, Icc (p : α × α).1 p.2 ∈ s,
+    from mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs)),
+  refine ⟨t, htl, λ p hp, _⟩,
+  cases le_total p.1 p.2,
+  { rw [mem_preimage, uIcc_of_le h], exact hts p hp },
+  { rw [mem_preimage, uIcc_of_ge h], exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩ }
 end
 
 lemma tendsto.uIcc {l : filter α} [tendsto_Ixx_class Icc l l] {f g : β → α} {lb : filter β}
- (hf : tendsto f lb l) (hg : tendsto g lb l) :
- tendsto (λ x, [f x, g x]) lb l.small_sets :=
+  (hf : tendsto f lb l) (hg : tendsto g lb l) :
+  tendsto (λ x, [f x, g x]) lb l.small_sets :=
 tendsto_Ixx_class.tendsto_Ixx.comp $ hf.prod_mk hg
 
 end linear_order
 
 end filter
-

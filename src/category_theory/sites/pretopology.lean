@@ -50,7 +50,7 @@ three axioms:
 1. Every family consisting of a single isomorphism is a covering family.
 2. The collection of covering families is stable under pullback.
 3. Given a covering family, and a covering family on each domain of the former, the composition
- is a covering family.
+   is a covering family.
 
 In some sense, a pretopology can be seen as Grothendieck topology with weaker saturation conditions,
 in that each covering is not necessarily downward closed.
@@ -66,8 +66,8 @@ structure pretopology :=
 (has_isos : ∀ ⦃X Y⦄ (f : Y ⟶ X) [is_iso f], presieve.singleton f ∈ coverings X)
 (pullbacks : ∀ ⦃X Y⦄ (f : Y ⟶ X) S, S ∈ coverings X → pullback_arrows f S ∈ coverings Y)
 (transitive : ∀ ⦃X : C⦄ (S : presieve X)
- (Ti : Π ⦃Y⦄ (f : Y ⟶ X), S f → presieve Y), S ∈ coverings X →
- (∀ ⦃Y⦄ f (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X)
+               (Ti : Π ⦃Y⦄ (f : Y ⟶ X), S f → presieve Y), S ∈ coverings X →
+               (∀ ⦃Y⦄ f (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X)
 
 namespace pretopology
 
@@ -84,17 +84,17 @@ variable (C)
 
 instance : partial_order (pretopology C) :=
 { le_refl := λ K, le_def.mpr le_rfl,
- le_trans := λ K₁ K₂ K₃ h₁₂ h₂₃, le_def.mpr (le_trans h₁₂ h₂₃),
- le_antisymm := λ K₁ K₂ h₁₂ h₂₁, pretopology.ext _ _ (le_antisymm h₁₂ h₂₁),
- ..pretopology.has_le }
+  le_trans := λ K₁ K₂ K₃ h₁₂ h₂₃, le_def.mpr (le_trans h₁₂ h₂₃),
+  le_antisymm := λ K₁ K₂ h₁₂ h₂₁, pretopology.ext _ _ (le_antisymm h₁₂ h₂₁),
+  ..pretopology.has_le }
 
 instance : order_top (pretopology C) :=
 { top :=
- { coverings := λ _, set.univ,
- has_isos := λ _ _ _ _, set.mem_univ _,
- pullbacks := λ _ _ _ _ _, set.mem_univ _,
- transitive := λ _ _ _ _ _, set.mem_univ _ },
- le_top := λ K X S hS, set.mem_univ _ }
+  { coverings := λ _, set.univ,
+    has_isos := λ _ _ _ _, set.mem_univ _,
+    pullbacks := λ _ _ _ _ _, set.mem_univ _,
+    transitive := λ _ _ _ _ _, set.mem_univ _ },
+  le_top := λ K X S hS, set.mem_univ _ }
 
 instance : inhabited (pretopology C) := ⟨⊤⟩
 
@@ -106,26 +106,26 @@ See <https://stacks.math.columbia.edu/tag/00ZC>, or [MM92] Chapter III, Section 
 -/
 def to_grothendieck (K : pretopology C) : grothendieck_topology C :=
 { sieves := λ X S, ∃ R ∈ K X, R ≤ (S : presieve _),
- top_mem' := λ X, ⟨presieve.singleton (𝟙 _), K.has_isos _, λ _ _ _, ⟨⟩⟩,
- pullback_stable' := λ X Y S g,
- begin
- rintro ⟨R, hR, RS⟩,
- refine ⟨_, K.pullbacks g _ hR, _⟩,
- rw [← sieve.sets_iff_generate]; rw [ sieve.pullback_arrows_comm],
- apply sieve.pullback_monotone,
- rwa sieve.gi_generate.gc,
- end,
- transitive' :=
- begin
- rintro X S ⟨R', hR', RS⟩ R t,
- choose t₁ t₂ t₃ using t,
- refine ⟨_, K.transitive _ _ hR' (λ _ f hf, t₂ (RS _ hf)), _⟩,
- rintro Y _ ⟨Z, g, f, hg, hf, rfl⟩,
- apply t₃ (RS _ hg) _ hf,
- end }
+  top_mem' := λ X, ⟨presieve.singleton (𝟙 _), K.has_isos _, λ _ _ _, ⟨⟩⟩,
+  pullback_stable' := λ X Y S g,
+  begin
+    rintro ⟨R, hR, RS⟩,
+    refine ⟨_, K.pullbacks g _ hR, _⟩,
+    rw [← sieve.sets_iff_generate, sieve.pullback_arrows_comm],
+    apply sieve.pullback_monotone,
+    rwa sieve.gi_generate.gc,
+  end,
+  transitive' :=
+  begin
+    rintro X S ⟨R', hR', RS⟩ R t,
+    choose t₁ t₂ t₃ using t,
+    refine ⟨_, K.transitive _ _ hR' (λ _ f hf, t₂ (RS _ hf)), _⟩,
+    rintro Y _ ⟨Z, g, f, hg, hf, rfl⟩,
+    apply t₃ (RS _ hg) _ hf,
+  end }
 
 lemma mem_to_grothendieck (K : pretopology C) (X S) :
- S ∈ to_grothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : presieve X) :=
+  S ∈ to_grothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : presieve X) :=
 iff.rfl
 
 /--
@@ -135,39 +135,39 @@ See [MM92] Chapter III, Section 2, Equations (3,4).
 -/
 def of_grothendieck (J : grothendieck_topology C) : pretopology C :=
 { coverings := λ X R, sieve.generate R ∈ J X,
- has_isos := λ X Y f i, by exactI J.covering_of_eq_top (by simp),
- pullbacks := λ X Y f R hR,
- begin
- rw [set.mem_def]; rw [ sieve.pullback_arrows_comm],
- apply J.pullback_stable f hR,
- end,
- transitive := λ X S Ti hS hTi,
- begin
- apply J.transitive hS,
- intros Y f,
- rintros ⟨Z, g, f, hf, rfl⟩,
- rw sieve.pullback_comp,
- apply J.pullback_stable g,
- apply J.superset_covering _ (hTi _ hf),
- rintro Y g ⟨W, h, g, hg, rfl⟩,
- exact ⟨_, h, _, ⟨_, _, _, hf, hg, rfl⟩, by simp⟩,
- end }
+  has_isos := λ X Y f i, by exactI J.covering_of_eq_top (by simp),
+  pullbacks := λ X Y f R hR,
+  begin
+    rw [set.mem_def, sieve.pullback_arrows_comm],
+    apply J.pullback_stable f hR,
+  end,
+  transitive := λ X S Ti hS hTi,
+  begin
+    apply J.transitive hS,
+    intros Y f,
+    rintros ⟨Z, g, f, hf, rfl⟩,
+    rw sieve.pullback_comp,
+    apply J.pullback_stable g,
+    apply J.superset_covering _ (hTi _ hf),
+    rintro Y g ⟨W, h, g, hg, rfl⟩,
+    exact ⟨_, h, _, ⟨_, _, _, hf, hg, rfl⟩, by simp⟩,
+  end }
 
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
 def gi : galois_insertion (to_grothendieck C) (of_grothendieck C) :=
 { gc :=
- λ K J,
- begin
- split,
- { intros h X R hR,
- exact h _ ⟨_, hR, sieve.le_generate R⟩ },
- { rintro h X S ⟨R, hR, RS⟩,
- apply J.superset_covering _ (h _ hR),
- rwa sieve.gi_generate.gc }
- end,
- le_l_u := λ J X S hS, ⟨S, J.superset_covering S.le_generate hS, le_rfl⟩,
- choice := λ x hx, to_grothendieck C x,
- choice_eq := λ _ _, rfl }
+  λ K J,
+  begin
+    split,
+    { intros h X R hR,
+      exact h _ ⟨_, hR, sieve.le_generate R⟩ },
+    { rintro h X S ⟨R, hR, RS⟩,
+      apply J.superset_covering _ (h _ hR),
+      rwa sieve.gi_generate.gc }
+  end,
+  le_l_u := λ J X S hS, ⟨S, J.superset_covering S.le_generate hS, le_rfl⟩,
+  choice := λ x hx, to_grothendieck C x,
+  choice_eq := λ _ _, rfl }
 
 /--
 The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
@@ -177,43 +177,43 @@ See <https://stacks.math.columbia.edu/tag/07GE>
 -/
 def trivial : pretopology C :=
 { coverings := λ X S, ∃ Y (f : Y ⟶ X) (h : is_iso f), S = presieve.singleton f,
- has_isos := λ X Y f i, ⟨_, _, i, rfl⟩,
- pullbacks := λ X Y f S,
- begin
- rintro ⟨Z, g, i, rfl⟩,
- refine ⟨pullback g f, pullback.snd, _, _⟩,
- { resetI, refine ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _) (by simp), ⟨_, by tidy⟩⟩⟩,
- apply pullback.hom_ext,
- { rw [assoc]; rw [ pullback.lift_fst]; rw [ ←pullback.condition_assoc],
- simp },
- { simp } },
- { apply pullback_singleton },
- end,
- transitive :=
- begin
- rintro X S Ti ⟨Z, g, i, rfl⟩ hS,
- rcases hS g (singleton_self g) with ⟨Y, f, i, hTi⟩,
- refine ⟨_, f ≫ g, _, _⟩,
- { resetI, apply_instance },
- ext W k,
- split,
- { rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩,
- rw hTi at hh,
- cases hh,
- apply singleton.mk },
- { rintro ⟨_⟩,
- refine bind_comp g presieve.singleton.mk _,
- rw hTi,
- apply presieve.singleton.mk }
- end }
+  has_isos := λ X Y f i, ⟨_, _, i, rfl⟩,
+  pullbacks := λ X Y f S,
+  begin
+    rintro ⟨Z, g, i, rfl⟩,
+    refine ⟨pullback g f, pullback.snd, _, _⟩,
+    { resetI, refine ⟨⟨pullback.lift (f ≫ inv g) (𝟙 _) (by simp), ⟨_, by tidy⟩⟩⟩,
+      apply pullback.hom_ext,
+      { rw [assoc, pullback.lift_fst, ←pullback.condition_assoc],
+        simp },
+      { simp } },
+    { apply pullback_singleton },
+  end,
+  transitive :=
+  begin
+    rintro X S Ti ⟨Z, g, i, rfl⟩ hS,
+    rcases hS g (singleton_self g) with ⟨Y, f, i, hTi⟩,
+    refine ⟨_, f ≫ g, _, _⟩,
+    { resetI, apply_instance },
+    ext W k,
+    split,
+    { rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩,
+      rw hTi at hh,
+      cases hh,
+      apply singleton.mk },
+    { rintro ⟨_⟩,
+      refine bind_comp g presieve.singleton.mk _,
+      rw hTi,
+      apply presieve.singleton.mk }
+  end }
 
 instance : order_bot (pretopology C) :=
 { bot := trivial C,
- bot_le := λ K X R,
- begin
- rintro ⟨Y, f, hf, rfl⟩,
- exactI K.has_isos f,
- end }
+  bot_le := λ K X R,
+  begin
+    rintro ⟨Y, f, hf, rfl⟩,
+    exactI K.has_isos f,
+  end }
 
 /-- The trivial pretopology induces the trivial grothendieck topology. -/
 lemma to_grothendieck_bot : to_grothendieck C ⊥ = ⊥ :=
@@ -222,4 +222,3 @@ lemma to_grothendieck_bot : to_grothendieck C ⊥ = ⊥ :=
 end pretopology
 
 end category_theory
-

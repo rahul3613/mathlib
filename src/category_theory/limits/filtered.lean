@@ -33,19 +33,18 @@ class has_cofiltered_limits_of_size : Prop :=
 /-- Class for having all filtered colimits of a given size. -/
 class has_filtered_colimits_of_size : Prop :=
 (has_colimits_of_shape : Π (I : Type w) [category.{w'} I] [is_filtered I],
- has_colimits_of_shape I C)
+  has_colimits_of_shape I C)
 
 end
 
 @[priority 100]
 instance has_limits_of_shape_of_has_cofiltered_limits [has_cofiltered_limits_of_size.{w' w} C]
- (I : Type w) [category.{w'} I] [is_cofiltered I] : has_limits_of_shape I C :=
+  (I : Type w) [category.{w'} I] [is_cofiltered I] : has_limits_of_shape I C :=
 has_cofiltered_limits_of_size.has_limits_of_shape _
 
 @[priority 100]
 instance has_colimits_of_shape_of_has_filtered_colimits [has_filtered_colimits_of_size.{w' w} C]
- (I : Type w) [category.{w'} I] [is_filtered I] : has_colimits_of_shape I C :=
+  (I : Type w) [category.{w'} I] [is_filtered I] : has_colimits_of_shape I C :=
 has_filtered_colimits_of_size.has_colimits_of_shape _
 
 end category_theory.limits
-

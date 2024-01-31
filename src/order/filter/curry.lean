@@ -36,7 +36,7 @@ tending to some limit on a curried filter is just iterated limits (see `tendsto.
 
 * `filter.eventually_curry_iff`: An alternative definition of a curried filter
 * `filter.curry_le_prod`: Something that is eventually true on the a product filter is eventually
- true on the curried filter
+   true on the curried filter
 
 ## Tags
 
@@ -53,41 +53,40 @@ in adding quantifiers to the middle of `tendsto`s. See
 `has_fderiv_at_of_tendsto_uniformly_on_filter`. -/
 def curry (f : filter α) (g : filter β) : filter (α × β) :=
 { sets := { s | ∀ᶠ (a : α) in f, ∀ᶠ (b : β) in g, (a, b) ∈ s },
- univ_sets := (by simp only [set.mem_set_of_eq, set.mem_univ, eventually_true]),
- sets_of_superset := begin
- intros x y hx hxy,
- simp only [set.mem_set_of_eq] at hx ⊢,
- exact hx.mono (λ a ha, ha.mono(λ b hb, set.mem_of_subset_of_mem hxy hb)),
- end,
- inter_sets := begin
- intros x y hx hy,
- simp only [set.mem_set_of_eq, set.mem_inter_iff] at hx hy ⊢,
- exact (hx.and hy).mono (λ a ha, (ha.1.and ha.2).mono (λ b hb, hb)),
- end, }
+  univ_sets := (by simp only [set.mem_set_of_eq, set.mem_univ, eventually_true]),
+  sets_of_superset := begin
+    intros x y hx hxy,
+    simp only [set.mem_set_of_eq] at hx ⊢,
+    exact hx.mono (λ a ha, ha.mono(λ b hb, set.mem_of_subset_of_mem hxy hb)),
+  end,
+  inter_sets := begin
+    intros x y hx hy,
+    simp only [set.mem_set_of_eq, set.mem_inter_iff] at hx hy ⊢,
+    exact (hx.and hy).mono (λ a ha, (ha.1.and ha.2).mono (λ b hb, hb)),
+  end, }
 
 lemma eventually_curry_iff {f : filter α} {g : filter β} {p : α × β → Prop} :
- (∀ᶠ (x : α × β) in f.curry g, p x) ↔ ∀ᶠ (x : α) in f, ∀ᶠ (y : β) in g, p (x, y) :=
+  (∀ᶠ (x : α × β) in f.curry g, p x) ↔ ∀ᶠ (x : α) in f, ∀ᶠ (y : β) in g, p (x, y) :=
 iff.rfl
 
 lemma curry_le_prod {f : filter α} {g : filter β} :
- f.curry g ≤ f.prod g :=
+  f.curry g ≤ f.prod g :=
 begin
- intros u hu,
- rw ←eventually_mem_set at hu ⊢,
- rw eventually_curry_iff,
- exact hu.curry,
+  intros u hu,
+  rw ←eventually_mem_set at hu ⊢,
+  rw eventually_curry_iff,
+  exact hu.curry,
 end
 
 lemma tendsto.curry {f : α → β → γ} {la : filter α} {lb : filter β} {lc : filter γ} :
- (∀ᶠ a in la, tendsto (λ b : β, f a b) lb lc) → tendsto ↿f (la.curry lb) lc :=
+  (∀ᶠ a in la, tendsto (λ b : β, f a b) lb lc) → tendsto ↿f (la.curry lb) lc :=
 begin
- intros h,
- rw tendsto_def,
- simp only [curry, filter.mem_mk, set.mem_set_of_eq, set.mem_preimage],
- simp_rw tendsto_def at h,
- refine (λ s hs, h.mono (λ a ha, eventually_iff.mpr _)),
- simpa [function.has_uncurry.uncurry, set.preimage] using ha s hs,
+  intros h,
+  rw tendsto_def,
+  simp only [curry, filter.mem_mk, set.mem_set_of_eq, set.mem_preimage],
+  simp_rw tendsto_def at h,
+  refine (λ s hs, h.mono (λ a ha, eventually_iff.mpr _)),
+  simpa [function.has_uncurry.uncurry, set.preimage] using ha s hs,
 end
 
 end filter
-

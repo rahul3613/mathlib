@@ -26,7 +26,7 @@ is guaranteed to be the identity.
 @[inline, irreducible]
 meta def unchecked_cast' {α : Sort u} {β : Sort v} (a : α) : β :=
 plift.down $ @cast (α → β → plift β) (β → α → plift β) undefined (λ _ a, plift.up a)
- (cast undefined punit.star) a
+  (cast undefined punit.star) a
 
 /--
 `uchange (α : Sort v) : Sort u` is an equivalent type in a different universe.
@@ -69,4 +69,3 @@ end uchange
 #eval do
 guard $ (uchange.down.{0} 42).up = 42,
 tactic.skip
-

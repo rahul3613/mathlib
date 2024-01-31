@@ -24,14 +24,13 @@ integer `r` such that `r * r ≤ n`. If it is negative, it returns `0`. For exam
 nat.sqrt $ int.to_nat z
 
 theorem sqrt_eq (n : ℤ) : sqrt (n*n) = n.nat_abs :=
-by rw [sqrt]; rw [ ← nat_abs_mul_self]; rw [ to_nat_coe_nat]; rw [ nat.sqrt_eq]
+by rw [sqrt, ← nat_abs_mul_self, to_nat_coe_nat, nat.sqrt_eq]
 
 theorem exists_mul_self (x : ℤ) :
- (∃ n, n * n = x) ↔ sqrt x * sqrt x = x :=
-⟨λ ⟨n, hn⟩, by rw [← hn]; rw [ sqrt_eq]; rw [ ← int.coe_nat_mul]; rw [ nat_abs_mul_self],
+  (∃ n, n * n = x) ↔ sqrt x * sqrt x = x :=
+⟨λ ⟨n, hn⟩, by rw [← hn, sqrt_eq, ← int.coe_nat_mul, nat_abs_mul_self],
 λ h, ⟨sqrt x, h⟩⟩
 
 theorem sqrt_nonneg (n : ℤ) : 0 ≤ sqrt n := coe_nat_nonneg _
 
 end int
-

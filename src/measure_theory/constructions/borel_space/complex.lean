@@ -21,4 +21,3 @@ instance is_R_or_C.borel_space {𝕜 : Type*} [is_R_or_C 𝕜] : borel_space �
 
 instance complex.measurable_space : measurable_space ℂ := borel ℂ
 instance complex.borel_space : borel_space ℂ := ⟨rfl⟩
-

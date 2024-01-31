@@ -20,7 +20,7 @@ We will develop the basics of the theory of unbounded operators on Hilbert space
 ## Main definitions
 
 * `linear_pmap.is_formal_adjoint`: An operator `T` is a formal adjoint of `S` if for all `x` in the
- domain of `T` and `y` in the domain of `S`, we have that `⟪T x, y⟫ = ⟪x, S y⟫`.
+  domain of `T` and `y` in the domain of `S`, we have that `⟪T x, y⟫ = ⟪x, S y⟫`.
 * `linear_pmap.adjoint`: The adjoint of a map `E →ₗ.[𝕜] F` as a map `F →ₗ.[𝕜] E`.
 
 ## Main statements
@@ -28,12 +28,12 @@ We will develop the basics of the theory of unbounded operators on Hilbert space
 * `linear_pmap.adjoint_is_formal_adjoint`: The adjoint is a formal adjoint
 * `linear_pmap.is_formal_adjoint.le_adjoint`: Every formal adjoint is contained in the adjoint
 * `continuous_linear_map.to_pmap_adjoint_eq_adjoint_to_pmap_of_dense`: The adjoint on
- `continuous_linear_map` and `linear_pmap` coincide.
+  `continuous_linear_map` and `linear_pmap` coincide.
 
 ## Notation
 
 * For `T : E →ₗ.[𝕜] F` the adjoint can be written as `T†`.
- This notation is localized in `linear_pmap`.
+  This notation is localized in `linear_pmap`.
 
 ## Implementation notes
 
@@ -72,7 +72,7 @@ def is_formal_adjoint (T : E →ₗ.[𝕜] F) (S : F →ₗ.[𝕜] E) : Prop :=
 variables {T : E →ₗ.[𝕜] F} {S : F →ₗ.[𝕜] E}
 
 @[protected] lemma is_formal_adjoint.symm (h : T.is_formal_adjoint S) : S.is_formal_adjoint T :=
-λ y _, by rw [←inner_conj_symm]; rw [ ←inner_conj_symm (y : F)]; rw [ h]
+λ y _, by rw [←inner_conj_symm, ←inner_conj_symm (y : F), h]
 
 variables (T)
 
@@ -82,11 +82,11 @@ This definition is needed to construct the adjoint operator and the preferred ve
 `T.adjoint.domain` instead of `T.adjoint_domain`. -/
 def adjoint_domain : submodule 𝕜 F :=
 { carrier := {y | continuous ((innerₛₗ 𝕜 y).comp T.to_fun)},
- zero_mem' := by { rw [set.mem_set_of_eq]; rw [ linear_map.map_zero]; rw [ linear_map.zero_comp],
- exact continuous_zero },
- add_mem' := λ x y hx hy, by { rw [set.mem_set_of_eq] at *; rw [ linear_map.map_add] at *, exact hx.add hy },
- smul_mem' := λ a x hx, by { rw [set.mem_set_of_eq] at *; rw [ linear_map.map_smulₛₗ] at *,
- exact hx.const_smul (conj a) } }
+  zero_mem' := by { rw [set.mem_set_of_eq, linear_map.map_zero, linear_map.zero_comp],
+      exact continuous_zero },
+  add_mem' := λ x y hx hy, by { rw [set.mem_set_of_eq, linear_map.map_add] at *, exact hx.add hy },
+  smul_mem' := λ a x hx, by { rw [set.mem_set_of_eq, linear_map.map_smulₛₗ] at *,
+    exact hx.const_smul (conj a) } }
 
 /-- The operator `λ x, ⟪y, T x⟫` considered as a continuous linear operator from `T.adjoint_domain`
 to `𝕜`. -/
@@ -94,7 +94,7 @@ def adjoint_domain_mk_clm (y : T.adjoint_domain) : T.domain →L[𝕜] 𝕜 :=
 ⟨(innerₛₗ 𝕜 (y : F)).comp T.to_fun, y.prop⟩
 
 lemma adjoint_domain_mk_clm_apply (y : T.adjoint_domain) (x : T.domain) :
- adjoint_domain_mk_clm T y x = ⟪(y : F), T x⟫ := rfl
+  adjoint_domain_mk_clm T y x = ⟪(y : F), T x⟫ := rfl
 
 variable {T}
 variable (hT : dense (T.domain : set E))
@@ -103,12 +103,12 @@ include hT
 
 /-- The unique continuous extension of the operator `adjoint_domain_mk_clm` to `E`. -/
 def adjoint_domain_mk_clm_extend (y : T.adjoint_domain) :
- E →L[𝕜] 𝕜 :=
+  E →L[𝕜] 𝕜 :=
 (T.adjoint_domain_mk_clm y).extend (submodule.subtypeL T.domain)
- hT.dense_range_coe uniform_embedding_subtype_coe.to_uniform_inducing
+  hT.dense_range_coe uniform_embedding_subtype_coe.to_uniform_inducing
 
 @[simp] lemma adjoint_domain_mk_clm_extend_apply (y : T.adjoint_domain) (x : T.domain) :
- adjoint_domain_mk_clm_extend hT y (x : E) = ⟪(y : F), T x⟫ :=
+  adjoint_domain_mk_clm_extend hT y (x : E) = ⟪(y : F), T x⟫ :=
 continuous_linear_map.extend_eq _ _ _ _ _
 
 variables [complete_space E]
@@ -119,20 +119,20 @@ This is an auxiliary definition needed to define the adjoint operator as a `line
 the assumption that `T.domain` is dense. -/
 def adjoint_aux : T.adjoint_domain →ₗ[𝕜] E :=
 { to_fun := λ y, (inner_product_space.to_dual 𝕜 E).symm (adjoint_domain_mk_clm_extend hT y),
- map_add' := λ x y, hT.eq_of_inner_left $ λ _,
- by simp only [inner_add_left, submodule.coe_add, inner_product_space.to_dual_symm_apply,
- adjoint_domain_mk_clm_extend_apply],
- map_smul' := λ _ _, hT.eq_of_inner_left $ λ _,
- by simp only [inner_smul_left, submodule.coe_smul_of_tower, ring_hom.id_apply,
- inner_product_space.to_dual_symm_apply, adjoint_domain_mk_clm_extend_apply] }
+  map_add' := λ x y, hT.eq_of_inner_left $ λ _,
+    by simp only [inner_add_left, submodule.coe_add, inner_product_space.to_dual_symm_apply,
+      adjoint_domain_mk_clm_extend_apply],
+  map_smul' := λ _ _, hT.eq_of_inner_left $ λ _,
+    by simp only [inner_smul_left, submodule.coe_smul_of_tower, ring_hom.id_apply,
+      inner_product_space.to_dual_symm_apply, adjoint_domain_mk_clm_extend_apply] }
 
 lemma adjoint_aux_inner (y : T.adjoint_domain) (x : T.domain) :
- ⟪adjoint_aux hT y, x⟫ = ⟪(y : F), T x⟫ :=
+  ⟪adjoint_aux hT y, x⟫ = ⟪(y : F), T x⟫ :=
 by simp only [adjoint_aux, linear_map.coe_mk, inner_product_space.to_dual_symm_apply,
- adjoint_domain_mk_clm_extend_apply]
+  adjoint_domain_mk_clm_extend_apply]
 
 lemma adjoint_aux_unique (y : T.adjoint_domain) {x₀ : E}
- (hx₀ : ∀ x : T.domain, ⟪x₀, x⟫ = ⟪(y : F), T x⟫) : adjoint_aux hT y = x₀ :=
+  (hx₀ : ∀ x : T.domain, ⟪x₀, x⟫ = ⟪(y : F), T x⟫) : adjoint_aux hT y = x₀ :=
 hT.eq_of_inner_left (λ v, (adjoint_aux_inner hT _ _).trans (hx₀ v).symm)
 
 omit hT
@@ -142,41 +142,41 @@ variable (T)
 /-- The adjoint operator as a partially defined linear operator. -/
 def adjoint : F →ₗ.[𝕜] E :=
 { domain := T.adjoint_domain,
- to_fun := if hT : dense (T.domain : set E) then adjoint_aux hT else 0 }
+  to_fun := if hT : dense (T.domain : set E) then adjoint_aux hT else 0 }
 
 localized "postfix (name := adjoint) `†`:1100 := linear_pmap.adjoint" in linear_pmap
 
 lemma mem_adjoint_domain_iff (y : F) :
- y ∈ T†.domain ↔ continuous ((innerₛₗ 𝕜 y).comp T.to_fun) := iff.rfl
+  y ∈ T†.domain ↔ continuous ((innerₛₗ 𝕜 y).comp T.to_fun) := iff.rfl
 
 variable {T}
 
 lemma mem_adjoint_domain_of_exists (y : F) (h : ∃ w : E, ∀ (x : T.domain), ⟪w, x⟫ = ⟪y, T x⟫) :
- y ∈ T†.domain :=
+  y ∈ T†.domain :=
 begin
- cases h with w hw,
- rw T.mem_adjoint_domain_iff,
- have : continuous ((innerSL 𝕜 w).comp T.domain.subtypeL) := by continuity,
- convert this using 1,
- exact funext (λ x, (hw x).symm),
+  cases h with w hw,
+  rw T.mem_adjoint_domain_iff,
+  have : continuous ((innerSL 𝕜 w).comp T.domain.subtypeL) := by continuity,
+  convert this using 1,
+  exact funext (λ x, (hw x).symm),
 end
 
 lemma adjoint_apply_of_not_dense (hT : ¬ dense (T.domain : set E)) (y : T†.domain) : T† y = 0 :=
 begin
- change (if hT : dense (T.domain : set E) then adjoint_aux hT else 0) y = _,
- simp only [hT, not_false_iff, dif_neg, linear_map.zero_apply],
+  change (if hT : dense (T.domain : set E) then adjoint_aux hT else 0) y = _,
+  simp only [hT, not_false_iff, dif_neg, linear_map.zero_apply],
 end
 
 include hT
 
 lemma adjoint_apply_of_dense (y : T†.domain) : T† y = adjoint_aux hT y :=
 begin
- change (if hT : dense (T.domain : set E) then adjoint_aux hT else 0) y = _,
- simp only [hT, dif_pos, linear_map.coe_mk],
+  change (if hT : dense (T.domain : set E) then adjoint_aux hT else 0) y = _,
+  simp only [hT, dif_pos, linear_map.coe_mk],
 end
 
 lemma adjoint_apply_eq (y : T†.domain) {x₀ : E}
- (hx₀ : ∀ x : T.domain, ⟪x₀, x⟫ = ⟪(y : F), T x⟫) : T† y = x₀ :=
+  (hx₀ : ∀ x : T.domain, ⟪x₀, x⟫ = ⟪(y : F), T x⟫) : T† y = x₀ :=
 (adjoint_apply_of_dense hT y).symm ▸ adjoint_aux_unique hT _ hx₀
 
 /-- The fundamental property of the adjoint. -/
@@ -187,9 +187,9 @@ lemma adjoint_is_formal_adjoint : T†.is_formal_adjoint T :=
 lemma is_formal_adjoint.le_adjoint (h : T.is_formal_adjoint S) : S ≤ T† :=
 -- Trivially, every `x : S.domain` is in `T.adjoint.domain`
 ⟨λ x hx, mem_adjoint_domain_of_exists _ ⟨S ⟨x, hx⟩, h.symm ⟨x, hx⟩⟩,
- -- Equality on `S.domain` follows from equality
- -- `⟪v, S x⟫ = ⟪v, T.adjoint y⟫` for all `v : T.domain`:
- λ _ _ hxy, (adjoint_apply_eq hT _ (λ _, by rw [h.symm]; rw [ hxy])).symm⟩
+  -- Equality on `S.domain` follows from equality
+  -- `⟪v, S x⟫ = ⟪v, T.adjoint y⟫` for all `v : T.domain`:
+  λ _ _ hxy, (adjoint_apply_eq hT _ (λ _, by rw [h.symm, hxy])).symm⟩
 
 end linear_pmap
 
@@ -201,16 +201,15 @@ variables (A : E →L[𝕜] F) {p : submodule 𝕜 E}
 /-- Restricting `A` to a dense submodule and taking the `linear_pmap.adjoint` is the same
 as taking the `continuous_linear_map.adjoint` interpreted as a `linear_pmap`. -/
 lemma to_pmap_adjoint_eq_adjoint_to_pmap_of_dense (hp : dense (p : set E)) :
- (A.to_pmap p).adjoint = A.adjoint.to_pmap ⊤ :=
+  (A.to_pmap p).adjoint = A.adjoint.to_pmap ⊤ :=
 begin
- ext,
- { simp only [to_linear_map_eq_coe, linear_map.to_pmap_domain, submodule.mem_top, iff_true,
- linear_pmap.mem_adjoint_domain_iff, linear_map.coe_comp, innerₛₗ_apply_coe],
- exact ((innerSL 𝕜 x).comp $ A.comp $ submodule.subtypeL _).cont },
- intros x y hxy,
- refine linear_pmap.adjoint_apply_eq hp _ (λ v, _),
- simp only [adjoint_inner_left, hxy, linear_map.to_pmap_apply, to_linear_map_eq_coe, coe_coe],
+  ext,
+  { simp only [to_linear_map_eq_coe, linear_map.to_pmap_domain, submodule.mem_top, iff_true,
+      linear_pmap.mem_adjoint_domain_iff, linear_map.coe_comp, innerₛₗ_apply_coe],
+    exact ((innerSL 𝕜 x).comp $ A.comp $ submodule.subtypeL _).cont },
+  intros x y hxy,
+  refine linear_pmap.adjoint_apply_eq hp _ (λ v, _),
+  simp only [adjoint_inner_left, hxy, linear_map.to_pmap_apply, to_linear_map_eq_coe, coe_coe],
 end
 
 end continuous_linear_map
-

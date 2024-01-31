@@ -197,28 +197,27 @@ end set
 open_locale set_family
 
 @[simp] lemma upper_closure_sups [semilattice_sup α] (s t : set α) :
- upper_closure (s ⊻ t) = upper_closure s ⊔ upper_closure t :=
+  upper_closure (s ⊻ t) = upper_closure s ⊔ upper_closure t :=
 begin
- ext a,
- simp only [set_like.mem_coe, mem_upper_closure, set.mem_sups, exists_and_distrib_left,
- exists_prop, upper_set.coe_sup, set.mem_inter_iff],
- split,
- { rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩,
- exact ⟨⟨b, hb, le_sup_left.trans ha⟩, c, hc, le_sup_right.trans ha⟩ },
- { rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩,
- exact ⟨_, ⟨b, hb, c, hc, rfl⟩, sup_le hab hac⟩ }
+  ext a,
+  simp only [set_like.mem_coe, mem_upper_closure, set.mem_sups, exists_and_distrib_left,
+    exists_prop, upper_set.coe_sup, set.mem_inter_iff],
+  split,
+  { rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩,
+    exact ⟨⟨b, hb, le_sup_left.trans ha⟩, c, hc, le_sup_right.trans ha⟩ },
+  { rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩,
+    exact ⟨_, ⟨b, hb, c, hc, rfl⟩, sup_le hab hac⟩ }
 end
 
 @[simp] lemma lower_closure_infs [semilattice_inf α] (s t : set α) :
- lower_closure (s ⊼ t) = lower_closure s ⊓ lower_closure t :=
+  lower_closure (s ⊼ t) = lower_closure s ⊓ lower_closure t :=
 begin
- ext a,
- simp only [set_like.mem_coe, mem_lower_closure, set.mem_infs, exists_and_distrib_left,
- exists_prop, lower_set.coe_sup, set.mem_inter_iff],
- split,
- { rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩,
- exact ⟨⟨b, hb, ha.trans inf_le_left⟩, c, hc, ha.trans inf_le_right⟩ },
- { rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩,
- exact ⟨_, ⟨b, hb, c, hc, rfl⟩, le_inf hab hac⟩ }
+  ext a,
+  simp only [set_like.mem_coe, mem_lower_closure, set.mem_infs, exists_and_distrib_left,
+    exists_prop, lower_set.coe_sup, set.mem_inter_iff],
+  split,
+  { rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩,
+    exact ⟨⟨b, hb, ha.trans inf_le_left⟩, c, hc, ha.trans inf_le_right⟩ },
+  { rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩,
+    exact ⟨_, ⟨b, hb, c, hc, rfl⟩, le_inf hab hac⟩ }
 end
-

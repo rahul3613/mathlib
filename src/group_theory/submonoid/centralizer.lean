@@ -30,8 +30,8 @@ variables [monoid M] (S)
 @[to_additive "The centralizer of a subset of an additive monoid."]
 def centralizer : submonoid M :=
 { carrier := S.centralizer,
- one_mem' := S.one_mem_centralizer,
- mul_mem' := λ a b, set.mul_mem_centralizer }
+  one_mem' := S.one_mem_centralizer,
+  mul_mem' := λ a b, set.mul_mem_centralizer }
 
 @[simp, norm_cast, to_additive] lemma coe_centralizer : ↑(centralizer S) = S.centralizer := rfl
 
@@ -39,11 +39,11 @@ lemma centralizer_to_subsemigroup : (centralizer S).to_subsemigroup = subsemigro
 rfl
 
 lemma _root_.add_submonoid.centralizer_to_add_subsemigroup {M} [add_monoid M] (S : set M) :
- (add_submonoid.centralizer S).to_add_subsemigroup = add_subsemigroup.centralizer S :=
+  (add_submonoid.centralizer S).to_add_subsemigroup = add_subsemigroup.centralizer S :=
 rfl
 
 attribute [to_additive add_submonoid.centralizer_to_add_subsemigroup]
- submonoid.centralizer_to_subsemigroup
+  submonoid.centralizer_to_subsemigroup
 
 variables {S}
 
@@ -54,7 +54,7 @@ iff.rfl
 s.center_subset_centralizer
 
 @[to_additive] instance decidable_mem_centralizer (a) [decidable $ ∀ b ∈ S, b * a = a * b] :
- decidable (a ∈ centralizer S) :=
+  decidable (a ∈ centralizer S) :=
 decidable_of_iff' _ mem_centralizer_iff
 
 @[to_additive]
@@ -62,7 +62,7 @@ lemma centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
 set.centralizer_subset h
 
 @[simp, to_additive] lemma centralizer_eq_top_iff_subset {s : set M} :
- centralizer s = ⊤ ↔ s ⊆ center M :=
+  centralizer s = ⊤ ↔ s ⊆ center M :=
 set_like.ext'_iff.trans set.centralizer_eq_top_iff_subset
 
 variables (M)
@@ -77,4 +77,3 @@ end submonoid
 
 -- Guard against import creep
 assert_not_exists finset
-

@@ -39,34 +39,33 @@ The `finset` of `l : list α` that, given `m : multiset α`, have the property `
 def lists : multiset α → finset (list α) :=
 λ s, quotient.lift_on s (λ l, l.permutations.to_finset)
 (λ l l' (h : l ~ l'),
- begin
- ext sl,
- simp only [mem_permutations, list.mem_to_finset],
- exact ⟨λ hs, hs.trans h, λ hs, hs.trans h.symm⟩
- end)
+  begin
+    ext sl,
+    simp only [mem_permutations, list.mem_to_finset],
+    exact ⟨λ hs, hs.trans h, λ hs, hs.trans h.symm⟩
+  end)
 
 @[simp] lemma lists_coe (l : list α) :
- lists (l : multiset α) = l.permutations.to_finset := rfl
+  lists (l : multiset α) = l.permutations.to_finset := rfl
 
 @[simp] lemma mem_lists_iff (s : multiset α) (l : list α) :
- l ∈ lists s ↔ s = ⟦l⟧ :=
+  l ∈ lists s ↔ s = ⟦l⟧ :=
 begin
- induction s using quotient.induction_on,
- simpa using perm_comm
+  induction s using quotient.induction_on,
+  simpa using perm_comm
 end
 
 end multiset
 
 instance fintype_nodup_list [fintype α] : fintype {l : list α // l.nodup} :=
 fintype.subtype ((finset.univ : finset α).powerset.bUnion (λ s, s.val.lists)) (λ l,
- begin
- suffices : (∃ (a : finset α), a.val = ↑l) ↔ l.nodup,
- { simpa },
- split,
- { rintro ⟨s, hs⟩,
- simpa [←multiset.coe_nodup, ←hs] using s.nodup },
- { intro hl,
- refine ⟨⟨↑l, hl⟩, _⟩,
- simp }
- end)
-
+  begin
+    suffices : (∃ (a : finset α), a.val = ↑l) ↔ l.nodup,
+    { simpa },
+    split,
+    { rintro ⟨s, hs⟩,
+      simpa [←multiset.coe_nodup, ←hs] using s.nodup },
+    { intro hl,
+      refine ⟨⟨↑l, hl⟩, _⟩,
+      simp }
+  end)

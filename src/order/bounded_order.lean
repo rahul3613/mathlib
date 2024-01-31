@@ -25,10 +25,10 @@ instances for `Prop` and `fun`.
 ## Common lattices
 
 * Distributive lattices with a bottom element. Notated by `[distrib_lattice α] [order_bot α]`
- It captures the properties of `disjoint` that are common to `generalized_boolean_algebra` and
- `distrib_lattice` when `order_bot`.
+  It captures the properties of `disjoint` that are common to `generalized_boolean_algebra` and
+  `distrib_lattice` when `order_bot`.
 * Bounded and distributive lattice. Notated by `[distrib_lattice α] [bounded_order α]`.
- Typical examples include `Prop` and `set α`.
+  Typical examples include `Prop` and `set α`.
 -/
 
 open function order_dual
@@ -65,12 +65,12 @@ section order_top
 /-- An order is (noncomputably) either an `order_top` or a `no_order_top`. Use as
 `casesI bot_order_or_no_bot_order α`. -/
 noncomputable def top_order_or_no_top_order (α : Type*) [has_le α] :
- psum (order_top α) (no_top_order α) :=
+  psum (order_top α) (no_top_order α) :=
 begin
- by_cases H : ∀ a : α, ∃ b, ¬ b ≤ a,
- { exact psum.inr ⟨H⟩ },
- { push_neg at H,
- exact psum.inl ⟨_, classical.some_spec H⟩ }
+  by_cases H : ∀ a : α, ∃ b, ¬ b ≤ a,
+  { exact psum.inr ⟨H⟩ },
+  { push_neg at H,
+    exact psum.inl ⟨_, classical.some_spec H⟩ }
 end
 
 section has_le
@@ -132,22 +132,22 @@ lemma not_is_min_top : ¬ is_min (⊤ : α) :=
 end order_top
 
 lemma strict_mono.maximal_preimage_top [linear_order α] [preorder β] [order_top β]
- {f : α → β} (H : strict_mono f) {a} (h_top : f a = ⊤) (x : α) :
- x ≤ a :=
+  {f : α → β} (H : strict_mono f) {a} (h_top : f a = ⊤) (x : α) :
+  x ≤ a :=
 H.maximal_of_maximal_image (λ p, by { rw h_top, exact le_top }) x
 
 theorem order_top.ext_top {α} {hA : partial_order α} (A : order_top α)
- {hB : partial_order α} (B : order_top α)
- (H : ∀ x y : α, (by haveI := hA; exact x ≤ y) ↔ x ≤ y) :
- (by haveI := A; exact ⊤ : α) = ⊤ :=
+  {hB : partial_order α} (B : order_top α)
+  (H : ∀ x y : α, (by haveI := hA; exact x ≤ y) ↔ x ≤ y) :
+  (by haveI := A; exact ⊤ : α) = ⊤ :=
 top_unique $ by rw ← H; apply le_top
 
 theorem order_top.ext {α} [partial_order α] {A B : order_top α} : A = B :=
 begin
- have tt := order_top.ext_top A B (λ _ _, iff.rfl),
- casesI A with _ ha, casesI B with _ hb,
- congr,
- exact le_antisymm (hb _) (ha _)
+  have tt := order_top.ext_top A B (λ _ _, iff.rfl),
+  casesI A with _ ha, casesI B with _ hb,
+  congr,
+  exact le_antisymm (hb _) (ha _)
 end
 
 /-- An order is an `order_bot` if it has a least element.
@@ -161,12 +161,12 @@ section order_bot
 /-- An order is (noncomputably) either an `order_bot` or a `no_order_bot`. Use as
 `casesI bot_order_or_no_bot_order α`. -/
 noncomputable def bot_order_or_no_bot_order (α : Type*) [has_le α] :
- psum (order_bot α) (no_bot_order α) :=
+  psum (order_bot α) (no_bot_order α) :=
 begin
- by_cases H : ∀ a : α, ∃ b, ¬ a ≤ b,
- { exact psum.inr ⟨H⟩ },
- { push_neg at H,
- exact psum.inl ⟨_, classical.some_spec H⟩ }
+  by_cases H : ∀ a : α, ∃ b, ¬ a ≤ b,
+  { exact psum.inr ⟨H⟩ },
+  { push_neg at H,
+    exact psum.inl ⟨_, classical.some_spec H⟩ }
 end
 
 section has_le
@@ -185,11 +185,11 @@ instance [has_top α] : has_bot αᵒᵈ := ⟨(⊤ : α)⟩
 
 instance [has_le α] [order_bot α] : order_top αᵒᵈ :=
 { le_top := @bot_le α _ _,
- .. order_dual.has_top α }
+  .. order_dual.has_top α }
 
 instance [has_le α] [order_top α] : order_bot αᵒᵈ :=
 { bot_le := @le_top α _ _,
- .. order_dual.has_bot α }
+  .. order_dual.has_bot α }
 
 @[simp] lemma of_dual_bot [has_top α] : of_dual ⊥ = (⊤ : α) := rfl
 @[simp] lemma of_dual_top [has_bot α] : of_dual ⊤ = (⊥ : α) := rfl
@@ -249,22 +249,22 @@ lemma not_is_max_bot : ¬ is_max (⊥ : α) := @not_is_min_top αᵒᵈ _ _ _
 end order_bot
 
 lemma strict_mono.minimal_preimage_bot [linear_order α] [partial_order β] [order_bot β]
- {f : α → β} (H : strict_mono f) {a} (h_bot : f a = ⊥) (x : α) :
- a ≤ x :=
+  {f : α → β} (H : strict_mono f) {a} (h_bot : f a = ⊥) (x : α) :
+  a ≤ x :=
 H.minimal_of_minimal_image (λ p, by { rw h_bot, exact bot_le }) x
 
 theorem order_bot.ext_bot {α} {hA : partial_order α} (A : order_bot α)
- {hB : partial_order α} (B : order_bot α)
- (H : ∀ x y : α, (by haveI := hA; exact x ≤ y) ↔ x ≤ y) :
- (by haveI := A; exact ⊥ : α) = ⊥ :=
+  {hB : partial_order α} (B : order_bot α)
+  (H : ∀ x y : α, (by haveI := hA; exact x ≤ y) ↔ x ≤ y) :
+  (by haveI := A; exact ⊥ : α) = ⊥ :=
 bot_unique $ by rw ← H; apply bot_le
 
 theorem order_bot.ext {α} [partial_order α] {A B : order_bot α} : A = B :=
 begin
- have tt := order_bot.ext_bot A B (λ _ _, iff.rfl),
- casesI A with a ha, casesI B with b hb,
- congr,
- exact le_antisymm (ha _) (hb _)
+  have tt := order_bot.ext_bot A B (λ _ _, iff.rfl),
+  casesI A with a ha, casesI B with b hb,
+  congr,
+  exact le_antisymm (ha _) (hb _)
 end
 
 section semilattice_sup_top
@@ -288,7 +288,7 @@ sup_of_le_right bot_le
 sup_of_le_left bot_le
 
 @[simp] theorem sup_eq_bot_iff : a ⊔ b = ⊥ ↔ (a = ⊥ ∧ b = ⊥) :=
-by rw [eq_bot_iff]; rw [ sup_le_iff]; simp
+by rw [eq_bot_iff, sup_le_iff]; simp
 
 end semilattice_sup_bot
 
@@ -320,7 +320,7 @@ end semilattice_inf_bot
 /-! ### Bounded order -/
 
 /-- A bounded order describes an order `(≤)` with a top and bottom element,
- denoted `⊤` and `⊥` respectively. -/
+  denoted `⊤` and `⊥` respectively. -/
 @[ancestor order_top order_bot]
 class bounded_order (α : Type u) [has_le α] extends order_top α, order_bot α.
 
@@ -329,15 +329,15 @@ instance (α : Type u) [has_le α] [bounded_order α] : bounded_order αᵒᵈ :
 
 theorem bounded_order.ext {α} [partial_order α] {A B : bounded_order α} : A = B :=
 begin
- have ht : @bounded_order.to_order_top α _ A = @bounded_order.to_order_top α _ B := order_top.ext,
- have hb : @bounded_order.to_order_bot α _ A = @bounded_order.to_order_bot α _ B := order_bot.ext,
- casesI A,
- casesI B,
- injection ht with h,
- injection hb with h',
- convert rfl,
- { exact h.symm },
- { exact h'.symm }
+  have ht : @bounded_order.to_order_top α _ A = @bounded_order.to_order_top α _ B := order_top.ext,
+  have hb : @bounded_order.to_order_bot α _ A = @bounded_order.to_order_bot α _ B := order_bot.ext,
+  casesI A,
+  casesI B,
+  injection ht with h,
+  injection hb with h',
+  convert rfl,
+  { exact h.symm },
+  { exact h'.symm }
 end
 
 section logic
@@ -349,12 +349,12 @@ section preorder
 variable [preorder α]
 
 theorem monotone_and {p q : α → Prop} (m_p : monotone p) (m_q : monotone q) :
- monotone (λ x, p x ∧ q x) :=
+  monotone (λ x, p x ∧ q x) :=
 λ a b h, and.imp (m_p h) (m_q h)
 -- Note: by finish [monotone] doesn't work
 
 theorem monotone_or {p q : α → Prop} (m_p : monotone p) (m_q : monotone q) :
- monotone (λ x, p x ∨ q x) :=
+  monotone (λ x, p x ∨ q x) :=
 λ a b h, or.imp (m_p h) (m_q h)
 
 lemma monotone_le {x : α}: monotone ((≤) x) :=
@@ -370,19 +370,19 @@ lemma antitone_lt {x : α}: antitone (< x) :=
 λ y z h' h, h'.trans_lt h
 
 lemma monotone.forall {P : β → α → Prop} (hP : ∀ x, monotone (P x)) :
- monotone (λ y, ∀ x, P x y) :=
+  monotone (λ y, ∀ x, P x y) :=
 λ y y' hy h x, hP x hy $ h x
 
 lemma antitone.forall {P : β → α → Prop} (hP : ∀ x, antitone (P x)) :
- antitone (λ y, ∀ x, P x y) :=
+  antitone (λ y, ∀ x, P x y) :=
 λ y y' hy h x, hP x hy (h x)
 
 lemma monotone.ball {P : β → α → Prop} {s : set β} (hP : ∀ x ∈ s, monotone (P x)) :
- monotone (λ y, ∀ x ∈ s, P x y) :=
+  monotone (λ y, ∀ x ∈ s, P x y) :=
 λ y y' hy h x hx, hP x hx hy (h x hx)
 
 lemma antitone.ball {P : β → α → Prop} {s : set β} (hP : ∀ x ∈ s, antitone (P x)) :
- antitone (λ y, ∀ x ∈ s, P x y) :=
+  antitone (λ y, ∀ x ∈ s, P x y) :=
 λ y y' hy h x hx, hP x hx hy (h x hx)
 
 end preorder
@@ -391,7 +391,7 @@ section semilattice_sup
 variables [semilattice_sup α]
 
 lemma exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : monotone P) :
- (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
+  (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
 ⟨λ h, h.imp $ λ x h, h.2, λ ⟨x, hx⟩, ⟨x ⊔ x₀, le_sup_right, hP le_sup_left hx⟩⟩
 
 end semilattice_sup
@@ -400,7 +400,7 @@ section semilattice_inf
 variables [semilattice_inf α]
 
 lemma exists_le_and_iff_exists {P : α → Prop} {x₀ : α} (hP : antitone P) :
- (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
+  (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
 exists_ge_and_iff_exists hP.dual_left
 
 end semilattice_inf
@@ -430,7 +430,7 @@ instance [Π i, has_le (α' i)] [Π i, order_bot (α' i)] : order_bot (Π i, α'
 { bot_le := λ _ _, bot_le, ..pi.has_bot }
 
 instance [Π i, has_le (α' i)] [Π i, bounded_order (α' i)] :
- bounded_order (Π i, α' i) :=
+  bounded_order (Π i, α' i) :=
 { ..pi.order_top, ..pi.order_bot }
 
 end pi
@@ -440,23 +440,23 @@ section subsingleton
 variables [partial_order α] [bounded_order α]
 
 lemma eq_bot_of_bot_eq_top (hα : (⊥ : α) = ⊤) (x : α) :
- x = (⊥ : α) :=
+  x = (⊥ : α) :=
 eq_bot_mono le_top (eq.symm hα)
 
 lemma eq_top_of_bot_eq_top (hα : (⊥ : α) = ⊤) (x : α) :
- x = (⊤ : α) :=
+  x = (⊤ : α) :=
 eq_top_mono bot_le hα
 
 lemma subsingleton_of_top_le_bot (h : (⊤ : α) ≤ (⊥ : α)) :
- subsingleton α :=
+  subsingleton α :=
 ⟨λ a b, le_antisymm (le_trans le_top $ le_trans h bot_le) (le_trans le_top $ le_trans h bot_le)⟩
 
 lemma subsingleton_of_bot_eq_top (hα : (⊥ : α) = (⊤ : α)) :
- subsingleton α :=
+  subsingleton α :=
 subsingleton_of_top_le_bot (ge_of_eq hα)
 
 lemma subsingleton_iff_bot_eq_top :
- (⊥ : α) = (⊤ : α) ↔ subsingleton α :=
+  (⊥ : α) = (⊤ : α) ↔ subsingleton α :=
 ⟨subsingleton_of_bot_eq_top, λ h, by exactI subsingleton.elim ⊥ ⊤⟩
 
 end subsingleton
@@ -466,22 +466,22 @@ section lift
 /-- Pullback an `order_top`. -/
 @[reducible] -- See note [reducible non-instances]
 def order_top.lift [has_le α] [has_top α] [has_le β] [order_top β] (f : α → β)
- (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) :
- order_top α :=
+  (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) :
+  order_top α :=
 ⟨⊤, λ a, map_le _ _ $ by { rw map_top, exact le_top }⟩
 
 /-- Pullback an `order_bot`. -/
 @[reducible] -- See note [reducible non-instances]
 def order_bot.lift [has_le α] [has_bot α] [has_le β] [order_bot β] (f : α → β)
- (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_bot : f ⊥ = ⊥) :
- order_bot α :=
+  (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_bot : f ⊥ = ⊥) :
+  order_bot α :=
 ⟨⊥, λ a, map_le _ _ $ by { rw map_bot, exact bot_le }⟩
 
 /-- Pullback a `bounded_order`. -/
 @[reducible] -- See note [reducible non-instances]
 def bounded_order.lift [has_le α] [has_top α] [has_bot α] [has_le β] [bounded_order β] (f : α → β)
- (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) :
- bounded_order α :=
+  (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) :
+  bounded_order α :=
 { ..order_top.lift f map_le map_top, ..order_bot.lift f map_le map_bot }
 
 end lift
@@ -495,18 +495,18 @@ variables {p : α → Prop}
 @[reducible] -- See note [reducible non-instances]
 protected def order_bot [has_le α] [order_bot α] (hbot : p ⊥) : order_bot {x : α // p x} :=
 { bot := ⟨⊥, hbot⟩,
- bot_le := λ _, bot_le }
+  bot_le := λ _, bot_le }
 
 /-- A subtype remains a `⊤`-order if the property holds at `⊤`. -/
 @[reducible] -- See note [reducible non-instances]
 protected def order_top [has_le α] [order_top α] (htop : p ⊤) : order_top {x : α // p x} :=
 { top := ⟨⊤, htop⟩,
- le_top := λ _, le_top }
+  le_top := λ _, le_top }
 
 /-- A subtype remains a bounded order if the property holds at `⊥` and `⊤`. -/
 @[reducible] -- See note [reducible non-instances]
 protected def bounded_order [has_le α] [bounded_order α] (hbot : p ⊥) (htop : p ⊤) :
- bounded_order (subtype p) :=
+  bounded_order (subtype p) :=
 { ..subtype.order_top htop, ..subtype.order_bot hbot }
 
 variables [partial_order α]
@@ -524,19 +524,19 @@ lemma coe_top [order_top α] [order_top (subtype p)] (htop : p ⊤) : ((⊤ : su
 congr_arg coe (mk_top htop).symm
 
 @[simp] lemma coe_eq_bot_iff [order_bot α] [order_bot (subtype p)] (hbot : p ⊥) {x : {x // p x}} :
- (x : α) = ⊥ ↔ x = ⊥ :=
-by rw [←coe_bot hbot]; rw [ ext_iff]
+  (x : α) = ⊥ ↔ x = ⊥ :=
+by rw [←coe_bot hbot, ext_iff]
 
 @[simp] lemma coe_eq_top_iff [order_top α] [order_top (subtype p)] (htop : p ⊤) {x : {x // p x}} :
- (x : α) = ⊤ ↔ x = ⊤ :=
-by rw [←coe_top htop]; rw [ ext_iff]
+  (x : α) = ⊤ ↔ x = ⊤ :=
+by rw [←coe_top htop, ext_iff]
 
 @[simp] lemma mk_eq_bot_iff [order_bot α] [order_bot (subtype p)] (hbot : p ⊥) {x : α} (hx : p x) :
- (⟨x, hx⟩ : subtype p) = ⊥ ↔ x = ⊥ :=
+  (⟨x, hx⟩ : subtype p) = ⊥ ↔ x = ⊥ :=
 (coe_eq_bot_iff hbot).symm
 
 @[simp] lemma mk_eq_top_iff [order_top α] [order_top (subtype p)] (htop : p ⊤) {x : α} (hx : p x) :
- (⟨x, hx⟩ : subtype p) = ⊤ ↔ x = ⊤ :=
+  (⟨x, hx⟩ : subtype p) = ⊤ ↔ x = ⊤ :=
 (coe_eq_top_iff htop).symm
 
 end subtype
@@ -549,11 +549,11 @@ instance [has_bot α] [has_bot β] : has_bot (α × β) := ⟨⟨⊥, ⊥⟩⟩
 
 instance [has_le α] [has_le β] [order_top α] [order_top β] : order_top (α × β) :=
 { le_top := λ a, ⟨le_top, le_top⟩,
- .. prod.has_top α β }
+  .. prod.has_top α β }
 
 instance [has_le α] [has_le β] [order_bot α] [order_bot β] : order_bot (α × β) :=
 { bot_le := λ a, ⟨bot_le, bot_le⟩,
- .. prod.has_bot α β }
+  .. prod.has_bot α β }
 
 instance [has_le α] [has_le β] [bounded_order α] [bounded_order β] : bounded_order (α × β) :=
 { .. prod.order_top α β, .. prod.order_bot α β }
@@ -602,12 +602,11 @@ open bool
 
 instance : bounded_order bool :=
 { top := tt,
- le_top := λ x, le_tt,
- bot := ff,
- bot_le := λ x, ff_le }
+  le_top := λ x, le_tt,
+  bot := ff,
+  bot_le := λ x, ff_le }
 
 @[simp] lemma top_eq_tt : ⊤ = tt := rfl
 @[simp] lemma bot_eq_ff : ⊥ = ff := rfl
 
 end bool
-

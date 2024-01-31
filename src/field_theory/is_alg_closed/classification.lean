@@ -19,9 +19,9 @@ This file contains results related to classifying algebraically closed fields.
 ## Main statements
 
 * `is_alg_closed.equiv_of_transcendence_basis` Two fields with the same characteristic and the same
- cardinality of transcendence basis are isomorphic.
+  cardinality of transcendence basis are isomorphic.
 * `is_alg_closed.ring_equiv_of_cardinal_eq_of_char_eq` Two uncountable algebraically closed fields
- are isomorphic if they have the same characteristic and the same cardinality.
+  are isomorphic if they have the same characteristic and the same cardinality.
 -/
 universe u
 
@@ -36,36 +36,38 @@ variables (R L : Type u) [comm_ring R] [comm_ring L] [is_domain L] [algebra R L]
 variables [no_zero_smul_divisors R L] (halg : algebra.is_algebraic R L)
 
 lemma cardinal_mk_le_sigma_polynomial :
- #L ≤ #(Σ p : R[X], { x : L // x ∈ (p.map (algebra_map R L)).roots }) :=
+  #L ≤ #(Σ p : R[X], { x : L // x ∈ (p.map (algebra_map R L)).roots }) :=
 @mk_le_of_injective L (Σ p : R[X], { x : L | x ∈ (p.map (algebra_map R L)).roots })
- (λ x : L, let p := classical.indefinite_description _ (halg x) in
- ⟨p.1, x,
- begin
- dsimp,
- have h : p.1.map (algebra_map R L) ≠ 0,
- { rw [ne.def]; rw [ ← polynomial.degree_eq_bot]; rw [ polynomial.degree_map_eq_of_injective (no_zero_smul_divisors.algebra_map_injective R L)]; rw [ polynomial.degree_eq_bot],
- exact p.2.1 },
- erw [polynomial.mem_roots h]; erw [ polynomial.is_root]; erw [ polynomial.eval_map]; erw [ ← polynomial.aeval_def]; erw [ p.2.2],
- end⟩) (λ x y, begin
- intro h,
- simp only at h,
- refine (subtype.heq_iff_coe_eq _).1 h.2,
- simp only [h.1, iff_self, forall_true_iff]
- end)
+  (λ x : L, let p := classical.indefinite_description _ (halg x) in
+    ⟨p.1, x,
+      begin
+      dsimp,
+      have h : p.1.map (algebra_map R L) ≠ 0,
+      { rw [ne.def, ← polynomial.degree_eq_bot, polynomial.degree_map_eq_of_injective
+          (no_zero_smul_divisors.algebra_map_injective R L), polynomial.degree_eq_bot],
+        exact p.2.1 },
+      erw [polynomial.mem_roots h, polynomial.is_root, polynomial.eval_map,
+        ← polynomial.aeval_def, p.2.2],
+      end⟩) (λ x y, begin
+    intro h,
+    simp only at h,
+    refine (subtype.heq_iff_coe_eq _).1 h.2,
+    simp only [h.1, iff_self, forall_true_iff]
+  end)
 
 /--The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ℵ₀` -/
 lemma cardinal_mk_le_max : #L ≤ max (#R) ℵ₀ :=
 calc #L ≤ #(Σ p : R[X], { x : L // x ∈ (p.map (algebra_map R L)).roots }) :
- cardinal_mk_le_sigma_polynomial R L halg
+  cardinal_mk_le_sigma_polynomial R L halg
 ... = cardinal.sum (λ p : R[X], #{ x : L | x ∈ (p.map (algebra_map R L)).roots }) :
- by rw ← mk_sigma; refl
+  by rw ← mk_sigma; refl
 ... ≤ cardinal.sum.{u u} (λ p : R[X], ℵ₀) :
- sum_le_sum _ _ $ λ p, (multiset.finite_to_set _).lt_aleph_0.le
+  sum_le_sum _ _ $ λ p, (multiset.finite_to_set _).lt_aleph_0.le
 ... = #R[X] * ℵ₀ : sum_const' _ _
 ... ≤ max (max (#R[X]) ℵ₀) ℵ₀ : mul_le_max _ _
 ... ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ :
- max_le_max (max_le_max polynomial.cardinal_mk_le_max le_rfl) le_rfl
+  max_le_max (max_le_max polynomial.cardinal_mk_le_max le_rfl) le_rfl
 ... = max (#R) ℵ₀ : by simp only [max_assoc, max_comm ℵ₀, max_left_comm ℵ₀, max_self]
 
 end algebra.is_algebraic
@@ -87,10 +89,10 @@ variables {κ : Type*} (w : κ → L)
 variables (hv : algebraic_independent R v)
 
 lemma is_alg_closure_of_transcendence_basis [is_alg_closed K] (hv : is_transcendence_basis R v) :
- is_alg_closure (algebra.adjoin R (set.range v)) K :=
+  is_alg_closure (algebra.adjoin R (set.range v)) K :=
 by letI := ring_hom.domain_nontrivial (algebra_map R K); exact
 { alg_closed := by apply_instance,
- algebraic := hv.is_algebraic }
+  algebraic := hv.is_algebraic }
 
 variables (hw : algebraic_independent R w)
 
@@ -98,20 +100,20 @@ variables (hw : algebraic_independent R w)
 closed fields have equipotent transcendence bases and the same characteristic then they are
 isomorphic. -/
 def equiv_of_transcendence_basis [is_alg_closed K] [is_alg_closed L] (e : ι ≃ κ)
- (hv : is_transcendence_basis R v) (hw : is_transcendence_basis R w) : K ≃+* L :=
+  (hv : is_transcendence_basis R v) (hw : is_transcendence_basis R w) : K ≃+* L :=
 begin
- letI := is_alg_closure_of_transcendence_basis v hv;
- letI := is_alg_closure_of_transcendence_basis w hw;
- have e : algebra.adjoin R (set.range v) ≃+* algebra.adjoin R (set.range w),
- { refine hv.1.aeval_equiv.symm.to_ring_equiv.trans _,
- refine (alg_equiv.of_alg_hom
- (mv_polynomial.rename e)
- (mv_polynomial.rename e.symm)
- _ _).to_ring_equiv.trans _,
- { ext, simp },
- { ext, simp },
- exact hw.1.aeval_equiv.to_ring_equiv },
- exact is_alg_closure.equiv_of_equiv K L e
+  letI := is_alg_closure_of_transcendence_basis v hv;
+  letI := is_alg_closure_of_transcendence_basis w hw;
+  have e : algebra.adjoin R (set.range v) ≃+* algebra.adjoin R (set.range w),
+  { refine hv.1.aeval_equiv.symm.to_ring_equiv.trans _,
+    refine (alg_equiv.of_alg_hom
+      (mv_polynomial.rename e)
+      (mv_polynomial.rename e.symm)
+      _ _).to_ring_equiv.trans _,
+    { ext, simp },
+    { ext, simp },
+    exact hw.1.aeval_equiv.to_ring_equiv },
+  exact is_alg_closure.equiv_of_equiv K L e
 end
 
 end classification
@@ -124,10 +126,10 @@ variables {ι : Type u} (v : ι → K)
 variable (hv : is_transcendence_basis R v)
 
 lemma cardinal_le_max_transcendence_basis (hv : is_transcendence_basis R v) :
- #K ≤ max (max (#R) (#ι)) ℵ₀ :=
+  #K ≤ max (max (#R) (#ι)) ℵ₀ :=
 calc #K ≤ max (#(algebra.adjoin R (set.range v))) ℵ₀ :
- by letI := is_alg_closure_of_transcendence_basis v hv;
- exact algebra.is_algebraic.cardinal_mk_le_max _ _ is_alg_closure.algebraic
+  by letI := is_alg_closure_of_transcendence_basis v hv;
+   exact algebra.is_algebraic.cardinal_mk_le_max _ _ is_alg_closure.algebraic
 ... = max (#(mv_polynomial ι R)) ℵ₀ : by rw [cardinal.eq.2 ⟨(hv.1.aeval_equiv).to_equiv⟩]
 ... ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ : max_le_max mv_polynomial.cardinal_mk_le_max le_rfl
 ... = _ : by simp [max_assoc]
@@ -135,20 +137,20 @@ calc #K ≤ max (#(algebra.adjoin R (set.range v))) ℵ₀ :
 /-- If `K` is an uncountable algebraically closed field, then its
 cardinality is the same as that of a transcendence basis. -/
 lemma cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt [nontrivial R]
- (hv : is_transcendence_basis R v) (hR : #R ≤ ℵ₀) (hK : ℵ₀ < #K) : #K = #ι :=
+  (hv : is_transcendence_basis R v) (hR : #R ≤ ℵ₀) (hK : ℵ₀ < #K) : #K = #ι :=
 have ℵ₀ ≤ #ι,
- from le_of_not_lt (λ h,
- not_le_of_gt hK $ calc
- #K ≤ max (max (#R) (#ι)) ℵ₀ : cardinal_le_max_transcendence_basis v hv
- ... ≤ _ : max_le (max_le hR (le_of_lt h)) le_rfl),
+  from le_of_not_lt (λ h,
+    not_le_of_gt hK $ calc
+      #K ≤ max (max (#R) (#ι)) ℵ₀ : cardinal_le_max_transcendence_basis v hv
+     ... ≤ _ : max_le (max_le hR (le_of_lt h)) le_rfl),
 le_antisymm
- (calc #K ≤ max (max (#R) (#ι)) ℵ₀ : cardinal_le_max_transcendence_basis v hv
- ... = #ι : begin
- rw [max_eq_left]; rw [ max_eq_right],
- { exact le_trans hR this },
- { exact le_max_of_le_right this }
- end)
- (mk_le_of_injective (show function.injective v, from hv.1.injective))
+  (calc #K ≤ max (max (#R) (#ι)) ℵ₀ : cardinal_le_max_transcendence_basis v hv
+       ... = #ι : begin
+         rw [max_eq_left, max_eq_right],
+         { exact le_trans hR this },
+         { exact le_max_of_le_right this }
+       end)
+  (mk_le_of_injective (show function.injective v, from hv.1.injective))
 
 end cardinal
 
@@ -157,55 +159,58 @@ variables {K L : Type} [field K] [field L] [is_alg_closed K] [is_alg_closed L]
 /-- Two uncountable algebraically closed fields of characteristic zero are isomorphic
 if they have the same cardinality. -/
 lemma ring_equiv_of_cardinal_eq_of_char_zero [char_zero K] [char_zero L]
- (hK : ℵ₀ < #K) (hKL : #K = #L) : nonempty (K ≃+* L) :=
+  (hK : ℵ₀ < #K) (hKL : #K = #L) : nonempty (K ≃+* L) :=
 begin
- cases exists_is_transcendence_basis ℤ
- (show function.injective (algebra_map ℤ K),
- from int.cast_injective) with s hs,
- cases exists_is_transcendence_basis ℤ
- (show function.injective (algebra_map ℤ L),
- from int.cast_injective) with t ht,
- have : #s = #t,
- { rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (le_of_eq mk_int) hK]; rw [ ← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (le_of_eq mk_int)]; rw [ hKL],
- rwa ← hKL },
- cases cardinal.eq.1 this with e,
- exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
+  cases exists_is_transcendence_basis ℤ
+    (show function.injective (algebra_map ℤ K),
+      from int.cast_injective) with s hs,
+  cases exists_is_transcendence_basis ℤ
+    (show function.injective (algebra_map ℤ L),
+      from int.cast_injective) with t ht,
+  have : #s = #t,
+  { rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (le_of_eq mk_int) hK,
+        ← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (le_of_eq mk_int), hKL],
+    rwa ← hKL },
+  cases cardinal.eq.1 this with e,
+  exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
 end
 
 private lemma ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [fact p.prime]
- [char_p K p] [char_p L p] (hK : ℵ₀ < #K) (hKL : #K = #L) : nonempty (K ≃+* L) :=
+  [char_p K p] [char_p L p] (hK : ℵ₀ < #K) (hKL : #K = #L) : nonempty (K ≃+* L) :=
 begin
- letI : algebra (zmod p) K := zmod.algebra _ _,
- letI : algebra (zmod p) L := zmod.algebra _ _,
- cases exists_is_transcendence_basis (zmod p)
- (show function.injective (algebra_map (zmod p) K),
- from ring_hom.injective _) with s hs,
- cases exists_is_transcendence_basis (zmod p)
- (show function.injective (algebra_map (zmod p) L),
- from ring_hom.injective _) with t ht,
- have : #s = #t,
- { rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_finite (zmod p)).le hK]; rw [ ← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (lt_aleph_0_of_finite (zmod p)).le]; rw [ hKL],
- rwa ← hKL },
- cases cardinal.eq.1 this with e,
- exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
+  letI : algebra (zmod p) K := zmod.algebra _ _,
+  letI : algebra (zmod p) L := zmod.algebra _ _,
+  cases exists_is_transcendence_basis (zmod p)
+    (show function.injective (algebra_map (zmod p) K),
+      from ring_hom.injective _) with s hs,
+  cases exists_is_transcendence_basis (zmod p)
+    (show function.injective (algebra_map (zmod p) L),
+      from ring_hom.injective _) with t ht,
+  have : #s = #t,
+  { rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs
+      (lt_aleph_0_of_finite (zmod p)).le hK,
+        ← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht
+      (lt_aleph_0_of_finite (zmod p)).le, hKL],
+    rwa ← hKL },
+  cases cardinal.eq.1 this with e,
+  exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
 end
 
 /-- Two uncountable algebraically closed fields are isomorphic
 if they have the same cardinality and the same characteristic. -/
 lemma ring_equiv_of_cardinal_eq_of_char_eq (p : ℕ) [char_p K p] [char_p L p]
- (hK : ℵ₀ < #K) (hKL : #K = #L) : nonempty (K ≃+* L) :=
+  (hK : ℵ₀ < #K) (hKL : #K = #L) : nonempty (K ≃+* L) :=
 begin
- rcases char_p.char_is_prime_or_zero K p with hp | hp,
- { haveI : fact p.prime := ⟨hp⟩,
- letI : algebra (zmod p) K := zmod.algebra _ _,
- letI : algebra (zmod p) L := zmod.algebra _ _,
- exact ring_equiv_of_cardinal_eq_of_char_p p hK hKL },
- { rw [hp] at *,
- resetI,
- letI : char_zero K := char_p.char_p_to_char_zero K,
- letI : char_zero L := char_p.char_p_to_char_zero L,
- exact ring_equiv_of_cardinal_eq_of_char_zero hK hKL }
+  rcases char_p.char_is_prime_or_zero K p with hp | hp,
+  { haveI : fact p.prime := ⟨hp⟩,
+    letI : algebra (zmod p) K := zmod.algebra _ _,
+    letI : algebra (zmod p) L := zmod.algebra _ _,
+    exact ring_equiv_of_cardinal_eq_of_char_p p hK hKL },
+  { rw [hp] at *,
+    resetI,
+    letI : char_zero K := char_p.char_p_to_char_zero K,
+    letI : char_zero L := char_p.char_p_to_char_zero L,
+    exact ring_equiv_of_cardinal_eq_of_char_zero hK hKL }
 end
 
 end is_alg_closed
-

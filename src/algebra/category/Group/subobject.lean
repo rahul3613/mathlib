@@ -23,4 +23,3 @@ instance well_powered_AddCommGroup : well_powered (AddCommGroup.{u}) :=
 well_powered_of_equiv (forget₂ (Module.{u} ℤ) AddCommGroup.{u}).as_equivalence
 
 end AddCommGroup
-

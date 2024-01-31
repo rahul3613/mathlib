@@ -22,12 +22,12 @@ In order to apply in maximal generality (such as for `laurent_polynomial`s), thi
 
 * `add_monoid_algebra.div_of x g`: divides `x` by the monomial `add_monoid_algebra.of k G g`
 * `add_monoid_algebra.mod_of x g`: the remainder upon dividing `x` by the monomial
- `add_monoid_algebra.of k G g`.
+  `add_monoid_algebra.of k G g`.
 
 ## Main results
 
 * `add_monoid_algebra.div_of_add_mod_of`, `add_monoid_algebra.mod_of_add_div_of`: `div_of` and
- `mod_of` are well-behaved as quotient and remainder operators.
+  `mod_of` are well-behaved as quotient and remainder operators.
 
 ## Implementation notes
 
@@ -52,17 +52,17 @@ noncomputable def div_of (x : add_monoid_algebra k G) (g : G) : add_monoid_algeb
 -- discarding the elements of the support from which `g` can't be subtracted. If `G` is an additive
 -- group, such as `ℤ` when used for `laurent_polynomial`, then no discarding occurs.
 @finsupp.comap_domain.add_monoid_hom _ _ _ _ ((+) g)
- (add_right_injective g) x
+  (add_right_injective g) x
 
 local infix ` /ᵒᶠ `:70 := div_of
 
 @[simp] lemma div_of_apply (g : G) (x : add_monoid_algebra k G) (g' : G) :
- (x /ᵒᶠ g) g' = x (g + g') := rfl
+  (x /ᵒᶠ g) g' = x (g + g') := rfl
 
-@[simp] lemma support_div_of (g : G) (x : add_monoid_algebra k G) :
- (x /ᵒᶠ g).support = x.support.preimage ((+) g)
- (function.injective.inj_on
- (add_right_injective g) _) := rfl
+@[simp] lemma support_div_of (g : G) (x : add_monoid_algebra k G)  :
+  (x /ᵒᶠ g).support = x.support.preimage ((+) g)
+    (function.injective.inj_on
+      (add_right_injective g) _) := rfl
 
 @[simp] lemma zero_div_of (g : G) : (0 : add_monoid_algebra k G) /ᵒᶠ g = 0 :=
 map_zero _
@@ -74,37 +74,37 @@ lemma add_div_of (x y : add_monoid_algebra k G) (g : G) : (x + y) /ᵒᶠ g = x 
 map_add _ _ _
 
 lemma div_of_add (x : add_monoid_algebra k G) (a b : G) :
- x /ᵒᶠ (a + b) = (x /ᵒᶠ a) /ᵒᶠ b :=
+  x /ᵒᶠ (a + b) = (x /ᵒᶠ a) /ᵒᶠ b :=
 by { ext, simp only [add_monoid_algebra.div_of_apply, add_assoc] }
 
 /-- A bundled version of `add_monoid_algebra.div_of`. -/
 @[simps]
 noncomputable def div_of_hom : multiplicative G →* add_monoid.End (add_monoid_algebra k G) :=
 { to_fun := λ g,
- { to_fun := λ x, div_of x g.to_add,
- map_zero' := zero_div_of _,
- map_add' := λ x y, add_div_of x y g.to_add },
- map_one' := add_monoid_hom.ext div_of_zero,
- map_mul' := λ g₁ g₂, add_monoid_hom.ext $ λ x,
- (congr_arg _ (add_comm g₁.to_add g₂.to_add)).trans (div_of_add _ _ _) }
+  { to_fun := λ x, div_of x g.to_add,
+    map_zero' := zero_div_of _,
+    map_add' := λ x y, add_div_of x y g.to_add },
+  map_one' := add_monoid_hom.ext div_of_zero,
+  map_mul' := λ g₁ g₂, add_monoid_hom.ext $ λ x,
+    (congr_arg _ (add_comm g₁.to_add g₂.to_add)).trans  (div_of_add _ _ _) }
 
 lemma of'_mul_div_of (a : G) (x : add_monoid_algebra k G) :
- (of' k G a * x) /ᵒᶠ a = x :=
+  (of' k G a * x) /ᵒᶠ a = x :=
 begin
- ext b,
- rw [add_monoid_algebra.div_of_apply]; rw [ of'_apply]; rw [ single_mul_apply_aux]; rw [ one_mul],
- intro c,
- exact add_right_inj _,
+  ext b,
+  rw [add_monoid_algebra.div_of_apply, of'_apply, single_mul_apply_aux, one_mul],
+  intro c,
+  exact add_right_inj _,
 end
 
 lemma mul_of'_div_of (x : add_monoid_algebra k G) (a : G) :
- (x * of' k G a) /ᵒᶠ a = x :=
+  (x * of' k G a) /ᵒᶠ a = x :=
 begin
- ext b,
- rw [add_monoid_algebra.div_of_apply]; rw [ of'_apply]; rw [ mul_single_apply_aux]; rw [ mul_one],
- intro c,
- rw add_comm,
- exact add_right_inj _,
+  ext b,
+  rw [add_monoid_algebra.div_of_apply, of'_apply, mul_single_apply_aux, mul_one],
+  intro c,
+  rw add_comm,
+  exact add_right_inj _,
 end
 
 lemma of'_div_of (a : G) : (of' k G a) /ᵒᶠ a = 1 :=
@@ -117,77 +117,78 @@ x.filter (λ g₁, ¬∃ g₂, g₁ = g + g₂)
 local infix ` %ᵒᶠ `:70 := mod_of
 
 @[simp] lemma mod_of_apply_of_not_exists_add (x : add_monoid_algebra k G) (g : G) (g' : G)
- (h : ¬∃ d, g' = g + d) :
- (x %ᵒᶠ g) g' = x g' :=
+  (h : ¬∃ d, g' = g + d) :
+  (x %ᵒᶠ g) g' = x g' :=
 finsupp.filter_apply_pos _ _ h
 
 @[simp] lemma mod_of_apply_of_exists_add (x : add_monoid_algebra k G) (g : G) (g' : G)
- (h : ∃ d, g' = g + d) :
- (x %ᵒᶠ g) g' = 0 :=
+  (h : ∃ d, g' = g + d) :
+  (x %ᵒᶠ g) g' = 0 :=
 finsupp.filter_apply_neg _ _ $ by rwa [not_not]
 
 @[simp] lemma mod_of_apply_add_self (x : add_monoid_algebra k G) (g : G) (d : G) :
- (x %ᵒᶠ g) (d + g) = 0 :=
+  (x %ᵒᶠ g) (d + g) = 0 :=
 mod_of_apply_of_exists_add _ _ _ ⟨_, add_comm _ _⟩
 
 @[simp] lemma mod_of_apply_self_add (x : add_monoid_algebra k G) (g : G) (d : G) :
- (x %ᵒᶠ g) (g + d) = 0 :=
+  (x %ᵒᶠ g) (g + d) = 0 :=
 mod_of_apply_of_exists_add _ _ _ ⟨_, rfl⟩
 
 lemma of'_mul_mod_of (g : G) (x : add_monoid_algebra k G) :
- (of' k G g * x) %ᵒᶠ g = 0 :=
+  (of' k G g * x) %ᵒᶠ g = 0 :=
 begin
- ext g',
- rw finsupp.zero_apply,
- obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d),
- { rw mod_of_apply_self_add },
- { rw [mod_of_apply_of_not_exists_add _ _ _ h]; rw [ of'_apply]; rw [ single_mul_apply_of_not_exists_add _ _ h] },
+  ext g',
+  rw finsupp.zero_apply,
+  obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d),
+  { rw mod_of_apply_self_add },
+  { rw [mod_of_apply_of_not_exists_add _ _ _ h, of'_apply,
+      single_mul_apply_of_not_exists_add _ _ h] },
 end
 
 lemma mul_of'_mod_of (x : add_monoid_algebra k G) (g : G) :
- (x * of' k G g) %ᵒᶠ g = 0 :=
+  (x * of' k G g) %ᵒᶠ g = 0 :=
 begin
- ext g',
- rw finsupp.zero_apply,
- obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d),
- { rw mod_of_apply_self_add },
- { rw [mod_of_apply_of_not_exists_add _ _ _ h]; rw [ of'_apply]; rw [ mul_single_apply_of_not_exists_add],
- simpa only [add_comm] using h },
+  ext g',
+  rw finsupp.zero_apply,
+  obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d),
+  { rw mod_of_apply_self_add },
+  { rw [mod_of_apply_of_not_exists_add _ _ _ h, of'_apply, mul_single_apply_of_not_exists_add],
+    simpa only [add_comm] using h },
 end
 
 lemma of'_mod_of (g : G) : of' k G g %ᵒᶠ g = 0 :=
 by simpa only [one_mul] using mul_of'_mod_of (1 : add_monoid_algebra k G) g
 
 lemma div_of_add_mod_of (x : add_monoid_algebra k G) (g : G) :
- of' k G g * (x /ᵒᶠ g) + x %ᵒᶠ g = x :=
+  of' k G g * (x /ᵒᶠ g) + x %ᵒᶠ g = x :=
 begin
- ext g',
- simp_rw [finsupp.add_apply],
- obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d),
- swap,
- { rw [mod_of_apply_of_not_exists_add _ _ _ h]; rw [ of'_apply]; rw [ single_mul_apply_of_not_exists_add _ _ h]; rw [ zero_add] },
- { rw [mod_of_apply_self_add]; rw [ add_zero],
- rw [of'_apply]; rw [ single_mul_apply_aux _ _ _]; rw [ one_mul]; rw [ div_of_apply],
- intro a,
- exact add_right_inj _ }
+  ext g',
+  simp_rw [finsupp.add_apply],
+  obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d),
+  swap,
+  { rw [mod_of_apply_of_not_exists_add _ _ _ h, of'_apply, single_mul_apply_of_not_exists_add _ _ h,
+      zero_add] },
+  { rw [mod_of_apply_self_add, add_zero],
+    rw [of'_apply, single_mul_apply_aux _ _ _, one_mul, div_of_apply],
+    intro a,
+    exact add_right_inj _ }
 end
 
 lemma mod_of_add_div_of (x : add_monoid_algebra k G) (g : G) :
- x %ᵒᶠ g + of' k G g * (x /ᵒᶠ g) = x :=
-by rw [add_comm]; rw [ div_of_add_mod_of]
+  x %ᵒᶠ g + of' k G g * (x /ᵒᶠ g) = x :=
+by rw [add_comm, div_of_add_mod_of]
 
 lemma of'_dvd_iff_mod_of_eq_zero {x : add_monoid_algebra k G} {g : G} :
- of' k G g ∣ x ↔ x %ᵒᶠ g = 0 :=
+  of' k G g ∣ x ↔ x %ᵒᶠ g = 0 :=
 begin
- split,
- { rintro ⟨x, rfl⟩,
- rw of'_mul_mod_of },
- { intro h,
- rw [←div_of_add_mod_of x g]; rw [ h]; rw [ add_zero],
- exact dvd_mul_right _ _ },
+  split,
+  { rintro ⟨x, rfl⟩,
+    rw of'_mul_mod_of },
+  { intro h,
+    rw [←div_of_add_mod_of x g, h, add_zero],
+    exact dvd_mul_right _ _ },
 end
 
 end
 
 end add_monoid_algebra
-

@@ -62,12 +62,12 @@ set_goals gs',
 a ← t,
 -- Run `m` on the produced terms,
 (gs.zip gs').mmap (λ ⟨g, g'⟩, do
- g' ← instantiate_mvars g',
- g'' ← with_local_goals' gs $ m g',
- -- and assign to the original goals.
- -- (We have to use `assign` here, as `unify` and `exact` are apparently
- -- unreliable about which way they do the assignment!)
- unsafe.type_context.run $ unsafe.type_context.assign g g''),
+  g' ← instantiate_mvars g',
+  g'' ← with_local_goals' gs $ m g',
+  -- and assign to the original goals.
+  -- (We have to use `assign` here, as `unify` and `exact` are apparently
+  -- unreliable about which way they do the assignment!)
+  unsafe.type_context.run $ unsafe.type_context.assign g g''),
 pure a
 
 /--
@@ -78,10 +78,10 @@ and runs `dsimp` on those results
 before assigning the simplified values to the original goals.
 -/
 meta def dsimp_result {α} (t : tactic α)
- (cfg : dsimp_config := { fail_if_unchanged := ff }) (no_defaults := ff)
- (attr_names : list name := []) (hs : list simp_arg_type := []) : tactic α :=
+  (cfg : dsimp_config := { fail_if_unchanged := ff }) (no_defaults := ff)
+  (attr_names : list name := []) (hs : list simp_arg_type := []) : tactic α :=
 intercept_result (λ g,
- g.dsimp cfg no_defaults attr_names hs) t
+  g.dsimp cfg no_defaults attr_names hs) t
 
 /--
 `simp_result t`
@@ -91,10 +91,10 @@ and runs `simp` on those results
 before assigning the simplified values to the original goals.
 -/
 meta def simp_result {α} (t : tactic α)
- (cfg : simp_config := { fail_if_unchanged := ff }) (discharger : tactic unit := failed)
- (no_defaults := ff) (attr_names : list name := []) (hs : list simp_arg_type := []) : tactic α :=
+  (cfg : simp_config := { fail_if_unchanged := ff }) (discharger : tactic unit := failed)
+  (no_defaults := ff) (attr_names : list name := []) (hs : list simp_arg_type := []) : tactic α :=
 intercept_result (λ g, prod.fst <$>
- g.simp cfg discharger no_defaults attr_names hs) t
+  g.simp cfg discharger no_defaults attr_names hs) t
 
 namespace interactive
 setup_tactic_parser
@@ -110,9 +110,9 @@ You can use the usual interactive syntax for `dsimp`, e.g.
 `dsimp_result only [a, b, c] with attr { tac }`.
 -/
 meta def dsimp_result
- (no_defaults : parse only_flag) (hs : parse simp_arg_list)
- (attr_names : parse with_ident_list)
- (t : itactic) : itactic :=
+  (no_defaults : parse only_flag) (hs : parse simp_arg_list)
+  (attr_names : parse with_ident_list)
+  (t : itactic) : itactic :=
 tactic.dsimp_result t { fail_if_unchanged := ff } no_defaults attr_names hs
 
 /--
@@ -126,9 +126,9 @@ You can use the usual interactive syntax for `simp`, e.g.
 `simp_result only [a, b, c] with attr { tac }`.
 -/
 meta def simp_result
- (no_defaults : parse only_flag) (hs : parse simp_arg_list)
- (attr_names : parse with_ident_list)
- (t : itactic) : itactic :=
+  (no_defaults : parse only_flag) (hs : parse simp_arg_list)
+  (attr_names : parse with_ident_list)
+  (t : itactic) : itactic :=
 tactic.simp_result t { fail_if_unchanged := ff } failed no_defaults attr_names hs
 
 /--
@@ -145,11 +145,10 @@ You can use the usual interactive syntax for `simp`, e.g.
 (and so only simplifiying along definitional lemmas).
 -/
 add_tactic_doc
-{ name := "simp_result",
- category := doc_category.tactic,
- decl_names := [``simp_result, ``dsimp_result],
- tags := ["simplification"] }
+{ name       := "simp_result",
+  category   := doc_category.tactic,
+  decl_names := [``simp_result, ``dsimp_result],
+  tags       := ["simplification"] }
 
 end interactive
 end tactic
-

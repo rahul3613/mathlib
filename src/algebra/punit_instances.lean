@@ -29,12 +29,12 @@ variables {R S : Type*} (x y : punit.{u+1}) (s : set punit.{u+1})
 instance : comm_group punit :=
 by refine_struct
 { mul := λ _ _, star,
- one := star,
- inv := λ _, star,
- div := λ _ _, star,
- npow := λ _ _, star,
- zpow := λ _ _, star,
- .. };
+  one := star,
+  inv := λ _, star,
+  div := λ _ _, star,
+  npow := λ _ _, star,
+  zpow := λ _ _, star,
+  .. };
 intros; exact subsingleton.elim _ _
 
 @[simp, to_additive] lemma one_eq : (1 : punit) = star := rfl
@@ -47,27 +47,27 @@ intros; exact subsingleton.elim _ _
 instance : comm_ring punit :=
 by refine
 { nat_cast := λ _, punit.star,
- .. punit.comm_group,
- .. punit.add_comm_group,
- .. };
+  .. punit.comm_group,
+  .. punit.add_comm_group,
+  .. };
 intros; exact subsingleton.elim _ _
 
 instance : cancel_comm_monoid_with_zero punit :=
 by refine
 { .. punit.comm_ring,
- .. };
+  .. };
 intros; exact subsingleton.elim _ _
 
 instance : normalized_gcd_monoid punit :=
 by refine
 { gcd := λ _ _, star,
- lcm := λ _ _, star,
- norm_unit := λ x, 1,
- gcd_dvd_left := λ _ _, ⟨star, subsingleton.elim _ _⟩,
- gcd_dvd_right := λ _ _, ⟨star, subsingleton.elim _ _⟩,
- dvd_gcd := λ _ _ _ _ _, ⟨star, subsingleton.elim _ _⟩,
- gcd_mul_lcm := λ _ _, ⟨1, subsingleton.elim _ _⟩,
- .. };
+  lcm := λ _ _, star,
+  norm_unit := λ x, 1,
+  gcd_dvd_left := λ _ _, ⟨star, subsingleton.elim _ _⟩,
+  gcd_dvd_right := λ _ _, ⟨star, subsingleton.elim _ _⟩,
+  dvd_gcd := λ _ _ _ _ _, ⟨star, subsingleton.elim _ _⟩,
+  gcd_mul_lcm := λ _ _, ⟨1, subsingleton.elim _ _⟩,
+  .. };
 intros; exact subsingleton.elim _ _
 
 @[simp] lemma gcd_eq : gcd x y = star := rfl
@@ -77,17 +77,17 @@ intros; exact subsingleton.elim _ _
 instance : canonically_ordered_add_monoid punit :=
 by refine
 { exists_add_of_le := λ _ _ _, ⟨star, subsingleton.elim _ _⟩,
- .. punit.comm_ring, .. punit.complete_boolean_algebra, .. };
+  .. punit.comm_ring, .. punit.complete_boolean_algebra, .. };
 intros; trivial
 
 instance : linear_ordered_cancel_add_comm_monoid punit :=
 { le_of_add_le_add_left := λ _ _ _ _, trivial,
- .. punit.canonically_ordered_add_monoid, ..punit.linear_order }
+  .. punit.canonically_ordered_add_monoid, ..punit.linear_order }
 
 instance : linear_ordered_add_comm_monoid_with_top punit :=
 { top_add' := λ _, rfl,
- ..punit.complete_boolean_algebra,
- ..punit.linear_ordered_cancel_add_comm_monoid }
+  ..punit.complete_boolean_algebra,
+  ..punit.linear_ordered_cancel_add_comm_monoid }
 
 @[to_additive] instance : has_smul R punit := ⟨λ _ _, star⟩
 
@@ -124,4 +124,3 @@ by refine { .. punit.distrib_mul_action, .. };
 intros; exact subsingleton.elim _ _
 
 end punit
-

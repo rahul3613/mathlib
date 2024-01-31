@@ -31,7 +31,7 @@ variables {F α β γ δ : Type*}
 
 /-- The type of continuous open maps from `α` to `β`, aka Priestley homomorphisms. -/
 structure continuous_open_map (α β : Type*) [topological_space α] [topological_space β]
- extends continuous_map α β :=
+  extends continuous_map α β :=
 (map_open' : is_open_map to_fun)
 
 infixr ` →CO `:25 := continuous_open_map
@@ -43,7 +43,7 @@ set_option old_structure_cmd true
 
 You should extend this class when you extend `continuous_open_map`. -/
 class continuous_open_map_class (F : Type*) (α β : out_param $ Type*) [topological_space α]
- [topological_space β] extends continuous_map_class F α β :=
+  [topological_space β] extends continuous_map_class F α β :=
 (map_open (f : F) : is_open_map f)
 
 end
@@ -51,7 +51,7 @@ end
 export continuous_open_map_class (map_open)
 
 instance [topological_space α] [topological_space β] [continuous_open_map_class F α β] :
- has_coe_t F (α →CO β) :=
+  has_coe_t F (α →CO β) :=
 ⟨λ f, ⟨f, map_open f⟩⟩
 
 /-! ### Continuous open maps -/
@@ -61,9 +61,9 @@ variables [topological_space α] [topological_space β] [topological_space γ] [
 
 instance : continuous_open_map_class (α →CO β) α β :=
 { coe := λ f, f.to_fun,
- coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
- map_continuous := λ f, f.continuous_to_fun,
- map_open := λ f, f.map_open' }
+  coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
+  map_continuous := λ f, f.continuous_to_fun,
+  map_open := λ f, f.map_open' }
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -101,17 +101,16 @@ def comp (f : β →CO γ) (g : α →CO β) : continuous_open_map α γ :=
 @[simp] lemma coe_comp (f : β →CO γ) (g : α →CO β) : (f.comp g : α → γ) = f ∘ g := rfl
 @[simp] lemma comp_apply (f : β →CO γ) (g : α →CO β) (a : α) : (f.comp g) a = f (g a) := rfl
 @[simp] lemma comp_assoc (f : γ →CO δ) (g : β →CO γ) (h : α →CO β) :
- (f.comp g).comp h = f.comp (g.comp h) := rfl
+  (f.comp g).comp h = f.comp (g.comp h) := rfl
 @[simp] lemma comp_id (f : α →CO β) : f.comp (continuous_open_map.id α) = f := ext $ λ a, rfl
 @[simp] lemma id_comp (f : α →CO β) : (continuous_open_map.id β).comp f = f := ext $ λ a, rfl
 
 lemma cancel_right {g₁ g₂ : β →CO γ} {f : α →CO β} (hf : surjective f) :
- g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+  g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
 ⟨λ h, ext $ hf.forall.2 $ fun_like.ext_iff.1 h, congr_arg _⟩
 
 lemma cancel_left {g : β →CO γ} {f₁ f₂ : α →CO β} (hg : injective g) :
- g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-⟨λ h, ext $ λ a, hg $ by rw [←comp_apply]; rw [ h]; rw [ comp_apply], congr_arg _⟩
+  g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+⟨λ h, ext $ λ a, hg $ by rw [←comp_apply, h, comp_apply], congr_arg _⟩
 
 end continuous_open_map
-

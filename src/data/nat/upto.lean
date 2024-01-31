@@ -30,7 +30,7 @@ no `j` less than `i` satisfies `p`. This is an initial segment of the
 natural numbers, up to and including the first value satisfying `p`.
 
 We will be particularly interested in the case where there exists a value
-satisfying `p`, because in this case the `>` relation is well-founded. -/
+satisfying `p`, because in this case the `>` relation is well-founded.  -/
 @[reducible]
 def upto (p : ℕ → Prop) : Type := {i : ℕ // ∀ j < i, ¬ p j}
 
@@ -47,12 +47,12 @@ instance : has_lt (upto p) := ⟨λ x y, x.1 < y.1⟩
 satisfying `p`. -/
 protected lemma wf : (∃ x, p x) → well_founded (upto.gt p)
 | ⟨x, h⟩ := begin
- suffices : upto.gt p = measure (λ y : nat.upto p, x - y.val),
- { rw this, apply measure_wf },
- ext ⟨a, ha⟩ ⟨b, _⟩,
- dsimp [measure, inv_image, upto.gt],
- rw tsub_lt_tsub_iff_left_of_le,
- exact le_of_not_lt (λ h', ha _ h' h),
+  suffices : upto.gt p = measure (λ y : nat.upto p, x - y.val),
+  { rw this, apply measure_wf },
+  ext ⟨a, ha⟩ ⟨b, _⟩,
+  dsimp [measure, inv_image, upto.gt],
+  rw tsub_lt_tsub_iff_left_of_le,
+  exact le_of_not_lt (λ h', ha _ h' h),
 end
 
 /-- Zero is always a member of `nat.upto p` because it has no predecessors. -/
@@ -61,10 +61,9 @@ def zero : nat.upto p := ⟨0, λ j h, false.elim (nat.not_lt_zero _ h)⟩
 /-- The successor of `n` is in `nat.upto p` provided that `n` doesn't satisfy `p`. -/
 def succ (x : nat.upto p) (h : ¬ p x.val) : nat.upto p :=
 ⟨x.val.succ, λ j h', begin
- rcases nat.lt_succ_iff_lt_or_eq.1 h' with h' | rfl;
- [exact x.2 _ h', exact h]
+  rcases nat.lt_succ_iff_lt_or_eq.1 h' with h' | rfl;
+  [exact x.2 _ h', exact h]
 end⟩
 
 end upto
 end nat
-

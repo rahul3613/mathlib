@@ -48,10 +48,9 @@ def prj.repr ⦃α : typevec n⦄ : prj i α → (prj.P i).obj α :=
 
 instance prj.mvqpf : mvqpf (prj i) :=
 { P := prj.P i,
- abs := prj.abs i,
- repr := prj.repr i,
- abs_repr := by intros; refl,
- abs_map := by intros; cases p; refl }
+  abs := prj.abs i,
+  repr := prj.repr i,
+  abs_repr := by intros; refl,
+  abs_map := by intros; cases p; refl }
 
 end mvqpf
-

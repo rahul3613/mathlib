@@ -17,10 +17,10 @@ This file defines simply connected spaces.
 A topological space is simply connected if its fundamental groupoid is equivalent to `unit`.
 
 ## Main theorems
- - `simply_connected_iff_unique_homotopic` - A space is simply connected if and only if it is
- nonempty and there is a unique path up to homotopy between any two points
+  - `simply_connected_iff_unique_homotopic` - A space is simply connected if and only if it is
+    nonempty and there is a unique path up to homotopy between any two points
 
- - `simply_connected_space.of_contractible` - A contractible space is simply connected
+  - `simply_connected_space.of_contractible` - A contractible space is simply connected
 -/
 noncomputable theory
 
@@ -33,13 +33,13 @@ class simply_connected_space (X : Type*) [topological_space X] : Prop :=
 (equiv_unit [] : nonempty (fundamental_groupoid X ≌ discrete unit))
 
 lemma simply_connected_def (X : Type*) [topological_space X] :
- simply_connected_space X ↔ nonempty (fundamental_groupoid X ≌ discrete unit) :=
+  simply_connected_space X ↔ nonempty (fundamental_groupoid X ≌ discrete unit) :=
 ⟨λ h, @simply_connected_space.equiv_unit X _ h, λ h, ⟨h⟩⟩
 
 lemma simply_connected_iff_unique_homotopic (X : Type*) [topological_space X] :
- simply_connected_space X ↔ (nonempty X) ∧
- ∀ (x y : X), nonempty (unique (path.homotopic.quotient x y)) :=
-by { rw [simply_connected_def]; rw [ equiv_punit_iff_unique], refl, }
+  simply_connected_space X ↔ (nonempty X) ∧
+  ∀ (x y : X), nonempty (unique (path.homotopic.quotient x y)) :=
+by { rw [simply_connected_def, equiv_punit_iff_unique], refl, }
 
 namespace simply_connected_space
 variables {X : Type*} [topological_space X] [simply_connected_space X]
@@ -60,33 +60,32 @@ by simpa using @subsingleton.elim (path.homotopic.quotient x y) _ ⟦p₁⟧ ⟦
 
 @[priority 100]
 instance of_contractible (Y : Type*) [topological_space Y] [contractible_space Y] :
- simply_connected_space Y :=
+  simply_connected_space Y :=
 { equiv_unit :=
- let H : Top.of Y ≃ₕ Top.of unit := (contractible_space.hequiv_unit Y).some in
- ⟨(fundamental_groupoid_functor.equiv_of_homotopy_equiv H).trans
- fundamental_groupoid.punit_equiv_discrete_punit⟩, }
+  let H : Top.of Y ≃ₕ Top.of unit := (contractible_space.hequiv_unit Y).some in
+  ⟨(fundamental_groupoid_functor.equiv_of_homotopy_equiv H).trans
+    fundamental_groupoid.punit_equiv_discrete_punit⟩, }
 
 end simply_connected_space
 
 local attribute [instance] path.homotopic.setoid
 
 /-- A space is simply connected iff it is path connected, and there is at most one path
- up to homotopy between any two points. -/
+  up to homotopy between any two points. -/
 lemma simply_connected_iff_paths_homotopic {Y : Type*} [topological_space Y] :
- simply_connected_space Y ↔ (path_connected_space Y) ∧
- (∀ x y : Y, subsingleton (path.homotopic.quotient x y)) :=
+  simply_connected_space Y ↔ (path_connected_space Y) ∧
+  (∀ x y : Y, subsingleton (path.homotopic.quotient x y)) :=
 ⟨by { introI, split; apply_instance, },
 λ h, begin
- casesI h, rw simply_connected_iff_unique_homotopic,
- exact ⟨infer_instance, λ x y, ⟨unique_of_subsingleton ⟦path_connected_space.some_path x y⟧⟩⟩,
+  casesI h, rw simply_connected_iff_unique_homotopic,
+  exact ⟨infer_instance, λ x y, ⟨unique_of_subsingleton ⟦path_connected_space.some_path x y⟧⟩⟩,
 end⟩
 
 /-- Another version of `simply_connected_iff_paths_homotopic` -/
 lemma simply_connected_iff_paths_homotopic' {Y : Type*} [topological_space Y] :
- simply_connected_space Y ↔ (path_connected_space Y) ∧
- (∀ {x y : Y} (p₁ p₂ : path x y), path.homotopic p₁ p₂) :=
+  simply_connected_space Y ↔ (path_connected_space Y) ∧
+  (∀ {x y : Y} (p₁ p₂ : path x y), path.homotopic p₁ p₂) :=
 begin
- convert simply_connected_iff_paths_homotopic,
- simp [path.homotopic.quotient, setoid.eq_top_iff], refl,
+  convert simply_connected_iff_paths_homotopic,
+  simp [path.homotopic.quotient, setoid.eq_top_iff], refl,
 end
-

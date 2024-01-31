@@ -32,29 +32,29 @@ variables [∀ i, module.finite R (M₁ i)] [∀ i, module.free R (M₁ i)]
 
 -- the induction requires us to show both at once
 private lemma free_and_finite :
- module.free R (multilinear_map R M₁ M₂) ∧ module.finite R (multilinear_map R M₁ M₂) :=
+  module.free R (multilinear_map R M₁ M₂) ∧ module.finite R (multilinear_map R M₁ M₂) :=
 begin
- -- the `fin n` case is sufficient
- suffices : ∀ n (N : fin n → Type*) [Π i, add_comm_group (N i)],
- by exactI ∀ [Π i, module R (N i)],
- by exactI ∀ [∀ i, module.finite R (N i)] [∀ i, module.free R (N i)],
- module.free R (multilinear_map R N M₂) ∧ module.finite R (multilinear_map R N M₂),
- { casesI nonempty_fintype ι,
- casesI this _ (M₁ ∘ (fintype.equiv_fin ι).symm),
- have e := dom_dom_congr_linear_equiv' R M₁ M₂ (fintype.equiv_fin ι),
- exact ⟨module.free.of_equiv e.symm, module.finite.equiv e.symm⟩, },
- introsI n N _ _ _ _,
- unfreezingI { induction n with n ih },
- { exact ⟨module.free.of_equiv (const_linear_equiv_of_is_empty R N M₂),
- module.finite.equiv (const_linear_equiv_of_is_empty R N M₂)⟩ },
- { suffices :
- module.free R (N 0 →ₗ[R] multilinear_map R (λ (i : fin n), N i.succ) M₂) ∧
- module.finite R (N 0 →ₗ[R] multilinear_map R (λ (i : fin n), N i.succ) M₂),
- { casesI this,
- exact ⟨module.free.of_equiv (multilinear_curry_left_equiv R N M₂),
- module.finite.equiv (multilinear_curry_left_equiv R N M₂)⟩ },
- casesI ih (λ i, N i.succ),
- exact ⟨module.free.linear_map _ _ _, module.finite.linear_map _ _⟩ },
+  -- the `fin n` case is sufficient
+  suffices : ∀ n (N : fin n → Type*) [Π i, add_comm_group (N i)],
+    by exactI ∀ [Π i, module R (N i)],
+    by exactI ∀ [∀ i, module.finite R (N i)] [∀ i, module.free R (N i)],
+      module.free R (multilinear_map R N M₂) ∧ module.finite R (multilinear_map R N M₂),
+  { casesI nonempty_fintype ι,
+    casesI this _ (M₁ ∘ (fintype.equiv_fin ι).symm),
+    have e := dom_dom_congr_linear_equiv' R M₁ M₂ (fintype.equiv_fin ι),
+    exact ⟨module.free.of_equiv e.symm, module.finite.equiv e.symm⟩, },
+  introsI n N _ _ _ _,
+  unfreezingI { induction n with n ih },
+  { exact ⟨module.free.of_equiv (const_linear_equiv_of_is_empty R N M₂),
+           module.finite.equiv (const_linear_equiv_of_is_empty R N M₂)⟩ },
+  { suffices :
+      module.free R (N 0 →ₗ[R] multilinear_map R (λ (i : fin n), N i.succ) M₂) ∧
+      module.finite R (N 0 →ₗ[R] multilinear_map R (λ (i : fin n), N i.succ) M₂),
+    { casesI this,
+      exact ⟨module.free.of_equiv (multilinear_curry_left_equiv R N M₂),
+            module.finite.equiv (multilinear_curry_left_equiv R N M₂)⟩ },
+    casesI ih (λ i, N i.succ),
+    exact ⟨module.free.linear_map _ _ _, module.finite.linear_map _ _⟩ },
 end
 
 instance _root_.module.finite.multilinear_map : module.finite R (multilinear_map R M₁ M₂) :=
@@ -64,4 +64,3 @@ instance _root_.module.free.multilinear_map : module.free R (multilinear_map R M
 free_and_finite.1
 
 end multilinear_map
-

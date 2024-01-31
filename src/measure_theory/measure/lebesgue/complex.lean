@@ -38,11 +38,10 @@ def measurable_equiv_real_prod : ℂ ≃ᵐ (ℝ × ℝ) :=
 equiv_real_prod_clm.to_homeomorph.to_measurable_equiv
 
 lemma volume_preserving_equiv_pi :
- measure_preserving measurable_equiv_pi :=
+  measure_preserving measurable_equiv_pi :=
 (measurable_equiv_pi.symm.measurable.measure_preserving _).symm _
 
 lemma volume_preserving_equiv_real_prod : measure_preserving measurable_equiv_real_prod :=
 (volume_preserving_fin_two_arrow ℝ).comp volume_preserving_equiv_pi
 
 end complex
-

@@ -35,24 +35,24 @@ lemma smul_def [mul_action G α] {S : subgroup G} (g : S) (m : α) : g • m = (
 
 @[to_additive]
 instance smul_comm_class_left
- [mul_action G β] [has_smul α β] [smul_comm_class G α β] (S : subgroup G) :
- smul_comm_class S α β :=
+  [mul_action G β] [has_smul α β] [smul_comm_class G α β] (S : subgroup G) :
+  smul_comm_class S α β :=
 S.to_submonoid.smul_comm_class_left
 
 @[to_additive]
 instance smul_comm_class_right
- [has_smul α β] [mul_action G β] [smul_comm_class α G β] (S : subgroup G) :
- smul_comm_class α S β :=
+  [has_smul α β] [mul_action G β] [smul_comm_class α G β] (S : subgroup G) :
+  smul_comm_class α S β :=
 S.to_submonoid.smul_comm_class_right
 
 /-- Note that this provides `is_scalar_tower S G G` which is needed by `smul_mul_assoc`. -/
 instance
- [has_smul α β] [mul_action G α] [mul_action G β] [is_scalar_tower G α β] (S : subgroup G) :
- is_scalar_tower S α β :=
+  [has_smul α β] [mul_action G α] [mul_action G β] [is_scalar_tower G α β] (S : subgroup G) :
+  is_scalar_tower S α β :=
 S.to_submonoid.is_scalar_tower
 
 instance [mul_action G α] [has_faithful_smul G α] (S : subgroup G) :
- has_faithful_smul S α :=
+  has_faithful_smul S α :=
 S.to_submonoid.has_faithful_smul
 
 /-- The action by a subgroup is the action by the underlying group. -/
@@ -72,4 +72,3 @@ instance center.smul_comm_class_right : smul_comm_class G (center G) G :=
 submonoid.center.smul_comm_class_right
 
 end subgroup
-

@@ -52,27 +52,27 @@ class Inf_convergence_class (α : Type*) [preorder α] [topological_space α] : 
 (tendsto_coe_at_bot_is_glb : ∀ (a : α) (s : set α), is_glb s a → tendsto (coe : s → α) at_bot (𝓝 a))
 
 instance order_dual.Sup_convergence_class [preorder α] [topological_space α]
- [Inf_convergence_class α] : Sup_convergence_class αᵒᵈ :=
+  [Inf_convergence_class α] : Sup_convergence_class αᵒᵈ :=
 ⟨‹Inf_convergence_class α›.1⟩
 
 instance order_dual.Inf_convergence_class [preorder α] [topological_space α]
- [Sup_convergence_class α] : Inf_convergence_class αᵒᵈ :=
+  [Sup_convergence_class α] : Inf_convergence_class αᵒᵈ :=
 ⟨‹Sup_convergence_class α›.1⟩
 
 @[priority 100] -- see Note [lower instance priority]
 instance linear_order.Sup_convergence_class [topological_space α] [linear_order α]
- [order_topology α] : Sup_convergence_class α :=
+  [order_topology α] : Sup_convergence_class α :=
 begin
- refine ⟨λ a s ha, tendsto_order.2 ⟨λ b hb, _, λ b hb, _⟩⟩,
- { rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩,
- lift c to s using hcs,
- refine (eventually_ge_at_top c).mono (λ x hx, bc.trans_le hx) },
- { exact eventually_of_forall (λ x, (ha.1 x.2).trans_lt hb) }
+  refine ⟨λ a s ha, tendsto_order.2 ⟨λ b hb, _, λ b hb, _⟩⟩,
+  { rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩,
+    lift c to s using hcs,
+    refine (eventually_ge_at_top c).mono (λ x hx, bc.trans_le hx) },
+  { exact eventually_of_forall (λ x, (ha.1 x.2).trans_lt hb) }
 end
 
 @[priority 100] -- see Note [lower instance priority]
 instance linear_order.Inf_convergence_class [topological_space α] [linear_order α]
- [order_topology α] : Inf_convergence_class α :=
+  [order_topology α] : Inf_convergence_class α :=
 show Inf_convergence_class αᵒᵈᵒᵈ, from order_dual.Inf_convergence_class
 
 section
@@ -84,15 +84,15 @@ section is_lub
 variables [preorder α] [Sup_convergence_class α] {f : ι → α} {a : α}
 
 lemma tendsto_at_top_is_lub (h_mono : monotone f) (ha : is_lub (set.range f) a) :
- tendsto f at_top (𝓝 a) :=
+  tendsto f at_top (𝓝 a) :=
 begin
- suffices : tendsto (range_factorization f) at_top at_top,
- from (Sup_convergence_class.tendsto_coe_at_top_is_lub _ _ ha).comp this,
- exact h_mono.range_factorization.tendsto_at_top_at_top (λ b, b.2.imp $ λ a ha, ha.ge)
+  suffices : tendsto (range_factorization f) at_top at_top,
+    from (Sup_convergence_class.tendsto_coe_at_top_is_lub _ _ ha).comp this,
+  exact h_mono.range_factorization.tendsto_at_top_at_top (λ b, b.2.imp $ λ a ha, ha.ge)
 end
 
 lemma tendsto_at_bot_is_lub (h_anti : antitone f) (ha : is_lub (set.range f) a) :
- tendsto f at_bot (𝓝 a) :=
+  tendsto f at_bot (𝓝 a) :=
 by convert tendsto_at_top_is_lub h_anti.dual_left ha
 
 end is_lub
@@ -102,11 +102,11 @@ section is_glb
 variables [preorder α] [Inf_convergence_class α] {f : ι → α} {a : α}
 
 lemma tendsto_at_bot_is_glb (h_mono : monotone f) (ha : is_glb (set.range f) a) :
- tendsto f at_bot (𝓝 a) :=
+  tendsto f at_bot (𝓝 a) :=
 by convert tendsto_at_top_is_lub h_mono.dual ha.dual
 
 lemma tendsto_at_top_is_glb (h_anti : antitone f) (ha : is_glb (set.range f) a) :
- tendsto f at_top (𝓝 a) :=
+  tendsto f at_top (𝓝 a) :=
 by convert tendsto_at_bot_is_lub h_anti.dual ha.dual
 
 end is_glb
@@ -116,14 +116,14 @@ section csupr
 variables [conditionally_complete_lattice α] [Sup_convergence_class α] {f : ι → α} {a : α}
 
 lemma tendsto_at_top_csupr (h_mono : monotone f) (hbdd : bdd_above $ range f) :
- tendsto f at_top (𝓝 (⨆i, f i)) :=
+  tendsto f at_top (𝓝 (⨆i, f i)) :=
 begin
- casesI is_empty_or_nonempty ι,
- exacts [tendsto_of_is_empty, tendsto_at_top_is_lub h_mono (is_lub_csupr hbdd)]
+  casesI is_empty_or_nonempty ι,
+  exacts [tendsto_of_is_empty, tendsto_at_top_is_lub h_mono (is_lub_csupr hbdd)]
 end
 
 lemma tendsto_at_bot_csupr (h_anti : antitone f) (hbdd : bdd_above $ range f) :
- tendsto f at_bot (𝓝 (⨆ i, f i)) :=
+  tendsto f at_bot (𝓝 (⨆ i, f i)) :=
 by convert tendsto_at_top_csupr h_anti.dual hbdd.dual
 
 end csupr
@@ -133,11 +133,11 @@ section cinfi
 variables [conditionally_complete_lattice α] [Inf_convergence_class α] {f : ι → α} {a : α}
 
 lemma tendsto_at_bot_cinfi (h_mono : monotone f) (hbdd : bdd_below $ range f) :
- tendsto f at_bot (𝓝 (⨅ i, f i)) :=
+  tendsto f at_bot (𝓝 (⨅ i, f i)) :=
 by convert tendsto_at_top_csupr h_mono.dual hbdd.dual
 
 lemma tendsto_at_top_cinfi (h_anti : antitone f) (hbdd : bdd_below $ range f) :
- tendsto f at_top (𝓝 (⨅ i, f i)) :=
+  tendsto f at_top (𝓝 (⨅ i, f i)) :=
 by convert tendsto_at_bot_csupr h_anti.dual hbdd.dual
 
 end cinfi
@@ -150,7 +150,7 @@ lemma tendsto_at_top_supr (h_mono : monotone f) : tendsto f at_top (𝓝 (⨆i, 
 tendsto_at_top_csupr h_mono (order_top.bdd_above _)
 
 lemma tendsto_at_bot_supr (h_anti : antitone f) :
- tendsto f at_bot (𝓝 (⨆i, f i)) :=
+  tendsto f at_bot (𝓝 (⨆i, f i)) :=
 tendsto_at_bot_csupr h_anti (order_top.bdd_above _)
 
 end supr
@@ -163,7 +163,7 @@ lemma tendsto_at_bot_infi (h_mono : monotone f) : tendsto f at_bot (𝓝 (⨅i, 
 tendsto_at_bot_cinfi h_mono (order_bot.bdd_below _)
 
 lemma tendsto_at_top_infi (h_anti : antitone f) :
- tendsto f at_top (𝓝 (⨅i, f i)) :=
+  tendsto f at_top (𝓝 (⨅i, f i)) :=
 tendsto_at_top_cinfi h_anti (order_bot.bdd_below _)
 
 end infi
@@ -171,60 +171,60 @@ end infi
 end
 
 instance [preorder α] [preorder β] [topological_space α] [topological_space β]
- [Sup_convergence_class α] [Sup_convergence_class β] : Sup_convergence_class (α × β) :=
+  [Sup_convergence_class α] [Sup_convergence_class β] : Sup_convergence_class (α × β) :=
 begin
- constructor,
- rintro ⟨a, b⟩ s h,
- rw [is_lub_prod] at h; rw [ ← range_restrict] at h; rw [ ← range_restrict] at h,
- have A : tendsto (λ x : s, (x : α × β).1) at_top (𝓝 a),
- from tendsto_at_top_is_lub (monotone_fst.restrict s) h.1,
- have B : tendsto (λ x : s, (x : α × β).2) at_top (𝓝 b),
- from tendsto_at_top_is_lub (monotone_snd.restrict s) h.2,
- convert A.prod_mk_nhds B,
- ext1 ⟨⟨x, y⟩, h⟩, refl
+  constructor,
+  rintro ⟨a, b⟩ s h,
+  rw [is_lub_prod, ← range_restrict, ← range_restrict] at h,
+  have A : tendsto (λ x : s, (x : α × β).1) at_top (𝓝 a),
+    from tendsto_at_top_is_lub (monotone_fst.restrict s) h.1,
+  have B : tendsto (λ x : s, (x : α × β).2) at_top (𝓝 b),
+    from tendsto_at_top_is_lub (monotone_snd.restrict s) h.2,
+  convert A.prod_mk_nhds B,
+  ext1 ⟨⟨x, y⟩, h⟩, refl
 end
 
 instance [preorder α] [preorder β] [topological_space α] [topological_space β]
- [Inf_convergence_class α] [Inf_convergence_class β] : Inf_convergence_class (α × β) :=
+  [Inf_convergence_class α] [Inf_convergence_class β] : Inf_convergence_class (α × β) :=
 show Inf_convergence_class (αᵒᵈ × βᵒᵈ)ᵒᵈ, from order_dual.Inf_convergence_class
 
 instance {ι : Type*} {α : ι → Type*} [Π i, preorder (α i)] [Π i, topological_space (α i)]
- [Π i, Sup_convergence_class (α i)] : Sup_convergence_class (Π i, α i) :=
+  [Π i, Sup_convergence_class (α i)] : Sup_convergence_class (Π i, α i) :=
 begin
- refine ⟨λ f s h, _⟩,
- simp only [is_lub_pi, ← range_restrict] at h,
- exact tendsto_pi_nhds.2 (λ i, tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i))
+  refine ⟨λ f s h, _⟩,
+  simp only [is_lub_pi, ← range_restrict] at h,
+  exact tendsto_pi_nhds.2 (λ i, tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i))
 end
 
 instance {ι : Type*} {α : ι → Type*} [Π i, preorder (α i)] [Π i, topological_space (α i)]
- [Π i, Inf_convergence_class (α i)] : Inf_convergence_class (Π i, α i) :=
+  [Π i, Inf_convergence_class (α i)] : Inf_convergence_class (Π i, α i) :=
 show Inf_convergence_class (Π i, (α i)ᵒᵈ)ᵒᵈ, from order_dual.Inf_convergence_class
 
 instance pi.Sup_convergence_class' {ι : Type*} [preorder α] [topological_space α]
- [Sup_convergence_class α] : Sup_convergence_class (ι → α) :=
+  [Sup_convergence_class α] : Sup_convergence_class (ι → α) :=
 pi.Sup_convergence_class
 
 instance pi.Inf_convergence_class' {ι : Type*} [preorder α] [topological_space α]
- [Inf_convergence_class α] : Inf_convergence_class (ι → α) :=
+  [Inf_convergence_class α] : Inf_convergence_class (ι → α) :=
 pi.Inf_convergence_class
 
 lemma tendsto_of_monotone {ι α : Type*} [preorder ι] [topological_space α]
- [conditionally_complete_linear_order α] [order_topology α] {f : ι → α} (h_mono : monotone f) :
- tendsto f at_top at_top ∨ (∃ l, tendsto f at_top (𝓝 l)) :=
+  [conditionally_complete_linear_order α] [order_topology α] {f : ι → α} (h_mono : monotone f) :
+  tendsto f at_top at_top ∨ (∃ l, tendsto f at_top (𝓝 l)) :=
 if H : bdd_above (range f) then or.inr ⟨_, tendsto_at_top_csupr h_mono H⟩
 else or.inl $ tendsto_at_top_at_top_of_monotone' h_mono H
 
 lemma tendsto_iff_tendsto_subseq_of_monotone {ι₁ ι₂ α : Type*} [semilattice_sup ι₁] [preorder ι₂]
- [nonempty ι₁] [topological_space α] [conditionally_complete_linear_order α] [order_topology α]
- [no_max_order α] {f : ι₂ → α} {φ : ι₁ → ι₂} {l : α} (hf : monotone f)
- (hg : tendsto φ at_top at_top) :
- tendsto f at_top (𝓝 l) ↔ tendsto (f ∘ φ) at_top (𝓝 l) :=
+  [nonempty ι₁] [topological_space α] [conditionally_complete_linear_order α] [order_topology α]
+  [no_max_order α] {f : ι₂ → α} {φ : ι₁ → ι₂} {l : α} (hf : monotone f)
+  (hg : tendsto φ at_top at_top) :
+  tendsto f at_top (𝓝 l) ↔ tendsto (f ∘ φ) at_top (𝓝 l) :=
 begin
- split; intro h,
- { exact h.comp hg },
- { rcases tendsto_of_monotone hf with h' | ⟨l', hl'⟩,
- { exact (not_tendsto_at_top_of_tendsto_nhds h (h'.comp hg)).elim },
- { rwa tendsto_nhds_unique h (hl'.comp hg) } }
+  split; intro h,
+  { exact h.comp hg },
+  { rcases tendsto_of_monotone hf with h' | ⟨l', hl'⟩,
+    { exact (not_tendsto_at_top_of_tendsto_nhds h (h'.comp hg)).elim },
+    { rwa tendsto_nhds_unique h (hl'.comp hg) } }
 end
 
 /-! The next family of results, such as `is_lub_of_tendsto_at_top` and `supr_eq_of_tendsto`, are
@@ -236,83 +236,82 @@ Related theorems above (`is_lub.is_lub_of_tendsto`, `is_glb.is_glb_of_tendsto` e
 when `f x` tends to `a` as `x` tends to some point `b` in the domain. -/
 
 lemma monotone.ge_of_tendsto [topological_space α] [preorder α] [order_closed_topology α]
- [semilattice_sup β] {f : β → α} {a : α} (hf : monotone f)
- (ha : tendsto f at_top (𝓝 a)) (b : β) :
- f b ≤ a :=
+  [semilattice_sup β] {f : β → α} {a : α} (hf : monotone f)
+  (ha : tendsto f at_top (𝓝 a)) (b : β) :
+  f b ≤ a :=
 begin
- haveI : nonempty β := nonempty.intro b,
- exact ge_of_tendsto ha ((eventually_ge_at_top b).mono (λ _ hxy, hf hxy))
+  haveI : nonempty β := nonempty.intro b,
+  exact ge_of_tendsto ha ((eventually_ge_at_top b).mono (λ _ hxy, hf hxy))
 end
 
 lemma monotone.le_of_tendsto [topological_space α] [preorder α] [order_closed_topology α]
- [semilattice_inf β] {f : β → α} {a : α} (hf : monotone f)
- (ha : tendsto f at_bot (𝓝 a)) (b : β) :
- a ≤ f b :=
+  [semilattice_inf β] {f : β → α} {a : α} (hf : monotone f)
+  (ha : tendsto f at_bot (𝓝 a)) (b : β) :
+  a ≤ f b :=
 hf.dual.ge_of_tendsto ha b
 
 lemma antitone.le_of_tendsto [topological_space α] [preorder α] [order_closed_topology α]
- [semilattice_sup β] {f : β → α} {a : α} (hf : antitone f)
- (ha : tendsto f at_top (𝓝 a)) (b : β) :
- a ≤ f b :=
+  [semilattice_sup β] {f : β → α} {a : α} (hf : antitone f)
+  (ha : tendsto f at_top (𝓝 a)) (b : β) :
+  a ≤ f b :=
 hf.dual_right.ge_of_tendsto ha b
 
 lemma antitone.ge_of_tendsto [topological_space α] [preorder α] [order_closed_topology α]
- [semilattice_inf β] {f : β → α} {a : α} (hf : antitone f)
- (ha : tendsto f at_bot (𝓝 a)) (b : β) :
- f b ≤ a :=
+  [semilattice_inf β] {f : β → α} {a : α} (hf : antitone f)
+  (ha : tendsto f at_bot (𝓝 a)) (b : β) :
+  f b ≤ a :=
 hf.dual_right.le_of_tendsto ha b
 
 lemma is_lub_of_tendsto_at_top [topological_space α] [preorder α] [order_closed_topology α]
- [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : monotone f)
- (ha : tendsto f at_top (𝓝 a)) :
- is_lub (set.range f) a :=
+  [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : monotone f)
+  (ha : tendsto f at_top (𝓝 a)) :
+  is_lub (set.range f) a :=
 begin
- split,
- { rintros _ ⟨b, rfl⟩,
- exact hf.ge_of_tendsto ha b },
- { exact λ _ hb, le_of_tendsto' ha (λ x, hb (set.mem_range_self x)) }
+  split,
+  { rintros _ ⟨b, rfl⟩,
+    exact hf.ge_of_tendsto ha b },
+  { exact λ _ hb, le_of_tendsto' ha (λ x, hb (set.mem_range_self x)) }
 end
 
 lemma is_glb_of_tendsto_at_bot [topological_space α] [preorder α] [order_closed_topology α]
- [nonempty β] [semilattice_inf β] {f : β → α} {a : α} (hf : monotone f)
- (ha : tendsto f at_bot (𝓝 a)) :
- is_glb (set.range f) a :=
+  [nonempty β] [semilattice_inf β] {f : β → α} {a : α} (hf : monotone f)
+  (ha : tendsto f at_bot (𝓝 a)) :
+  is_glb (set.range f) a :=
 @is_lub_of_tendsto_at_top αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ hf.dual ha
 
 lemma is_lub_of_tendsto_at_bot [topological_space α] [preorder α] [order_closed_topology α]
- [nonempty β] [semilattice_inf β] {f : β → α} {a : α} (hf : antitone f)
- (ha : tendsto f at_bot (𝓝 a)) :
- is_lub (set.range f) a :=
-@is_lub_of_tendsto_at_top α βᵒᵈ _ _ _ _ _ _ _ hf.dual_left ha
+  [nonempty β] [semilattice_inf β] {f : β → α} {a : α} (hf : antitone f)
+  (ha : tendsto f at_bot (𝓝 a)) :
+  is_lub (set.range f) a :=
+@is_lub_of_tendsto_at_top α βᵒᵈ  _ _ _ _ _ _ _ hf.dual_left ha
 
 lemma is_glb_of_tendsto_at_top [topological_space α] [preorder α] [order_closed_topology α]
- [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : antitone f)
- (ha : tendsto f at_top (𝓝 a)) :
- is_glb (set.range f) a :=
-@is_glb_of_tendsto_at_bot α βᵒᵈ _ _ _ _ _ _ _ hf.dual_left ha
+  [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : antitone f)
+  (ha : tendsto f at_top (𝓝 a)) :
+  is_glb (set.range f) a :=
+@is_glb_of_tendsto_at_bot α βᵒᵈ  _ _ _ _ _ _ _ hf.dual_left ha
 
 lemma supr_eq_of_tendsto {α β} [topological_space α] [complete_linear_order α] [order_topology α]
- [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : monotone f) :
- tendsto f at_top (𝓝 a) → supr f = a :=
+  [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : monotone f) :
+  tendsto f at_top (𝓝 a) → supr f = a :=
 tendsto_nhds_unique (tendsto_at_top_supr hf)
 
 lemma infi_eq_of_tendsto {α} [topological_space α] [complete_linear_order α] [order_topology α]
- [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : antitone f) :
- tendsto f at_top (𝓝 a) → infi f = a :=
+  [nonempty β] [semilattice_sup β] {f : β → α} {a : α} (hf : antitone f) :
+  tendsto f at_top (𝓝 a) → infi f = a :=
 tendsto_nhds_unique (tendsto_at_top_infi hf)
 
 lemma supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type*} [preorder ι₂] [complete_lattice α]
- {l : filter ι₁} [l.ne_bot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : monotone f)
- (hφ : tendsto φ l at_top) :
- (⨆ i, f i) = (⨆ i, f (φ i)) :=
+  {l : filter ι₁} [l.ne_bot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : monotone f)
+  (hφ : tendsto φ l at_top) :
+  (⨆ i, f i) = (⨆ i, f (φ i)) :=
 le_antisymm
- (supr_mono' $ λ i, exists_imp_exists (λ j (hj : i ≤ φ j), hf hj)
- (hφ.eventually $ eventually_ge_at_top i).exists)
- (supr_mono' $ λ i, ⟨φ i, le_rfl⟩)
+  (supr_mono' $ λ i, exists_imp_exists (λ j (hj : i ≤ φ j), hf hj)
+    (hφ.eventually $ eventually_ge_at_top i).exists)
+  (supr_mono' $ λ i, ⟨φ i, le_rfl⟩)
 
 lemma infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type*} [preorder ι₂] [complete_lattice α]
- {l : filter ι₁} [l.ne_bot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : monotone f)
- (hφ : tendsto φ l at_bot) :
- (⨅ i, f i) = (⨅ i, f (φ i)) :=
+  {l : filter ι₁} [l.ne_bot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : monotone f)
+  (hφ : tendsto φ l at_bot) :
+  (⨅ i, f i) = (⨅ i, f (φ i)) :=
 supr_eq_supr_subseq_of_monotone hf.dual hφ
-

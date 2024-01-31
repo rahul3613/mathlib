@@ -19,9 +19,9 @@ This file defines the finitely supported product of finsets as a `finset (ι →
 ## Main declarations
 
 * `finset.finsupp`: Finitely supported product of finsets. `s.finset t` is the product of the `t i`
- over all `i ∈ s`.
+  over all `i ∈ s`.
 * `finsupp.pi`: `f.pi` is the finset of `finsupp`s whose `i`-th value lies in `f i`. This is the
- special case of `finset.finsupp` where we take the product of the `f i` over the support of `f`.
+  special case of `finset.finsupp` where we take the product of the `f i` over the support of `f`.
 
 ## Implementation notes
 
@@ -44,31 +44,31 @@ protected def finsupp (s : finset ι) (t : ι → finset α) : finset (ι →₀
 
 lemma mem_finsupp_iff {t : ι → finset α} : f ∈ s.finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
 begin
- refine mem_map.trans ⟨_, _⟩,
- { rintro ⟨f, hf, rfl⟩,
- refine ⟨support_indicator_subset _ _, λ i hi, _⟩,
- convert mem_pi.1 hf i hi,
- exact indicator_of_mem hi _ },
- { refine λ h, ⟨λ i _, f i, mem_pi.2 h.2, _⟩,
- ext i,
- exact ite_eq_left_iff.2 (λ hi, (not_mem_support_iff.1 $ λ H, hi $ h.1 H).symm) }
+  refine mem_map.trans ⟨_, _⟩,
+  { rintro ⟨f, hf, rfl⟩,
+    refine ⟨support_indicator_subset _ _, λ i hi, _⟩,
+    convert mem_pi.1 hf i hi,
+    exact indicator_of_mem hi _ },
+  { refine λ h, ⟨λ i _, f i, mem_pi.2 h.2, _⟩,
+    ext i,
+    exact ite_eq_left_iff.2 (λ hi, (not_mem_support_iff.1 $ λ H, hi $ h.1 H).symm) }
 end
 
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp] lemma mem_finsupp_iff_of_support_subset {t : ι →₀ finset α} (ht : t.support ⊆ s) :
- f ∈ s.finsupp t ↔ ∀ i, f i ∈ t i :=
+  f ∈ s.finsupp t ↔ ∀ i, f i ∈ t i :=
 begin
- refine mem_finsupp_iff.trans (forall_and_distrib.symm.trans $ forall_congr $ λ i, ⟨λ h, _,
- λ h, ⟨λ hi, ht $ mem_support_iff.2 $ λ H, mem_support_iff.1 hi _, λ _, h⟩⟩),
- { by_cases hi : i ∈ s,
- { exact h.2 hi },
- { rw [not_mem_support_iff.1 (mt h.1 hi)]; rw [ not_mem_support_iff.1 (λ H, hi $ ht H)],
- exact zero_mem_zero } },
- { rwa [H] at h ; rwa [ mem_zero] at h }
+  refine mem_finsupp_iff.trans (forall_and_distrib.symm.trans $ forall_congr $ λ i, ⟨λ h, _,
+    λ h, ⟨λ hi, ht $ mem_support_iff.2 $ λ H, mem_support_iff.1 hi _, λ _, h⟩⟩),
+  { by_cases hi : i ∈ s,
+    { exact h.2 hi },
+    { rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 (λ H, hi $ ht H)],
+      exact zero_mem_zero } },
+  { rwa [H, mem_zero] at h }
 end
 
 @[simp] lemma card_finsupp (s : finset ι) (t : ι → finset α) :
- (s.finsupp t).card = ∏ i in s, (t i).card :=
+  (s.finsupp t).card = ∏ i in s, (t i).card :=
 (card_map _).trans $ card_pi _ _
 
 end finset
@@ -86,9 +86,8 @@ mem_finsupp_iff_of_support_subset $ subset.refl _
 
 @[simp] lemma card_pi (f : ι →₀ finset α) : f.pi.card = f.prod (λ i, (f i).card) :=
 begin
- rw [pi]; rw [ card_finsupp],
- exact finset.prod_congr rfl (λ i _, by simp only [pi.nat_apply, nat.cast_id]),
+  rw [pi, card_finsupp],
+  exact finset.prod_congr rfl (λ i _, by simp only [pi.nat_apply, nat.cast_id]),
 end
 
 end finsupp
-

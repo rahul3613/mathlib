@@ -50,9 +50,9 @@ Recall that When `R` is the semiring corresponding to the nonnegative elements o
 This is available as an instance in the `pointwise` locale. -/
 protected def has_pointwise_neg : has_neg (submodule R M) :=
 { neg := λ p,
- { carrier := -(p : set M),
- smul_mem' := λ r m hm, set.mem_neg.2 $ smul_neg r m ▸ p.smul_mem r $ set.mem_neg.1 hm,
- ..(- p.to_add_submonoid) } }
+  { carrier := -(p : set M),
+    smul_mem' := λ r m hm, set.mem_neg.2 $ smul_neg r m ▸ p.smul_mem r $ set.mem_neg.1 hm,
+    ..(- p.to_add_submonoid) } }
 
 localized "attribute [instance] submodule.has_pointwise_neg" in pointwise
 open_locale pointwise
@@ -60,7 +60,7 @@ open_locale pointwise
 @[simp] lemma coe_set_neg (S : submodule R M) : ↑(-S) = -(S : set M) := rfl
 
 @[simp] lemma neg_to_add_submonoid (S : submodule R M) :
- (-S).to_add_submonoid = -S.to_add_submonoid := rfl
+  (-S).to_add_submonoid = -S.to_add_submonoid := rfl
 
 @[simp] lemma mem_neg {g : M} {S : submodule R M} : g ∈ -S ↔ -g ∈ S := iff.rfl
 
@@ -69,7 +69,7 @@ open_locale pointwise
 This is available as an instance in the `pointwise` locale. -/
 protected def has_involutive_pointwise_neg : has_involutive_neg (submodule R M) :=
 { neg := has_neg.neg,
- neg_neg := λ S, set_like.coe_injective $ neg_neg _ }
+  neg_neg := λ S, set_like.coe_injective $ neg_neg _ }
 
 localized "attribute [instance] submodule.has_involutive_pointwise_neg" in pointwise
 
@@ -82,15 +82,15 @@ set_like.coe_subset_coe.symm.trans set.neg_subset
 /-- `submodule.has_pointwise_neg` as an order isomorphism. -/
 def neg_order_iso : submodule R M ≃o submodule R M :=
 { to_equiv := equiv.neg _,
- map_rel_iff' := neg_le_neg }
+  map_rel_iff' := neg_le_neg }
 
 lemma closure_neg (s : set M) : span R (-s) = -(span R s) :=
 begin
- apply le_antisymm,
- { rw [span_le]; rw [ coe_set_neg]; rw [ ←set.neg_subset]; rw [ neg_neg],
- exact subset_span },
- { rw [neg_le]; rw [ span_le]; rw [ coe_set_neg]; rw [ ←set.neg_subset],
- exact subset_span }
+  apply le_antisymm,
+  { rw [span_le, coe_set_neg, ←set.neg_subset, neg_neg],
+    exact subset_span },
+  { rw [neg_le, span_le, coe_set_neg, ←set.neg_subset],
+    exact subset_span }
 end
 
 @[simp]
@@ -130,24 +130,24 @@ variables [semiring R] [add_comm_monoid M] [module R M]
 
 instance pointwise_add_comm_monoid : add_comm_monoid (submodule R M) :=
 { add := (⊔),
- add_assoc := λ _ _ _, sup_assoc,
- zero := ⊥,
- zero_add := λ _, bot_sup_eq,
- add_zero := λ _, sup_bot_eq,
- add_comm := λ _ _, sup_comm }
+  add_assoc := λ _ _ _, sup_assoc,
+  zero := ⊥,
+  zero_add := λ _, bot_sup_eq,
+  add_zero := λ _, sup_bot_eq,
+  add_comm := λ _ _, sup_comm }
 
 @[simp] lemma add_eq_sup (p q : submodule R M) : p + q = p ⊔ q := rfl
 @[simp] lemma zero_eq_bot : (0 : submodule R M) = ⊥ := rfl
 
 instance : canonically_ordered_add_monoid (submodule R M) :=
 { zero := 0,
- bot := ⊥,
- add := (+),
- add_le_add_left := λ a b, sup_le_sup_left,
- exists_add_of_le := λ a b h, ⟨b, (sup_eq_right.2 h).symm⟩,
- le_self_add := λ a b, le_sup_left,
- ..submodule.pointwise_add_comm_monoid,
- ..submodule.complete_lattice }
+  bot := ⊥,
+  add := (+),
+  add_le_add_left := λ a b, sup_le_sup_left,
+  exists_add_of_le := λ a b h, ⟨b, (sup_eq_right.2 h).symm⟩,
+  le_self_add := λ a b, le_sup_left,
+  ..submodule.pointwise_add_comm_monoid,
+  ..submodule.complete_lattice }
 
 section
 variables [monoid α] [distrib_mul_action α M] [smul_comm_class α R M]
@@ -157,14 +157,14 @@ variables [monoid α] [distrib_mul_action α M] [smul_comm_class α R M]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwise_distrib_mul_action : distrib_mul_action α (submodule R M) :=
 { smul := λ a S, S.map (distrib_mul_action.to_linear_map R M a : M →ₗ[R] M),
- one_smul := λ S,
- (congr_arg (λ f : module.End R M, S.map f) (linear_map.ext $ by exact one_smul α)).trans
- S.map_id,
- mul_smul := λ a₁ a₂ S,
- (congr_arg (λ f : module.End R M, S.map f) (linear_map.ext $ by exact mul_smul _ _)).trans
- (S.map_comp _ _),
- smul_zero := λ a, map_bot _,
- smul_add := λ a S₁ S₂, map_sup _ _ _ }
+  one_smul := λ S,
+    (congr_arg (λ f : module.End R M, S.map f) (linear_map.ext $ by exact one_smul α)).trans
+      S.map_id,
+  mul_smul := λ a₁ a₂ S,
+    (congr_arg (λ f : module.End R M, S.map f) (linear_map.ext $ by exact mul_smul _ _)).trans
+      (S.map_comp _ _),
+  smul_zero := λ a, map_bot _,
+  smul_add := λ a S₁ S₂, map_sup _ _ _ }
 
 localized "attribute [instance] submodule.pointwise_distrib_mul_action" in pointwise
 open_locale pointwise
@@ -172,12 +172,12 @@ open_locale pointwise
 @[simp] lemma coe_pointwise_smul (a : α) (S : submodule R M) : ↑(a • S) = a • (S : set M) := rfl
 
 @[simp] lemma pointwise_smul_to_add_submonoid (a : α) (S : submodule R M) :
- (a • S).to_add_submonoid = a • S.to_add_submonoid := rfl
+  (a • S).to_add_submonoid = a • S.to_add_submonoid := rfl
 
 @[simp] lemma pointwise_smul_to_add_subgroup {R M : Type*}
- [ring R] [add_comm_group M] [distrib_mul_action α M] [module R M] [smul_comm_class α R M]
- (a : α) (S : submodule R M) :
- (a • S).to_add_subgroup = a • S.to_add_subgroup := rfl
+  [ring R] [add_comm_group M] [distrib_mul_action α M] [module R M] [smul_comm_class α R M]
+  (a : α) (S : submodule R M) :
+  (a • S).to_add_subgroup = a • S.to_add_subgroup := rfl
 
 lemma smul_mem_pointwise_smul (m : M) (a : α) (S : submodule R M) : m ∈ S → a • m ∈ a • S :=
 (set.smul_mem_smul_set : _ → _ ∈ a • (S : set M))
@@ -190,16 +190,16 @@ lemma smul_span (a : α) (s : set M) : a • span R s = span R (a • s) := map_
 lemma span_smul (a : α) (s : set M) : span R (a • s) = a • span R s := eq.symm (span_image _).symm
 
 instance pointwise_central_scalar [distrib_mul_action αᵐᵒᵖ M] [smul_comm_class αᵐᵒᵖ R M]
- [is_central_scalar α M] :
- is_central_scalar α (submodule R M) :=
+  [is_central_scalar α M] :
+  is_central_scalar α (submodule R M) :=
 ⟨λ a S, congr_arg (λ f : module.End R M, S.map f) $ linear_map.ext $ by exact op_smul_eq_smul _⟩
 
 @[simp] lemma smul_le_self_of_tower {α : Type*}
- [semiring α] [module α R] [module α M] [smul_comm_class α R M] [is_scalar_tower α R M]
- (a : α) (S : submodule R M) : a • S ≤ S :=
+  [semiring α] [module α R] [module α M] [smul_comm_class α R M] [is_scalar_tower α R M]
+  (a : α) (S : submodule R M) : a • S ≤ S :=
 begin
- rintro y ⟨x, hx, rfl⟩,
- exact smul_of_tower_mem _ a hx,
+  rintro y ⟨x, hx, rfl⟩,
+  exact smul_of_tower_mem _ a hx,
 end
 
 end
@@ -214,12 +214,11 @@ This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note tha
 not hold so this cannot be stated as a `module`. -/
 protected def pointwise_mul_action_with_zero : mul_action_with_zero α (submodule R M) :=
 { zero_smul := λ S,
- (congr_arg (λ f : M →ₗ[R] M, S.map f) (linear_map.ext $ by exact zero_smul α)).trans S.map_zero,
- .. submodule.pointwise_distrib_mul_action }
+    (congr_arg (λ f : M →ₗ[R] M, S.map f) (linear_map.ext $ by exact zero_smul α)).trans S.map_zero,
+  .. submodule.pointwise_distrib_mul_action }
 
 localized "attribute [instance] submodule.pointwise_mul_action_with_zero" in pointwise
 
 end
 
 end submodule
-

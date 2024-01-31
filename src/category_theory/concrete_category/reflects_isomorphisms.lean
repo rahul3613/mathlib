@@ -31,20 +31,19 @@ where `forget C` reflects isomorphisms, itself reflects isomorphisms.
 -- This should not be an instance, as it causes a typeclass loop
 -- with `category_theory.has_forget_to_Type`
 lemma reflects_isomorphisms_forget₂ [has_forget₂ C D] [reflects_isomorphisms (forget C)] :
- reflects_isomorphisms (forget₂ C D) :=
+  reflects_isomorphisms (forget₂ C D) :=
 { reflects := λ X Y f i,
- begin
- resetI,
- haveI i' : is_iso ((forget D).map ((forget₂ C D).map f)) := functor.map_is_iso (forget D) _,
- haveI : is_iso ((forget C).map f) :=
- begin
- have := has_forget₂.forget_comp,
- dsimp at this,
- rw ←this,
- exact i',
- end,
- apply is_iso_of_reflects_iso f (forget C),
- end }
+  begin
+    resetI,
+    haveI i' : is_iso ((forget D).map ((forget₂ C D).map f)) := functor.map_is_iso (forget D) _,
+    haveI : is_iso ((forget C).map f) :=
+    begin
+      have := has_forget₂.forget_comp,
+      dsimp at this,
+      rw ←this,
+      exact i',
+    end,
+    apply is_iso_of_reflects_iso f (forget C),
+  end }
 
 end category_theory
-

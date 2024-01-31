@@ -57,14 +57,14 @@ attribute [nolint unused_arguments] hom.decidable_eq
 
 instance struct : category_struct (wide_pullback_shape J) :=
 { hom := hom,
- id := λ j, hom.id j,
- comp := λ j₁ j₂ j₃ f g,
- begin
- cases f,
- exact g,
- cases g,
- apply hom.term _
- end }
+  id := λ j, hom.id j,
+  comp := λ j₁ j₂ j₃ f g,
+  begin
+    cases f,
+      exact g,
+    cases g,
+    apply hom.term _
+  end }
 
 instance hom.inhabited : inhabited (hom none none) := ⟨hom.id (none : wide_pullback_shape J)⟩
 
@@ -85,55 +85,55 @@ fixed object.
 -/
 @[simps]
 def wide_cospan (B : C) (objs : J → C) (arrows : Π (j : J), objs j ⟶ B) :
- wide_pullback_shape J ⥤ C :=
+  wide_pullback_shape J ⥤ C :=
 { obj := λ j, option.cases_on j B objs,
- map := λ X Y f,
- begin
- cases f with _ j,
- { apply (𝟙 _) },
- { exact arrows j }
- end,
- map_comp' := λ _ _ _ f g,
- begin
- cases f,
- { simpa },
- cases g,
- simp
- end }
+  map := λ X Y f,
+  begin
+    cases f with _ j,
+    { apply (𝟙 _) },
+    { exact arrows j }
+  end,
+  map_comp' := λ _ _ _ f g,
+  begin
+    cases f,
+    { simpa },
+    cases g,
+    simp
+  end }
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :
- F ≅ wide_cospan (F.obj none) (λ j, F.obj (some j)) (λ j, F.map (hom.term j)) :=
+  F ≅ wide_cospan (F.obj none) (λ j, F.obj (some j)) (λ j, F.map (hom.term j)) :=
 nat_iso.of_components (λ j, eq_to_iso $ by tidy) $ by tidy
 
 /-- Construct a cone over a wide cospan. -/
 @[simps]
 def mk_cone {F : wide_pullback_shape J ⥤ C} {X : C}
- (f : X ⟶ F.obj none) (π : Π j, X ⟶ F.obj (some j))
- (w : ∀ j, π j ≫ F.map (hom.term j) = f) : cone F :=
+  (f : X ⟶ F.obj none) (π : Π j, X ⟶ F.obj (some j))
+  (w : ∀ j, π j ≫ F.map (hom.term j) = f) : cone F :=
 { X := X,
- π :=
- { app := λ j, match j with
- | none := f
- | (some j) := π j
- end,
- naturality' := λ j j' f, by { cases j; cases j'; cases f; unfold_aux; dsimp; simp [w], }, } }
+  π :=
+  { app := λ j, match j with
+    | none := f
+    | (some j) := π j
+    end,
+    naturality' := λ j j' f, by { cases j; cases j'; cases f; unfold_aux; dsimp; simp [w], }, } }
 
 /-- Wide pullback diagrams of equivalent index types are equivlent. -/
 def equivalence_of_equiv (J' : Type w') (h : J ≃ J') :
- wide_pullback_shape J ≌ wide_pullback_shape J' :=
+  wide_pullback_shape J ≌ wide_pullback_shape J' :=
 { functor := wide_cospan none (λ j, some (h j)) (λ j, hom.term (h j)),
- inverse := wide_cospan none (λ j, some (h.inv_fun j)) (λ j, hom.term (h.inv_fun j)),
- unit_iso := nat_iso.of_components (λ j, by cases j; simp)
- (λ j k f, by { simp only [eq_iff_true_of_subsingleton]}),
- counit_iso := nat_iso.of_components (λ j, by cases j; simp)
- (λ j k f, by { simp only [eq_iff_true_of_subsingleton]}) }
+  inverse := wide_cospan none (λ j, some (h.inv_fun j)) (λ j, hom.term (h.inv_fun j)),
+  unit_iso := nat_iso.of_components (λ j, by cases j; simp)
+    (λ j k f, by { simp only [eq_iff_true_of_subsingleton]}),
+  counit_iso := nat_iso.of_components (λ j, by cases j; simp)
+    (λ j k f, by { simp only [eq_iff_true_of_subsingleton]}) }
 
 /-- Lifting universe and morphism levels preserves wide pullback diagrams. -/
 def ulift_equivalence :
- ulift_hom.{w'} (ulift.{w'} (wide_pullback_shape J)) ≌ wide_pullback_shape (ulift J) :=
+  ulift_hom.{w'} (ulift.{w'} (wide_pullback_shape J)) ≌ wide_pullback_shape (ulift J) :=
 (ulift_hom_ulift_category.equiv.{w' w' w w} (wide_pullback_shape J)).symm.trans
- (equivalence_of_equiv _ (equiv.ulift.{w' w}.symm : J ≃ ulift.{w'} J))
+  (equivalence_of_equiv _ (equiv.ulift.{w' w}.symm : J ≃ ulift.{w'} J))
 
 end wide_pullback_shape
 
@@ -151,14 +151,14 @@ attribute [nolint unused_arguments] hom.decidable_eq
 
 instance struct : category_struct (wide_pushout_shape J) :=
 { hom := hom,
- id := λ j, hom.id j,
- comp := λ j₁ j₂ j₃ f g,
- begin
- cases f,
- exact g,
- cases g,
- apply hom.init _
- end }
+  id := λ j, hom.id j,
+  comp := λ j₁ j₂ j₃ f g,
+  begin
+    cases f,
+      exact g,
+    cases g,
+    apply hom.init _
+  end }
 
 instance hom.inhabited : inhabited (hom none none) := ⟨hom.id (none : wide_pushout_shape J)⟩
 
@@ -180,31 +180,31 @@ fixed object.
 @[simps]
 def wide_span (B : C) (objs : J → C) (arrows : Π (j : J), B ⟶ objs j) : wide_pushout_shape J ⥤ C :=
 { obj := λ j, option.cases_on j B objs,
- map := λ X Y f,
- begin
- cases f with _ j,
- { apply (𝟙 _) },
- { exact arrows j }
- end,
- map_comp' := by { rintros (_|_) (_|_) (_|_) (_|_) (_|_); simpa <|> simp } }
+  map := λ X Y f,
+  begin
+    cases f with _ j,
+    { apply (𝟙 _) },
+    { exact arrows j }
+  end,
+  map_comp' := by { rintros (_|_) (_|_) (_|_) (_|_) (_|_); simpa <|> simp } }
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_span` -/
 def diagram_iso_wide_span (F : wide_pushout_shape J ⥤ C) :
- F ≅ wide_span (F.obj none) (λ j, F.obj (some j)) (λ j, F.map (hom.init j)) :=
+  F ≅ wide_span (F.obj none) (λ j, F.obj (some j)) (λ j, F.map (hom.init j)) :=
 nat_iso.of_components (λ j, eq_to_iso $ by tidy) $ by tidy
 
 /-- Construct a cocone over a wide span. -/
 @[simps]
 def mk_cocone {F : wide_pushout_shape J ⥤ C} {X : C}
- (f : F.obj none ⟶ X) (ι : Π j, F.obj (some j) ⟶ X)
- (w : ∀ j, F.map (hom.init j) ≫ ι j = f) : cocone F :=
+  (f : F.obj none ⟶ X) (ι : Π j, F.obj (some j) ⟶ X)
+  (w : ∀ j, F.map (hom.init j) ≫ ι j = f) : cocone F :=
 { X := X,
- ι :=
- { app := λ j, match j with
- | none := f
- | (some j) := ι j
- end,
- naturality' := λ j j' f, by { cases j; cases j'; cases f; unfold_aux; dsimp; simp [w], }, } }
+  ι :=
+  { app := λ j, match j with
+    | none := f
+    | (some j) := ι j
+    end,
+    naturality' := λ j j' f, by { cases j; cases j'; cases f; unfold_aux; dsimp; simp [w], }, } }
 
 end wide_pushout_shape
 
@@ -222,24 +222,24 @@ variables {C J}
 
 /-- `has_wide_pullback B objs arrows` means that `wide_cospan B objs arrows` has a limit. -/
 abbreviation has_wide_pullback (B : C) (objs : J → C)
- (arrows : Π (j : J), objs j ⟶ B) : Prop :=
+  (arrows : Π (j : J), objs j ⟶ B) : Prop :=
 has_limit (wide_pullback_shape.wide_cospan B objs arrows)
 
 /-- `has_wide_pushout B objs arrows` means that `wide_span B objs arrows` has a colimit. -/
 abbreviation has_wide_pushout (B : C) (objs : J → C)
- (arrows : Π (j : J), B ⟶ objs j) : Prop :=
+  (arrows : Π (j : J), B ⟶ objs j) : Prop :=
 has_colimit (wide_pushout_shape.wide_span B objs arrows)
 
 /-- A choice of wide pullback. -/
 noncomputable
 abbreviation wide_pullback (B : C) (objs : J → C) (arrows : Π (j : J), objs j ⟶ B)
- [has_wide_pullback B objs arrows] : C :=
+  [has_wide_pullback B objs arrows] : C :=
 limit (wide_pullback_shape.wide_cospan B objs arrows)
 
 /-- A choice of wide pushout. -/
 noncomputable
 abbreviation wide_pushout (B : C) (objs : J → C) (arrows : Π (j : J), B ⟶ objs j)
- [has_wide_pushout B objs arrows] : C :=
+  [has_wide_pushout B objs arrows] : C :=
 colimit (wide_pushout_shape.wide_span B objs arrows)
 
 variable (C)
@@ -268,14 +268,14 @@ variables {arrows}
 /-- Lift a collection of morphisms to a morphism to the pullback. -/
 noncomputable
 abbreviation lift {X : C} (f : X ⟶ B) (fs : Π (j : J), X ⟶ objs j)
- (w : ∀ j, fs j ≫ arrows j = f) : X ⟶ wide_pullback _ _ arrows :=
+  (w : ∀ j, fs j ≫ arrows j = f) : X ⟶ wide_pullback _ _ arrows :=
 limit.lift (wide_pullback_shape.wide_cospan _ _ _)
- (wide_pullback_shape.mk_cone f fs $ by exact w)
+  (wide_pullback_shape.mk_cone f fs $ by exact w)
 
 variables (arrows)
 
 variables {X : C} (f : X ⟶ B) (fs : Π (j : J), X ⟶ objs j)
- (w : ∀ j, fs j ≫ arrows j = f)
+  (w : ∀ j, fs j ≫ arrows j = f)
 
 @[simp, reassoc]
 lemma lift_π (j : J) : lift f fs w ≫ π arrows j = fs _ :=
@@ -286,33 +286,33 @@ lemma lift_base : lift f fs w ≫ base arrows = f :=
 by { simp, refl }
 
 lemma eq_lift_of_comp_eq (g : X ⟶ wide_pullback _ _ arrows) :
- (∀ j : J, g ≫ π arrows j = fs j) → g ≫ base arrows = f → g = lift f fs w :=
+  (∀ j : J, g ≫ π arrows j = fs j) → g ≫ base arrows = f → g = lift f fs w :=
 begin
- intros h1 h2,
- apply (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq
- (wide_pullback_shape.mk_cone f fs $ by exact w),
- rintro (_|_),
- { apply h2 },
- { apply h1 }
+  intros h1 h2,
+  apply (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq
+    (wide_pullback_shape.mk_cone f fs $ by exact w),
+  rintro (_|_),
+  { apply h2 },
+  { apply h1 }
 end
 
 lemma hom_eq_lift (g : X ⟶ wide_pullback _ _ arrows) :
- g = lift (g ≫ base arrows) (λ j, g ≫ π arrows j) (by tidy) :=
+  g = lift (g ≫ base arrows) (λ j, g ≫ π arrows j) (by tidy) :=
 begin
- apply eq_lift_of_comp_eq,
- tidy,
+  apply eq_lift_of_comp_eq,
+  tidy,
 end
 
 @[ext]
 lemma hom_ext (g1 g2 : X ⟶ wide_pullback _ _ arrows) :
- (∀ j : J, g1 ≫ π arrows j = g2 ≫ π arrows j) →
- g1 ≫ base arrows = g2 ≫ base arrows → g1 = g2 :=
+  (∀ j : J, g1 ≫ π arrows j = g2 ≫ π arrows j) →
+  g1 ≫ base arrows = g2 ≫ base arrows → g1 = g2 :=
 begin
- intros h1 h2,
- apply limit.hom_ext,
- rintros (_|_),
- { apply h2 },
- { apply h1 },
+  intros h1 h2,
+  apply limit.hom_ext,
+  rintros (_|_),
+  { apply h2 },
+  { apply h1 },
 end
 
 end wide_pullback
@@ -341,14 +341,14 @@ variables {arrows}
 /-- Descend a collection of morphisms to a morphism from the pushout. -/
 noncomputable
 abbreviation desc {X : C} (f : B ⟶ X) (fs : Π (j : J), objs j ⟶ X)
- (w : ∀ j, arrows j ≫ fs j = f) : wide_pushout _ _ arrows ⟶ X :=
+  (w : ∀ j, arrows j ≫ fs j = f) : wide_pushout _ _ arrows ⟶ X :=
 colimit.desc (wide_pushout_shape.wide_span B objs arrows)
- (wide_pushout_shape.mk_cocone f fs $ by exact w)
+  (wide_pushout_shape.mk_cocone f fs $ by exact w)
 
 variables (arrows)
 
 variables {X : C} (f : B ⟶ X) (fs : Π (j : J), objs j ⟶ X)
- (w : ∀ j, arrows j ≫ fs j = f)
+  (w : ∀ j, arrows j ≫ fs j = f)
 
 @[simp, reassoc]
 lemma ι_desc (j : J) : ι arrows j ≫ desc f fs w = fs _ :=
@@ -359,33 +359,33 @@ lemma head_desc : head arrows ≫ desc f fs w = f :=
 by { simp, refl }
 
 lemma eq_desc_of_comp_eq (g : wide_pushout _ _ arrows ⟶ X) :
- (∀ j : J, ι arrows j ≫ g = fs j) → head arrows ≫ g = f → g = desc f fs w :=
+  (∀ j : J, ι arrows j ≫ g = fs j) → head arrows ≫ g = f → g = desc f fs w :=
 begin
- intros h1 h2,
- apply (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq
- (wide_pushout_shape.mk_cocone f fs $ by exact w),
- rintro (_|_),
- { apply h2 },
- { apply h1 }
+  intros h1 h2,
+  apply (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq
+    (wide_pushout_shape.mk_cocone f fs $ by exact w),
+  rintro (_|_),
+  { apply h2 },
+  { apply h1 }
 end
 
 lemma hom_eq_desc (g : wide_pushout _ _ arrows ⟶ X) :
- g = desc (head arrows ≫ g) (λ j, ι arrows j ≫ g) (λ j, by { rw ← category.assoc, simp }) :=
+  g = desc (head arrows ≫ g) (λ j, ι arrows j ≫ g) (λ j, by { rw ← category.assoc, simp }) :=
 begin
- apply eq_desc_of_comp_eq,
- tidy,
+  apply eq_desc_of_comp_eq,
+  tidy,
 end
 
 @[ext]
 lemma hom_ext (g1 g2 : wide_pushout _ _ arrows ⟶ X) :
- (∀ j : J, ι arrows j ≫ g1 = ι arrows j ≫ g2) →
- head arrows ≫ g1 = head arrows ≫ g2 → g1 = g2 :=
+  (∀ j : J, ι arrows j ≫ g1 = ι arrows j ≫ g2) →
+  head arrows ≫ g1 = head arrows ≫ g2 → g1 = g2 :=
 begin
- intros h1 h2,
- apply colimit.hom_ext,
- rintros (_|_),
- { apply h2 },
- { apply h1 },
+  intros h1 h2,
+  apply colimit.hom_ext,
+  rintros (_|_),
+  { apply h2 },
+  { apply h1 },
 end
 
 end wide_pushout
@@ -393,9 +393,9 @@ end wide_pushout
 variable (J)
 
 /-- The action on morphisms of the obvious functor
- `wide_pullback_shape_op : wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ`-/
+  `wide_pullback_shape_op : wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ`-/
 def wide_pullback_shape_op_map : Π (X Y : wide_pullback_shape J),
- (X ⟶ Y) → ((op X : (wide_pushout_shape J)ᵒᵖ) ⟶ (op Y : (wide_pushout_shape J)ᵒᵖ))
+  (X ⟶ Y) → ((op X : (wide_pushout_shape J)ᵒᵖ) ⟶ (op Y : (wide_pushout_shape J)ᵒᵖ))
 | _ _ (wide_pullback_shape.hom.id X) := quiver.hom.op (wide_pushout_shape.hom.id _)
 | _ _ (wide_pullback_shape.hom.term j) := quiver.hom.op (wide_pushout_shape.hom.init _)
 
@@ -403,12 +403,12 @@ def wide_pullback_shape_op_map : Π (X Y : wide_pullback_shape J),
 @[simps]
 def wide_pullback_shape_op : wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ :=
 { obj := λ X, op X,
- map := wide_pullback_shape_op_map J, }
+  map := wide_pullback_shape_op_map J, }
 
 /-- The action on morphisms of the obvious functor
 `wide_pushout_shape_op : `wide_pushout_shape J ⥤ (wide_pullback_shape J)ᵒᵖ` -/
 def wide_pushout_shape_op_map : Π (X Y : wide_pushout_shape J),
- (X ⟶ Y) → ((op X : (wide_pullback_shape J)ᵒᵖ) ⟶ (op Y : (wide_pullback_shape J)ᵒᵖ))
+  (X ⟶ Y) → ((op X : (wide_pullback_shape J)ᵒᵖ) ⟶ (op Y : (wide_pullback_shape J)ᵒᵖ))
 | _ _ (wide_pushout_shape.hom.id X) := quiver.hom.op (wide_pullback_shape.hom.id _)
 | _ _ (wide_pushout_shape.hom.init j) := quiver.hom.op (wide_pullback_shape.hom.term _)
 
@@ -416,7 +416,7 @@ def wide_pushout_shape_op_map : Π (X Y : wide_pushout_shape J),
 @[simps]
 def wide_pushout_shape_op : wide_pushout_shape J ⥤ (wide_pullback_shape J)ᵒᵖ :=
 { obj := λ X, op X,
- map := wide_pushout_shape_op_map J, }
+  map := wide_pushout_shape_op_map J, }
 
 /-- The obvious functor `(wide_pullback_shape J)ᵒᵖ ⥤ wide_pushout_shape J`-/
 @[simps]
@@ -452,23 +452,22 @@ nat_iso.of_components (λ X, iso.refl _) (λ X Y f, dec_trivial)
 @[simps]
 def wide_pushout_shape_op_equiv : (wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J :=
 { functor := wide_pushout_shape_unop J,
- inverse := wide_pullback_shape_op J,
- unit_iso := (wide_pushout_shape_op_unop J).symm,
- counit_iso := wide_pullback_shape_unop_op J, }
+  inverse := wide_pullback_shape_op J,
+  unit_iso := (wide_pushout_shape_op_unop J).symm,
+  counit_iso := wide_pullback_shape_unop_op J, }
 
 /-- The duality equivalence `(wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
 @[simps]
 def wide_pullback_shape_op_equiv : (wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J :=
 { functor := wide_pullback_shape_unop J,
- inverse := wide_pushout_shape_op J,
- unit_iso := (wide_pullback_shape_op_unop J).symm,
- counit_iso := wide_pushout_shape_unop_op J, }
+  inverse := wide_pushout_shape_op J,
+  unit_iso := (wide_pullback_shape_op_unop J).symm,
+  counit_iso := wide_pushout_shape_unop_op J, }
 
 /-- If a category has wide pullbacks on a higher universe level it also has wide pullbacks
 on a lower universe level. -/
 lemma has_wide_pullbacks_shrink [has_wide_pullbacks.{max w w'} C] : has_wide_pullbacks.{w} C :=
 λ J, has_limits_of_shape_of_equivalence
- (wide_pullback_shape.equivalence_of_equiv _ equiv.ulift.{w'})
+  (wide_pullback_shape.equivalence_of_equiv _ equiv.ulift.{w'})
 
 end category_theory.limits
-

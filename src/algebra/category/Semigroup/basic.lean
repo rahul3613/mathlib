@@ -61,13 +61,13 @@ add_decl_doc AddMagma.of
 
 /-- Typecheck a `mul_hom` as a morphism in `Magma`. -/
 @[to_additive] def of_hom {X Y : Type u} [has_mul X] [has_mul Y] (f : X →ₙ* Y) :
- of X ⟶ of Y := f
+  of X ⟶ of Y := f
 
 /-- Typecheck a `add_hom` as a morphism in `AddMagma`. -/
 add_decl_doc AddMagma.of_hom
 
 @[simp, to_additive] lemma of_hom_apply {X Y : Type u} [has_mul X] [has_mul Y] (f : X →ₙ* Y)
- (x : X) : of_hom f x = f x := rfl
+  (x : X) : of_hom f x = f x := rfl
 
 @[to_additive]
 instance : inhabited Magma := ⟨Magma.of pempty⟩
@@ -105,13 +105,13 @@ add_decl_doc AddSemigroup.of
 
 /-- Typecheck a `mul_hom` as a morphism in `Semigroup`. -/
 @[to_additive] def of_hom {X Y : Type u} [semigroup X] [semigroup Y] (f : X →ₙ* Y) :
- of X ⟶ of Y := f
+  of X ⟶ of Y := f
 
 /-- Typecheck a `add_hom` as a morphism in `AddSemigroup`. -/
 add_decl_doc AddSemigroup.of_hom
 
 @[simp, to_additive] lemma of_hom_apply {X Y : Type u} [semigroup X] [semigroup Y] (f : X →ₙ* Y)
- (x : X) : of_hom f x = f x := rfl
+  (x : X) : of_hom f x = f x := rfl
 
 @[to_additive]
 instance : inhabited Semigroup := ⟨Semigroup.of pempty⟩
@@ -136,7 +136,7 @@ variables [has_mul X] [has_mul Y]
 an `add_equiv` between `has_add`s.", simps]
 def mul_equiv.to_Magma_iso (e : X ≃* Y) : Magma.of X ≅ Magma.of Y :=
 { hom := e.to_mul_hom,
- inv := e.symm.to_mul_hom }
+  inv := e.symm.to_mul_hom }
 
 end
 
@@ -148,7 +148,7 @@ variables [semigroup X] [semigroup Y]
 `AddSemigroup` from an `add_equiv` between `add_semigroup`s.", simps]
 def mul_equiv.to_Semigroup_iso (e : X ≃* Y) : Semigroup.of X ≅ Semigroup.of Y :=
 { hom := e.to_mul_hom,
- inv := e.symm.to_mul_hom }
+  inv := e.symm.to_mul_hom }
 
 end
 
@@ -159,20 +159,20 @@ namespace category_theory.iso
 `AddMagma`."]
 def Magma_iso_to_mul_equiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y :=
 { to_fun := i.hom,
- inv_fun := i.inv,
- left_inv := λ x, by simp,
- right_inv := λ y, by simp,
- map_mul' := by simp }
+  inv_fun := i.inv,
+  left_inv := λ x, by simp,
+  right_inv := λ y, by simp,
+  map_mul' := by simp }
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Semigroup`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category
 `AddSemigroup`."]
 def Semigroup_iso_to_mul_equiv {X Y : Semigroup} (i : X ≅ Y) : X ≃* Y :=
 { to_fun := i.hom,
- inv_fun := i.inv,
- left_inv := λ x, by simp,
- right_inv := λ y, by simp,
- map_mul' := by simp }
+  inv_fun := i.inv,
+  left_inv := λ x, by simp,
+  right_inv := λ y, by simp,
+  map_mul' := by simp }
 
 end category_theory.iso
 
@@ -181,38 +181,38 @@ in `Magma` -/
 @[to_additive add_equiv_iso_AddMagma_iso "additive equivalences between `has_add`s are the same
 as (isomorphic to) isomorphisms in `AddMagma`"]
 def mul_equiv_iso_Magma_iso {X Y : Type u} [has_mul X] [has_mul Y] :
- (X ≃* Y) ≅ (Magma.of X ≅ Magma.of Y) :=
+  (X ≃* Y) ≅ (Magma.of X ≅ Magma.of Y) :=
 { hom := λ e, e.to_Magma_iso,
- inv := λ i, i.Magma_iso_to_mul_equiv }
+  inv := λ i, i.Magma_iso_to_mul_equiv }
 
 /-- multiplicative equivalences between `semigroup`s are the same as (isomorphic to) isomorphisms
 in `Semigroup` -/
 @[to_additive add_equiv_iso_AddSemigroup_iso "additive equivalences between `add_semigroup`s are
 the same as (isomorphic to) isomorphisms in `AddSemigroup`"]
 def mul_equiv_iso_Semigroup_iso {X Y : Type u} [semigroup X] [semigroup Y] :
- (X ≃* Y) ≅ (Semigroup.of X ≅ Semigroup.of Y) :=
+  (X ≃* Y) ≅ (Semigroup.of X ≅ Semigroup.of Y) :=
 { hom := λ e, e.to_Semigroup_iso,
- inv := λ i, i.Semigroup_iso_to_mul_equiv }
+  inv := λ i, i.Semigroup_iso_to_mul_equiv }
 
 @[to_additive]
 instance Magma.forget_reflects_isos : reflects_isomorphisms (forget Magma.{u}) :=
 { reflects := λ X Y f _,
- begin
- resetI,
- let i := as_iso ((forget Magma).map f),
- let e : X ≃* Y := { ..f, ..i.to_equiv },
- exact ⟨(is_iso.of_iso e.to_Magma_iso).1⟩,
- end }
+  begin
+    resetI,
+    let i := as_iso ((forget Magma).map f),
+    let e : X ≃* Y := { ..f, ..i.to_equiv },
+    exact ⟨(is_iso.of_iso e.to_Magma_iso).1⟩,
+  end }
 
 @[to_additive]
 instance Semigroup.forget_reflects_isos : reflects_isomorphisms (forget Semigroup.{u}) :=
 { reflects := λ X Y f _,
- begin
- resetI,
- let i := as_iso ((forget Semigroup).map f),
- let e : X ≃* Y := { ..f, ..i.to_equiv },
- exact ⟨(is_iso.of_iso e.to_Semigroup_iso).1⟩,
- end }
+  begin
+    resetI,
+    let i := as_iso ((forget Semigroup).map f),
+    let e : X ≃* Y := { ..f, ..i.to_equiv },
+    exact ⟨(is_iso.of_iso e.to_Semigroup_iso).1⟩,
+  end }
 
 /-!
 Once we've shown that the forgetful functors to type reflect isomorphisms,
@@ -220,4 +220,3 @@ we automatically obtain that the `forget₂` functors between our concrete categ
 reflect isomorphisms.
 -/
 example : reflects_isomorphisms (forget₂ Semigroup Magma) := by apply_instance
-

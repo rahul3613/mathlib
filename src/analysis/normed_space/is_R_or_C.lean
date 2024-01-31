@@ -22,7 +22,7 @@ None.
 ## Main theorems
 
 * `continuous_linear_map.op_norm_bound_of_ball_bound`: A bound on the norms of values of a linear
- map in a ball yields a bound on the operator norm.
+  map in a ball yields a bound on the operator norm.
 
 ## Notes
 
@@ -40,66 +40,66 @@ variables [normed_space 𝕜 E]
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
 @[simp] lemma norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) • x‖ = 1 :=
 begin
- have : ‖x‖ ≠ 0 := by simp [hx],
- field_simp [norm_smul]
+  have : ‖x‖ ≠ 0 := by simp [hx],
+  field_simp [norm_smul]
 end
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
 lemma norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) :
- ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r :=
+  ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r :=
 begin
- have : ‖x‖ ≠ 0 := by simp [hx],
- field_simp [norm_smul, r_nonneg] with is_R_or_C_simps
+  have : ‖x‖ ≠ 0 := by simp [hx],
+  field_simp [norm_smul, r_nonneg] with is_R_or_C_simps
 end
 
 lemma linear_map.bound_of_sphere_bound
- {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜) (h : ∀ z ∈ sphere (0 : E) r, ‖f z‖ ≤ c) (z : E) :
- ‖f z‖ ≤ c / r * ‖z‖ :=
+  {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜) (h : ∀ z ∈ sphere (0 : E) r, ‖f z‖ ≤ c) (z : E) :
+  ‖f z‖ ≤ c / r * ‖z‖ :=
 begin
- by_cases z_zero : z = 0,
- { rw z_zero, simp only [linear_map.map_zero, norm_zero, mul_zero], },
- set z₁ := (r * ‖z‖⁻¹ : 𝕜) • z with hz₁,
- have norm_f_z₁ : ‖f z₁‖ ≤ c,
- { apply h,
- rw mem_sphere_zero_iff_norm,
- exact norm_smul_inv_norm' r_pos.le z_zero },
- have r_ne_zero : (r : 𝕜) ≠ 0 := is_R_or_C.of_real_ne_zero.mpr r_pos.ne',
- have eq : f z = ‖z‖ / r * (f z₁),
- { rw [hz₁]; rw [ linear_map.map_smul]; rw [ smul_eq_mul],
- rw [← mul_assoc]; rw [ ← mul_assoc]; rw [ div_mul_cancel _ r_ne_zero]; rw [ mul_inv_cancel]; rw [ one_mul],
- simp only [z_zero, is_R_or_C.of_real_eq_zero, norm_eq_zero, ne.def, not_false_iff], },
- rw [eq]; rw [ norm_mul]; rw [ norm_div]; rw [ is_R_or_C.norm_coe_norm]; rw [ is_R_or_C.norm_of_nonneg r_pos.le]; rw [ div_mul_eq_mul_div]; rw [ div_mul_eq_mul_div]; rw [ mul_comm],
- apply div_le_div _ _ r_pos rfl.ge,
- { exact mul_nonneg ((norm_nonneg _).trans norm_f_z₁) (norm_nonneg z), },
- apply mul_le_mul norm_f_z₁ rfl.le (norm_nonneg z) ((norm_nonneg _).trans norm_f_z₁),
+  by_cases z_zero : z = 0,
+  { rw z_zero, simp only [linear_map.map_zero, norm_zero, mul_zero], },
+  set z₁ := (r * ‖z‖⁻¹ : 𝕜) • z with hz₁,
+  have norm_f_z₁ : ‖f z₁‖ ≤ c,
+  { apply h,
+    rw mem_sphere_zero_iff_norm,
+    exact norm_smul_inv_norm' r_pos.le z_zero },
+  have r_ne_zero : (r : 𝕜) ≠ 0 := is_R_or_C.of_real_ne_zero.mpr r_pos.ne',
+  have eq : f z = ‖z‖ / r * (f z₁),
+  { rw [hz₁, linear_map.map_smul, smul_eq_mul],
+    rw [← mul_assoc, ← mul_assoc, div_mul_cancel _ r_ne_zero, mul_inv_cancel, one_mul],
+    simp only [z_zero, is_R_or_C.of_real_eq_zero, norm_eq_zero, ne.def, not_false_iff], },
+  rw [eq, norm_mul, norm_div, is_R_or_C.norm_coe_norm,
+      is_R_or_C.norm_of_nonneg r_pos.le, div_mul_eq_mul_div, div_mul_eq_mul_div, mul_comm],
+  apply div_le_div _ _ r_pos rfl.ge,
+  { exact mul_nonneg ((norm_nonneg _).trans norm_f_z₁) (norm_nonneg z), },
+  apply mul_le_mul norm_f_z₁ rfl.le (norm_nonneg z) ((norm_nonneg _).trans norm_f_z₁),
 end
 
 /--
 `linear_map.bound_of_ball_bound` is a version of this over arbitrary nontrivially normed fields.
 It produces a less precise bound so we keep both versions. -/
 lemma linear_map.bound_of_ball_bound' {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
- (h : ∀ z ∈ closed_ball (0 : E) r, ‖f z‖ ≤ c) (z : E) :
- ‖f z‖ ≤ c / r * ‖z‖ :=
+  (h : ∀ z ∈ closed_ball (0 : E) r, ‖f z‖ ≤ c) (z : E) :
+  ‖f z‖ ≤ c / r * ‖z‖ :=
 f.bound_of_sphere_bound r_pos c (λ z hz, h z hz.le) z
 
 lemma continuous_linear_map.op_norm_bound_of_ball_bound
- {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →L[𝕜] 𝕜) (h : ∀ z ∈ closed_ball (0 : E) r, ‖f z‖ ≤ c) :
- ‖f‖ ≤ c / r :=
+  {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →L[𝕜] 𝕜) (h : ∀ z ∈ closed_ball (0 : E) r, ‖f z‖ ≤ c) :
+  ‖f‖ ≤ c / r :=
 begin
- apply continuous_linear_map.op_norm_le_bound,
- { apply div_nonneg _ r_pos.le,
- exact (norm_nonneg _).trans
- (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le])), },
- apply linear_map.bound_of_ball_bound' r_pos,
- exact λ z hz, h z hz,
+  apply continuous_linear_map.op_norm_le_bound,
+  { apply div_nonneg _ r_pos.le,
+    exact (norm_nonneg _).trans
+          (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le])), },
+  apply linear_map.bound_of_ball_bound' r_pos,
+  exact λ z hz, h z hz,
 end
 
 variables (𝕜)
 include 𝕜
 lemma normed_space.sphere_nonempty_is_R_or_C [nontrivial E] {r : ℝ} (hr : 0 ≤ r) :
- nonempty (sphere (0:E) r) :=
+  nonempty (sphere (0:E) r) :=
 begin
- letI : normed_space ℝ E := normed_space.restrict_scalars ℝ 𝕜 E,
- exact (normed_space.sphere_nonempty.mpr hr).coe_sort,
+  letI : normed_space ℝ E := normed_space.restrict_scalars ℝ 𝕜 E,
+  exact (normed_space.sphere_nonempty.mpr hr).coe_sort,
 end
-

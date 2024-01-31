@@ -22,16 +22,16 @@ variables (C : Type*) [category C] [preadditive C]
 
 instance : preadditive Cᵒᵖ :=
 { hom_group := λ X Y, equiv.add_comm_group (op_equiv X Y),
- add_comp' := λ X Y Z f f' g,
- congr_arg quiver.hom.op (preadditive.comp_add _ _ _ g.unop f.unop f'.unop),
- comp_add' := λ X Y Z f g g',
- congr_arg quiver.hom.op (preadditive.add_comp _ _ _ g.unop g'.unop f.unop), }
+  add_comp' := λ X Y Z f f' g,
+    congr_arg quiver.hom.op (preadditive.comp_add _ _ _ g.unop f.unop f'.unop),
+  comp_add' := λ X Y Z f g g',
+    congr_arg quiver.hom.op (preadditive.add_comp _ _ _ g.unop g'.unop f.unop), }
 
 instance module_End_left {X : Cᵒᵖ} {Y : C} : module (End X) (unop X ⟶ Y) :=
 { smul_add := λ r f g, preadditive.comp_add _ _ _ _ _ _,
- smul_zero := λ r, limits.comp_zero,
- add_smul := λ r s f, preadditive.add_comp _ _ _ _ _ _,
- zero_smul := λ f, limits.zero_comp }
+  smul_zero := λ r, limits.comp_zero,
+  add_smul := λ r s f, preadditive.add_comp _ _ _ _ _ _,
+  zero_smul := λ f, limits.zero_comp }
 
 @[simp] lemma unop_zero (X Y : Cᵒᵖ) : (0 : X ⟶ Y).unop = 0 := rfl
 @[simp] lemma unop_add {X Y : Cᵒᵖ} (f g : X ⟶ Y) : (f + g).unop = f.unop + g.unop := rfl
@@ -49,7 +49,7 @@ variable {C}
 add_monoid_hom.mk' (λ f, f.unop) $ λ f g, unop_add _ f g
 
 @[simp] lemma unop_sum (X Y : Cᵒᵖ) {ι : Type*} (s : finset ι) (f : ι → (X ⟶ Y)) :
- (s.sum f).unop = s.sum (λ i, (f i).unop) :=
+  (s.sum f).unop = s.sum (λ i, (f i).unop) :=
 (unop_hom X Y).map_sum _ _
 
 /-- `op` induces morphisms of monoids on hom groups of a preadditive category -/
@@ -57,7 +57,7 @@ add_monoid_hom.mk' (λ f, f.unop) $ λ f g, unop_add _ f g
 add_monoid_hom.mk' (λ f, f.op) $ λ f g, op_add _ f g
 
 @[simp] lemma op_sum (X Y : C) {ι : Type*} (s : finset ι) (f : ι → (X ⟶ Y)) :
- (s.sum f).op = s.sum (λ i, (f i).op) :=
+  (s.sum f).op = s.sum (λ i, (f i).op) :=
 (op_hom X Y).map_sum _ _
 
 variables {D : Type*} [category D] [preadditive D]
@@ -71,4 +71,3 @@ instance functor.left_op_additive (F : C ⥤ Dᵒᵖ) [F.additive] : F.left_op.a
 instance functor.unop_additive (F : Cᵒᵖ ⥤ Dᵒᵖ) [F.additive] : F.unop.additive := {}
 
 end category_theory
-

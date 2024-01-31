@@ -26,7 +26,7 @@ local notation (name := op) a ` * ` b := op a b
 include hc ha
 
 /-- `fold op b f s` folds the commutative associative operation `op` over the
- `f`-image of `s`, i.e. `fold (+) b f {1,2,3} = f 1 + f 2 + f 3 + b`. -/
+  `f`-image of `s`, i.e. `fold (+) b f {1,2,3} = f 1 + f 2 + f 3 + b`. -/
 def fold (b : β) (f : α → β) (s : finset α) : β := (s.1.map f).fold op b
 
 variables {op} {f : α → β} {b : β} {s : finset α} {a : α}
@@ -34,95 +34,96 @@ variables {op} {f : α → β} {b : β} {s : finset α} {a : α}
 @[simp] theorem fold_empty : (∅ : finset α).fold op b f = b := rfl
 
 @[simp] theorem fold_cons (h : a ∉ s) : (cons a s h).fold op b f = f a * s.fold op b f :=
-by { dunfold fold, rw [cons_val]; rw [ multiset.map_cons]; rw [ fold_cons_left], }
+by { dunfold fold, rw [cons_val, multiset.map_cons, fold_cons_left], }
 
 @[simp] theorem fold_insert [decidable_eq α] (h : a ∉ s) :
- (insert a s).fold op b f = f a * s.fold op b f :=
-by unfold fold; rw [insert_val]; rw [ ndinsert_of_not_mem h]; rw [ multiset.map_cons]; rw [ fold_cons_left]
+  (insert a s).fold op b f = f a * s.fold op b f :=
+by unfold fold; rw [insert_val, ndinsert_of_not_mem h, multiset.map_cons, fold_cons_left]
 
 @[simp] theorem fold_singleton : ({a} : finset α).fold op b f = f a * b := rfl
 
 @[simp] theorem fold_map {g : γ ↪ α} {s : finset γ} :
- (s.map g).fold op b f = s.fold op b (f ∘ g) :=
+  (s.map g).fold op b f = s.fold op b (f ∘ g) :=
 by simp only [fold, map, multiset.map_map]
 
 @[simp] theorem fold_image [decidable_eq α] {g : γ → α} {s : finset γ}
- (H : ∀ (x ∈ s) (y ∈ s), g x = g y → x = y) : (s.image g).fold op b f = s.fold op b (f ∘ g) :=
+  (H : ∀ (x ∈ s) (y ∈ s), g x = g y → x = y) : (s.image g).fold op b f = s.fold op b (f ∘ g) :=
 by simp only [fold, image_val_of_inj_on H, multiset.map_map]
 
 @[congr] theorem fold_congr {g : α → β} (H : ∀ x ∈ s, f x = g x) : s.fold op b f = s.fold op b g :=
-by rw [fold]; rw [ fold]; rw [ map_congr rfl H]
+by rw [fold, fold, map_congr rfl H]
 
 theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
- s.fold op (b₁ * b₂) (λx, f x * g x) = s.fold op b₁ f * s.fold op b₂ g :=
+  s.fold op (b₁ * b₂) (λx, f x * g x) = s.fold op b₁ f * s.fold op b₂ g :=
 by simp only [fold, fold_distrib]
 
 lemma fold_const [decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
- finset.fold op b (λ _, c) s = if s = ∅ then b else op b c :=
+  finset.fold op b (λ _, c) s = if s = ∅ then b else op b c :=
 begin
- classical,
- unfreezingI { induction s using finset.induction_on with x s hx IH },
- { simp },
- { simp only [finset.fold_insert hx, IH, if_false, finset.insert_ne_empty],
- split_ifs,
- { rw hc.comm },
- { exact h } }
+  classical,
+  unfreezingI { induction s using finset.induction_on with x s hx IH },
+  { simp },
+  { simp only [finset.fold_insert hx, IH, if_false, finset.insert_ne_empty],
+    split_ifs,
+    { rw hc.comm },
+    { exact h } }
 end
 
 theorem fold_hom {op' : γ → γ → γ} [is_commutative γ op'] [is_associative γ op']
- {m : β → γ} (hm : ∀x y, m (op x y) = op' (m x) (m y)) :
- s.fold op' (m b) (λx, m (f x)) = m (s.fold op b f) :=
-by rw [fold]; rw [ fold]; rw [ ← fold_hom op hm]; rw [ multiset.map_map]
+  {m : β → γ} (hm : ∀x y, m (op x y) = op' (m x) (m y)) :
+  s.fold op' (m b) (λx, m (f x)) = m (s.fold op b f) :=
+by rw [fold, fold, ← fold_hom op hm, multiset.map_map]
 
 theorem fold_disj_union {s₁ s₂ : finset α} {b₁ b₂ : β} (h) :
- (s₁.disj_union s₂ h).fold op (b₁ * b₂) f = s₁.fold op b₁ f * s₂.fold op b₂ f :=
+  (s₁.disj_union s₂ h).fold op (b₁ * b₂) f = s₁.fold op b₁ f * s₂.fold op b₂ f :=
 (congr_arg _ $ multiset.map_add _ _ _).trans (multiset.fold_add _ _ _ _ _)
 
 theorem fold_disj_Union {ι : Type*} {s : finset ι} {t : ι → finset α} {b : ι → β} {b₀ : β} (h) :
- (s.disj_Union t h).fold op (s.fold op b₀ b) f = s.fold op b₀ (λ i, (t i).fold op (b i) f) :=
+  (s.disj_Union t h).fold op (s.fold op b₀ b) f = s.fold op b₀ (λ i, (t i).fold op (b i) f) :=
 (congr_arg _ $ multiset.map_bind _ _ _).trans (multiset.fold_bind _ _ _ _ _)
 
 theorem fold_union_inter [decidable_eq α] {s₁ s₂ : finset α} {b₁ b₂ : β} :
- (s₁ ∪ s₂).fold op b₁ f * (s₁ ∩ s₂).fold op b₂ f = s₁.fold op b₂ f * s₂.fold op b₁ f :=
-by unfold fold; rw [← fold_add op]; rw [ ← multiset.map_add]; rw [ union_val]; rw [ inter_val]; rw [ union_add_inter]; rw [ multiset.map_add]; rw [ hc.comm]; rw [ fold_add]
+  (s₁ ∪ s₂).fold op b₁ f * (s₁ ∩ s₂).fold op b₂ f = s₁.fold op b₂ f * s₂.fold op b₁ f :=
+by unfold fold; rw [← fold_add op, ← multiset.map_add, union_val,
+     inter_val, union_add_inter, multiset.map_add, hc.comm, fold_add]
 
 @[simp] theorem fold_insert_idem [decidable_eq α] [hi : is_idempotent β op] :
- (insert a s).fold op b f = f a * s.fold op b f :=
+  (insert a s).fold op b f = f a * s.fold op b f :=
 begin
- by_cases (a ∈ s),
- { rw [← insert_erase h], simp [← ha.assoc, hi.idempotent] },
- { apply fold_insert h },
+  by_cases (a ∈ s),
+  { rw [← insert_erase h], simp [← ha.assoc, hi.idempotent] },
+  { apply fold_insert h },
 end
 
 theorem fold_image_idem [decidable_eq α] {g : γ → α} {s : finset γ}
- [hi : is_idempotent β op] :
- (image g s).fold op b f = s.fold op b (f ∘ g) :=
+  [hi : is_idempotent β op] :
+  (image g s).fold op b f = s.fold op b (f ∘ g) :=
 begin
- induction s using finset.cons_induction with x xs hx ih,
- { rw [fold_empty]; rw [ image_empty]; rw [ fold_empty] },
- { haveI := classical.dec_eq γ,
- rw [fold_cons]; rw [ cons_eq_insert]; rw [ image_insert]; rw [ fold_insert_idem]; rw [ ih], }
+  induction s using finset.cons_induction with x xs hx ih,
+  { rw [fold_empty, image_empty, fold_empty] },
+  { haveI := classical.dec_eq γ,
+    rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih], }
 end
 
 /-- A stronger version of `finset.fold_ite`, but relies on
 an explicit proof of idempotency on the seed element, rather
 than relying on typeclass idempotency over the whole type. -/
 lemma fold_ite' {g : α → β} (hb : op b b = b)
- (p : α → Prop) [decidable_pred p] :
- finset.fold op b (λ i, ite (p i) (f i) (g i)) s =
- op (finset.fold op b f (s.filter p)) (finset.fold op b g (s.filter (λ i, ¬ p i))) :=
+  (p : α → Prop) [decidable_pred p] :
+  finset.fold op b (λ i, ite (p i) (f i) (g i)) s =
+  op (finset.fold op b f (s.filter p)) (finset.fold op b g (s.filter (λ i, ¬ p i))) :=
 begin
- classical,
- induction s using finset.induction_on with x s hx IH,
- { simp [hb] },
- { simp only [finset.filter_congr_decidable, finset.fold_insert hx],
- split_ifs with h h,
- { have : x ∉ finset.filter p s,
- { simp [hx] },
- simp [finset.filter_insert, h, finset.fold_insert this, ha.assoc, IH] },
- { have : x ∉ finset.filter (λ i, ¬ p i) s,
- { simp [hx] },
- simp [finset.filter_insert, h, finset.fold_insert this, IH, ←ha.assoc, hc.comm] } }
+  classical,
+  induction s using finset.induction_on with x s hx IH,
+  { simp [hb] },
+  { simp only [finset.filter_congr_decidable, finset.fold_insert hx],
+    split_ifs with h h,
+    { have : x ∉ finset.filter p s,
+      { simp [hx] },
+      simp [finset.filter_insert, h, finset.fold_insert this, ha.assoc, IH] },
+    { have : x ∉ finset.filter (λ i, ¬ p i) s,
+      { simp [hx] },
+      simp [finset.filter_insert, h, finset.fold_insert this, IH, ←ha.assoc, hc.comm] } }
 end
 
 /-- A weaker version of `finset.fold_ite'`,
@@ -130,60 +131,60 @@ relying on typeclass idempotency over the whole type,
 instead of solely on the seed element.
 However, this is easier to use because it does not generate side goals. -/
 lemma fold_ite [is_idempotent β op] {g : α → β}
- (p : α → Prop) [decidable_pred p] :
- finset.fold op b (λ i, ite (p i) (f i) (g i)) s =
- op (finset.fold op b f (s.filter p)) (finset.fold op b g (s.filter (λ i, ¬ p i))) :=
+  (p : α → Prop) [decidable_pred p] :
+  finset.fold op b (λ i, ite (p i) (f i) (g i)) s =
+  op (finset.fold op b f (s.filter p)) (finset.fold op b g (s.filter (λ i, ¬ p i))) :=
 fold_ite' (is_idempotent.idempotent _) _
 
 lemma fold_op_rel_iff_and
- {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ (r x y ∧ r x z)) {c : β} :
- r c (s.fold op b f) ↔ (r c b ∧ ∀ x∈s, r c (f x)) :=
+  {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ (r x y ∧ r x z)) {c : β} :
+  r c (s.fold op b f) ↔ (r c b ∧ ∀ x∈s, r c (f x)) :=
 begin
- classical,
- apply finset.induction_on s, { simp },
- clear s, intros a s ha IH,
- rw [finset.fold_insert ha]; rw [ hr]; rw [ IH]; rw [ ← and_assoc]; rw [ and_comm (r c (f a))]; rw [ and_assoc],
- apply and_congr iff.rfl,
- split,
- { rintro ⟨h₁, h₂⟩, intros b hb, rw finset.mem_insert at hb,
- rcases hb with rfl|hb; solve_by_elim },
- { intro h, split,
- { exact h a (finset.mem_insert_self _ _), },
- { intros b hb, apply h b, rw finset.mem_insert, right, exact hb } }
+  classical,
+  apply finset.induction_on s, { simp },
+  clear s, intros a s ha IH,
+  rw [finset.fold_insert ha, hr, IH, ← and_assoc, and_comm (r c (f a)), and_assoc],
+  apply and_congr iff.rfl,
+  split,
+  { rintro ⟨h₁, h₂⟩, intros b hb, rw finset.mem_insert at hb,
+    rcases hb with rfl|hb; solve_by_elim },
+  { intro h, split,
+    { exact h a (finset.mem_insert_self _ _), },
+    { intros b hb, apply h b, rw finset.mem_insert, right, exact hb } }
 end
 
 lemma fold_op_rel_iff_or
- {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ (r x y ∨ r x z)) {c : β} :
- r c (s.fold op b f) ↔ (r c b ∨ ∃ x∈s, r c (f x)) :=
+  {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ (r x y ∨ r x z)) {c : β} :
+  r c (s.fold op b f) ↔ (r c b ∨ ∃ x∈s, r c (f x)) :=
 begin
- classical,
- apply finset.induction_on s, { simp },
- clear s, intros a s ha IH,
- rw [finset.fold_insert ha]; rw [ hr]; rw [ IH]; rw [ ← or_assoc]; rw [ or_comm (r c (f a))]; rw [ or_assoc],
- apply or_congr iff.rfl,
- split,
- { rintro (h₁|⟨x, hx, h₂⟩),
- { use a, simp [h₁] },
- { refine ⟨x, by simp [hx], h₂⟩ } },
- { rintro ⟨x, hx, h⟩,
- rw mem_insert at hx, cases hx,
- { left, rwa hx at h },
- { right, exact ⟨x, hx, h⟩ } }
+  classical,
+  apply finset.induction_on s, { simp },
+  clear s, intros a s ha IH,
+  rw [finset.fold_insert ha, hr, IH, ← or_assoc, or_comm (r c (f a)), or_assoc],
+  apply or_congr iff.rfl,
+  split,
+  { rintro (h₁|⟨x, hx, h₂⟩),
+    { use a, simp [h₁] },
+    { refine ⟨x, by simp [hx], h₂⟩ } },
+  { rintro ⟨x, hx, h⟩,
+    rw mem_insert at hx, cases hx,
+    { left, rwa hx at h },
+    { right, exact ⟨x, hx, h⟩ } }
 end
 
 omit hc ha
 
 @[simp]
 lemma fold_union_empty_singleton [decidable_eq α] (s : finset α) :
- finset.fold (∪) ∅ singleton s = s :=
+  finset.fold (∪) ∅ singleton s = s :=
 begin
- apply finset.induction_on s,
- { simp only [fold_empty], },
- { intros a s has ih, rw [fold_insert has]; rw [ ih]; rw [ insert_eq], }
+  apply finset.induction_on s,
+  { simp only [fold_empty], },
+  { intros a s has ih, rw [fold_insert has, ih, insert_eq], }
 end
 
 lemma fold_sup_bot_singleton [decidable_eq α] (s : finset α) :
- finset.fold (⊔) ⊥ singleton s = s :=
+  finset.fold (⊔) ⊥ singleton s = s :=
 fold_union_empty_singleton s
 
 section order
@@ -194,11 +195,11 @@ fold_op_rel_iff_and $ λ x y z, le_min_iff
 
 lemma fold_min_le : s.fold min b f ≤ c ↔ (b ≤ c ∨ ∃ x∈s, f x ≤ c) :=
 begin
- show _ ≥ _ ↔ _,
- apply fold_op_rel_iff_or,
- intros x y z,
- show _ ≤ _ ↔ _,
- exact min_le_iff
+  show _ ≥ _ ↔ _,
+  apply fold_op_rel_iff_or,
+  intros x y z,
+  show _ ≤ _ ↔ _,
+  exact min_le_iff
 end
 
 lemma lt_fold_min : c < s.fold min b f ↔ (c < b ∧ ∀ x∈s, c < f x) :=
@@ -206,20 +207,20 @@ fold_op_rel_iff_and $ λ x y z, lt_min_iff
 
 lemma fold_min_lt : s.fold min b f < c ↔ (b < c ∨ ∃ x∈s, f x < c) :=
 begin
- show _ > _ ↔ _,
- apply fold_op_rel_iff_or,
- intros x y z,
- show _ < _ ↔ _,
- exact min_lt_iff
+  show _ > _ ↔ _,
+  apply fold_op_rel_iff_or,
+  intros x y z,
+  show _ < _ ↔ _,
+  exact min_lt_iff
 end
 
 lemma fold_max_le : s.fold max b f ≤ c ↔ (b ≤ c ∧ ∀ x∈s, f x ≤ c) :=
 begin
- show _ ≥ _ ↔ _,
- apply fold_op_rel_iff_and,
- intros x y z,
- show _ ≤ _ ↔ _,
- exact max_le_iff
+  show _ ≥ _ ↔ _,
+  apply fold_op_rel_iff_and,
+  intros x y z,
+  show _ ≤ _ ↔ _,
+  exact max_le_iff
 end
 
 lemma le_fold_max : c ≤ s.fold max b f ↔ (c ≤ b ∨ ∃ x∈s, c ≤ f x) :=
@@ -227,11 +228,11 @@ fold_op_rel_iff_or $ λ x y z, le_max_iff
 
 lemma fold_max_lt : s.fold max b f < c ↔ (b < c ∧ ∀ x∈s, f x < c) :=
 begin
- show _ > _ ↔ _,
- apply fold_op_rel_iff_and,
- intros x y z,
- show _ < _ ↔ _,
- exact max_lt_iff
+  show _ > _ ↔ _,
+  apply fold_op_rel_iff_and,
+  intros x y z,
+  show _ < _ ↔ _,
+  exact max_lt_iff
 end
 
 lemma lt_fold_max : c < s.fold max b f ↔ (c < b ∨ ∃ x∈s, c < f x) :=
@@ -239,7 +240,7 @@ fold_op_rel_iff_or $ λ x y z, lt_max_iff
 
 lemma fold_max_add [has_add β] [covariant_class β β (function.swap (+)) (≤)]
  (n : with_bot β) (s : finset α) :
- s.fold max ⊥ (λ (x : α), ↑(f x) + n) = s.fold max ⊥ (coe ∘ f) + n :=
+  s.fold max ⊥ (λ (x : α), ↑(f x) + n) = s.fold max ⊥ (coe ∘ f) + n :=
 by { classical, apply s.induction_on; simp [max_add_add_right] {contextual := tt} }
 
 end order
@@ -247,4 +248,3 @@ end order
 end fold
 
 end finset
-

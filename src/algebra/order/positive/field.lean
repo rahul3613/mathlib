@@ -31,7 +31,6 @@ instance : has_pow {x : K // 0 < x} ℤ :=
 
 instance : linear_ordered_comm_group {x : K // 0 < x} :=
 { mul_left_inv := λ a, subtype.ext $ inv_mul_cancel a.2.ne',
- .. positive.subtype.has_inv, .. positive.subtype.linear_ordered_cancel_comm_monoid }
+  .. positive.subtype.has_inv, .. positive.subtype.linear_ordered_cancel_comm_monoid }
 
 end positive
-

@@ -58,16 +58,16 @@ instance has_forget_to_BddLat : has_forget₂ BddDistLat BddLat :=
 induced_category.has_forget₂ to_BddLat
 
 lemma forget_BddLat_Lat_eq_forget_DistLat_Lat :
- forget₂ BddDistLat BddLat ⋙ forget₂ BddLat Lat =
- forget₂ BddDistLat DistLat ⋙ forget₂ DistLat Lat := rfl
+  forget₂ BddDistLat BddLat ⋙ forget₂ BddLat Lat =
+    forget₂ BddDistLat DistLat ⋙ forget₂ DistLat Lat := rfl
 
 /-- Constructs an equivalence between bounded distributive lattices from an order isomorphism
 between them. -/
 @[simps] def iso.mk {α β : BddDistLat.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := (e : bounded_lattice_hom α β),
- inv := (e.symm : bounded_lattice_hom β α),
- hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
- inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+  inv := (e.symm : bounded_lattice_hom β α),
+  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 /-- `order_dual` as a functor. -/
 @[simps] def dual : BddDistLat ⥤ BddDistLat :=
@@ -76,12 +76,11 @@ between them. -/
 /-- The equivalence between `BddDistLat` and itself induced by `order_dual` both ways. -/
 @[simps functor inverse] def dual_equiv : BddDistLat ≌ BddDistLat :=
 equivalence.mk dual dual
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
 
 end BddDistLat
 
 lemma BddDistLat_dual_comp_forget_to_DistLat :
- BddDistLat.dual ⋙ forget₂ BddDistLat DistLat =
- forget₂ BddDistLat DistLat ⋙ DistLat.dual := rfl
-
+  BddDistLat.dual ⋙ forget₂ BddDistLat DistLat =
+    forget₂ BddDistLat DistLat ⋙ DistLat.dual := rfl

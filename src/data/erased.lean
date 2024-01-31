@@ -19,9 +19,9 @@ represented as `0`, just like types and proofs.
 universes u
 
 /-- `erased α` is the same as `α`, except that the elements
- of `erased α` are erased in the VM in the same way as types
- and proofs. This can be used to track data without storing it
- literally. -/
+  of `erased α` are erased in the VM in the same way as types
+  and proofs. This can be used to track data without storing it
+  literally. -/
 def erased (α : Sort u) : Sort (max 1 u) :=
 Σ' s : α → Prop, ∃ a, (λ b, a = b) = s
 
@@ -46,9 +46,9 @@ theorem out_proof {p : Prop} (a : erased p) : p := out a
 
 @[simp] theorem out_mk {α} (a : α) : (mk a).out = a :=
 begin
- let h, show classical.some h = a,
- have := classical.some_spec h,
- exact cast (congr_fun this a).symm rfl
+  let h, show classical.some h = a,
+  have := classical.some_spec h,
+  exact cast (congr_fun this a).symm rfl
 end
 
 @[simp] theorem mk_out {α} : ∀ (a : erased α), mk (out a) = a
@@ -114,4 +114,3 @@ instance : monad erased := { pure := @mk, bind := @bind, map := @map }
 instance : is_lawful_monad erased := by refine {..}; intros; ext; simp
 
 end erased
-

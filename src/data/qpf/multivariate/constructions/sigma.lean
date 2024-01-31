@@ -58,16 +58,16 @@ protected def abs ⦃α⦄ : (sigma.P F).obj α → sigma F α
 /-- representation function for dependent sums -/
 protected def repr ⦃α⦄ : sigma F α → (sigma.P F).obj α
 | ⟨a,f⟩ :=
- let x := mvqpf.repr f in
- ⟨ ⟨a,x.1⟩, x.2 ⟩
+  let x := mvqpf.repr f in
+  ⟨ ⟨a,x.1⟩, x.2 ⟩
 
 instance : mvqpf (sigma F) :=
 { P := sigma.P F,
- abs := sigma.abs F,
- repr := sigma.repr F,
- abs_repr := by rintros α ⟨x,f⟩; simp [sigma.repr,sigma.abs,abs_repr],
- abs_map := by rintros α β f ⟨x,g⟩; simp [sigma.abs,mvpfunctor.map_eq];
- simp [(<$$>),mvfunctor._match_1,← abs_map,← mvpfunctor.map_eq] }
+  abs := sigma.abs F,
+  repr := sigma.repr F,
+  abs_repr := by rintros α ⟨x,f⟩; simp [sigma.repr,sigma.abs,abs_repr],
+  abs_map := by rintros α β f ⟨x,g⟩; simp [sigma.abs,mvpfunctor.map_eq];
+                simp [(<$$>),mvfunctor._match_1,← abs_map,← mvpfunctor.map_eq] }
 
 end sigma
 
@@ -89,18 +89,17 @@ protected def abs ⦃α⦄ : (pi.P F).obj α → pi F α
 /-- representation function for dependent products -/
 protected def repr ⦃α⦄ : pi F α → (pi.P F).obj α
 | f :=
- ⟨ λ a, (mvqpf.repr (f a)).1, λ i a, (mvqpf.repr (f _)).2 _ a.2 ⟩
+  ⟨ λ a, (mvqpf.repr (f a)).1, λ i a, (mvqpf.repr (f _)).2 _ a.2 ⟩
 
 instance : mvqpf (pi F) :=
 { P := pi.P F,
- abs := pi.abs F,
- repr := pi.repr F,
- abs_repr := by rintros α f; ext; simp [pi.repr,pi.abs,abs_repr],
- abs_map := by rintros α β f ⟨x,g⟩; simp only [pi.abs, mvpfunctor.map_eq]; ext;
- simp only [(<$$>)];
- simp only [←abs_map, mvpfunctor.map_eq]; refl }
+  abs := pi.abs F,
+  repr := pi.repr F,
+  abs_repr := by rintros α f; ext; simp [pi.repr,pi.abs,abs_repr],
+  abs_map := by rintros α β f ⟨x,g⟩; simp only [pi.abs, mvpfunctor.map_eq]; ext;
+                simp only [(<$$>)];
+                simp only [←abs_map, mvpfunctor.map_eq]; refl }
 
 end pi
 
 end mvqpf
-

@@ -24,35 +24,35 @@ namespace pi
 
 @[to_additive]
 lemma list_prod_apply {α : Type*} {β : α → Type*} [Πa, monoid (β a)] (a : α) (l : list (Πa, β a)) :
- l.prod a = (l.map (λf:Πa, β a, f a)).prod :=
+  l.prod a = (l.map (λf:Πa, β a, f a)).prod :=
 (eval_monoid_hom β a).map_list_prod _
 
 @[to_additive]
 lemma multiset_prod_apply {α : Type*} {β : α → Type*} [∀a, comm_monoid (β a)] (a : α)
- (s : multiset (Πa, β a)) : s.prod a = (s.map (λf:Πa, β a, f a)).prod :=
+  (s : multiset (Πa, β a)) : s.prod a = (s.map (λf:Πa, β a, f a)).prod :=
 (eval_monoid_hom β a).map_multiset_prod _
 
 end pi
 
 @[simp, to_additive]
 lemma finset.prod_apply {α : Type*} {β : α → Type*} {γ} [∀a, comm_monoid (β a)] (a : α)
- (s : finset γ) (g : γ → Πa, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
+  (s : finset γ) (g : γ → Πa, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
 (pi.eval_monoid_hom β a).map_prod _ _
 
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[to_additive "An 'unapplied' analogue of `finset.sum_apply`."]
 lemma finset.prod_fn {α : Type*} {β : α → Type*} {γ} [∀a, comm_monoid (β a)]
- (s : finset γ) (g : γ → Πa, β a) : (∏ c in s, g c) = (λ a, ∏ c in s, g c a) :=
+  (s : finset γ) (g : γ → Πa, β a) : (∏ c in s, g c) = (λ a, ∏ c in s, g c a) :=
 funext (λ a, finset.prod_apply _ _ _)
 
 @[simp, to_additive]
 lemma fintype.prod_apply {α : Type*} {β : α → Type*} {γ : Type*} [fintype γ]
- [∀a, comm_monoid (β a)] (a : α) (g : γ → Πa, β a) : (∏ c, g c) a = ∏ c, g c a :=
+  [∀a, comm_monoid (β a)] (a : α) (g : γ → Πa, β a) : (∏ c, g c) a = ∏ c, g c a :=
 finset.prod_apply a finset.univ g
 
 @[to_additive prod_mk_sum]
 lemma prod_mk_prod {α β γ : Type*} [comm_monoid α] [comm_monoid β] (s : finset γ)
- (f : γ → α) (g : γ → β) : (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
+  (f : γ → α) (g : γ → β) : (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
 by haveI := classical.dec_eq γ; exact
 finset.induction_on s rfl (by simp [prod.ext_iff] {contextual := tt})
 
@@ -62,17 +62,17 @@ variables [Π i, comm_monoid (Z i)]
 
 @[to_additive]
 lemma finset.univ_prod_mul_single [fintype I] (f : Π i, Z i) :
- ∏ i, pi.mul_single i (f i) = f :=
+  ∏ i, pi.mul_single i (f i) = f :=
 by { ext a, simp }
 
 @[to_additive]
 lemma monoid_hom.functions_ext [finite I] (G : Type*) [comm_monoid G]
- (g h : (Π i, Z i) →* G) (H : ∀ i x, g (pi.mul_single i x) = h (pi.mul_single i x)) : g = h :=
+  (g h : (Π i, Z i) →* G) (H : ∀ i x, g (pi.mul_single i x) = h (pi.mul_single i x)) : g = h :=
 begin
- casesI nonempty_fintype I,
- ext k,
- rw [← finset.univ_prod_mul_single k]; rw [ g.map_prod]; rw [ h.map_prod],
- simp only [H]
+  casesI nonempty_fintype I,
+  ext k,
+  rw [← finset.univ_prod_mul_single k, g.map_prod, h.map_prod],
+  simp only [H]
 end
 
 /-- This is used as the ext lemma instead of `monoid_hom.functions_ext` for reasons explained in
@@ -81,9 +81,9 @@ note [partially-applied ext lemmas]. -/
 This is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in
 note [partially-applied ext lemmas]."]
 lemma monoid_hom.functions_ext' [finite I] (M : Type*) [comm_monoid M]
- (g h : (Π i, Z i) →* M)
- (H : ∀ i, g.comp (monoid_hom.single Z i) = h.comp (monoid_hom.single Z i)) :
- g = h :=
+  (g h : (Π i, Z i) →* M)
+  (H : ∀ i, g.comp (monoid_hom.single Z i) = h.comp (monoid_hom.single Z i)) :
+  g = h :=
 g.functions_ext M h $ λ i, monoid_hom.congr_fun (H i)
 
 end mul_single
@@ -94,9 +94,9 @@ variables {I : Type*} [decidable_eq I] {f : I → Type*}
 variables [Π i, non_assoc_semiring (f i)]
 
 @[ext] lemma ring_hom.functions_ext [finite I] (G : Type*) [non_assoc_semiring G]
- (g h : (Π i, f i) →+* G) (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
+  (g h : (Π i, f i) →+* G) (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
 ring_hom.coe_add_monoid_hom_injective $
- @add_monoid_hom.functions_ext I _ f _ _ G _ (g : (Π i, f i) →+ G) h H
+  @add_monoid_hom.functions_ext I _ f _ _ G _ (g : (Π i, f i) →+ G) h H
 
 end ring_hom
 
@@ -109,8 +109,7 @@ lemma fst_prod : (∏ c in s, f c).1 = ∏ c in s, (f c).1 :=
 (monoid_hom.fst α β).map_prod f s
 
 @[to_additive]
-lemma snd_prod : (∏ c in s, f c).2 = ∏ c in s, (f c).2 :=
+lemma snd_prod  : (∏ c in s, f c).2 = ∏ c in s, (f c).2 :=
 (monoid_hom.snd α β).map_prod f s
 
 end prod
-

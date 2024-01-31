@@ -51,14 +51,13 @@ le_antisymm (le_of_not_gt h2) (le_of_not_gt h1)
 -- used in the `nlinarith` normalization steps. The `_` argument is for uniformity.
 @[nolint unused_arguments]
 lemma mul_zero_eq {α} {R : α → α → Prop} [semiring α] {a b : α} (_ : R a 0) (h : b = 0) :
- a * b = 0 :=
+  a * b = 0 :=
 by simp [h]
 
 -- used in the `nlinarith` normalization steps. The `_` argument is for uniformity.
 @[nolint unused_arguments]
 lemma zero_mul_eq {α} {R : α → α → Prop} [semiring α] {a b : α} (h : a = 0) (_ : R b 0) :
- a * b = 0 :=
+  a * b = 0 :=
 by simp [h]
 
 end linarith
-

@@ -18,5 +18,4 @@ variables {α : Type*}
 @[priority 100] -- see Note [lower instance priority]
 instance strict_ordered_semiring.to_char_zero [strict_ordered_semiring α] : char_zero α :=
 ⟨strict_mono.injective $ strict_mono_nat_of_lt_succ $ λ n,
- by { rw [nat.cast_succ], apply lt_add_one }⟩
-
+  by { rw [nat.cast_succ], apply lt_add_one }⟩

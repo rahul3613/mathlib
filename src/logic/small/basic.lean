@@ -77,23 +77,23 @@ instance small_subtype (α : Type v) [small.{w} α] (P : α → Prop) : small.{w
 small_map (equiv_shrink α).subtype_equiv_of_subtype'
 
 theorem small_of_injective {α : Type v} {β : Type w} [small.{u} β] {f : α → β}
- (hf : function.injective f) : small.{u} α :=
+  (hf : function.injective f) : small.{u} α :=
 small_map (equiv.of_injective f hf)
 
 theorem small_of_surjective {α : Type v} {β : Type w} [small.{u} α] {f : α → β}
- (hf : function.surjective f) : small.{u} β :=
+  (hf : function.surjective f) : small.{u} β :=
 small_of_injective (function.injective_surj_inv hf)
 
 theorem small_subset {α : Type v} {s t : set α} (hts : t ⊆ s) [small.{u} s] : small.{u} t :=
 let f : t → s := λ x, ⟨x, hts x.prop⟩ in
- @small_of_injective _ _ _ f (λ x y hxy, subtype.ext (subtype.mk.inj hxy))
+  @small_of_injective _ _ _ f (λ x y hxy, subtype.ext (subtype.mk.inj hxy))
 
 @[priority 100]
 instance small_subsingleton (α : Type v) [subsingleton α] : small.{w} α :=
 begin
- rcases is_empty_or_nonempty α; resetI,
- { apply small_map (equiv.equiv_pempty α) },
- { apply small_map equiv.punit_of_nonempty_of_subsingleton, assumption' },
+  rcases is_empty_or_nonempty α; resetI,
+  { apply small_map (equiv.equiv_pempty α) },
+  { apply small_map equiv.punit_of_nonempty_of_subsingleton, assumption' },
 end
 
 /-!
@@ -102,39 +102,38 @@ to keep imports to `logic` to a minimum.
 -/
 
 instance small_Pi {α} (β : α → Type*) [small.{w} α] [∀ a, small.{w} (β a)] :
- small.{w} (Π a, β a) :=
+  small.{w} (Π a, β a) :=
 ⟨⟨Π a' : shrink α, shrink (β ((equiv_shrink α).symm a')),
- ⟨equiv.Pi_congr (equiv_shrink α) (λ a, by simpa using equiv_shrink (β a))⟩⟩⟩
+  ⟨equiv.Pi_congr (equiv_shrink α) (λ a, by simpa using equiv_shrink (β a))⟩⟩⟩
 
 instance small_sigma {α} (β : α → Type*) [small.{w} α] [∀ a, small.{w} (β a)] :
- small.{w} (Σ a, β a) :=
+  small.{w} (Σ a, β a) :=
 ⟨⟨Σ a' : shrink α, shrink (β ((equiv_shrink α).symm a')),
- ⟨equiv.sigma_congr (equiv_shrink α) (λ a, by simpa using equiv_shrink (β a))⟩⟩⟩
+  ⟨equiv.sigma_congr (equiv_shrink α) (λ a, by simpa using equiv_shrink (β a))⟩⟩⟩
 
 instance small_prod {α β} [small.{w} α] [small.{w} β] : small.{w} (α × β) :=
 ⟨⟨shrink α × shrink β,
- ⟨equiv.prod_congr (equiv_shrink α) (equiv_shrink β)⟩⟩⟩
+  ⟨equiv.prod_congr (equiv_shrink α) (equiv_shrink β)⟩⟩⟩
 
 instance small_sum {α β} [small.{w} α] [small.{w} β] : small.{w} (α ⊕ β) :=
 ⟨⟨shrink α ⊕ shrink β,
- ⟨equiv.sum_congr (equiv_shrink α) (equiv_shrink β)⟩⟩⟩
+  ⟨equiv.sum_congr (equiv_shrink α) (equiv_shrink β)⟩⟩⟩
 
 instance small_set {α} [small.{w} α] : small.{w} (set α) :=
 ⟨⟨set (shrink α), ⟨equiv.set.congr (equiv_shrink α)⟩⟩⟩
 
 instance small_range {α : Type v} {β : Type w} (f : α → β) [small.{u} α] :
- small.{u} (set.range f) :=
+  small.{u} (set.range f) :=
 small_of_surjective set.surjective_onto_range
 
 instance small_image {α : Type v} {β : Type w} (f : α → β) (S : set α) [small.{u} S] :
- small.{u} (f '' S) :=
+  small.{u} (f '' S) :=
 small_of_surjective set.surjective_onto_image
 
 theorem not_small_type : ¬ small.{u} (Type (max u v))
 | ⟨⟨S, ⟨e⟩⟩⟩ := @function.cantor_injective (Σ α, e.symm α)
- (λ a, ⟨_, cast (e.3 _).symm a⟩)
- (λ a b e, (cast_inj _).1 $ eq_of_heq (sigma.mk.inj e).2)
+  (λ a, ⟨_, cast (e.3 _).symm a⟩)
+  (λ a b e, (cast_inj _).1 $ eq_of_heq (sigma.mk.inj e).2)
 
 
 end
-

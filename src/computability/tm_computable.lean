@@ -23,7 +23,7 @@ of a function between two types that have an encoding (as in encoding.lean).
 ## Main theorems
 
 - `id_computable_in_poly_time` : a TM + a proof it computes the identity on a type in polytime.
-- `id_computable` : a TM + a proof it computes the identity on a type.
+- `id_computable`              : a TM + a proof it computes the identity on a type.
 
 ## Implementation notes
 
@@ -76,18 +76,18 @@ end fin_tm2
 /-- The initial configuration corresponding to a list in the input alphabet. -/
 def init_list (tm : fin_tm2) (s : list (tm.Γ tm.k₀)) : tm.cfg :=
 { l := option.some tm.main,
- var := tm.initial_state,
- stk := λ k, @dite (list (tm.Γ k)) (k = tm.k₀) (tm.K_decidable_eq k tm.k₀)
- (λ h, begin rw h, exact s, end)
- (λ _,[]) }
+  var := tm.initial_state,
+  stk := λ k, @dite (list (tm.Γ k)) (k = tm.k₀) (tm.K_decidable_eq k tm.k₀)
+                (λ h, begin rw h, exact s, end)
+                (λ _,[]) }
 
 /-- The final configuration corresponding to a list in the output alphabet. -/
 def halt_list (tm : fin_tm2) (s : list (tm.Γ tm.k₁)) : tm.cfg :=
 { l := option.none,
- var := tm.initial_state,
- stk := λ k, @dite (list (tm.Γ k)) (k = tm.k₁) (tm.K_decidable_eq k tm.k₁)
- (λ h, begin rw h, exact s, end)
- (λ _,[]) }
+  var := tm.initial_state,
+  stk := λ k, @dite (list (tm.Γ k)) (k = tm.k₁) (tm.K_decidable_eq k tm.k₁)
+                (λ h, begin rw h, exact s, end)
+                (λ _,[]) }
 
 /-- A "proof" of the fact that f eventually reaches b when repeatedly evaluated on a,
 remembering the number of steps it takes. -/
@@ -101,7 +101,7 @@ structure evals_to {σ : Type*} (f : σ → option σ) (a : σ) (b : option σ) 
 /-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
 evaluated on `a`, remembering the number of steps it takes. -/
 structure evals_to_in_time {σ : Type*} (f : σ → option σ) (a : σ) (b : option σ) (m : ℕ)
- extends evals_to f a b :=
+  extends evals_to f a b :=
 (steps_le_m : steps ≤ m)
 
 /-- Reflexivity of `evals_to` in 0 steps. -/
@@ -109,19 +109,19 @@ structure evals_to_in_time {σ : Type*} (f : σ → option σ) (a : σ) (b : opt
 
 /-- Transitivity of `evals_to` in the sum of the numbers of steps. -/
 @[trans] def evals_to.trans {σ : Type*} (f : σ → option σ) (a : σ) (b : σ) (c : option σ)
- (h₁ : evals_to f a b) (h₂ : evals_to f b c) : evals_to f a c :=
+  (h₁ : evals_to f a b) (h₂ : evals_to f b c) : evals_to f a c :=
 ⟨h₂.steps + h₁.steps,
- by rw [function.iterate_add_apply]; rw [h₁.evals_in_steps]; rw [h₂.evals_in_steps]⟩
+ by rw [function.iterate_add_apply,h₁.evals_in_steps,h₂.evals_in_steps]⟩
 
 /-- Reflexivity of `evals_to_in_time` in 0 steps. -/
 @[refl] def evals_to_in_time.refl {σ : Type*} (f : σ → option σ) (a : σ) :
- evals_to_in_time f a a 0 :=
+  evals_to_in_time f a a 0 :=
 ⟨evals_to.refl f a, le_refl 0⟩
 
 /-- Transitivity of `evals_to_in_time` in the sum of the numbers of steps. -/
 @[trans] def evals_to_in_time.trans {σ : Type*} (f : σ → option σ) (m₁ : ℕ) (m₂ : ℕ)
- (a : σ) (b : σ) (c : option σ) (h₁ : evals_to_in_time f a b m₁) (h₂ : evals_to_in_time f b c m₂) :
- evals_to_in_time f a c (m₂ + m₁) :=
+  (a : σ) (b : σ) (c : option σ) (h₁ : evals_to_in_time f a b m₁) (h₂ : evals_to_in_time f b c m₂) :
+  evals_to_in_time f a c (m₂ + m₁) :=
 ⟨evals_to.trans f a b c h₁.to_evals_to h₂.to_evals_to, add_le_add h₂.steps_le_m h₁.steps_le_m⟩
 
 /-- A proof of tm outputting l' when given l. -/
@@ -130,13 +130,13 @@ evals_to tm.step (init_list tm l) ((option.map (halt_list tm)) l')
 
 /-- A proof of tm outputting l' when given l in at most m steps. -/
 def tm2_outputs_in_time (tm : fin_tm2) (l : list (tm.Γ tm.k₀))
- (l' : option (list (tm.Γ tm.k₁))) (m : ℕ) :=
+  (l' : option (list (tm.Γ tm.k₁))) (m : ℕ) :=
 evals_to_in_time tm.step (init_list tm l) ((option.map (halt_list tm)) l') m
 
 /-- The forgetful map, forgetting the upper bound on the number of steps. -/
 def tm2_outputs_in_time.to_tm2_outputs {tm : fin_tm2} {l : list (tm.Γ tm.k₀)}
 {l' : option (list (tm.Γ tm.k₁))} {m : ℕ} (h : tm2_outputs_in_time tm l l' m) :
- tm2_outputs tm l l' :=
+  tm2_outputs tm l l' :=
 h.to_evals_to
 
 /-- A Turing machine with input alphabet equivalent to Γ₀ and output alphabet equivalent to Γ₁. -/
@@ -147,39 +147,39 @@ structure tm2_computable_aux (Γ₀ Γ₁ : Type) :=
 
 /-- A Turing machine + a proof it outputs f. -/
 structure tm2_computable {α β : Type} (ea : fin_encoding α) (eb : fin_encoding β) (f : α → β)
- extends tm2_computable_aux ea.Γ eb.Γ :=
+  extends tm2_computable_aux ea.Γ eb.Γ :=
 (outputs_fun : ∀ a, tm2_outputs tm (list.map input_alphabet.inv_fun (ea.encode a))
- (option.some ((list.map output_alphabet.inv_fun) (eb.encode (f a)))) )
+  (option.some ((list.map output_alphabet.inv_fun) (eb.encode (f a)))) )
 
 /-- A Turing machine + a time function + a proof it outputs f in at most time(len(input)) steps. -/
 structure tm2_computable_in_time {α β : Type} (ea : fin_encoding α) (eb : fin_encoding β)
- (f : α → β)
- extends tm2_computable_aux ea.Γ eb.Γ :=
+  (f : α → β)
+  extends tm2_computable_aux ea.Γ eb.Γ :=
 (time: ℕ → ℕ)
 (outputs_fun : ∀ a, tm2_outputs_in_time tm (list.map input_alphabet.inv_fun (ea.encode a))
- (option.some ((list.map output_alphabet.inv_fun) (eb.encode (f a))))
- (time (ea.encode a).length))
+  (option.some ((list.map output_alphabet.inv_fun) (eb.encode (f a))))
+  (time (ea.encode a).length))
 
 /-- A Turing machine + a polynomial time function + a proof it outputs f in at most time(len(input))
 steps. -/
 structure tm2_computable_in_poly_time {α β : Type} (ea : fin_encoding α) (eb : fin_encoding β)
- (f : α → β)
- extends tm2_computable_aux ea.Γ eb.Γ :=
+  (f : α → β)
+  extends tm2_computable_aux ea.Γ eb.Γ :=
 (time: polynomial ℕ)
 (outputs_fun : ∀ a, tm2_outputs_in_time tm (list.map input_alphabet.inv_fun (ea.encode a))
- (option.some ((list.map output_alphabet.inv_fun) (eb.encode (f a))))
- (time.eval (ea.encode a).length))
+  (option.some ((list.map output_alphabet.inv_fun) (eb.encode (f a))))
+  (time.eval (ea.encode a).length))
 
 /-- A forgetful map, forgetting the time bound on the number of steps. -/
 def tm2_computable_in_time.to_tm2_computable {α β : Type} {ea : fin_encoding α}
- {eb : fin_encoding β} {f : α → β} (h : tm2_computable_in_time ea eb f) :
- tm2_computable ea eb f :=
+  {eb : fin_encoding β} {f : α → β} (h : tm2_computable_in_time ea eb f) :
+  tm2_computable ea eb f :=
 ⟨h.to_tm2_computable_aux, λ a, tm2_outputs_in_time.to_tm2_outputs (h.outputs_fun a)⟩
 
 /-- A forgetful map, forgetting that the time function is polynomial. -/
 def tm2_computable_in_poly_time.to_tm2_computable_in_time {α β : Type} {ea : fin_encoding α}
- {eb : fin_encoding β} {f : α → β} (h : tm2_computable_in_poly_time ea eb f) :
- tm2_computable_in_time ea eb f :=
+  {eb : fin_encoding β} {f : α → β} (h : tm2_computable_in_poly_time ea eb f) :
+  tm2_computable_in_time ea eb f :=
 ⟨h.to_tm2_computable_aux, λ n, h.time.eval n, h.outputs_fun⟩
 
 open turing.TM2.stmt
@@ -187,15 +187,15 @@ open turing.TM2.stmt
 /-- A Turing machine computing the identity on α. -/
 def id_computer {α : Type} (ea : fin_encoding α) : fin_tm2 :=
 { K := unit,
- k₀ := ⟨⟩,
- k₁ := ⟨⟩,
- Γ := λ _, ea.Γ,
- Λ := unit,
- main := ⟨⟩,
- σ := unit,
- initial_state := ⟨⟩,
- Γk₀_fin := ea.Γ_fin,
- M := λ _, halt }
+  k₀ := ⟨⟩,
+  k₁ := ⟨⟩,
+  Γ := λ _, ea.Γ,
+  Λ := unit,
+  main := ⟨⟩,
+  σ := unit,
+  initial_state := ⟨⟩,
+  Γk₀_fin := ea.Γ_fin,
+  M := λ _, halt }
 
 instance inhabited_fin_tm2 : inhabited fin_tm2 :=
 ⟨id_computer computability.inhabited_fin_encoding.default⟩
@@ -204,22 +204,22 @@ noncomputable theory
 
 /-- A proof that the identity map on α is computable in polytime. -/
 def id_computable_in_poly_time {α : Type} (ea : fin_encoding α) :
- @tm2_computable_in_poly_time α α ea ea id :=
+  @tm2_computable_in_poly_time α α ea ea id :=
 { tm := id_computer ea,
- input_alphabet := equiv.cast rfl,
- output_alphabet := equiv.cast rfl,
- time := 1,
- outputs_fun := λ _, { steps := 1,
- evals_in_steps := rfl,
- steps_le_m := by simp only [polynomial.eval_one] } }
+  input_alphabet := equiv.cast rfl,
+  output_alphabet := equiv.cast rfl,
+  time := 1,
+  outputs_fun := λ _, { steps := 1,
+    evals_in_steps := rfl,
+    steps_le_m := by simp only [polynomial.eval_one] } }
 
 instance inhabited_tm2_computable_in_poly_time :
- inhabited (tm2_computable_in_poly_time (default : fin_encoding bool) default id) :=
+  inhabited (tm2_computable_in_poly_time (default : fin_encoding bool) default id) :=
 ⟨id_computable_in_poly_time computability.inhabited_fin_encoding.default⟩
 
 instance inhabited_tm2_outputs_in_time :
- inhabited (tm2_outputs_in_time (id_computer fin_encoding_bool_bool)
- (list.map (equiv.cast rfl).inv_fun [ff]) (some (list.map (equiv.cast rfl).inv_fun [ff])) _) :=
+  inhabited (tm2_outputs_in_time (id_computer fin_encoding_bool_bool)
+    (list.map (equiv.cast rfl).inv_fun [ff]) (some (list.map (equiv.cast rfl).inv_fun [ff])) _) :=
 ⟨(id_computable_in_poly_time fin_encoding_bool_bool).outputs_fun ff⟩
 
 instance inhabited_tm2_outputs : inhabited (tm2_outputs (id_computer fin_encoding_bool_bool)
@@ -227,7 +227,7 @@ instance inhabited_tm2_outputs : inhabited (tm2_outputs (id_computer fin_encodin
 ⟨tm2_outputs_in_time.to_tm2_outputs turing.inhabited_tm2_outputs_in_time.default⟩
 
 instance inhabited_evals_to_in_time :
- inhabited (evals_to_in_time (λ _ : unit, some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=
+  inhabited (evals_to_in_time (λ _ : unit, some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=
 ⟨evals_to_in_time.refl _ _⟩
 
 instance inhabited_tm2_evals_to : inhabited (evals_to (λ _ : unit, some ⟨⟩) ⟨⟩ (some ⟨⟩)) :=
@@ -238,7 +238,7 @@ def id_computable_in_time {α : Type} (ea : fin_encoding α) : @tm2_computable_i
 tm2_computable_in_poly_time.to_tm2_computable_in_time $ id_computable_in_poly_time ea
 
 instance inhabited_tm2_computable_in_time :
- inhabited (tm2_computable_in_time fin_encoding_bool_bool fin_encoding_bool_bool id) :=
+  inhabited (tm2_computable_in_time fin_encoding_bool_bool fin_encoding_bool_bool id) :=
 ⟨id_computable_in_time computability.inhabited_fin_encoding.default⟩
 
 /-- A proof that the identity map on α is computable. -/
@@ -246,11 +246,10 @@ def id_computable {α : Type} (ea : fin_encoding α) : @tm2_computable α α ea 
 tm2_computable_in_time.to_tm2_computable $ id_computable_in_time ea
 
 instance inhabited_tm2_computable :
- inhabited (tm2_computable fin_encoding_bool_bool fin_encoding_bool_bool id) :=
+  inhabited (tm2_computable fin_encoding_bool_bool fin_encoding_bool_bool id) :=
 ⟨id_computable computability.inhabited_fin_encoding.default⟩
 
 instance inhabited_tm2_computable_aux : inhabited (tm2_computable_aux bool bool) :=
 ⟨(default : tm2_computable fin_encoding_bool_bool fin_encoding_bool_bool id).to_tm2_computable_aux⟩
 
 end turing
-

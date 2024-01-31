@@ -38,7 +38,7 @@ universes v v₂ u u₂ -- morphism levels before object levels. See note [categ
 
 /-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
 class groupoid (obj : Type u) extends category.{v} obj : Type (max u (v+1)) :=
-(inv : Π {X Y : obj}, (X ⟶ Y) → (Y ⟶ X))
+(inv       : Π {X Y : obj}, (X ⟶ Y) → (Y ⟶ X))
 (inv_comp' : ∀ {X Y : obj} (f : X ⟶ Y), comp (inv f) f = id Y . obviously)
 (comp_inv' : ∀ {X Y : obj} (f : X ⟶ Y), comp f (inv f) = id X . obviously)
 
@@ -47,8 +47,8 @@ restate_axiom groupoid.comp_inv'
 
 
 initialize_simps_projections groupoid (-to_category_to_category_struct_to_quiver_hom,
- to_category_to_category_struct_comp → comp, to_category_to_category_struct_id → id,
- -to_category_to_category_struct, -to_category)
+  to_category_to_category_struct_comp → comp, to_category_to_category_struct_id → id,
+  -to_category_to_category_struct, -to_category)
 
 /--
 A `large_groupoid` is a groupoid
@@ -79,31 +79,31 @@ is_iso.eq_inv_of_hom_inv_id $ groupoid.comp_inv f
 @[priority 100]
 instance groupoid_has_involutive_reverse : quiver.has_involutive_reverse C :=
 { reverse' := λ X Y f, groupoid.inv f,
- inv' := λ X Y f, by { dsimp [quiver.reverse], simp, } }
+  inv' := λ X Y f, by { dsimp [quiver.reverse], simp, } }
 
 @[simp] lemma groupoid.reverse_eq_inv (f : X ⟶ Y) : quiver.reverse f = groupoid.inv f := rfl
 
 instance functor_map_reverse {D : Type*} [groupoid D] (F : C ⥤ D) :
- F.to_prefunctor.map_reverse :=
+  F.to_prefunctor.map_reverse :=
 { map_reverse' := λ X Y f, by
- simp only [quiver.reverse, quiver.has_reverse.reverse', groupoid.inv_eq_inv,
- functor.to_prefunctor_map, functor.map_inv], }
+  simp only [quiver.reverse, quiver.has_reverse.reverse', groupoid.inv_eq_inv,
+               functor.to_prefunctor_map, functor.map_inv], }
 
 variables (X Y)
 
 /-- In a groupoid, isomorphisms are equivalent to morphisms. -/
 def groupoid.iso_equiv_hom : (X ≅ Y) ≃ (X ⟶ Y) :=
 { to_fun := iso.hom,
- inv_fun := λ f, ⟨f, groupoid.inv f⟩,
- left_inv := λ i, iso.ext rfl,
- right_inv := λ f, rfl }
+  inv_fun := λ f, ⟨f, groupoid.inv f⟩,
+  left_inv := λ i, iso.ext rfl,
+  right_inv := λ f, rfl }
 
 variables (C)
 
 /-- The functor from a groupoid `C` to its opposite sending every morphism to its inverse. -/
 @[simps] noncomputable def groupoid.inv_functor : C ⥤ Cᵒᵖ :=
 { obj := opposite.op,
- map := λ {X Y} f, (inv f).op }
+  map := λ {X Y} f, (inv f).op }
 
 end
 
@@ -123,23 +123,22 @@ def groupoid.of_hom_unique (all_unique : ∀ {X Y : C}, unique (X ⟶ Y)) : grou
 end
 
 instance induced_category.groupoid {C : Type u} (D : Type u₂) [groupoid.{v} D] (F : C → D) :
- groupoid.{v} (induced_category D F) :=
-{ inv := λ X Y f, groupoid.inv f,
- inv_comp' := λ X Y f, groupoid.inv_comp f,
- comp_inv' := λ X Y f, groupoid.comp_inv f,
- .. induced_category.category F }
+   groupoid.{v} (induced_category D F) :=
+{ inv       := λ X Y f, groupoid.inv f,
+  inv_comp' := λ X Y f, groupoid.inv_comp f,
+  comp_inv' := λ X Y f, groupoid.comp_inv f,
+  .. induced_category.category F }
 
 section
 
 instance groupoid_pi {I : Type u} {J : I → Type u₂} [∀ i, groupoid.{v} (J i)] :
- groupoid.{max u v} (Π i : I, J i) :=
+  groupoid.{max u v} (Π i : I, J i) :=
 { inv := λ (x y : Π i, J i) (f : Π i, x i ⟶ y i), (λ i : I, groupoid.inv (f i)), }
 
 instance groupoid_prod {α : Type u} {β : Type v} [groupoid.{u₂} α] [groupoid.{v₂} β] :
- groupoid.{max u₂ v₂} (α × β) :=
+  groupoid.{max u₂ v₂} (α × β) :=
 { inv := λ (x y : α × β) (f : x ⟶ y), (groupoid.inv f.1, groupoid.inv f.2) }
 
 end
 
 end category_theory
-

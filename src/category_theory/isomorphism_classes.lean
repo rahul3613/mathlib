@@ -33,7 +33,7 @@ variable (C)
 /-- `is_isomorphic` defines a setoid. -/
 def is_isomorphic_setoid : setoid C :=
 { r := is_isomorphic,
- iseqv := ⟨λ X, ⟨iso.refl X⟩, λ X Y ⟨α⟩, ⟨α.symm⟩, λ X Y Z ⟨α⟩ ⟨β⟩, ⟨α.trans β⟩⟩ }
+  iseqv := ⟨λ X, ⟨iso.refl X⟩, λ X Y ⟨α⟩, ⟨α.symm⟩, λ X Y Z ⟨α⟩ ⟨β⟩, ⟨α.trans β⟩⟩ }
 
 end category
 
@@ -42,13 +42,12 @@ The functor that sends each category to the quotient space of its objects up to 
 -/
 def isomorphism_classes : Cat.{v u} ⥤ Type u :=
 { obj := λ C, quotient (is_isomorphic_setoid C.α),
- map := λ C D F, quot.map F.obj $ λ X Y ⟨f⟩, ⟨F.map_iso f⟩ }
+  map := λ C D F, quot.map F.obj $ λ X Y ⟨f⟩, ⟨F.map_iso f⟩ }
 
 lemma groupoid.is_isomorphic_iff_nonempty_hom {C : Type u} [groupoid.{v} C] {X Y : C} :
- is_isomorphic X Y ↔ nonempty (X ⟶ Y) :=
+  is_isomorphic X Y ↔ nonempty (X ⟶ Y) :=
 (groupoid.iso_equiv_hom X Y).nonempty_congr
 
 -- PROJECT: define `skeletal`, and show every category is equivalent to a skeletal category,
 -- using the axiom of choice to pick a representative of every isomorphism class.
 end category_theory
-

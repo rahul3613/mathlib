@@ -31,12 +31,12 @@ variables {C : Type*} [category C]
 
 /-- The proposition that a square
 ```
- W ---f---> X
- | |
- g h
- | |
- v v
- Y ---i---> Z
+  W ---f---> X
+  |          |
+  g          h
+  |          |
+  v          v
+  Y ---i---> Z
 
 ```
 is a commuting square.
@@ -60,7 +60,7 @@ lemma op (p : comm_sq f g h i) : comm_sq i.op h.op g.op f.op :=
 
 /-- The commutative square associated to a commutative square in the opposite category. -/
 lemma unop {W X Y Z : Cᵒᵖ} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
- (p : comm_sq f g h i) : comm_sq i.unop h.unop g.unop f.unop :=
+  (p : comm_sq f g h i) : comm_sq i.unop h.unop g.unop f.unop :=
 ⟨by simp only [← unop_comp, p.w]⟩
 
 end comm_sq
@@ -97,44 +97,44 @@ corresponding square in the opposite category. -/
 @[simps]
 def op {sq : comm_sq f i p g} (l : lift_struct sq) : lift_struct sq.op :=
 { l := l.l.op,
- fac_left' := by rw [← op_comp]; rw [ l.fac_right],
- fac_right' := by rw [← op_comp]; rw [ l.fac_left], }
+  fac_left' := by rw [← op_comp, l.fac_right],
+  fac_right' := by rw [← op_comp, l.fac_left], }
 
 /-- A `lift_struct` for a commutative square in the opposite category
 gives a `lift_struct` for the corresponding square in the original category. -/
 @[simps]
 def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} {sq : comm_sq f i p g}
- (l : lift_struct sq) : lift_struct sq.unop :=
+  (l : lift_struct sq) : lift_struct sq.unop :=
 { l := l.l.unop,
- fac_left' := by rw [← unop_comp]; rw [ l.fac_right],
- fac_right' := by rw [← unop_comp]; rw [ l.fac_left], }
+  fac_left' := by rw [← unop_comp, l.fac_right],
+  fac_right' := by rw [← unop_comp, l.fac_left], }
 
 /-- Equivalences of `lift_struct` for a square and the corresponding square
 in the opposite category. -/
 @[simps]
 def op_equiv (sq : comm_sq f i p g) : lift_struct sq ≃ lift_struct sq.op :=
 { to_fun := op,
- inv_fun := unop,
- left_inv := by tidy,
- right_inv := by tidy, }
+  inv_fun := unop,
+  left_inv := by tidy,
+  right_inv := by tidy, }
 
 /-- Equivalences of `lift_struct` for a square in the oppositive category and
 the corresponding square in the original category. -/
 def unop_equiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
- (sq : comm_sq f i p g) : lift_struct sq ≃ lift_struct sq.unop :=
+  (sq : comm_sq f i p g) : lift_struct sq ≃ lift_struct sq.unop :=
 { to_fun := unop,
- inv_fun := op,
- left_inv := by tidy,
- right_inv := by tidy, }
+  inv_fun := op,
+  left_inv := by tidy,
+  right_inv := by tidy, }
 
 end lift_struct
 
 instance subsingleton_lift_struct_of_epi (sq : comm_sq f i p g) [epi i] :
- subsingleton (lift_struct sq) :=
+  subsingleton (lift_struct sq) :=
 ⟨λ l₁ l₂, by { ext, simp only [← cancel_epi i, lift_struct.fac_left], }⟩
 
 instance subsingleton_lift_struct_of_mono (sq : comm_sq f i p g) [mono p] :
- subsingleton (lift_struct sq) :=
+  subsingleton (lift_struct sq) :=
 ⟨λ l₁ l₂, by { ext, simp only [← cancel_mono p, lift_struct.fac_right], }⟩
 
 variable (sq : comm_sq f i p g)
@@ -155,15 +155,15 @@ by { split, exacts [λ h, h.exists_lift, λ h, mk h], }
 
 lemma iff_op : has_lift sq ↔ has_lift sq.op :=
 begin
- rw [iff]; rw [ iff],
- exact nonempty.congr (lift_struct.op_equiv sq).to_fun (lift_struct.op_equiv sq).inv_fun,
+  rw [iff, iff],
+  exact nonempty.congr (lift_struct.op_equiv sq).to_fun (lift_struct.op_equiv sq).inv_fun,
 end
 
 lemma iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
- (sq : comm_sq f i p g) : has_lift sq ↔ has_lift sq.unop :=
+  (sq : comm_sq f i p g) : has_lift sq ↔ has_lift sq.unop :=
 begin
- rw [iff]; rw [ iff],
- exact nonempty.congr (lift_struct.unop_equiv sq).to_fun (lift_struct.unop_equiv sq).inv_fun,
+  rw [iff, iff],
+  exact nonempty.congr (lift_struct.unop_equiv sq).to_fun (lift_struct.unop_equiv sq).inv_fun,
 end
 
 end has_lift
@@ -185,4 +185,3 @@ hsq.exists_lift.some.fac_right
 end comm_sq
 
 end category_theory
-

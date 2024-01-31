@@ -18,7 +18,7 @@ separate `has_mul` typeclass used for general algebras.
 It is useful to have a special typeclass for Lie algebras because:
  * it enables us to use the traditional notation `⁅x, y⁆` for the Lie multiplication,
  * associative algebras carry a natural Lie algebra structure via the ring commutator and so we need
- them to carry both `has_mul` and `has_bracket` simultaneously,
+   them to carry both `has_mul` and `has_bracket` simultaneously,
  * more generally, Poisson algebras (not yet defined) need both typeclasses.
 
 However there are times when it is convenient to be able to regard a Lie algebra as a general
@@ -26,9 +26,9 @@ algebra and we provide some basic definitions for doing so here.
 
 ## Main definitions
 
- * `commutator_ring` turns a Lie ring into a `non_unital_non_assoc_semiring` by turning its
- `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`).
- * `lie_hom.to_non_unital_alg_hom`
+  * `commutator_ring` turns a Lie ring into a `non_unital_non_assoc_semiring` by turning its
+    `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`).
+  * `lie_hom.to_non_unital_alg_hom`
 
 ## Tags
 
@@ -49,12 +49,12 @@ def commutator_ring (L : Type v) : Type v := L
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
 instance : non_unital_non_assoc_semiring (commutator_ring L) :=
 show non_unital_non_assoc_semiring L, from
-{ mul := has_bracket.bracket,
- left_distrib := lie_add,
- right_distrib := add_lie,
- zero_mul := zero_lie,
- mul_zero := lie_zero,
- .. (infer_instance : add_comm_monoid L) }
+{ mul           := has_bracket.bracket,
+  left_distrib  := lie_add,
+  right_distrib := add_lie,
+  zero_mul      := zero_lie,
+  mul_zero      := lie_zero,
+  .. (infer_instance : add_comm_monoid L) }
 
 namespace lie_algebra
 
@@ -90,13 +90,12 @@ regard a `lie_hom` as a `non_unital_alg_hom`. -/
 @[simps]
 def to_non_unital_alg_hom (f : L →ₗ⁅R⁆ L₂) : commutator_ring L →ₙₐ[R] commutator_ring L₂ :=
 { to_fun := f,
- map_zero' := f.map_zero,
- map_mul' := f.map_lie,
- ..f }
+  map_zero' := f.map_zero,
+  map_mul'  := f.map_lie,
+  ..f }
 
 lemma to_non_unital_alg_hom_injective :
- function.injective (to_non_unital_alg_hom : _ → (commutator_ring L →ₙₐ[R] commutator_ring L₂)) :=
+  function.injective (to_non_unital_alg_hom : _ → (commutator_ring L →ₙₐ[R] commutator_ring L₂)) :=
 λ f g h, ext $ non_unital_alg_hom.congr_fun h
 
 end lie_hom
-

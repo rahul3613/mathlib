@@ -39,20 +39,19 @@ ext (λ x, (s.not_mem_iff_bool_indicator x).symm)
 open_locale classical
 
 lemma preimage_bool_indicator_eq_union (t : set bool) :
- s.bool_indicator ⁻¹' t = (if tt ∈ t then s else ∅) ∪ (if ff ∈ t then sᶜ else ∅) :=
+  s.bool_indicator ⁻¹' t = (if tt ∈ t then s else ∅) ∪ (if ff ∈ t then sᶜ else ∅) :=
 begin
- ext x,
- dsimp [bool_indicator],
- split_ifs ; tauto
+  ext x,
+  dsimp [bool_indicator],
+  split_ifs ; tauto
 end
 
 lemma preimage_bool_indicator (t : set bool) :
- s.bool_indicator ⁻¹' t = univ ∨ s.bool_indicator ⁻¹' t = s ∨
- s.bool_indicator ⁻¹' t = sᶜ ∨ s.bool_indicator ⁻¹' t = ∅ :=
+  s.bool_indicator ⁻¹' t = univ ∨ s.bool_indicator ⁻¹' t = s ∨
+  s.bool_indicator ⁻¹' t = sᶜ ∨ s.bool_indicator ⁻¹' t = ∅ :=
 begin
- simp only [preimage_bool_indicator_eq_union],
- split_ifs ; simp [s.union_compl_self]
+  simp only [preimage_bool_indicator_eq_union],
+  split_ifs ; simp [s.union_compl_self]
 end
 
 end set
-

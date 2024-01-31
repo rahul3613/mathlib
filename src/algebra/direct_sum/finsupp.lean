@@ -34,15 +34,14 @@ def finsupp_lequiv_direct_sum : (ι →₀ M) ≃ₗ[R] ⨁ i : ι, M :=
 by haveI : Π m : M, decidable (m ≠ 0) := classical.dec_pred _; exact finsupp_lequiv_dfinsupp R
 
 @[simp] theorem finsupp_lequiv_direct_sum_single (i : ι) (m : M) :
- finsupp_lequiv_direct_sum R M ι (finsupp.single i m) = direct_sum.lof R ι _ i m :=
+  finsupp_lequiv_direct_sum R M ι (finsupp.single i m) = direct_sum.lof R ι _ i m :=
 finsupp.to_dfinsupp_single i m
 
 @[simp] theorem finsupp_lequiv_direct_sum_symm_lof (i : ι) (m : M) :
- (finsupp_lequiv_direct_sum R M ι).symm (direct_sum.lof R ι _ i m) = finsupp.single i m :=
+  (finsupp_lequiv_direct_sum R M ι).symm (direct_sum.lof R ι _ i m) = finsupp.single i m :=
 begin
- letI : Π m : M, decidable (m ≠ 0) := classical.dec_pred _,
- exact (dfinsupp.to_finsupp_single i m),
+  letI : Π m : M, decidable (m ≠ 0) := classical.dec_pred _,
+  exact (dfinsupp.to_finsupp_single i m),
 end
 
 end finsupp_lequiv_direct_sum
-

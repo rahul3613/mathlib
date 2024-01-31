@@ -39,18 +39,18 @@ instance : has_coe_to_fun (general_linear_group R M) (λ _, M → M) := by apply
 /-- An invertible linear map `f` determines an equivalence from `M` to itself. -/
 def to_linear_equiv (f : general_linear_group R M) : (M ≃ₗ[R] M) :=
 { inv_fun := f.inv.to_fun,
- left_inv := λ m, show (f.inv * f.val) m = m,
- by erw f.inv_val; simp,
- right_inv := λ m, show (f.val * f.inv) m = m,
- by erw f.val_inv; simp,
- ..f.val }
+  left_inv := λ m, show (f.inv * f.val) m = m,
+    by erw f.inv_val; simp,
+  right_inv := λ m, show (f.val * f.inv) m = m,
+    by erw f.val_inv; simp,
+  ..f.val }
 
 /-- An equivalence from `M` to itself determines an invertible linear map. -/
 def of_linear_equiv (f : (M ≃ₗ[R] M)) : general_linear_group R M :=
 { val := f,
- inv := (f.symm : M →ₗ[R] M),
- val_inv := linear_map.ext $ λ _, f.apply_symm_apply _,
- inv_val := linear_map.ext $ λ _, f.symm_apply_apply _ }
+  inv := (f.symm : M →ₗ[R] M),
+  val_inv := linear_map.ext $ λ _, f.apply_symm_apply _,
+  inv_val := linear_map.ext $ λ _, f.symm_apply_apply _ }
 
 variables (R M)
 
@@ -58,20 +58,19 @@ variables (R M)
 equivalences between `M` and itself. -/
 def general_linear_equiv : general_linear_group R M ≃* (M ≃ₗ[R] M) :=
 { to_fun := to_linear_equiv,
- inv_fun := of_linear_equiv,
- left_inv := λ f, by { ext, refl },
- right_inv := λ f, by { ext, refl },
- map_mul' := λ x y, by {ext, refl} }
+  inv_fun := of_linear_equiv,
+  left_inv := λ f, by { ext, refl },
+  right_inv := λ f, by { ext, refl },
+  map_mul' := λ x y, by {ext, refl} }
 
 @[simp] lemma general_linear_equiv_to_linear_map (f : general_linear_group R M) :
- (general_linear_equiv R M f : M →ₗ[R] M) = f :=
+  (general_linear_equiv R M f : M →ₗ[R] M) = f :=
 by {ext, refl}
 
 @[simp] lemma coe_fn_general_linear_equiv (f : general_linear_group R M) :
- ⇑(general_linear_equiv R M f) = (f : M → M) :=
+  ⇑(general_linear_equiv R M f) = (f : M → M) :=
 rfl
 
 end general_linear_group
 
 end linear_map
-

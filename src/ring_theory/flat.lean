@@ -28,21 +28,21 @@ This result is not yet formalised.
 ## TODO
 
 * Show that tensoring with a flat module preserves injective morphisms.
- Show that this is equivalent to be flat.
- See <https://stacks.math.columbia.edu/tag/00HD>.
- To do this, it is probably a good idea to think about a suitable
- categorical induction principle that should be applied to the category of `R`-modules,
- and that will take care of the administrative side of the proof.
+  Show that this is equivalent to be flat.
+  See <https://stacks.math.columbia.edu/tag/00HD>.
+  To do this, it is probably a good idea to think about a suitable
+  categorical induction principle that should be applied to the category of `R`-modules,
+  and that will take care of the administrative side of the proof.
 * Define flat `R`-algebras
 * Define flat ring homomorphisms
- - Show that the identity is flat
- - Show that composition of flat morphisms is flat
+  - Show that the identity is flat
+  - Show that composition of flat morphisms is flat
 * Show that flatness is stable under base change (aka extension of scalars)
- For base change, it will be very useful to have a "characteristic predicate"
- instead of relying on the construction `A ⊗ B`.
- Indeed, such a predicate should allow us to treat both
- `A[X]` and `A ⊗ R[X]` as the base change of `R[X]` to `A`.
- (Similar examples exist with `fin n → R`, `R × R`, `ℤ[i] ⊗ ℝ`, etc...)
+  For base change, it will be very useful to have a "characteristic predicate"
+  instead of relying on the construction `A ⊗ B`.
+  Indeed, such a predicate should allow us to treat both
+  `A[X]` and `A ⊗ R[X]` as the base change of `R[X]` to `A`.
+  (Similar examples exist with `fin n → R`, `R × R`, `ℤ[i] ⊗ ℝ`, etc...)
 * Generalize flatness to noncommutative rings.
 
 -/
@@ -66,15 +66,14 @@ open tensor_product linear_map _root_.submodule
 
 instance self (R : Type u) [comm_ring R] : flat R R :=
 ⟨begin
- intros I hI,
- rw ← equiv.injective_comp (tensor_product.rid R I).symm.to_equiv,
- convert subtype.coe_injective using 1,
- ext x,
- simp only [function.comp_app, linear_equiv.coe_to_equiv, rid_symm_apply, comp_apply,
- mul_one, lift.tmul, subtype_apply, algebra.id.smul_eq_mul, lsmul_apply]
+  intros I hI,
+  rw ← equiv.injective_comp (tensor_product.rid R I).symm.to_equiv,
+  convert subtype.coe_injective using 1,
+  ext x,
+  simp only [function.comp_app, linear_equiv.coe_to_equiv, rid_symm_apply, comp_apply,
+    mul_one, lift.tmul, subtype_apply, algebra.id.smul_eq_mul, lsmul_apply]
 end⟩
 
 end flat
 
 end module
-

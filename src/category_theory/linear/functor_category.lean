@@ -27,17 +27,17 @@ variables {C D : Type*} [category C] [category D] [preadditive D] [linear R D]
 
 instance functor_category_linear : linear R (C ⥤ D) :=
 { hom_module := λ F G,
- { smul := λ r α,
- { app := λ X, r • α.app X,
- naturality' := by { intros, rw [comp_smul]; rw [ smul_comp]; rw [ α.naturality] } },
- one_smul := by { intros, ext, apply one_smul },
- zero_smul := by { intros, ext, apply zero_smul },
- smul_zero := by { intros, ext, apply smul_zero },
- add_smul := by { intros, ext, apply add_smul },
- smul_add := by { intros, ext, apply smul_add },
- mul_smul := by { intros, ext, apply mul_smul } },
- smul_comp' := by { intros, ext, apply smul_comp },
- comp_smul' := by { intros, ext, apply comp_smul } }
+  { smul := λ r α,
+    { app := λ X, r • α.app X,
+      naturality' := by { intros, rw [comp_smul, smul_comp, α.naturality] } },
+    one_smul := by { intros, ext, apply one_smul },
+    zero_smul := by { intros, ext, apply zero_smul },
+    smul_zero := by { intros, ext, apply smul_zero },
+    add_smul := by { intros, ext, apply add_smul },
+    smul_add := by { intros, ext, apply smul_add },
+    mul_smul := by { intros, ext, apply mul_smul } },
+  smul_comp' := by { intros, ext, apply smul_comp },
+  comp_smul' := by { intros, ext, apply comp_smul } }
 
 namespace nat_trans
 
@@ -47,12 +47,11 @@ variables {F G : C ⥤ D}
 as group homomorphism -/
 @[simps] def app_linear_map (X : C) : (F ⟶ G) →ₗ[R] (F.obj X ⟶ G.obj X) :=
 { to_fun := λ α, α.app X,
- map_add' := λ _ _, rfl,
- map_smul' := λ _ _, rfl, }
+  map_add' := λ _ _, rfl,
+  map_smul' := λ _ _, rfl, }
 
 @[simp] lemma app_smul (X : C) (r : R) (α : F ⟶ G) : (r • α).app X = r • α.app X := rfl
 
 end nat_trans
 
 end category_theory
-

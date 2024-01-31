@@ -22,10 +22,10 @@ statements about them. For a more extensive theory of fields, see the `field_the
 * `semifield`: Commutative division semiring.
 * `field`: Commutative division ring.
 * `is_field`: Predicate on a (semi)ring that it is a (semi)field, i.e. that the multiplication is
- commutative, that it has more than one element and that all non-zero elements have a
- multiplicative inverse. In contrast to `field`, which contains the data of a function associating
- to an element of the field its multiplicative inverse, this predicate only assumes the existence
- and can therefore more easily be used to e.g. transfer along ring isomorphisms.
+  commutative, that it has more than one element and that all non-zero elements have a
+  multiplicative inverse. In contrast to `field`, which contains the data of a function associating
+  to an element of the field its multiplicative inverse, this predicate only assumes the existence
+  and can therefore more easily be used to e.g. transfer along ring isomorphisms.
 
 ## Implementation details
 
@@ -124,9 +124,9 @@ variables [division_ring K] {a b : K}
 namespace rat
 
 /-- Construct the canonical injection from `ℚ` into an arbitrary
- division ring. If the field has positive characteristic `p`,
- we define `1 / p = 1 / 0 = 0` for consistency with our
- division by zero convention. -/
+  division ring. If the field has positive characteristic `p`,
+  we define `1 / p = 1 / 0 = 0` for consistency with our
+  division by zero convention. -/
 -- see Note [coercion into rings]
 @[priority 900] instance cast_coe {K : Type*} [has_rat_cast K] : has_coe_t ℚ K :=
 ⟨has_rat_cast.rat_cast⟩
@@ -144,8 +144,8 @@ instance smul_division_ring : has_smul ℚ K :=
 lemma smul_def (a : ℚ) (x : K) : a • x = ↑a * x := division_ring.qsmul_eq_mul' a x
 
 @[simp] lemma smul_one_eq_coe (A : Type*) [division_ring A] (m : ℚ) :
- m • (1 : A) = ↑m :=
-by rw [rat.smul_def]; rw [ mul_one]
+  m • (1 : A) = ↑m :=
+by rw [rat.smul_def, mul_one]
 
 end rat
 
@@ -177,7 +177,7 @@ structure is_field (R : Type u) [semiring R] : Prop :=
 /-- Transferring from `semifield` to `is_field`. -/
 lemma semifield.to_is_field (R : Type u) [semifield R] : is_field R :=
 { mul_inv_cancel := λ a ha, ⟨a⁻¹, mul_inv_cancel ha⟩,
- ..‹semifield R› }
+  ..‹semifield R› }
 
 /-- Transferring from `field` to `is_field`. -/
 lemma field.to_is_field (R : Type u) [field R] : is_field R := semifield.to_is_field _
@@ -186,7 +186,7 @@ lemma field.to_is_field (R : Type u) [field R] : is_field R := semifield.to_is_f
 ⟨h.exists_pair_ne⟩
 
 @[simp] lemma not_is_field_of_subsingleton (R : Type u) [semiring R] [subsingleton R] :
- ¬is_field R :=
+  ¬is_field R :=
 λ h, let ⟨x, y, h⟩ := h.exists_pair_ne in h (subsingleton.elim _ _)
 
 open_locale classical
@@ -194,13 +194,13 @@ open_locale classical
 /-- Transferring from `is_field` to `semifield`. -/
 noncomputable def is_field.to_semifield {R : Type u} [semiring R] (h : is_field R) : semifield R :=
 { inv := λ a, if ha : a = 0 then 0 else classical.some (is_field.mul_inv_cancel h ha),
- inv_zero := dif_pos rfl,
- mul_inv_cancel := λ a ha,
- begin
- convert classical.some_spec (is_field.mul_inv_cancel h ha),
- exact dif_neg ha
- end,
- .. ‹semiring R›, ..h }
+  inv_zero := dif_pos rfl,
+  mul_inv_cancel := λ a ha,
+    begin
+      convert classical.some_spec (is_field.mul_inv_cancel h ha),
+      exact dif_neg ha
+    end,
+  .. ‹semiring R›, ..h }
 
 /-- Transferring from `is_field` to `field`. -/
 noncomputable def is_field.to_field {R : Type u} [ring R] (h : is_field R) : field R :=
@@ -211,16 +211,15 @@ Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.
 -/
 lemma uniq_inv_of_is_field (R : Type u) [ring R] (hf : is_field R) :
- ∀ (x : R), x ≠ 0 → ∃! (y : R), x * y = 1 :=
+  ∀ (x : R), x ≠ 0 → ∃! (y : R), x * y = 1 :=
 begin
- intros x hx,
- apply exists_unique_of_exists_of_unique,
- { exact hf.mul_inv_cancel hx },
- { intros y z hxy hxz,
- calc y = y * (x * z) : by rw [hxz]; rw [ mul_one]
- ... = (x * y) * z : by rw [← mul_assoc]; rw [ hf.mul_comm y x]
- ... = z : by rw [hxy]; rw [ one_mul] }
+  intros x hx,
+  apply exists_unique_of_exists_of_unique,
+  { exact hf.mul_inv_cancel hx },
+  { intros y z hxy hxz,
+    calc y = y * (x * z) : by rw [hxz, mul_one]
+       ... = (x * y) * z : by rw [← mul_assoc, hf.mul_comm y x]
+       ... = z           : by rw [hxy, one_mul] }
 end
 
 end is_field
-

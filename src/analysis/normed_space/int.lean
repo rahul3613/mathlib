@@ -25,21 +25,20 @@ namespace int
 
 lemma nnnorm_coe_units (e : ℤˣ) : ‖(e : ℤ)‖₊ = 1 :=
 begin
- obtain (rfl|rfl) := int.units_eq_one_or e;
- simp only [units.coe_neg_one, units.coe_one, nnnorm_neg, nnnorm_one],
+  obtain (rfl|rfl) := int.units_eq_one_or e;
+  simp only [units.coe_neg_one, units.coe_one, nnnorm_neg, nnnorm_one],
 end
 
 lemma norm_coe_units (e : ℤˣ) : ‖(e : ℤ)‖ = 1 :=
-by rw [← coe_nnnorm]; rw [ int.nnnorm_coe_units]; rw [ nnreal.coe_one]
+by rw [← coe_nnnorm, int.nnnorm_coe_units, nnreal.coe_one]
 
 @[simp] lemma nnnorm_coe_nat (n : ℕ) : ‖(n : ℤ)‖₊ = n := real.nnnorm_coe_nat _
 
 @[simp] lemma to_nat_add_to_nat_neg_eq_nnnorm (n : ℤ) : ↑(n.to_nat) + ↑((-n).to_nat) = ‖n‖₊ :=
-by rw [← nat.cast_add]; rw [ to_nat_add_to_nat_neg_eq_nat_abs]; rw [ nnreal.coe_nat_abs]
+by rw [← nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, nnreal.coe_nat_abs]
 
 @[simp] lemma to_nat_add_to_nat_neg_eq_norm (n : ℤ) : ↑(n.to_nat) + ↑((-n).to_nat) = ‖n‖ :=
 by simpa only [nnreal.coe_nat_cast, nnreal.coe_add]
- using congr_arg (coe : _ → ℝ) (to_nat_add_to_nat_neg_eq_nnnorm n)
+  using congr_arg (coe : _ → ℝ) (to_nat_add_to_nat_neg_eq_nnnorm n)
 
 end int
-

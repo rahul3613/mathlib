@@ -58,9 +58,9 @@ end
 /-- Constructs an equivalence between Boolean algebras from an order isomorphism between them. -/
 @[simps] def iso.mk {α β : BoolAlg.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := (e : bounded_lattice_hom α β),
- inv := (e.symm : bounded_lattice_hom β α),
- hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
- inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+  inv := (e.symm : bounded_lattice_hom β α),
+  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 /-- `order_dual` as a functor. -/
 @[simps] def dual : BoolAlg ⥤ BoolAlg :=
@@ -69,12 +69,11 @@ end
 /-- The equivalence between `BoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps functor inverse] def dual_equiv : BoolAlg ≌ BoolAlg :=
 equivalence.mk dual dual
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
 
 end BoolAlg
 
 lemma BoolAlg_dual_comp_forget_to_BddDistLat :
- BoolAlg.dual ⋙ forget₂ BoolAlg BddDistLat =
- forget₂ BoolAlg BddDistLat ⋙ BddDistLat.dual := rfl
-
+  BoolAlg.dual ⋙ forget₂ BoolAlg BddDistLat =
+    forget₂ BoolAlg BddDistLat ⋙ BddDistLat.dual := rfl

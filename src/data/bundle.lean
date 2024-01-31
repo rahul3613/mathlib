@@ -28,13 +28,13 @@ general, the constructions of fiber bundles we will make will be of this form.
 ## Implementation Notes
 
 - We use a custom structure for the total space of a bundle instead of using a type synonym for the
- canonical disjoint union `Σ x, E x` because the total space usually has a different topology and
- Lean 4 `simp` fails to apply lemmas about `Σ x, E x` to elements of the total space.
+  canonical disjoint union `Σ x, E x` because the total space usually has a different topology and
+  Lean 4 `simp` fails to apply lemmas about `Σ x, E x` to elements of the total space.
 
 - The definition of `bundle.total_space` has an unused argument `F`. The reason is that in some
- constructions (e.g., `bundle.continuous_linear_map.vector_bundle`) we need access to the atlas of
- trivializations of original fiber bundles to construct the topology on the total space of the new
- fiber bundle.
+  constructions (e.g., `bundle.continuous_linear_map.vector_bundle`) we need access to the atlas of
+  trivializations of original fiber bundles to construct the topology on the total space of the new
+  fiber bundle.
 
 ## References
 - https://en.wikipedia.org/wiki/Bundle_(mathematics)
@@ -54,7 +54,7 @@ structure total_space (F : Type*) (E : B → Type*) :=
 (snd : E proj)
 
 instance [inhabited B] [inhabited (E default)] :
- inhabited (total_space F E) := ⟨⟨default, default⟩⟩
+  inhabited (total_space F E) := ⟨⟨default, default⟩⟩
 
 variables {E}
 
@@ -69,7 +69,7 @@ localized "notation `π` := @bundle.total_space.proj _" in bundle
 localized "notation `total_space.mk'` F:max := @bundle.total_space.mk _ F _" in bundle
 
 lemma total_space.mk_cast {x x' : B} (h : x = x') (b : E x) :
- total_space.mk' F x' (cast (congr_arg E h) b) = total_space.mk x b :=
+  total_space.mk' F x' (cast (congr_arg E h) b) = total_space.mk x b :=
 by { subst h, refl }
 
 instance {x : B} : has_coe_t (E x) (total_space F E) := ⟨total_space.mk x⟩
@@ -80,7 +80,7 @@ instance {x : B} : has_coe_t (E x) (total_space F E) := ⟨total_space.mk x⟩
 lemma total_space.coe_eq_mk {x : B} (v : E x) : (v : total_space F E) = total_space.mk x v := rfl
 
 lemma total_space.eta (z : total_space F E) :
- total_space.mk z.proj z.2 = z :=
+  total_space.mk z.proj z.2 = z :=
 by cases z; refl
 
 -- notation for the direct sum of two bundles over the same base
@@ -98,16 +98,16 @@ total_space.snd
 @[simps { attrs := [`simp, `mfld_simps] }]
 def total_space.to_prod (B F : Type*) : total_space F (λ _ : B, F) ≃ B × F :=
 { to_fun := λ x, (x.1, x.2),
- inv_fun := λ x, ⟨x.1, x.2⟩,
- left_inv := λ ⟨_, _⟩, rfl,
- right_inv := λ ⟨_, _⟩, rfl }
+  inv_fun := λ x, ⟨x.1, x.2⟩,
+  left_inv := λ ⟨_, _⟩, rfl,
+  right_inv := λ ⟨_, _⟩, rfl }
 
 section pullback
 
 variable {B' : Type*}
 
 /-- The pullback of a bundle `E` over a base `B` under a map `f : B' → B`, denoted by `pullback f E`
-or `f *ᵖ E`, is the bundle over `B'` whose fiber over `b'` is `E (f b')`. -/
+or `f *ᵖ E`,  is the bundle over `B'` whose fiber over `b'` is `E (f b')`. -/
 def pullback (f : B' → B) (E : B → Type*) : B' → Type* := λ x, E (f x)
 
 notation f ` *ᵖ ` E:max := pullback f E
@@ -116,7 +116,7 @@ instance {f : B' → B} {x : B'} [nonempty (E (f x))] : nonempty (f *ᵖ E x) :=
 
 /-- Natural embedding of the total space of `f *ᵖ E` into `B' × total_space E`. -/
 @[simp] def pullback_total_space_embedding (f : B' → B) :
- total_space F (f *ᵖ E) → B' × total_space F E :=
+  total_space F (f *ᵖ E) → B' × total_space F E :=
 λ z, (z.proj, total_space.mk (f z.proj) z.2)
 
 /-- The base map `f : B' → B` lifts to a canonical map on the total spaces. -/
@@ -125,7 +125,7 @@ def pullback.lift (f : B' → B) : total_space F (f *ᵖ E) → total_space F E 
 λ z, ⟨f z.proj, z.2⟩
 
 @[simp, mfld_simps] lemma pullback.lift_mk (f : B' → B) (x : B') (y : E (f x)) :
- pullback.lift f (total_space.mk' F x y) = ⟨f x, y⟩ :=
+  pullback.lift f (total_space.mk' F x y) = ⟨f x, y⟩ :=
 rfl
 
 end pullback
@@ -133,12 +133,11 @@ end pullback
 section fiber_structures
 
 @[simp] lemma coe_snd_map_apply [∀ x, has_add (E x)] (x : B) (v w : E x) :
- (↑(v + w) : total_space F E).snd = (v : total_space F E).snd + (w : total_space F E).snd := rfl
+  (↑(v + w) : total_space F E).snd = (v : total_space F E).snd + (w : total_space F E).snd := rfl
 
 @[simp] lemma coe_snd_map_smul {R} [∀ x, has_smul R (E x)] (x : B) (r : R) (v : E x) :
- (↑(r • v) : total_space F E).snd = r • (v : total_space F E).snd := rfl
+  (↑(r • v) : total_space F E).snd = r • (v : total_space F E).snd := rfl
 
 end fiber_structures
 
 end bundle
-

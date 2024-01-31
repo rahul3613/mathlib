@@ -23,10 +23,9 @@ namespace bool
 (eq_univ_of_forall bool.dichotomy).symm
 
 @[simp] lemma range_eq {α : Type*} (f : bool → α) : range f = {f ff, f tt} :=
-by rw [← image_univ]; rw [ univ_eq]; rw [ image_pair]
+by rw [← image_univ, univ_eq, image_pair]
 
 @[simp] lemma compl_singleton (b : bool) : ({b}ᶜ : set bool) = { !b } :=
 ext $ λ _, eq_bnot_iff.symm
 
 end bool
-

@@ -25,41 +25,41 @@ instance : ∀ {n : ℕ}, succ_order (fin n)
 | (n+1) :=
 _root_.succ_order.of_core (λ i, if i < fin.last n then i + 1 else i)
 begin
- intros a ha b,
- rw [is_max_iff_eq_top] at ha; rw [ eq_top_iff] at ha; rw [ not_le] at ha; rw [ top_eq_last] at ha,
- rw [if_pos ha]; rw [ lt_iff_coe_lt_coe]; rw [ le_iff_coe_le_coe]; rw [ coe_add_one_of_lt ha],
- exact nat.lt_iff_add_one_le
+  intros a ha b,
+  rw [is_max_iff_eq_top, eq_top_iff, not_le, top_eq_last] at ha,
+  rw [if_pos ha, lt_iff_coe_lt_coe, le_iff_coe_le_coe, coe_add_one_of_lt ha],
+  exact nat.lt_iff_add_one_le
 end
 begin
- intros a ha,
- rw [is_max_iff_eq_top] at ha; rw [ top_eq_last] at ha,
- rw [if_neg ha.not_lt],
+  intros a ha,
+  rw [is_max_iff_eq_top, top_eq_last] at ha,
+  rw [if_neg ha.not_lt],
 end
 
 @[simp] lemma succ_eq {n : ℕ} : succ_order.succ = λ a, if a < fin.last n then a + 1 else a := rfl
 @[simp] lemma succ_apply {n : ℕ} (a) :
- succ_order.succ a = if a < fin.last n then a + 1 else a := rfl
+  succ_order.succ a = if a < fin.last n then a + 1 else a := rfl
 
 instance : ∀ {n : ℕ}, pred_order (fin n)
 | 0 := by constructor; exact elim0
 | (n+1) :=
 _root_.pred_order.of_core (λ x, if x = 0 then 0 else x - 1)
 begin
- intros a ha b,
- rw [is_min_iff_eq_bot] at ha; rw [ eq_bot_iff] at ha; rw [ not_le] at ha; rw [ bot_eq_zero] at ha,
- rw [if_neg ha.ne']; rw [ lt_iff_coe_lt_coe]; rw [ le_iff_coe_le_coe]; rw [ coe_sub_one]; rw [ if_neg ha.ne']; rw [ le_tsub_iff_right]; rw [ iff.comm],
- exact nat.lt_iff_add_one_le,
- exact ha
+  intros a ha b,
+  rw [is_min_iff_eq_bot, eq_bot_iff, not_le, bot_eq_zero] at ha,
+  rw [if_neg ha.ne', lt_iff_coe_lt_coe, le_iff_coe_le_coe, coe_sub_one,
+      if_neg ha.ne', le_tsub_iff_right, iff.comm],
+  exact nat.lt_iff_add_one_le,
+  exact ha
 end
 begin
- intros a ha,
- rw [is_min_iff_eq_bot] at ha; rw [ bot_eq_zero] at ha,
- rwa [if_pos ha]; rwa [ eq_comm],
+  intros a ha,
+  rw [is_min_iff_eq_bot, bot_eq_zero] at ha,
+  rwa [if_pos ha, eq_comm],
 end
 
 @[simp] lemma pred_eq {n} : pred_order.pred = λ a : fin (n + 1), if a = 0 then 0 else a - 1 := rfl
 @[simp] lemma pred_apply {n : ℕ} (a : fin (n + 1)) :
- pred_order.pred a = if a = 0 then 0 else a - 1 := rfl
+  pred_order.pred a = if a = 0 then 0 else a - 1 := rfl
 
 end fin
-

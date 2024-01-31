@@ -18,7 +18,7 @@ that any two distinct points can be separated by a clopen upper set.
 ## Main declarations
 
 * `priestley_space`: Prop-valued mixin stating the Priestley separation axiom: Any two distinct
- points can be separated by a clopen upper set.
+  points can be separated by a clopen upper set.
 
 ## Implementation notes
 
@@ -46,13 +46,13 @@ section preorder
 variables [preorder α] [priestley_space α] {x y : α}
 
 lemma exists_clopen_upper_of_not_le :
- ¬ x ≤ y → ∃ U : set α, is_clopen U ∧ is_upper_set U ∧ x ∈ U ∧ y ∉ U :=
+  ¬ x ≤ y → ∃ U : set α, is_clopen U ∧ is_upper_set U ∧ x ∈ U ∧ y ∉ U :=
 priestley_space.priestley
 
 lemma exists_clopen_lower_of_not_le (h : ¬ x ≤ y) :
- ∃ U : set α, is_clopen U ∧ is_lower_set U ∧ x ∉ U ∧ y ∈ U :=
+  ∃ U : set α, is_clopen U ∧ is_lower_set U ∧ x ∉ U ∧ y ∈ U :=
 let ⟨U, hU, hU', hx, hy⟩ := exists_clopen_upper_of_not_le h in
- ⟨Uᶜ, hU.compl, hU'.compl, not_not.2 hx, hy⟩
+  ⟨Uᶜ, hU.compl, hU'.compl, not_not.2 hx, hy⟩
 
 end preorder
 
@@ -60,18 +60,17 @@ section partial_order
 variables [partial_order α] [priestley_space α] {x y : α}
 
 lemma exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
- ∃ U : set α, is_clopen U ∧ (is_upper_set U ∨ is_lower_set U) ∧ x ∈ U ∧ y ∉ U :=
+  ∃ U : set α, is_clopen U ∧ (is_upper_set U ∨ is_lower_set U) ∧ x ∈ U ∧ y ∉ U :=
 begin
- obtain (h | h) := h.not_le_or_not_le,
- { exact (exists_clopen_upper_of_not_le h).imp (λ U, and.imp_right $ and.imp_left or.inl) },
- { obtain ⟨U, hU, hU', hy, hx⟩ := exists_clopen_lower_of_not_le h,
- exact ⟨U, hU, or.inr hU', hx, hy⟩ }
+  obtain (h | h) := h.not_le_or_not_le,
+  { exact (exists_clopen_upper_of_not_le h).imp (λ U, and.imp_right $ and.imp_left or.inl) },
+  { obtain ⟨U, hU, hU', hy, hx⟩ := exists_clopen_lower_of_not_le h,
+    exact ⟨U, hU, or.inr hU', hx, hy⟩ }
 end
 
 @[priority 100] -- See note [lower instance priority]
 instance priestley_space.to_t2_space : t2_space α :=
 ⟨λ x y h, let ⟨U, hU, _, hx, hy⟩ := exists_clopen_upper_or_lower_of_ne h in
- ⟨U, Uᶜ, hU.is_open, hU.compl.is_open, hx, hy, disjoint_compl_right⟩⟩
+   ⟨U, Uᶜ, hU.is_open, hU.compl.is_open, hx, hy, disjoint_compl_right⟩⟩
 
 end partial_order
-

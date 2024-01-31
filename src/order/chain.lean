@@ -58,7 +58,7 @@ lemma set.subsingleton.is_chain (hs : s.subsingleton) : is_chain r s := hs.pairw
 lemma is_chain.mono : s ⊆ t → is_chain r t → is_chain r s := set.pairwise.mono
 
 lemma is_chain.mono_rel {r' : α → α → Prop} (h : is_chain r s)
- (h_imp : ∀ x y, r x y → r' x y) : is_chain r' s :=
+  (h_imp : ∀ x y, r x y → r' x y) : is_chain r' s :=
 h.mono' $ λ x y, or.imp (h_imp x y) (h_imp y x)
 
 /-- This can be used to turn `is_chain (≥)` into `is_chain (≤)` and vice-versa. -/
@@ -68,21 +68,21 @@ lemma is_chain_of_trichotomous [is_trichotomous α r] (s : set α) : is_chain r 
 λ a _ b _ hab, (trichotomous_of r a b).imp_right $ λ h, h.resolve_left hab
 
 lemma is_chain.insert (hs : is_chain r s) (ha : ∀ b ∈ s, a ≠ b → a ≺ b ∨ b ≺ a) :
- is_chain r (insert a s) :=
+  is_chain r (insert a s) :=
 hs.insert_of_symmetric (λ _ _, or.symm) ha
 
 lemma is_chain_univ_iff : is_chain r (univ : set α) ↔ is_trichotomous α r :=
 begin
- refine ⟨λ h, ⟨λ a b , _⟩, λ h, @is_chain_of_trichotomous _ _ h univ⟩,
- rw [or.left_comm]; rw [ or_iff_not_imp_left],
- exact h trivial trivial,
+  refine ⟨λ h, ⟨λ a b , _⟩, λ h, @is_chain_of_trichotomous _ _ h univ⟩,
+  rw [or.left_comm, or_iff_not_imp_left],
+  exact h trivial trivial,
 end
 
 lemma is_chain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β)
- (h : ∀ x y, r x y → s (f x) (f y)) {c : set α} (hrc : is_chain r c) :
- is_chain s (f '' c) :=
+  (h : ∀ x y, r x y → s (f x) (f y)) {c : set α} (hrc : is_chain r c) :
+  is_chain s (f '' c) :=
 λ x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩, ha₂ ▸ hb₂ ▸ λ hxy,
- (hrc ha₁ hb₁ $ ne_of_apply_ne f hxy).imp (h _ _) (h _ _)
+  (hrc ha₁ hb₁ $ ne_of_apply_ne f hxy).imp (h _ _) (h _ _)
 
 section total
 variables [is_refl α r]
@@ -94,21 +94,21 @@ lemma is_chain.directed_on (H : is_chain r s) : directed_on r s :=
 λ x hx y hy, (H.total hx hy).elim (λ h, ⟨y, hy, h, refl _⟩) $ λ h, ⟨x, hx, refl _, h⟩
 
 protected lemma is_chain.directed {f : β → α} {c : set β} (h : is_chain (f ⁻¹'o r) c) :
- directed r (λ x : {a : β // a ∈ c}, f x) :=
+  directed r (λ x : {a : β // a ∈ c}, f x) :=
 λ ⟨a, ha⟩ ⟨b, hb⟩, by_cases
- (λ hab : a = b, by simp only [hab, exists_prop, and_self, subtype.exists];
- exact ⟨b, hb, refl _⟩) $
- λ hab, (h ha hb hab).elim (λ h, ⟨⟨b, hb⟩, h, refl _⟩) $ λ h, ⟨⟨a, ha⟩, refl _, h⟩
+  (λ hab : a = b, by simp only [hab, exists_prop, and_self, subtype.exists];
+    exact ⟨b, hb, refl _⟩) $
+  λ hab, (h ha hb hab).elim (λ h, ⟨⟨b, hb⟩, h, refl _⟩) $ λ h, ⟨⟨a, ha⟩, refl _, h⟩
 
 lemma is_chain.exists3 (hchain : is_chain r s) [is_trans α r] {a b c}
- (mem1 : a ∈ s) (mem2 : b ∈ s) (mem3 : c ∈ s) :
- ∃ (z) (mem4 : z ∈ s), r a z ∧ r b z ∧ r c z :=
+  (mem1 : a ∈ s) (mem2 : b ∈ s) (mem3 : c ∈ s) :
+  ∃ (z) (mem4 : z ∈ s), r a z ∧ r b z ∧ r c z :=
 begin
- rcases directed_on_iff_directed.mpr (is_chain.directed hchain) a mem1 b mem2 with
- ⟨z, mem4, H1, H2⟩,
- rcases directed_on_iff_directed.mpr (is_chain.directed hchain) z mem4 c mem3 with
- ⟨z', mem5, H3, H4⟩,
- exact ⟨z', mem5, trans H1 H3, trans H2 H3, H4⟩,
+  rcases directed_on_iff_directed.mpr (is_chain.directed hchain) a mem1 b mem2 with
+    ⟨z, mem4, H1, H2⟩,
+  rcases directed_on_iff_directed.mpr (is_chain.directed hchain) z mem4 c mem3 with
+    ⟨z', mem5, H3, H4⟩,
+  exact ⟨z', mem5, trans H1 H3, trans H2 H3, H4⟩,
 end
 
 end total
@@ -131,27 +131,27 @@ def succ_chain (r : α → α → Prop) (s : set α) : set α :=
 if h : ∃ t, is_chain r s ∧ super_chain r s t then some h else s
 
 lemma succ_chain_spec (h : ∃ t, is_chain r s ∧ super_chain r s t) :
- super_chain r s (succ_chain r s) :=
+  super_chain r s (succ_chain r s) :=
 let ⟨t, hc'⟩ := h in
 have is_chain r s ∧ super_chain r s (some h),
- from @some_spec _ (λ t, is_chain r s ∧ super_chain r s t) _,
+  from @some_spec _ (λ t, is_chain r s ∧ super_chain r s t) _,
 by simp [succ_chain, dif_pos, h, this.right]
 
 lemma is_chain.succ (hs : is_chain r s) : is_chain r (succ_chain r s) :=
 if h : ∃ t, is_chain r s ∧ super_chain r s t then (succ_chain_spec h).1
- else by { simp [succ_chain, dif_neg, h], exact hs }
+  else by { simp [succ_chain, dif_neg, h], exact hs }
 
 lemma is_chain.super_chain_succ_chain (hs₁ : is_chain r s) (hs₂ : ¬ is_max_chain r s) :
- super_chain r s (succ_chain r s) :=
+  super_chain r s (succ_chain r s) :=
 begin
- simp [is_max_chain, not_and_distrib, not_forall_not] at hs₂,
- obtain ⟨t, ht, hst⟩ := hs₂.neg_resolve_left hs₁,
- exact succ_chain_spec ⟨t, hs₁, ht, ssubset_iff_subset_ne.2 hst⟩,
+  simp [is_max_chain, not_and_distrib, not_forall_not] at hs₂,
+  obtain ⟨t, ht, hst⟩ := hs₂.neg_resolve_left hs₁,
+  exact succ_chain_spec ⟨t, hs₁, ht, ssubset_iff_subset_ne.2 hst⟩,
 end
 
 lemma subset_succ_chain : s ⊆ succ_chain r s :=
 if h : ∃ t, is_chain r s ∧ super_chain r s t then (succ_chain_spec h).2.1
- else by simp [succ_chain, dif_neg, h, subset.rfl]
+  else by simp [succ_chain, dif_neg, h, subset.rfl]
 
 /-- Predicate for whether a set is reachable from `∅` using `succ_chain` and `⋃₀`. -/
 inductive chain_closure (r : α → α → Prop) : set α → Prop
@@ -164,79 +164,79 @@ def max_chain (r : α → α → Prop) := ⋃₀ set_of (chain_closure r)
 
 lemma chain_closure_empty : chain_closure r ∅ :=
 have chain_closure r (⋃₀ ∅),
- from chain_closure.union $ λ a h, h.rec _,
+  from chain_closure.union $ λ a h, h.rec _,
 by simpa using this
 
 lemma chain_closure_max_chain : chain_closure r (max_chain r) := chain_closure.union $ λ s, id
 
 private lemma chain_closure_succ_total_aux (hc₁ : chain_closure r c₁) (hc₂ : chain_closure r c₂)
- (h : ∀ ⦃c₃⦄, chain_closure r c₃ → c₃ ⊆ c₂ → c₂ = c₃ ∨ succ_chain r c₃ ⊆ c₂) :
- succ_chain r c₂ ⊆ c₁ ∨ c₁ ⊆ c₂ :=
+  (h : ∀ ⦃c₃⦄, chain_closure r c₃ → c₃ ⊆ c₂ → c₂ = c₃ ∨ succ_chain r c₃ ⊆ c₂) :
+  succ_chain r c₂ ⊆ c₁ ∨ c₁ ⊆ c₂ :=
 begin
- induction hc₁,
- case succ : c₃ hc₃ ih
- { cases ih with ih ih,
- { exact or.inl (ih.trans subset_succ_chain) },
- { exact (h hc₃ ih).imp_left (λ h, h ▸ subset.rfl) } },
- case union : s hs ih
- { refine (or_iff_not_imp_left.2 $ λ hn, sUnion_subset $ λ a ha, _),
- exact (ih a ha).resolve_left (λ h, hn $ h.trans $ subset_sUnion_of_mem ha) }
+  induction hc₁,
+  case succ : c₃ hc₃ ih
+  { cases ih with ih ih,
+    { exact or.inl (ih.trans subset_succ_chain) },
+    { exact (h hc₃ ih).imp_left (λ h, h ▸ subset.rfl) } },
+  case union : s hs ih
+  { refine (or_iff_not_imp_left.2 $ λ hn, sUnion_subset $ λ a ha, _),
+    exact (ih a ha).resolve_left (λ h, hn $ h.trans $ subset_sUnion_of_mem ha) }
 end
 
 private lemma chain_closure_succ_total (hc₁ : chain_closure r c₁) (hc₂ : chain_closure r c₂)
- (h : c₁ ⊆ c₂) :
- c₂ = c₁ ∨ succ_chain r c₁ ⊆ c₂ :=
+  (h : c₁ ⊆ c₂) :
+  c₂ = c₁ ∨ succ_chain r c₁ ⊆ c₂ :=
 begin
- induction hc₂ generalizing c₁ hc₁ h,
- case succ : c₂ hc₂ ih
- { refine (chain_closure_succ_total_aux hc₁ hc₂ $ λ c₁, ih).imp h.antisymm' (λ h₁, _),
- obtain rfl | h₂ := ih hc₁ h₁,
- { exact subset.rfl },
- { exact h₂.trans subset_succ_chain } },
- case union : s hs ih
- { apply or.imp_left h.antisymm',
- apply classical.by_contradiction,
- simp [not_or_distrib, sUnion_subset_iff, not_forall],
- intros c₃ hc₃ h₁ h₂,
- obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) (λ c₄, ih _ hc₃),
- { exact h₁ (subset_succ_chain.trans h) },
- obtain h' | h' := ih c₃ hc₃ hc₁ h,
- { exact h₁ h'.subset },
- { exact h₂ (h'.trans $ subset_sUnion_of_mem hc₃) } }
+  induction hc₂ generalizing c₁ hc₁ h,
+  case succ : c₂ hc₂ ih
+  { refine (chain_closure_succ_total_aux hc₁ hc₂ $ λ c₁, ih).imp h.antisymm' (λ h₁, _),
+    obtain rfl | h₂ := ih hc₁ h₁,
+    { exact subset.rfl },
+    { exact h₂.trans subset_succ_chain } },
+  case union : s hs ih
+  { apply or.imp_left h.antisymm',
+    apply classical.by_contradiction,
+    simp [not_or_distrib, sUnion_subset_iff, not_forall],
+    intros c₃ hc₃ h₁ h₂,
+    obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) (λ c₄, ih _ hc₃),
+    { exact h₁ (subset_succ_chain.trans h) },
+    obtain h' | h' := ih c₃ hc₃ hc₁ h,
+    { exact h₁ h'.subset },
+    { exact h₂ (h'.trans $ subset_sUnion_of_mem hc₃) } }
 end
 
 lemma chain_closure.total (hc₁ : chain_closure r c₁) (hc₂ : chain_closure r c₂) :
- c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
+  c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
 (chain_closure_succ_total_aux hc₂ hc₁ $ λ c₃ hc₃, chain_closure_succ_total hc₃ hc₁).imp_left
- subset_succ_chain.trans
+  subset_succ_chain.trans
 
 lemma chain_closure.succ_fixpoint (hc₁ : chain_closure r c₁) (hc₂ : chain_closure r c₂)
- (hc : succ_chain r c₂ = c₂) :
- c₁ ⊆ c₂ :=
+  (hc : succ_chain r c₂ = c₂) :
+  c₁ ⊆ c₂ :=
 begin
- induction hc₁,
- case succ : s₁ hc₁ h
- { exact (chain_closure_succ_total hc₁ hc₂ h).elim (λ h, h ▸ hc.subset) id },
- case union : s hs ih
- { exact sUnion_subset ih }
+  induction hc₁,
+  case succ : s₁ hc₁ h
+  { exact (chain_closure_succ_total hc₁ hc₂ h).elim (λ h, h ▸ hc.subset) id },
+  case union : s hs ih
+  { exact sUnion_subset ih }
 end
 
 lemma chain_closure.succ_fixpoint_iff (hc : chain_closure r c) :
- succ_chain r c = c ↔ c = max_chain r :=
+  succ_chain r c = c ↔ c = max_chain r :=
 ⟨λ h, (subset_sUnion_of_mem hc).antisymm $ chain_closure_max_chain.succ_fixpoint hc h,
- λ h, subset_succ_chain.antisymm' $ (subset_sUnion_of_mem hc.succ).trans h.symm.subset⟩
+  λ h, subset_succ_chain.antisymm' $ (subset_sUnion_of_mem hc.succ).trans h.symm.subset⟩
 
 lemma chain_closure.is_chain (hc : chain_closure r c) : is_chain r c :=
 begin
- induction hc,
- case succ : c hc h
- { exact h.succ },
- case union : s hs h
- { change ∀ c ∈ s, is_chain r c at h,
- exact λ c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq,
- ((hs _ ht₁).total $ hs _ ht₂).elim
- (λ ht, h t₂ ht₂ (ht hc₁) hc₂ hneq)
- (λ ht, h t₁ ht₁ hc₁ (ht hc₂) hneq) }
+  induction hc,
+  case succ : c hc h
+  { exact h.succ },
+  case union : s hs h
+  { change ∀ c ∈ s, is_chain r c at h,
+    exact λ c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq,
+      ((hs _ ht₁).total $ hs _ ht₂).elim
+        (λ ht, h t₂ ht₂ (ht hc₁) hc₂ hneq)
+        (λ ht, h t₁ ht₁ hc₁ (ht hc₂) hneq) }
 end
 
 /-- **Hausdorff's maximality principle**
@@ -246,7 +246,7 @@ Note that we do not require `α` to be partially ordered by `r`. -/
 lemma max_chain_spec : is_max_chain r (max_chain r) :=
 classical.by_contradiction $ λ h,
 let ⟨h₁, H⟩ := chain_closure_max_chain.is_chain.super_chain_succ_chain h in
- H.ne (chain_closure_max_chain.succ_fixpoint_iff.mpr rfl).symm
+  H.ne (chain_closure_max_chain.succ_fixpoint_iff.mpr rfl).symm
 
 end chain
 
@@ -264,7 +264,7 @@ variables [has_le α] {s t : flag α} {a : α}
 
 instance : set_like (flag α) α :=
 { coe := carrier,
- coe_injective' := λ s t h, by { cases s, cases t, congr' } }
+  coe_injective' := λ s t h, by { cases s, cases t, congr' } }
 
 @[ext] lemma ext : (s : set α) = t → s = t := set_like.ext'
 @[simp] lemma mem_coe_iff : a ∈ (s : set α) ↔ a ∈ s := iff.rfl
@@ -299,18 +299,17 @@ lemma chain_lt (s : flag α) : is_chain (<) (s : set α) :=
 λ a ha b hb h, (s.le_or_le ha hb).imp h.lt_of_le h.lt_of_le'
 
 instance [decidable_eq α] [@decidable_rel α (≤)] [@decidable_rel α (<)] (s : flag α) :
- linear_order s :=
+  linear_order s :=
 { le_total := λ a b, s.le_or_le a.2 b.2,
- decidable_eq := subtype.decidable_eq,
- decidable_le := subtype.decidable_le,
- decidable_lt := subtype.decidable_lt,
- ..subtype.partial_order _ }
+  decidable_eq := subtype.decidable_eq,
+  decidable_le := subtype.decidable_le,
+  decidable_lt := subtype.decidable_lt,
+  ..subtype.partial_order _ }
 
 end partial_order
 
 instance [linear_order α] : unique (flag α) :=
 { default := ⟨univ, is_chain_of_trichotomous _, λ s _, s.subset_univ.antisymm'⟩,
- uniq := λ s, set_like.coe_injective $ s.3 (is_chain_of_trichotomous _) $ subset_univ _ }
+  uniq := λ s, set_like.coe_injective $ s.3 (is_chain_of_trichotomous _) $ subset_univ _ }
 
 end flag
-

@@ -16,9 +16,8 @@ import logic.equiv.array
 variables {α : Type*}
 
 instance d_array.fintype {n : ℕ} {α : fin n → Type*}
- [∀ n, fintype (α n)] : fintype (d_array n α) :=
+  [∀ n, fintype (α n)] : fintype (d_array n α) :=
 fintype.of_equiv _ (equiv.d_array_equiv_fin _).symm
 
 instance array.fintype {n : ℕ} {α : Type*} [fintype α] : fintype (array n α) :=
 d_array.fintype
-

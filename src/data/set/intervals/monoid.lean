@@ -27,46 +27,46 @@ variables {M : Type*} [ordered_cancel_add_comm_monoid M] [has_exists_add_of_le M
 
 lemma Ici_add_bij : bij_on (+d) (Ici a) (Ici (a + d)) :=
 begin
- refine ⟨λ x h, add_le_add_right (mem_Ici.mp h) _, (add_left_injective d).inj_on _, λ _ h, _⟩,
- obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h),
- rw [mem_Ici] at h; rw [ add_right_comm] at h; rw [ add_le_add_iff_right] at h,
- exact ⟨a + c, h, by rw add_right_comm⟩,
+  refine ⟨λ x h, add_le_add_right (mem_Ici.mp h) _, (add_left_injective d).inj_on _, λ _ h, _⟩,
+  obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h),
+  rw [mem_Ici, add_right_comm, add_le_add_iff_right] at h,
+  exact ⟨a + c, h, by rw add_right_comm⟩,
 end
 
 lemma Ioi_add_bij : bij_on (+d) (Ioi a) (Ioi (a + d)) :=
 begin
- refine ⟨λ x h, add_lt_add_right (mem_Ioi.mp h) _, λ _ _ _ _ h, add_right_cancel h, λ _ h, _⟩,
- obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ioi.mp h).le,
- rw [mem_Ioi] at h; rw [ add_right_comm] at h; rw [ add_lt_add_iff_right] at h,
- exact ⟨a + c, h, by rw add_right_comm⟩,
+  refine ⟨λ x h, add_lt_add_right (mem_Ioi.mp h) _, λ _ _ _ _ h, add_right_cancel h, λ _ h, _⟩,
+  obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ioi.mp h).le,
+  rw [mem_Ioi, add_right_comm, add_lt_add_iff_right] at h,
+  exact ⟨a + c, h, by rw add_right_comm⟩,
 end
 
 lemma Icc_add_bij : bij_on (+d) (Icc a b) (Icc (a + d) (b + d)) :=
 begin
- rw [← Ici_inter_Iic]; rw [ ← Ici_inter_Iic],
- exact (Ici_add_bij a d).inter_maps_to (λ x hx, add_le_add_right hx _)
- (λ x hx, le_of_add_le_add_right hx.2)
+  rw [← Ici_inter_Iic, ← Ici_inter_Iic],
+  exact (Ici_add_bij a d).inter_maps_to (λ x hx, add_le_add_right hx _)
+    (λ x hx, le_of_add_le_add_right hx.2)
 end
 
 lemma Ioo_add_bij : bij_on (+d) (Ioo a b) (Ioo (a + d) (b + d)) :=
 begin
- rw [← Ioi_inter_Iio]; rw [ ← Ioi_inter_Iio],
- exact (Ioi_add_bij a d).inter_maps_to (λ x hx, add_lt_add_right hx _)
- (λ x hx, lt_of_add_lt_add_right hx.2)
+  rw [← Ioi_inter_Iio, ← Ioi_inter_Iio],
+  exact (Ioi_add_bij a d).inter_maps_to (λ x hx, add_lt_add_right hx _)
+    (λ x hx, lt_of_add_lt_add_right hx.2)
 end
 
 lemma Ioc_add_bij : bij_on (+d) (Ioc a b) (Ioc (a + d) (b + d)) :=
 begin
- rw [← Ioi_inter_Iic]; rw [ ← Ioi_inter_Iic],
- exact (Ioi_add_bij a d).inter_maps_to (λ x hx, add_le_add_right hx _)
- (λ x hx, le_of_add_le_add_right hx.2)
+  rw [← Ioi_inter_Iic, ← Ioi_inter_Iic],
+  exact (Ioi_add_bij a d).inter_maps_to (λ x hx, add_le_add_right hx _)
+    (λ x hx, le_of_add_le_add_right hx.2)
 end
 
 lemma Ico_add_bij : bij_on (+d) (Ico a b) (Ico (a + d) (b + d)) :=
 begin
- rw [← Ici_inter_Iio]; rw [ ← Ici_inter_Iio],
- exact (Ici_add_bij a d).inter_maps_to (λ x hx, add_lt_add_right hx _)
- (λ x hx, lt_of_add_lt_add_right hx.2)
+  rw [← Ici_inter_Iio, ← Ici_inter_Iio],
+  exact (Ici_add_bij a d).inter_maps_to (λ x hx, add_lt_add_right hx _)
+    (λ x hx, lt_of_add_lt_add_right hx.2)
 end
 
 /-!
@@ -114,4 +114,3 @@ by simp only [add_comm a, image_add_const_Ioc]
 by simp only [add_comm a, image_add_const_Ioo]
 
 end set
-

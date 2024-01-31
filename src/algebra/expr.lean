@@ -19,34 +19,33 @@ namespace expr
 /-- Produce a `has_one` instance for the type cached by `t`, such that `1 : expr` is the one of that
 type. -/
 meta def has_one (t : tactic.instance_cache) :
- tactic (tactic.instance_cache × has_one expr) :=
+  tactic (tactic.instance_cache × has_one expr) :=
 do
- (t, one) ← t.mk_app `has_one.one [],
- pure (t, { one := one })
+  (t, one) ← t.mk_app `has_one.one [],
+  pure (t, { one := one })
 
 /-- Produce a `has_zero` instance for the type cached by `t`, such that `0 : expr` is the zero of
 that type. -/
 meta def has_zero (t : tactic.instance_cache) :
- tactic (tactic.instance_cache × has_zero expr) :=
+  tactic (tactic.instance_cache × has_zero expr) :=
 do
- (t, zero) ← t.mk_app `has_zero.zero [],
- pure (t, { zero := zero })
+  (t, zero) ← t.mk_app `has_zero.zero [],
+  pure (t, { zero := zero })
 
 /-- Produce a `has_mul` instance for the type cached by `t`, such that `(*) : expr → expr → expr` is
 the multiplication of that type. -/
 meta def has_mul (t : tactic.instance_cache) :
- tactic (tactic.instance_cache × has_mul expr) :=
+  tactic (tactic.instance_cache × has_mul expr) :=
 do
- (t, mul) ← t.mk_app `has_mul.mul [],
- pure (t, { mul := λ a b, mul a b })
+  (t, mul) ← t.mk_app `has_mul.mul [],
+  pure (t, { mul := λ a b, mul a b })
 
 /-- Produce a `has_add` instance for the type cached by `t`, such that `(+) : expr → expr → expr` is
 the addition of that type. -/
 meta def has_add (t : tactic.instance_cache) :
- tactic (tactic.instance_cache × has_add expr) :=
+  tactic (tactic.instance_cache × has_add expr) :=
 do
- (t, add) ← t.mk_app `has_add.add [],
- pure (t, { add := λ a b, add a b })
+  (t, add) ← t.mk_app `has_add.add [],
+  pure (t, { add := λ a b, add a b })
 
 end expr
-

@@ -25,10 +25,10 @@ section semiring
 variables [semiring R] [char_p R 2]
 
 lemma two_eq_zero : (2 : R) = 0 :=
-by rw [← nat.cast_two]; rw [ char_p.cast_eq_zero]
+by rw [← nat.cast_two, char_p.cast_eq_zero]
 
 @[simp] lemma add_self_eq_zero (x : R) : x + x = 0 :=
-by rw [←two_smul R x]; rw [ two_eq_zero]; rw [ zero_smul]
+by rw [←two_smul R x, two_eq_zero, zero_smul]
 
 @[simp] lemma bit0_eq_zero : (bit0 : R → R) = 0 :=
 by { funext, exact add_self_eq_zero _ }
@@ -48,13 +48,13 @@ section ring
 variables [ring R] [char_p R 2]
 
 @[simp] lemma neg_eq (x : R) : -x = x :=
-by rw [neg_eq_iff_add_eq_zero]; rw [ ←two_smul R x]; rw [ two_eq_zero]; rw [ zero_smul]
+by rw [neg_eq_iff_add_eq_zero, ←two_smul R x, two_eq_zero, zero_smul]
 
 lemma neg_eq' : has_neg.neg = (id : R → R) :=
 funext neg_eq
 
 @[simp] lemma sub_eq_add (x y : R) : x - y = x + y :=
-by rw [sub_eq_add_neg]; rw [ neg_eq]
+by rw [sub_eq_add_neg, neg_eq]
 
 lemma sub_eq_add' : has_sub.sub = ((+) : R → R → R) :=
 funext $ λ x, funext $ λ y, sub_eq_add x y
@@ -68,7 +68,7 @@ lemma add_sq (x y : R) : (x + y) ^ 2 = x ^ 2 + y ^ 2 :=
 add_pow_char _ _ _
 
 lemma add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y :=
-by rw [←pow_two]; rw [ ←pow_two]; rw [ ←pow_two]; rw [ add_sq]
+by rw [←pow_two, ←pow_two, ←pow_two, add_sq]
 
 open_locale big_operators
 
@@ -85,11 +85,11 @@ lemma multiset_sum_mul_self (l : multiset R) : l.sum * l.sum = (multiset.map (λ
 by simp_rw [←pow_two, multiset_sum_sq]
 
 lemma sum_sq (s : finset ι) (f : ι → R) :
- (∑ i in s, f i) ^ 2 = ∑ i in s, f i ^ 2 :=
+  (∑ i in s, f i) ^ 2 = ∑ i in s, f i ^ 2 :=
 sum_pow_char _ _ _
 
 lemma sum_mul_self (s : finset ι) (f : ι → R) :
- (∑ i in s, f i) * (∑ i in s, f i) = ∑ i in s, f i * f i :=
+  (∑ i in s, f i) * (∑ i in s, f i) = ∑ i in s, f i * f i :=
 by simp_rw [←pow_two, sum_sq]
 
 end comm_semiring
@@ -101,20 +101,19 @@ variables [ring R]
 
 lemma neg_one_eq_one_iff [nontrivial R]: (-1 : R) = 1 ↔ ring_char R = 2 :=
 begin
- refine ⟨λ h, _, λ h, @@char_two.neg_eq _ (ring_char.of_eq h) 1⟩,
- rw [eq_comm] at h; rw [ ←sub_eq_zero] at h; rw [ sub_neg_eq_add] at h; rw [ ← nat.cast_one] at h; rw [ ← nat.cast_add] at h,
- exact ((nat.dvd_prime nat.prime_two).mp (ring_char.dvd h)).resolve_left char_p.ring_char_ne_one
+  refine ⟨λ h, _, λ h, @@char_two.neg_eq _ (ring_char.of_eq h) 1⟩,
+  rw [eq_comm, ←sub_eq_zero, sub_neg_eq_add, ← nat.cast_one, ← nat.cast_add] at h,
+  exact ((nat.dvd_prime nat.prime_two).mp (ring_char.dvd h)).resolve_left char_p.ring_char_ne_one
 end
 
 @[simp] lemma order_of_neg_one [nontrivial R] :
- order_of (-1 : R) = if ring_char R = 2 then 1 else 2 :=
+  order_of (-1 : R) = if ring_char R = 2 then 1 else 2 :=
 begin
- split_ifs,
- { rw [neg_one_eq_one_iff.2 h]; rw [ order_of_one] },
- apply order_of_eq_prime,
- { simp },
- simpa [neg_one_eq_one_iff] using h
+  split_ifs,
+  { rw [neg_one_eq_one_iff.2 h, order_of_one] },
+  apply order_of_eq_prime,
+  { simp },
+  simpa [neg_one_eq_one_iff] using h
 end
 
 end ring_char
-

@@ -45,12 +45,12 @@ accumulating the elements of the resulting `list β` as a single monadic lazy li
 meta def fixl_with [alternative m] (f : α → m (α × list β)) : α → list β → mllist m β
 | s (b :: rest) := cons $ pure (some b, fixl_with s rest)
 | s [] := cons $ do
- { (s', l) ← f s,
- match l with
- | (b :: rest) := pure (some b, fixl_with s' rest)
- | [] := pure (none, fixl_with s' [])
- end }
- <|> pure (none, nil)
+          { (s', l) ← f s,
+            match l with
+            | (b :: rest) := pure (some b, fixl_with s' rest)
+            | [] := pure (none, fixl_with s' [])
+            end }
+          <|> pure (none, nil)
 
 /-- Repeatedly apply a function `f : α → m (α × list β)` to an initial `a : α`,
 accumulating the elements of the resulting `list β` as a single monadic lazy list. -/
@@ -61,8 +61,8 @@ representing the head and tail of the list. -/
 meta def uncons {α : Type u} : mllist m α → m (option (α × mllist m α))
 | nil := pure none
 | (cons l) := do (x, xs) ← l,
- some x ← return x | uncons xs,
- return (x, xs)
+                 some x ← return x | uncons xs,
+                 return (x, xs)
 
 /-- Compute, inside the monad, whether an `mllist` is empty. -/
 meta def empty {α : Type u} (xs : mllist m α) : m (ulift bool) :=
@@ -82,18 +82,18 @@ meta def m_of_list {α : Type u} : list (m α) → mllist m α
 meta def force {α} : mllist m α → m (list α)
 | nil := pure []
 | (cons l) :=
- do (x, xs) ← l,
- some x ← pure x | force xs,
- (::) x <$> (force xs)
+  do (x, xs) ← l,
+     some x ← pure x | force xs,
+     (::) x <$> (force xs)
 
 /-- Take the first `n` elements, as a list inside the monad. -/
 meta def take {α} : mllist m α → ℕ → m (list α)
 | nil _ := pure []
 | _ 0 := pure []
 | (cons l) (n+1) :=
- do (x, xs) ← l,
- some x ← pure x | take xs (n+1),
- (::) x <$> (take xs n)
+  do (x, xs) ← l,
+     some x ← pure x | take xs (n+1),
+     (::) x <$> (take xs n)
 
 /-- Apply a function to every element of an `mllist`. -/
 meta def map {α β : Type u} (f : α → β) : mllist m α → mllist m β
@@ -105,16 +105,16 @@ meta def mmap {α β : Type u} (f : α → m β) : mllist m α → mllist m β
 | nil := nil
 | (cons l) :=
 cons $ do (x, xs) ← l,
- b ← x.traverse f,
- return (b, mmap xs)
+          b ← x.traverse f,
+          return (b, mmap xs)
 
 /-- Filter a `mllist`. -/
 meta def filter {α : Type u} (p : α → Prop) [decidable_pred p] : mllist m α → mllist m α
 | nil := nil
 | (cons l) :=
 cons $ do (a, r) ← l,
- some a ← return a | return (none, filter r),
- return (if p a then some a else none, filter r)
+          some a ← return a | return (none, filter r),
+          return (if p a then some a else none, filter r)
 
 /-- Filter a `mllist` using a function which returns values in the (alternative) monad.
 Whenever the function "succeeds", we accept the element, and reject otherwise. -/
@@ -122,19 +122,19 @@ meta def mfilter [alternative m] {α β : Type u} (p : α → m β) : mllist m �
 | nil := nil
 | (cons l) :=
 cons $ do (a, r) ← l,
- some a ← return a | return (none, mfilter r),
- (p a >> return (a, mfilter r)) <|> return (none , mfilter r)
+          some a ← return a | return (none, mfilter r),
+          (p a >> return (a, mfilter r)) <|> return (none , mfilter r)
 
 /-- Filter and transform a `mllist` using an `option` valued function. -/
 meta def filter_map {α β : Type u} (f : α → option β) : mllist m α → mllist m β
 | nil := nil
 | (cons l) :=
 cons $ do (a, r) ← l,
- some a ← return a | return (none, filter_map r),
- match f a with
- | (some b) := return (some b, filter_map r)
- | none := return (none, filter_map r)
- end
+          some a ← return a | return (none, filter_map r),
+          match f a with
+          | (some b) := return (some b, filter_map r)
+          | none := return (none, filter_map r)
+          end
 
 /-- Filter and transform a `mllist` using a function that returns values inside the monad.
 We discard elements where the function fails. -/
@@ -142,26 +142,26 @@ meta def mfilter_map [alternative m] {α β : Type u} (f : α → m β) : mllist
 | nil := nil
 | (cons l) :=
 cons $ do (a, r) ← l,
- some a ← return a | return (none, mfilter_map r),
- (f a >>= (λ b, return (some b, mfilter_map r))) <|> return (none, mfilter_map r)
+          some a ← return a | return (none, mfilter_map r),
+          (f a >>= (λ b, return (some b, mfilter_map r))) <|> return (none, mfilter_map r)
 
 /-- Concatenate two monadic lazty lists. -/
 meta def append {α : Type u} : mllist m α → mllist m α → mllist m α
 | nil ys := ys
 | (cons xs) ys :=
 cons $ do (x, xs) ← xs,
- return (x, append xs ys)
+          return (x, append xs ys)
 
 /-- Join a monadic lazy list of monadic lazy lists into a single monadic lazy list. -/
 meta def join {α : Type u} : mllist m (mllist m α) → mllist m α
 | nil := nil
 | (cons l) :=
 cons $ do (xs,r) ← l,
- some xs ← return xs | return (none, join r),
- match xs with
- | nil := return (none, join r)
- | cons m := do (a,n) ← m, return (a, join (cons $ return (n, r)))
- end
+       some xs ← return xs | return (none, join r),
+       match xs with
+       | nil := return (none, join r)
+       | cons m := do (a,n) ← m, return (a, join (cons $ return (n, r)))
+       end
 
 /-- Lift a monadic lazy list inside the monad to a monadic lazy list. -/
 meta def squash {α} (t : m (mllist m α)) : mllist m α :=
@@ -172,8 +172,8 @@ meta def enum_from {α : Type u} : ℕ → mllist m α → mllist m (ℕ × α)
 | _ nil := nil
 | n (cons l) :=
 cons $ do (a, r) ← l,
- some a ← return a | return (none, enum_from n r),
- return ((n, a), (enum_from (n + 1) r))
+          some a ← return a | return (none, enum_from n r),
+          return ((n, a), (enum_from (n + 1) r))
 
 /-- Enumerate the elements of a monadic lazy list. -/
 meta def enum {α : Type u} : mllist m α → mllist m (ℕ × α) := enum_from 0
@@ -191,8 +191,8 @@ meta def bind_ {α β : Type u} : mllist m α → (α → mllist m β) → mllis
 | nil f := nil
 | (cons ll) f :=
 cons $ do (x, xs) ← ll,
- some x ← return x | return (none, bind_ xs f),
- return (none, append (f x) (bind_ xs f))
+          some x ← return x | return (none, bind_ xs f),
+          return (none, append (f x) (bind_ xs f))
 
 /-- Convert any value in the monad to the singleton monadic lazy list. -/
 meta def monad_lift {α} (x : m α) : mllist m α := cons $ (flip prod.mk nil ∘ some) <$> x
@@ -200,7 +200,7 @@ meta def monad_lift {α} (x : m α) : mllist m α := cons $ (flip prod.mk nil �
 /-- Return the head of a monadic lazy list, as a value in the monad. -/
 meta def head [alternative m] {α} (L : mllist m α) : m α :=
 do some (r, _) ← L.uncons | failure,
- return r
+   return r
 
 /-- Apply a function returning values inside the monad to a monadic lazy list,
 returning only the first successful result. -/
@@ -210,4 +210,3 @@ meta def mfirst [alternative m] {α β} (L : mllist m α) (f : α → m β) : m 
 end mllist
 
 end tactic
-

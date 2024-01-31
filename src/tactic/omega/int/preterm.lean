@@ -42,11 +42,11 @@ namespace preterm
 @[simp] def val (v : nat → int) : preterm → int
 | (& i) := i
 | (i ** n) :=
- if i = 1
- then v n
- else if i = -1
- then -(v n)
- else (v n) * i
+  if i = 1
+  then v n
+  else if i = -1
+       then -(v n)
+       else (v n) * i
 | (t1 +* t2) := t1.val + t2.val
 
 /-- Fresh de Brujin index not used by any variable in argument -/
@@ -67,30 +67,29 @@ end preterm
 open_locale list.func -- get notation for list.func.set
 
 /-- Return a term (which is in canonical form by definition)
- that is equivalent to the input preterm -/
+    that is equivalent to the input preterm -/
 @[simp] def canonize : preterm → term
-| (& i) := ⟨i, []⟩
-| (i ** n) := ⟨0, [] {n ↦ i}⟩
+| (& i)      := ⟨i, []⟩
+| (i ** n)   := ⟨0, [] {n ↦ i}⟩
 | (t1 +* t2) := term.add (canonize t1) (canonize t2)
 
 @[simp] lemma val_canonize {v : nat → int} :
- ∀ {t : preterm}, (canonize t).val v = t.val v
+  ∀ {t : preterm}, (canonize t).val v = t.val v
 | (& i) :=
- by simp only [preterm.val, add_zero, term.val, canonize, coeffs.val_nil]
-| (i ** n) :=
- begin
- simp only [coeffs.val_set, canonize,
- preterm.val, zero_add, term.val],
- split_ifs with h1 h2,
- { simp only [one_mul, h1] },
- { simp only [neg_mul, one_mul, h2] },
- { rw mul_comm }
- end
+  by simp only [preterm.val, add_zero, term.val, canonize, coeffs.val_nil]
+| (i ** n)   :=
+  begin
+    simp only [coeffs.val_set, canonize,
+      preterm.val, zero_add, term.val],
+    split_ifs with h1 h2,
+    { simp only [one_mul, h1] },
+    { simp only [neg_mul, one_mul, h2] },
+    { rw mul_comm }
+  end
 | (t +* s) :=
- by simp only [canonize, val_canonize,
- term.val_add, preterm.val]
+  by simp only [canonize, val_canonize,
+     term.val_add, preterm.val]
 
 end int
 
 end omega
-

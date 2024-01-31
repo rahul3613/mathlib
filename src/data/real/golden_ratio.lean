@@ -39,17 +39,17 @@ localized "notation (name := golden_conj) `ψ` := golden_conj" in real
 /-- The inverse of the golden ratio is the opposite of its conjugate. -/
 lemma inv_gold : φ⁻¹ = -ψ :=
 begin
- have : 1 + real.sqrt 5 ≠ 0,
- from ne_of_gt (add_pos (by norm_num) $ real.sqrt_pos.mpr (by norm_num)),
- field_simp [sub_mul, mul_add],
- norm_num
+  have : 1 + real.sqrt 5 ≠ 0,
+    from ne_of_gt (add_pos (by norm_num) $ real.sqrt_pos.mpr (by norm_num)),
+  field_simp [sub_mul, mul_add],
+  norm_num
 end
 
 /-- The opposite of the golden ratio is the inverse of its conjugate. -/
 lemma inv_gold_conj : ψ⁻¹ = -φ :=
 begin
- rw [inv_eq_iff_eq_inv]; rw [ ← neg_inv]; rw [ ← neg_eq_iff_eq_neg],
- exact inv_gold.symm,
+  rw [inv_eq_iff_eq_inv, ← neg_inv, ← neg_eq_iff_eq_neg],
+  exact inv_gold.symm,
 end
 
 @[simp] lemma gold_mul_gold_conj : φ * ψ = -1 :=
@@ -58,26 +58,26 @@ by {field_simp, rw ← sq_sub_sq, norm_num}
 @[simp] lemma gold_conj_mul_gold : ψ * φ = -1 :=
 by {rw mul_comm, exact gold_mul_gold_conj}
 
-@[simp] lemma gold_add_gold_conj : φ + ψ = 1 := by {rw [golden_ratio]; rw [ golden_conj], ring}
+@[simp] lemma gold_add_gold_conj : φ + ψ = 1 := by {rw [golden_ratio, golden_conj], ring}
 
 lemma one_sub_gold_conj : 1 - φ = ψ := by linarith [gold_add_gold_conj]
 
 lemma one_sub_gold : 1 - ψ = φ := by linarith [gold_add_gold_conj]
 
-@[simp] lemma gold_sub_gold_conj : φ - ψ = real.sqrt 5 := by {rw [golden_ratio]; rw [ golden_conj], ring}
+@[simp] lemma gold_sub_gold_conj : φ - ψ = real.sqrt 5 := by {rw [golden_ratio, golden_conj], ring}
 
 @[simp] lemma gold_sq : φ^2 = φ + 1 :=
 begin
- rw [golden_ratio]; rw [ ←sub_eq_zero],
- ring_exp,
- rw real.sq_sqrt; norm_num,
+  rw [golden_ratio, ←sub_eq_zero],
+  ring_exp,
+  rw real.sq_sqrt; norm_num,
 end
 
 @[simp] lemma gold_conj_sq : ψ^2 = ψ + 1 :=
 begin
- rw [golden_conj]; rw [ ←sub_eq_zero],
- ring_exp,
- rw real.sq_sqrt; norm_num,
+  rw [golden_conj, ←sub_eq_zero],
+  ring_exp,
+  rw real.sq_sqrt; norm_num,
 end
 
 lemma gold_pos : 0 < φ :=
@@ -87,8 +87,8 @@ lemma gold_ne_zero : φ ≠ 0 := ne_of_gt gold_pos
 
 lemma one_lt_gold : 1 < φ :=
 begin
- refine lt_of_mul_lt_mul_left _ (le_of_lt gold_pos),
- simp [← sq, gold_pos, zero_lt_one]
+  refine lt_of_mul_lt_mul_left _ (le_of_lt gold_pos),
+  simp [← sq, gold_pos, zero_lt_one]
 end
 
 lemma gold_conj_neg : ψ < 0 := by linarith [one_sub_gold_conj, one_lt_gold]
@@ -97,8 +97,8 @@ lemma gold_conj_ne_zero : ψ ≠ 0 := ne_of_lt gold_conj_neg
 
 lemma neg_one_lt_gold_conj : -1 < ψ :=
 begin
- rw [neg_lt]; rw [ ← inv_gold],
- exact inv_lt_one one_lt_gold,
+  rw [neg_lt, ← inv_gold],
+  exact inv_lt_one one_lt_gold,
 end
 
 /-!
@@ -108,21 +108,21 @@ end
 /-- The golden ratio is irrational. -/
 theorem gold_irrational : irrational φ :=
 begin
- have := nat.prime.irrational_sqrt (show nat.prime 5, by norm_num),
- have := this.rat_add 1,
- have := this.rat_mul (show (0.5 : ℚ) ≠ 0, by norm_num),
- convert this,
- field_simp
+  have := nat.prime.irrational_sqrt (show nat.prime 5, by norm_num),
+  have := this.rat_add 1,
+  have := this.rat_mul (show (0.5 : ℚ) ≠ 0, by norm_num),
+  convert this,
+  field_simp
 end
 
 /-- The conjugate of the golden ratio is irrational. -/
 theorem gold_conj_irrational : irrational ψ :=
 begin
- have := nat.prime.irrational_sqrt (show nat.prime 5, by norm_num),
- have := this.rat_sub 1,
- have := this.rat_mul (show (0.5 : ℚ) ≠ 0, by norm_num),
- convert this,
- field_simp
+  have := nat.prime.irrational_sqrt (show nat.prime 5, by norm_num),
+  have := this.rat_sub 1,
+  have := this.rat_mul (show (0.5 : ℚ) ≠ 0, by norm_num),
+  convert this,
+  field_simp
 end
 
 /-!
@@ -136,7 +136,7 @@ variables {α : Type*} [comm_semiring α]
 /-- The recurrence relation satisfied by the Fibonacci sequence. -/
 def fib_rec : linear_recurrence α :=
 { order := 2,
- coeffs := ![1, 1]}
+  coeffs := ![1, 1]}
 
 section poly
 
@@ -144,10 +144,10 @@ open polynomial
 
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
 lemma fib_rec_char_poly_eq {β : Type*} [comm_ring β] :
- fib_rec.char_poly = X^2 - (X + (1 : β[X])) :=
+  fib_rec.char_poly = X^2 - (X + (1 : β[X])) :=
 begin
- rw [fib_rec]; rw [ linear_recurrence.char_poly],
- simp [finset.sum_fin_eq_sum_range, finset.sum_range_succ', ← smul_X_eq_monomial]
+  rw [fib_rec, linear_recurrence.char_poly],
+  simp [finset.sum_fin_eq_sum_range, finset.sum_range_succ', ← smul_X_eq_monomial]
 end
 
 end poly
@@ -155,25 +155,25 @@ end poly
 /-- As expected, the Fibonacci sequence is a solution of `fib_rec`. -/
 lemma fib_is_sol_fib_rec : fib_rec.is_solution (λ x, x.fib : ℕ → α) :=
 begin
- rw fib_rec,
- intros n,
- simp only,
- rw [nat.fib_add_two]; rw [ add_comm],
- simp [finset.sum_fin_eq_sum_range, finset.sum_range_succ'],
+  rw fib_rec,
+  intros n,
+  simp only,
+  rw [nat.fib_add_two, add_comm],
+  simp [finset.sum_fin_eq_sum_range, finset.sum_range_succ'],
 end
 
 /-- The geometric sequence `λ n, φ^n` is a solution of `fib_rec`. -/
 lemma geom_gold_is_sol_fib_rec : fib_rec.is_solution (pow φ) :=
 begin
- rw [fib_rec.geom_sol_iff_root_char_poly]; rw [ fib_rec_char_poly_eq],
- simp [sub_eq_zero]
+  rw [fib_rec.geom_sol_iff_root_char_poly, fib_rec_char_poly_eq],
+  simp [sub_eq_zero]
 end
 
 /-- The geometric sequence `λ n, ψ^n` is a solution of `fib_rec`. -/
 lemma geom_gold_conj_is_sol_fib_rec : fib_rec.is_solution (pow ψ) :=
 begin
- rw [fib_rec.geom_sol_iff_root_char_poly]; rw [ fib_rec_char_poly_eq],
- simp [sub_eq_zero]
+  rw [fib_rec.geom_sol_iff_root_char_poly, fib_rec_char_poly_eq],
+  simp [sub_eq_zero]
 end
 
 end fibrec
@@ -181,19 +181,18 @@ end fibrec
 /-- Binet's formula as a function equality. -/
 theorem real.coe_fib_eq' : (λ n, nat.fib n : ℕ → ℝ) = λ n, (φ^n - ψ^n) / real.sqrt 5 :=
 begin
- rw fib_rec.sol_eq_of_eq_init,
- { intros i hi,
- fin_cases hi,
- { simp },
- { simp only [golden_ratio, golden_conj], ring_exp, rw mul_inv_cancel; norm_num } },
- { exact fib_is_sol_fib_rec },
- { ring_nf,
- exact (@fib_rec ℝ _).sol_space.sub_mem
- (submodule.smul_mem fib_rec.sol_space (real.sqrt 5)⁻¹ geom_gold_is_sol_fib_rec)
- (submodule.smul_mem fib_rec.sol_space (real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fib_rec) }
+  rw fib_rec.sol_eq_of_eq_init,
+  { intros i hi,
+    fin_cases hi,
+    { simp },
+    { simp only [golden_ratio, golden_conj], ring_exp, rw mul_inv_cancel; norm_num } },
+  { exact fib_is_sol_fib_rec },
+  { ring_nf,
+    exact (@fib_rec ℝ _).sol_space.sub_mem
+            (submodule.smul_mem fib_rec.sol_space (real.sqrt 5)⁻¹ geom_gold_is_sol_fib_rec)
+            (submodule.smul_mem fib_rec.sol_space (real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fib_rec) }
 end
 
 /-- Binet's formula as a dependent equality. -/
 theorem real.coe_fib_eq : ∀ n, (nat.fib n : ℝ) = (φ^n - ψ^n) / real.sqrt 5 :=
-by rw [← function.funext_iff]; rw [ real.coe_fib_eq']
-
+by rw [← function.funext_iff, real.coe_fib_eq']

@@ -44,7 +44,7 @@ instance group.has_exists_mul_of_le (α : Type u) [group α] [has_le α] : has_e
 
 section mul_one_class
 variables [mul_one_class α] [preorder α] [contravariant_class α α (*) (<)] [has_exists_mul_of_le α]
- {a b : α}
+  {a b : α}
 
 @[to_additive] lemma exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b :=
 by { obtain ⟨c, rfl⟩ := exists_mul_of_le h.le, exact ⟨c, one_lt_of_lt_mul_right h, rfl⟩ }
@@ -53,12 +53,12 @@ end mul_one_class
 
 section has_exists_mul_of_le
 variables [linear_order α] [densely_ordered α] [monoid α] [has_exists_mul_of_le α]
- [covariant_class α α (*) (<)] [contravariant_class α α (*) (<)] {a b : α}
+  [covariant_class α α (*) (<)] [contravariant_class α α (*) (<)] {a b : α}
 
 @[to_additive]
 lemma le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
 le_of_forall_le_of_dense $ λ x hxb, by { obtain ⟨ε, rfl⟩ := exists_mul_of_le hxb.le,
- exact h _ ((lt_mul_iff_one_lt_right' b).1 hxb) }
+  exact h _ ((lt_mul_iff_one_lt_right' b).1 hxb) }
 
 @[to_additive]
 lemma le_of_forall_one_lt_lt_mul' (h : ∀ ε : α, 1 < ε → a < b * ε) : a ≤ b :=
@@ -71,29 +71,29 @@ lemma le_iff_forall_one_lt_lt_mul' : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε :
 end has_exists_mul_of_le
 
 /-- A canonically ordered additive monoid is an ordered commutative additive monoid
- in which the ordering coincides with the subtractibility relation,
- which is to say, `a ≤ b` iff there exists `c` with `b = a + c`.
- This is satisfied by the natural numbers, for example, but not
- the integers or other nontrivial `ordered_add_comm_group`s. -/
+  in which the ordering coincides with the subtractibility relation,
+  which is to say, `a ≤ b` iff there exists `c` with `b = a + c`.
+  This is satisfied by the natural numbers, for example, but not
+  the integers or other nontrivial `ordered_add_comm_group`s. -/
 @[protect_proj, ancestor ordered_add_comm_monoid has_bot]
 class canonically_ordered_add_monoid (α : Type*) extends ordered_add_comm_monoid α, has_bot α :=
 (bot_le : ∀ x : α, ⊥ ≤ x)
 (exists_add_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a + c)
 (le_self_add : ∀ a b : α, a ≤ a + b)
 
-@[priority 100] -- see Note [lower instance priority]
+@[priority 100]  -- see Note [lower instance priority]
 instance canonically_ordered_add_monoid.to_order_bot (α : Type u)
- [h : canonically_ordered_add_monoid α] : order_bot α :=
+  [h : canonically_ordered_add_monoid α] : order_bot α :=
 { ..h }
 
 /-- A canonically ordered monoid is an ordered commutative monoid
- in which the ordering coincides with the divisibility relation,
- which is to say, `a ≤ b` iff there exists `c` with `b = a * c`.
- Examples seem rare; it seems more likely that the `order_dual`
- of a naturally-occurring lattice satisfies this than the lattice
- itself (for example, dual of the lattice of ideals of a PID or
- Dedekind domain satisfy this; collections of all things ≤ 1 seem to
- be more natural that collections of all things ≥ 1).
+  in which the ordering coincides with the divisibility relation,
+  which is to say, `a ≤ b` iff there exists `c` with `b = a * c`.
+  Examples seem rare; it seems more likely that the `order_dual`
+  of a naturally-occurring lattice satisfies this than the lattice
+  itself (for example, dual of the lattice of ideals of a PID or
+  Dedekind domain satisfy this; collections of all things ≤ 1 seem to
+  be more natural that collections of all things ≥ 1).
 -/
 @[protect_proj, ancestor ordered_comm_monoid has_bot, to_additive]
 class canonically_ordered_monoid (α : Type*) extends ordered_comm_monoid α, has_bot α :=
@@ -101,14 +101,14 @@ class canonically_ordered_monoid (α : Type*) extends ordered_comm_monoid α, ha
 (exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c)
 (le_self_mul : ∀ a b : α, a ≤ a * b)
 
-@[priority 100, to_additive] -- see Note [lower instance priority]
+@[priority 100, to_additive]  -- see Note [lower instance priority]
 instance canonically_ordered_monoid.to_order_bot (α : Type u)
- [h : canonically_ordered_monoid α] : order_bot α :=
+  [h : canonically_ordered_monoid α] : order_bot α :=
 { ..h }
 
-@[priority 100, to_additive] -- see Note [lower instance priority]
+@[priority 100, to_additive]  -- see Note [lower instance priority]
 instance canonically_ordered_monoid.has_exists_mul_of_le (α : Type u)
- [h : canonically_ordered_monoid α] : has_exists_mul_of_le α :=
+  [h : canonically_ordered_monoid α] : has_exists_mul_of_le α :=
 { ..h }
 
 section canonically_ordered_monoid
@@ -159,29 +159,29 @@ by simp only [one_lt_iff_ne_one, ne.def, mul_eq_one_iff, not_and_distrib]
 
 @[to_additive] lemma exists_one_lt_mul_of_lt (h : a < b) : ∃ c (hc : 1 < c), a * c = b :=
 begin
- obtain ⟨c, hc⟩ := le_iff_exists_mul.1 h.le,
- refine ⟨c, one_lt_iff_ne_one.2 _, hc.symm⟩,
- rintro rfl,
- simpa [hc, lt_irrefl] using h
+  obtain ⟨c, hc⟩ := le_iff_exists_mul.1 h.le,
+  refine ⟨c, one_lt_iff_ne_one.2 _, hc.symm⟩,
+  rintro rfl,
+  simpa [hc, lt_irrefl] using h
 end
 
 @[to_additive] lemma le_mul_left (h : a ≤ c) : a ≤ b * c :=
 calc a = 1 * a : by simp
- ... ≤ b * c : mul_le_mul' (one_le _) h
+  ... ≤ b * c : mul_le_mul' (one_le _) h
 
 @[to_additive] lemma le_mul_right (h : a ≤ b) : a ≤ b * c :=
 calc a = a * 1 : by simp
- ... ≤ b * c : mul_le_mul' h (one_le _)
+  ... ≤ b * c : mul_le_mul' h (one_le _)
 
 @[to_additive]
 lemma lt_iff_exists_mul [covariant_class α α (*) (<)] : a < b ↔ ∃ c > 1, b = a * c :=
 begin
- simp_rw [lt_iff_le_and_ne, and_comm, le_iff_exists_mul, ← exists_and_distrib_left, exists_prop],
- apply exists_congr, intro c,
- rw [and.congr_left_iff]; rw [ gt_iff_lt], rintro rfl,
- split,
- { rw [one_lt_iff_ne_one], apply mt, rintro rfl, rw [mul_one] },
- { rw [← (self_le_mul_right a c).lt_iff_ne], apply lt_mul_of_one_lt_right' }
+  simp_rw [lt_iff_le_and_ne, and_comm, le_iff_exists_mul, ← exists_and_distrib_left, exists_prop],
+  apply exists_congr, intro c,
+  rw [and.congr_left_iff, gt_iff_lt], rintro rfl,
+  split,
+  { rw [one_lt_iff_ne_one], apply mt, rintro rfl, rw [mul_one] },
+  { rw [← (self_le_mul_right a c).lt_iff_ne], apply lt_mul_of_one_lt_right' }
 end
 
 end canonically_ordered_monoid
@@ -202,7 +202,7 @@ of_pos $ pos_of_gt h
 -- metavariable and it will hugely slow down typeclass inference.
 @[priority 10]
 instance of_gt' {M} [canonically_ordered_add_monoid M] [has_one M] {y : M}
- [fact (1 < y)] : ne_zero y :=
+  [fact (1 < y)] : ne_zero y :=
 of_gt $ fact.out $ 1 < y
 
 instance bit0 {M} [canonically_ordered_add_monoid M] {x : M} [ne_zero x] : ne_zero (bit0 x) :=
@@ -211,32 +211,32 @@ of_pos $ bit0_pos $ ne_zero.pos x
 end ne_zero
 
 /-- A canonically linear-ordered additive monoid is a canonically ordered additive monoid
- whose ordering is a linear order. -/
+    whose ordering is a linear order. -/
 @[protect_proj, ancestor canonically_ordered_add_monoid linear_order]
 class canonically_linear_ordered_add_monoid (α : Type*)
- extends canonically_ordered_add_monoid α, linear_order α
+      extends canonically_ordered_add_monoid α, linear_order α
 
 /-- A canonically linear-ordered monoid is a canonically ordered monoid
- whose ordering is a linear order. -/
+    whose ordering is a linear order. -/
 @[protect_proj, ancestor canonically_ordered_monoid linear_order, to_additive]
 class canonically_linear_ordered_monoid (α : Type*)
- extends canonically_ordered_monoid α, linear_order α
+      extends canonically_ordered_monoid α, linear_order α
 
 section canonically_linear_ordered_monoid
 variables [canonically_linear_ordered_monoid α]
 
-@[priority 100, to_additive] -- see Note [lower instance priority]
+@[priority 100, to_additive]  -- see Note [lower instance priority]
 instance canonically_linear_ordered_monoid.semilattice_sup : semilattice_sup α :=
 { ..linear_order.to_lattice }
 
 @[to_additive]
 lemma min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) :=
 begin
- cases le_total a b with hb hb,
- { simp [hb, le_mul_right] },
- { cases le_total a c with hc hc,
- { simp [hc, le_mul_left] },
- { simp [hb, hc] } }
+  cases le_total a b with hb hb,
+  { simp [hb, le_mul_right] },
+  { cases le_total a c with hc hc,
+    { simp [hc, le_mul_left] },
+    { simp [hb, hc] } }
 end
 
 @[to_additive]
@@ -253,9 +253,8 @@ min_eq_right (one_le a)
 
 /-- In a linearly ordered monoid, we are happy for `bot_eq_one` to be a `@[simp]` lemma. -/
 @[simp, to_additive
- "In a linearly ordered monoid, we are happy for `bot_eq_zero` to be a `@[simp]` lemma"]
+  "In a linearly ordered monoid, we are happy for `bot_eq_zero` to be a `@[simp]` lemma"]
 lemma bot_eq_one' : (⊥ : α) = 1 :=
 bot_eq_one
 
 end canonically_linear_ordered_monoid
-

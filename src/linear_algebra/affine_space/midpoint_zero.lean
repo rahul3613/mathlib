@@ -22,32 +22,31 @@ midpoint
 open affine_map affine_equiv
 
 lemma line_map_inv_two {R : Type*} {V P : Type*} [division_ring R] [char_zero R]
- [add_comm_group V] [module R V] [add_torsor V P] (a b : P) :
- line_map a b (2⁻¹:R) = midpoint R a b :=
+  [add_comm_group V] [module R V] [add_torsor V P] (a b : P) :
+  line_map a b (2⁻¹:R) = midpoint R a b :=
 rfl
 
 lemma line_map_one_half {R : Type*} {V P : Type*} [division_ring R] [char_zero R]
- [add_comm_group V] [module R V] [add_torsor V P] (a b : P) :
- line_map a b (1/2:R) = midpoint R a b :=
-by rw [one_div]; rw [ line_map_inv_two]
+  [add_comm_group V] [module R V] [add_torsor V P] (a b : P) :
+  line_map a b (1/2:R) = midpoint R a b :=
+by rw [one_div, line_map_inv_two]
 
 lemma homothety_inv_of_two {R : Type*} {V P : Type*} [comm_ring R] [invertible (2:R)]
- [add_comm_group V] [module R V] [add_torsor V P] (a b : P) :
- homothety a (⅟2:R) b = midpoint R a b :=
+  [add_comm_group V] [module R V] [add_torsor V P] (a b : P) :
+  homothety a (⅟2:R) b = midpoint R a b :=
 rfl
 
 lemma homothety_inv_two {k : Type*} {V P : Type*} [field k] [char_zero k]
- [add_comm_group V] [module k V] [add_torsor V P] (a b : P) :
- homothety a (2⁻¹:k) b = midpoint k a b :=
+  [add_comm_group V] [module k V] [add_torsor V P] (a b : P) :
+  homothety a (2⁻¹:k) b = midpoint k a b :=
 rfl
 
 lemma homothety_one_half {k : Type*} {V P : Type*} [field k] [char_zero k]
- [add_comm_group V] [module k V] [add_torsor V P] (a b : P) :
- homothety a (1/2:k) b = midpoint k a b :=
-by rw [one_div]; rw [ homothety_inv_two]
+  [add_comm_group V] [module k V] [add_torsor V P] (a b : P) :
+  homothety a (1/2:k) b = midpoint k a b :=
+by rw [one_div, homothety_inv_two]
 
 @[simp] lemma pi_midpoint_apply {k ι : Type*} {V : Π i : ι, Type*} {P : Π i : ι, Type*} [field k]
- [invertible (2:k)] [Π i, add_comm_group (V i)] [Π i, module k (V i)]
- [Π i, add_torsor (V i) (P i)] (f g : Π i, P i) (i : ι) :
- midpoint k f g i = midpoint k (f i) (g i) := rfl
-
+  [invertible (2:k)] [Π i, add_comm_group (V i)] [Π i, module k (V i)]
+  [Π i, add_torsor (V i) (P i)] (f g : Π i, P i) (i : ι) :
+  midpoint k f g i = midpoint k (f i) (g i) := rfl

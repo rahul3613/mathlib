@@ -18,20 +18,20 @@ open tactic
 
 meta def select_domain (t s : tactic (option bool)) : tactic (option bool) :=
 do a ← t, b ← s,
- match a, b with
- | a, none := return a
- | none, b := return b
- | (some tt), (some tt) := return (some tt)
- | (some ff), (some ff) := return (some ff)
- | _, _ := failed
- end
+   match a, b with
+   | a,         none      := return a
+   | none,      b         := return b
+   | (some tt), (some tt) := return (some tt)
+   | (some ff), (some ff) := return (some ff)
+   | _,         _         := failed
+   end
 
 meta def type_domain (x : expr) : tactic (option bool) :=
 if x = `(int)
 then return (some tt)
 else if x = `(nat)
- then return (some ff)
- else failed
+     then return (some ff)
+     else failed
 
 /-- Detects domain of a formula from its expr.
 * Returns none, if domain can be either ℤ or ℕ
@@ -39,42 +39,42 @@ else if x = `(nat)
 * Returns some ff, if domain is exclusively ℕ
 * Fails, if domain is neither ℤ nor ℕ -/
 meta def form_domain : expr → tactic (option bool)
-| `(¬ %%px) := form_domain px
+| `(¬ %%px)      := form_domain px
 | `(%%px ∨ %%qx) := select_domain (form_domain px) (form_domain qx)
 | `(%%px ∧ %%qx) := select_domain (form_domain px) (form_domain qx)
 | `(%%px ↔ %%qx) := select_domain (form_domain px) (form_domain qx)
 | `(%%(expr.pi _ _ px qx)) :=
- monad.cond
- (if expr.has_var px then return tt else is_prop px)
- (select_domain (form_domain px) (form_domain qx))
- (select_domain (type_domain px) (form_domain qx))
+  monad.cond
+     (if expr.has_var px then return tt else is_prop px)
+     (select_domain (form_domain px) (form_domain qx))
+     (select_domain (type_domain px) (form_domain qx))
 | `(@has_lt.lt %%dx %%h _ _) := type_domain dx
 | `(@has_le.le %%dx %%h _ _) := type_domain dx
-| `(@eq %%dx _ _) := type_domain dx
-| `(@ge %%dx %%h _ _) := type_domain dx
-| `(@gt %%dx %%h _ _) := type_domain dx
-| `(@ne %%dx _ _) := type_domain dx
-| `(true) := return none
-| `(false) := return none
-| x := failed
+| `(@eq %%dx _ _)            := type_domain dx
+| `(@ge %%dx %%h _ _)        := type_domain dx
+| `(@gt %%dx %%h _ _)        := type_domain dx
+| `(@ne %%dx _ _)            := type_domain dx
+| `(true)                    := return none
+| `(false)                   := return none
+| x                          := failed
 
 meta def goal_domain_aux (x : expr) : tactic bool :=
 (omega.int.wff x >> return tt) <|> (omega.nat.wff x >> return ff)
 
 /-- Use the current goal to determine.
- Return tt if the domain is ℤ, and return ff if it is ℕ -/
+    Return tt if the domain is ℤ, and return ff if it is ℕ -/
 meta def goal_domain : tactic bool :=
 do gx ← target,
- hxs ← local_context >>= monad.mapm infer_type,
- app_first goal_domain_aux (gx::hxs)
+   hxs ← local_context >>= monad.mapm infer_type,
+   app_first goal_domain_aux (gx::hxs)
 
 /-- Return tt if the domain is ℤ, and return ff if it is ℕ -/
 meta def determine_domain (opt : list name) : tactic bool :=
 if `int ∈ opt
 then return tt
 else if `nat ∈ opt
- then return ff
- else goal_domain
+     then return ff
+     else goal_domain
 
 end omega
 
@@ -89,10 +89,10 @@ Use `omega manual` to disable automatic reverts, and `omega int` or
 -/
 meta def tactic.interactive.omega (opt : parse (many ident)) : tactic unit :=
 do is_int ← determine_domain opt,
- let is_manual : bool := if `manual ∈ opt then tt else ff,
- if is_int
- then omega_int is_manual
- else omega_nat is_manual
+   let is_manual : bool := if `manual ∈ opt then tt else ff,
+   if is_int
+   then omega_int is_manual
+   else omega_nat is_manual
 
 add_hint_tactic "omega"
 
@@ -141,8 +141,7 @@ but it may fail if a real solution exists, even if there is no integer/natural n
 You can enable `set_option trace.omega true` to see how `omega` interprets your goal.
 -/
 add_tactic_doc
-{ name := "omega",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.omega],
- tags := ["finishing", "arithmetic", "decision procedure"] }
-
+{ name       := "omega",
+  category   := doc_category.tactic,
+  decl_names := [`tactic.interactive.omega],
+  tags       := ["finishing", "arithmetic", "decision procedure"] }

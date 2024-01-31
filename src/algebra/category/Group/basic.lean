@@ -54,7 +54,7 @@ add_decl_doc AddGroup.of
 add_decl_doc AddGroup.of_hom
 
 @[simp, to_additive] lemma of_hom_apply {X Y : Type*} [group X] [group Y] (f : X →* Y) (x : X) :
- of_hom f x = f x := rfl
+  of_hom f x = f x := rfl
 
 @[to_additive]
 instance (G : Group) : group G := G.str
@@ -111,13 +111,13 @@ add_decl_doc AddCommGroup.of
 
 /-- Typecheck a `monoid_hom` as a morphism in `CommGroup`. -/
 @[to_additive] def of_hom {X Y : Type u} [comm_group X] [comm_group Y] (f : X →* Y) :
- of X ⟶ of Y := f
+  of X ⟶ of Y := f
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddCommGroup`. -/
 add_decl_doc AddCommGroup.of_hom
 
 @[simp, to_additive] lemma of_hom_apply {X Y : Type*} [comm_group X] [comm_group Y] (f : X →* Y)
- (x : X) : of_hom f x = f x := rfl
+  (x : X) : of_hom f x = f x := rfl
 
 @[to_additive]
 instance comm_group_instance (G : CommGroup) : comm_group G := G.str
@@ -178,7 +178,7 @@ lemma as_hom_injective {G : AddCommGroup.{0}} : function.injective (@as_hom G) :
 
 @[ext]
 lemma int_hom_ext
- {G : AddCommGroup.{0}} (f g : (AddCommGroup.of ℤ) ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
+  {G : AddCommGroup.{0}} (f g : (AddCommGroup.of ℤ) ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
 add_monoid_hom.ext_int w
 
 -- TODO: this argument should be generalised to the situation where
@@ -186,13 +186,13 @@ add_monoid_hom.ext_int w
 lemma injective_of_mono {G H : AddCommGroup.{0}} (f : G ⟶ H) [mono f] : function.injective f :=
 λ g₁ g₂ h,
 begin
- have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f :=
- begin
- ext,
- simpa [as_hom_apply] using h,
- end,
- have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0,
- apply as_hom_injective t1,
+  have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f :=
+  begin
+    ext,
+    simpa [as_hom_apply] using h,
+  end,
+  have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0,
+  apply as_hom_injective t1,
 end
 
 end AddCommGroup
@@ -201,7 +201,7 @@ end AddCommGroup
 @[to_additive add_equiv.to_AddGroup_iso, simps]
 def mul_equiv.to_Group_iso {X Y : Group} (e : X ≃* Y) : X ≅ Y :=
 { hom := e.to_monoid_hom,
- inv := e.symm.to_monoid_hom }
+  inv := e.symm.to_monoid_hom }
 
 /-- Build an isomorphism in the category `AddGroup` from an `add_equiv` between `add_group`s. -/
 add_decl_doc add_equiv.to_AddGroup_iso
@@ -210,7 +210,7 @@ add_decl_doc add_equiv.to_AddGroup_iso
 @[to_additive add_equiv.to_AddCommGroup_iso, simps]
 def mul_equiv.to_CommGroup_iso {X Y : CommGroup} (e : X ≃* Y) : X ≅ Y :=
 { hom := e.to_monoid_hom,
- inv := e.symm.to_monoid_hom }
+  inv := e.symm.to_monoid_hom }
 
 /-- Build an isomorphism in the category `AddCommGroup` from a `add_equiv` between
 `add_comm_group`s. -/
@@ -238,7 +238,7 @@ in `Group` -/
 as (isomorphic to) isomorphisms in `AddGroup`"]
 def mul_equiv_iso_Group_iso {X Y : Group.{u}} : (X ≃* Y) ≅ (X ≅ Y) :=
 { hom := λ e, e.to_Group_iso,
- inv := λ i, i.Group_iso_to_mul_equiv, }
+  inv := λ i, i.Group_iso_to_mul_equiv, }
 
 /-- multiplicative equivalences between `comm_group`s are the same as (isomorphic to) isomorphisms
 in `CommGroup` -/
@@ -246,7 +246,7 @@ in `CommGroup` -/
 the same as (isomorphic to) isomorphisms in `AddCommGroup`"]
 def mul_equiv_iso_CommGroup_iso {X Y : CommGroup.{u}} : X ≃* Y ≅ (X ≅ Y) :=
 { hom := λ e, e.to_CommGroup_iso,
- inv := λ i, i.CommGroup_iso_to_mul_equiv, }
+  inv := λ i, i.CommGroup_iso_to_mul_equiv, }
 
 namespace category_theory.Aut
 
@@ -254,7 +254,7 @@ namespace category_theory.Aut
 of permutations. -/
 def iso_perm {α : Type u} : Group.of (Aut α) ≅ Group.of (equiv.perm α) :=
 { hom := ⟨λ g, g.to_equiv, (by tidy), (by tidy)⟩,
- inv := ⟨λ g, g.to_iso, (by tidy), (by tidy)⟩ }
+  inv := ⟨λ g, g.to_iso, (by tidy), (by tidy)⟩ }
 
 /-- The (unbundled) group of automorphisms of a type is `mul_equiv` to the (unbundled) group
 of permutations. -/
@@ -266,20 +266,19 @@ end category_theory.Aut
 @[to_additive]
 instance Group.forget_reflects_isos : reflects_isomorphisms (forget Group.{u}) :=
 { reflects := λ X Y f _,
- begin
- resetI,
- let i := as_iso ((forget Group).map f),
- let e : X ≃* Y := { ..f, ..i.to_equiv },
- exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩,
- end }
+  begin
+    resetI,
+    let i := as_iso ((forget Group).map f),
+    let e : X ≃* Y := { ..f, ..i.to_equiv },
+    exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩,
+  end }
 
 @[to_additive]
 instance CommGroup.forget_reflects_isos : reflects_isomorphisms (forget CommGroup.{u}) :=
 { reflects := λ X Y f _,
- begin
- resetI,
- let i := as_iso ((forget CommGroup).map f),
- let e : X ≃* Y := { ..f, ..i.to_equiv },
- exact ⟨(is_iso.of_iso e.to_CommGroup_iso).1⟩,
- end }
-
+  begin
+    resetI,
+    let i := as_iso ((forget CommGroup).map f),
+    let e : X ≃* Y := { ..f, ..i.to_equiv },
+    exact ⟨(is_iso.of_iso e.to_CommGroup_iso).1⟩,
+  end }

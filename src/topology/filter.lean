@@ -24,10 +24,10 @@ This topology has the following important properties.
 * In particular, it is a continuous map, so `𝓝 ∘ f` tends to `𝓝 (𝓝 a)` whenever `f` tends to `𝓝 a`.
 
 * If `X` is an ordered topological space with order topology and no max element, then `𝓝 ∘ f` tends
- to `𝓝 filter.at_top` whenever `f` tends to `filter.at_top`.
+  to `𝓝 filter.at_top` whenever `f` tends to `filter.at_top`.
 
 * It turns `filter X` into a T₀ space and the order on `filter X` is the dual of the
- `specialization_order (filter X)`.
+  `specialization_order (filter X)`.
 
 ## Tags
 
@@ -53,50 +53,50 @@ lemma is_open_set_of_mem {s : set α} : is_open {l : filter α | s ∈ l} :=
 by simpa only [Iic_principal] using is_open_Iic_principal
 
 lemma is_topological_basis_Iic_principal :
- is_topological_basis (range (Iic ∘ 𝓟 : set α → set (filter α))) :=
+  is_topological_basis (range (Iic ∘ 𝓟 : set α → set (filter α))) :=
 { exists_subset_inter :=
- begin
- rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl,
- exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
- end,
- sUnion_eq := sUnion_eq_univ_iff.2 $ λ l, ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩,
- eq_generate_from := rfl }
+    begin
+      rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl,
+      exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
+    end,
+  sUnion_eq := sUnion_eq_univ_iff.2 $ λ l, ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩,
+  eq_generate_from := rfl }
 
 lemma is_open_iff {s : set (filter α)} :
- is_open s ↔ ∃ T : set (set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
+  is_open s ↔ ∃ T : set (set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
 is_topological_basis_Iic_principal.open_iff_eq_sUnion.trans $
- by simp only [exists_subset_range_iff, sUnion_image]
+  by simp only [exists_subset_range_iff, sUnion_image]
 
 lemma nhds_eq (l : filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
 nhds_generate_from.trans $ by simp only [mem_set_of_eq, and_comm (l ∈ _), infi_and, infi_range,
- filter.lift', filter.lift, (∘), mem_Iic, le_principal_iff]
+  filter.lift', filter.lift, (∘), mem_Iic, le_principal_iff]
 
 lemma nhds_eq' (l : filter α) : 𝓝 l = l.lift' (λ s, {l' | s ∈ l'}) :=
 by simpa only [(∘), Iic_principal] using nhds_eq l
 
 protected lemma tendsto_nhds {la : filter α} {lb : filter β} {f : α → filter β} :
- tendsto f la (𝓝 lb) ↔ ∀ s ∈ lb, ∀ᶠ a in la, s ∈ f a :=
+  tendsto f la (𝓝 lb) ↔ ∀ s ∈ lb, ∀ᶠ a in la, s ∈ f a :=
 by simp only [nhds_eq', tendsto_lift', mem_set_of_eq]
 
 lemma has_basis.nhds {l : filter α} {p : ι → Prop} {s : ι → set α} (h : has_basis l p s) :
- has_basis (𝓝 l) p (λ i, Iic (𝓟 (s i))) :=
+  has_basis (𝓝 l) p (λ i, Iic (𝓟 (s i))) :=
 by { rw nhds_eq, exact h.lift' monotone_principal.Iic }
 
 /-- Neighborhoods of a countably generated filter is a countably generated filter. -/
 instance {l : filter α} [is_countably_generated l] : is_countably_generated (𝓝 l) :=
 let ⟨b, hb⟩ := l.exists_antitone_basis in has_countable_basis.is_countably_generated $
- ⟨hb.nhds, set.to_countable _⟩
+  ⟨hb.nhds, set.to_countable _⟩
 
 lemma has_basis.nhds' {l : filter α} {p : ι → Prop} {s : ι → set α} (h : has_basis l p s) :
- has_basis (𝓝 l) p (λ i, {l' | s i ∈ l'}) :=
+  has_basis (𝓝 l) p (λ i, {l' | s i ∈ l'}) :=
 by simpa only [Iic_principal] using h.nhds
 
 lemma mem_nhds_iff {l : filter α} {S : set (filter α)} :
- S ∈ 𝓝 l ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ S :=
+  S ∈ 𝓝 l ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ S :=
 l.basis_sets.nhds.mem_iff
 
 lemma mem_nhds_iff' {l : filter α} {S : set (filter α)} :
- S ∈ 𝓝 l ↔ ∃ t ∈ l, ∀ ⦃l' : filter α⦄, t ∈ l' → l' ∈ S :=
+  S ∈ 𝓝 l ↔ ∃ t ∈ l, ∀ ⦃l' : filter α⦄, t ∈ l' → l' ∈ S :=
 l.basis_sets.nhds'.mem_iff
 
 @[simp] lemma nhds_bot : 𝓝 (⊥ : filter α) = pure ⊥ :=
@@ -108,7 +108,7 @@ by simp [nhds_eq, lift'_bot monotone_principal.Iic]
 (has_basis_principal s).nhds.eq_of_same_basis (has_basis_principal _)
 
 @[simp] lemma nhds_pure (x : α) : 𝓝 (pure x : filter α) = 𝓟 {⊥, pure x} :=
-by rw [← principal_singleton]; rw [ nhds_principal]; rw [ principal_singleton]; rw [ Iic_pure]
+by rw [← principal_singleton, nhds_principal, principal_singleton, Iic_pure]
 
 @[simp] lemma nhds_infi (f : ι → filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
 by { simp only [nhds_eq], apply lift'_infi_of_map_univ; simp }
@@ -121,23 +121,23 @@ monotone.of_map_inf nhds_inf
 
 lemma Inter_nhds (l : filter α) : ⋂₀ {s | s ∈ 𝓝 l} = Iic l :=
 by simp only [nhds_eq, sInter_lift'_sets monotone_principal.Iic, Iic, le_principal_iff,
- ← set_of_forall, ← filter.le_def]
+  ← set_of_forall, ← filter.le_def]
 
 @[simp] lemma nhds_mono {l₁ l₂ : filter α} : 𝓝 l₁ ≤ 𝓝 l₂ ↔ l₁ ≤ l₂ :=
 begin
- refine ⟨λ h, _, λ h, monotone_nhds h⟩,
- rw [← Iic_subset_Iic]; rw [ ← Inter_nhds]; rw [ ← Inter_nhds],
- exact sInter_subset_sInter h
+  refine ⟨λ h, _, λ h, monotone_nhds h⟩,
+  rw [← Iic_subset_Iic, ← Inter_nhds, ← Inter_nhds],
+  exact sInter_subset_sInter h
 end
 
 protected lemma mem_interior {s : set (filter α)} {l : filter α} :
- l ∈ interior s ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ s :=
-by rw [mem_interior_iff_mem_nhds]; rw [ mem_nhds_iff]
+  l ∈ interior s ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ s :=
+by rw [mem_interior_iff_mem_nhds, mem_nhds_iff]
 
 protected lemma mem_closure {s : set (filter α)} {l : filter α} :
- l ∈ closure s ↔ ∀ t ∈ l, ∃ l' ∈ s, t ∈ l' :=
+  l ∈ closure s ↔ ∀ t ∈ l, ∃ l' ∈ s, t ∈ l' :=
 by simp only [closure_eq_compl_interior_compl, filter.mem_interior, mem_compl_iff, not_exists,
- not_forall, not_not, exists_prop, not_and, and_comm, subset_def, mem_Iic, le_principal_iff]
+  not_forall, not_not, exists_prop, not_and, and_comm, subset_def, mem_Iic, le_principal_iff]
 
 @[simp] protected lemma closure_singleton (l : filter α) : closure {l} = Ici l :=
 by { ext l', simp [filter.mem_closure, filter.le_def] }
@@ -152,30 +152,30 @@ lemma nhds_at_top [preorder α] : 𝓝 at_top = ⨅ x : α, 𝓟 (Iic (𝓟 (Ici
 by simp only [at_top, nhds_infi, nhds_principal]
 
 protected lemma tendsto_nhds_at_top_iff [preorder β] {l : filter α} {f : α → filter β} :
- tendsto f l (𝓝 at_top) ↔ ∀ y, ∀ᶠ a in l, Ici y ∈ f a :=
+  tendsto f l (𝓝 at_top) ↔ ∀ y, ∀ᶠ a in l, Ici y ∈ f a :=
 by simp only [nhds_at_top, tendsto_infi, tendsto_principal, mem_Iic, le_principal_iff]
 
 lemma nhds_at_bot [preorder α] : 𝓝 at_bot = ⨅ x : α, 𝓟 (Iic (𝓟 (Iic x))) := @nhds_at_top αᵒᵈ _
 
 protected lemma tendsto_nhds_at_bot_iff [preorder β] {l : filter α} {f : α → filter β} :
- tendsto f l (𝓝 at_bot) ↔ ∀ y, ∀ᶠ a in l, Iic y ∈ f a :=
+  tendsto f l (𝓝 at_bot) ↔ ∀ y, ∀ᶠ a in l, Iic y ∈ f a :=
 @filter.tendsto_nhds_at_top_iff α βᵒᵈ _ _ _
 
 variables [topological_space X]
 
 lemma nhds_nhds (x : X) :
- 𝓝 (𝓝 x) = ⨅ (s : set X) (hs : is_open s) (hx : x ∈ s), 𝓟 (Iic (𝓟 s)) :=
+  𝓝 (𝓝 x) = ⨅ (s : set X) (hs : is_open s) (hx : x ∈ s), 𝓟 (Iic (𝓟 s)) :=
 by simp only [(nhds_basis_opens x).nhds.eq_binfi, infi_and, @infi_comm _ (_ ∈ _)]
 
 lemma inducing_nhds : inducing (𝓝 : X → filter X) :=
 inducing_iff_nhds.2 $ λ x, (nhds_def' _).trans $
- by simp only [nhds_nhds, comap_infi, comap_principal, Iic_principal, preimage_set_of_eq,
- ← mem_interior_iff_mem_nhds, set_of_mem_eq, is_open.interior_eq] { contextual := tt }
+  by simp only [nhds_nhds, comap_infi, comap_principal, Iic_principal, preimage_set_of_eq,
+    ← mem_interior_iff_mem_nhds, set_of_mem_eq, is_open.interior_eq] { contextual := tt }
 
 @[continuity] lemma continuous_nhds : continuous (𝓝 : X → filter X) := inducing_nhds.continuous
 
 protected lemma tendsto.nhds {f : α → X} {l : filter α} {x : X} (h : tendsto f l (𝓝 x)) :
- tendsto (𝓝 ∘ f) l (𝓝 (𝓝 x)) :=
+  tendsto (𝓝 ∘ f) l (𝓝 (𝓝 x)) :=
 (continuous_nhds.tendsto _).comp h
 
 end filter
@@ -183,10 +183,9 @@ end filter
 variables [topological_space X] [topological_space Y] {f : X → Y} {x : X} {s : set X}
 
 lemma continuous_within_at.nhds (h : continuous_within_at f s x) :
- continuous_within_at (𝓝 ∘ f) s x :=
+  continuous_within_at (𝓝 ∘ f) s x :=
 h.nhds
 
 lemma continuous_at.nhds (h : continuous_at f x) : continuous_at (𝓝 ∘ f) x := h.nhds
 lemma continuous_on.nhds (h : continuous_on f s) : continuous_on (𝓝 ∘ f) s := λ x hx, (h x hx).nhds
 lemma continuous.nhds (h : continuous f) : continuous (𝓝 ∘ f) := filter.continuous_nhds.comp h
-

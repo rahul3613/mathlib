@@ -31,12 +31,12 @@ lemma is_wf.mul (hs : s.is_wf) (ht : t.is_wf) : is_wf (s * t) := (hs.is_pwo.mul 
 
 @[to_additive]
 lemma is_wf.min_mul (hs : s.is_wf) (ht : t.is_wf) (hsn : s.nonempty) (htn : t.nonempty) :
- (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn :=
+  (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn :=
 begin
- refine le_antisymm (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _,
- rw is_wf.le_min_iff,
- rintro _ ⟨x, y, hx, hy, rfl⟩,
- exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy),
+  refine le_antisymm (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _,
+  rw is_wf.le_min_iff,
+  rintro _ ⟨x, y, hx, hy, rfl⟩,
+  exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy),
 end
 
 end set
@@ -64,15 +64,15 @@ lemma mem_mul_antidiagonal : x ∈ mul_antidiagonal hs ht a ↔ x.1 ∈ s ∧ x.
 by simp [mul_antidiagonal, and_rotate]
 
 @[to_additive] lemma mul_antidiagonal_mono_left (h : u ⊆ s) :
- mul_antidiagonal hu ht a ⊆ mul_antidiagonal hs ht a :=
+  mul_antidiagonal hu ht a ⊆ mul_antidiagonal hs ht a :=
 set.finite.to_finset_mono $ set.mul_antidiagonal_mono_left h
 
 @[to_additive] lemma mul_antidiagonal_mono_right (h : u ⊆ t) :
- mul_antidiagonal hs hu a ⊆ mul_antidiagonal hs ht a :=
+  mul_antidiagonal hs hu a ⊆ mul_antidiagonal hs ht a :=
 set.finite.to_finset_mono $ set.mul_antidiagonal_mono_right h
 
 @[simp, to_additive] lemma swap_mem_mul_antidiagonal :
- x.swap ∈ finset.mul_antidiagonal hs ht a ↔ x ∈ finset.mul_antidiagonal ht hs a :=
+  x.swap ∈ finset.mul_antidiagonal hs ht a ↔ x ∈ finset.mul_antidiagonal ht hs a :=
 by simp [mul_comm, and.left_comm]
 
 @[to_additive]
@@ -85,19 +85,18 @@ lemma is_pwo_support_mul_antidiagonal : {a | (mul_antidiagonal hs ht a).nonempty
 
 @[to_additive]
 lemma mul_antidiagonal_min_mul_min {α} [linear_ordered_cancel_comm_monoid α] {s t : set α}
- (hs : s.is_wf) (ht : t.is_wf) (hns : s.nonempty) (hnt : t.nonempty) :
- mul_antidiagonal hs.is_pwo ht.is_pwo ((hs.min hns) * (ht.min hnt)) = {(hs.min hns, ht.min hnt)} :=
+  (hs : s.is_wf) (ht : t.is_wf) (hns : s.nonempty) (hnt : t.nonempty) :
+  mul_antidiagonal hs.is_pwo ht.is_pwo ((hs.min hns) * (ht.min hnt)) = {(hs.min hns, ht.min hnt)} :=
 begin
- ext ⟨a, b⟩,
- simp only [mem_mul_antidiagonal, mem_singleton, prod.ext_iff],
- split,
- { rintro ⟨has, hat, hst⟩,
- obtain rfl := (hs.min_le hns has).eq_of_not_lt
- (λ hlt, (mul_lt_mul_of_lt_of_le hlt $ ht.min_le hnt hat).ne' hst),
- exact ⟨rfl, mul_left_cancel hst⟩ },
- { rintro ⟨rfl, rfl⟩,
- exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩ }
+  ext ⟨a, b⟩,
+  simp only [mem_mul_antidiagonal, mem_singleton, prod.ext_iff],
+  split,
+  { rintro ⟨has, hat, hst⟩,
+    obtain rfl := (hs.min_le hns has).eq_of_not_lt
+      (λ hlt, (mul_lt_mul_of_lt_of_le hlt $ ht.min_le hnt hat).ne' hst),
+    exact ⟨rfl, mul_left_cancel hst⟩ },
+  { rintro ⟨rfl, rfl⟩,
+    exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩ }
 end
 
 end finset
-

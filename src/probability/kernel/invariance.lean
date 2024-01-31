@@ -21,8 +21,8 @@ kernel `μ.bind κ` is the same measure.
 ## Useful lemmas
 
 * `probability_theory.kernel.const_bind_eq_comp_const`, and
- `probability_theory.kernel.comp_const_apply_eq_bind` established the relationship between
- the push-forward measure and the composition of kernels.
+  `probability_theory.kernel.comp_const_apply_eq_bind` established the relationship between
+  the push-forward measure and the composition of kernels.
 
 -/
 
@@ -33,7 +33,7 @@ open_locale measure_theory ennreal probability_theory
 namespace probability_theory
 
 variables {α β γ : Type*} {mα : measurable_space α} {mβ : measurable_space β}
- {mγ : measurable_space γ}
+  {mγ : measurable_space γ}
 
 include mα mβ
 
@@ -43,30 +43,33 @@ namespace kernel
 
 @[simp]
 lemma bind_add (μ ν : measure α) (κ : kernel α β) :
- (μ + ν).bind κ = μ.bind κ + ν.bind κ :=
+  (μ + ν).bind κ = μ.bind κ + ν.bind κ :=
 begin
- ext1 s hs,
- rw [measure.bind_apply hs (kernel.measurable _)]; rw [ lintegral_add_measure]; rw [ measure.coe_add]; rw [ pi.add_apply]; rw [ measure.bind_apply hs (kernel.measurable _)]; rw [ measure.bind_apply hs (kernel.measurable _)],
+  ext1 s hs,
+  rw [measure.bind_apply hs (kernel.measurable _), lintegral_add_measure, measure.coe_add,
+    pi.add_apply, measure.bind_apply hs (kernel.measurable _),
+    measure.bind_apply hs (kernel.measurable _)],
 end
 
 @[simp]
 lemma bind_smul (κ : kernel α β) (μ : measure α) (r : ℝ≥0∞) :
- (r • μ).bind κ = r • μ.bind κ :=
+  (r • μ).bind κ = r • μ.bind κ :=
 begin
- ext1 s hs,
- rw [measure.bind_apply hs (kernel.measurable _)]; rw [ lintegral_smul_measure]; rw [ measure.coe_smul]; rw [ pi.smul_apply]; rw [ measure.bind_apply hs (kernel.measurable _)]; rw [ smul_eq_mul],
+  ext1 s hs,
+  rw [measure.bind_apply hs (kernel.measurable _), lintegral_smul_measure, measure.coe_smul,
+    pi.smul_apply, measure.bind_apply hs (kernel.measurable _), smul_eq_mul],
 end
 
 lemma const_bind_eq_comp_const (κ : kernel α β) (μ : measure α) :
- const α (μ.bind κ) = κ ∘ₖ const α μ :=
+  const α (μ.bind κ) = κ ∘ₖ const α μ :=
 begin
- ext a s hs : 2,
- simp_rw [comp_apply' _ _ _ hs, const_apply, measure.bind_apply hs (kernel.measurable _)],
+  ext a s hs : 2,
+  simp_rw [comp_apply' _ _ _ hs, const_apply, measure.bind_apply hs (kernel.measurable _)],
 end
 
 lemma comp_const_apply_eq_bind (κ : kernel α β) (μ : measure α) (a : α) :
- (κ ∘ₖ const α μ) a = μ.bind κ :=
-by rw [← const_apply (μ.bind κ) a]; rw [ const_bind_eq_comp_const κ μ]
+  (κ ∘ₖ const α μ) a = μ.bind κ :=
+by rw [← const_apply (μ.bind κ) a, const_bind_eq_comp_const κ μ]
 
 omit mβ
 
@@ -82,17 +85,17 @@ variables {κ η : kernel α α} {μ : measure α}
 lemma invariant.def (hκ : invariant κ μ) : μ.bind κ = μ := hκ
 
 lemma invariant.comp_const (hκ : invariant κ μ) : κ ∘ₖ const α μ = const α μ :=
-by rw [← const_bind_eq_comp_const κ μ]; rw [ hκ.def]
+by rw [← const_bind_eq_comp_const κ μ, hκ.def]
 
 lemma invariant.comp [is_s_finite_kernel κ] (hκ : invariant κ μ) (hη : invariant η μ) :
- invariant (κ ∘ₖ η) μ :=
+  invariant (κ ∘ₖ η) μ :=
 begin
- casesI is_empty_or_nonempty α with _ hα,
- { exact subsingleton.elim _ _ },
- { simp_rw [invariant, ← comp_const_apply_eq_bind (κ ∘ₖ η) μ hα.some, comp_assoc, hη.comp_const, hκ.comp_const, const_apply] },
+  casesI is_empty_or_nonempty α with _ hα,
+  { exact subsingleton.elim _ _ },
+  { simp_rw [invariant, ← comp_const_apply_eq_bind (κ ∘ₖ η) μ hα.some, comp_assoc,
+      hη.comp_const, hκ.comp_const, const_apply] },
 end
 
 end kernel
 
 end probability_theory
-

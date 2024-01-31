@@ -13,7 +13,7 @@ import order.filter.cofinite
 
 We develop the basic theory of bornologies. Instead of axiomatizing bounded sets and defining
 bornologies in terms of those, we recognize that the cobounded sets form a filter and define a
-bornology as a filter of cobounded sets which contains the cofinite filter. This allows us to make
+bornology as a filter of cobounded sets which contains the cofinite filter.  This allows us to make
 use of the extensive library for filters, but we also provide the relevant connecting results for
 bounded sets.
 
@@ -27,13 +27,13 @@ cobounded filter is generally referred to as the *filter at infinity*.
 ## Main definitions
 
 - `bornology α`: a class consisting of `cobounded : filter α` and a proof that this filter
- contains the `cofinite` filter.
+  contains the `cofinite` filter.
 - `bornology.is_cobounded`: the predicate that a set is a member of the `cobounded α` filter. For
- `s : set α`, one should prefer `bornology.is_cobounded s` over `s ∈ cobounded α`.
+  `s : set α`, one should prefer `bornology.is_cobounded s` over `s ∈ cobounded α`.
 - `bornology.is_bounded`: the predicate that states a set is bounded (i.e., the complement of a
- cobounded set). One should prefer `bornology.is_bounded s` over `sᶜ ∈ cobounded α`.
+  cobounded set). One should prefer `bornology.is_bounded s` over `sᶜ ∈ cobounded α`.
 - `bounded_space α`: a class extending `bornology α` with the condition
- `bornology.is_bounded (set.univ : set α)`
+  `bornology.is_bounded (set.univ : set α)`
 
 Although use of `cobounded α` is discouraged for indicating the (co)boundedness of individual sets,
 it is intended for regular use as a filter on `α`.
@@ -55,36 +55,36 @@ class bornology (α : Type*) :=
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
 def bornology.of_bounded {α : Type*} (B : set (set α))
- (empty_mem : ∅ ∈ B) (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : set α, s₂ ⊆ s₁ → s₂ ∈ B)
- (union_mem : ∀ s₁ s₂ ∈ B, s₁ ∪ s₂ ∈ B) (singleton_mem : ∀ x, {x} ∈ B) :
- bornology α :=
+  (empty_mem : ∅ ∈ B) (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : set α, s₂ ⊆ s₁ → s₂ ∈ B)
+  (union_mem : ∀ s₁ s₂ ∈ B, s₁ ∪ s₂ ∈ B) (singleton_mem : ∀ x, {x} ∈ B) :
+  bornology α :=
 { cobounded :=
- { sets := {s : set α | sᶜ ∈ B},
- univ_sets := by rwa ←compl_univ at empty_mem,
- sets_of_superset := λ x y hx hy, subset_mem xᶜ hx yᶜ (compl_subset_compl.mpr hy),
- inter_sets := λ x y hx hy, by simpa [compl_inter] using union_mem xᶜ hx yᶜ hy, },
- le_cofinite :=
- begin
- rw le_cofinite_iff_compl_singleton_mem,
- intros x,
- change {x}ᶜᶜ ∈ B,
- rw compl_compl,
- exact singleton_mem x
- end }
+  { sets := {s : set α | sᶜ ∈ B},
+    univ_sets := by rwa ←compl_univ at empty_mem,
+    sets_of_superset := λ x y hx hy, subset_mem xᶜ hx yᶜ (compl_subset_compl.mpr hy),
+    inter_sets := λ x y hx hy, by simpa [compl_inter] using union_mem xᶜ hx yᶜ hy, },
+  le_cofinite :=
+  begin
+    rw le_cofinite_iff_compl_singleton_mem,
+    intros x,
+    change {x}ᶜᶜ ∈ B,
+    rw compl_compl,
+    exact singleton_mem x
+  end }
 
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
 def bornology.of_bounded' {α : Type*} (B : set (set α))
- (empty_mem : ∅ ∈ B) (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : set α, s₂ ⊆ s₁ → s₂ ∈ B)
- (union_mem : ∀ s₁ s₂ ∈ B, s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀ B = univ) :
- bornology α :=
+  (empty_mem : ∅ ∈ B) (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : set α, s₂ ⊆ s₁ → s₂ ∈ B)
+  (union_mem : ∀ s₁ s₂ ∈ B, s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀ B = univ) :
+  bornology α :=
 bornology.of_bounded B empty_mem subset_mem union_mem $ λ x,
- begin
- rw sUnion_eq_univ_iff at sUnion_univ,
- rcases sUnion_univ x with ⟨s, hs, hxs⟩,
- exact subset_mem s hs {x} (singleton_subset_iff.mpr hxs)
- end
+  begin
+    rw sUnion_eq_univ_iff at sUnion_univ,
+    rcases sUnion_univ x with ⟨s, hs, hxs⟩,
+    exact subset_mem s hs {x} (singleton_subset_iff.mpr hxs)
+  end
 
 namespace bornology
 
@@ -103,7 +103,7 @@ lemma is_cobounded_def {s : set α} : is_cobounded s ↔ s ∈ cobounded α := i
 lemma is_bounded_def {s : set α} : is_bounded s ↔ sᶜ ∈ cobounded α := iff.rfl
 
 @[simp] lemma is_bounded_compl_iff : is_bounded sᶜ ↔ is_cobounded s :=
-by rw [is_bounded_def]; rw [ is_cobounded_def]; rw [ compl_compl]
+by rw [is_bounded_def, is_cobounded_def, compl_compl]
 
 @[simp] lemma is_cobounded_compl_iff : is_cobounded sᶜ ↔ is_bounded s := iff.rfl
 
@@ -111,7 +111,7 @@ alias is_bounded_compl_iff ↔ is_bounded.of_compl is_cobounded.compl
 alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
 
 @[simp] lemma is_bounded_empty : is_bounded (∅ : set α) :=
-by { rw [is_bounded_def]; rw [ compl_empty], exact univ_mem}
+by { rw [is_bounded_def, compl_empty], exact univ_mem}
 
 @[simp] lemma is_bounded_singleton : is_bounded ({x} : set α) :=
 by {rw [is_bounded_def], exact le_cofinite _ (finite_singleton x).compl_mem_cofinite}
@@ -141,67 +141,67 @@ lemma sUnion_bounded_univ : (⋃₀ {s : set α | is_bounded s}) = univ :=
 sUnion_eq_univ_iff.2 $ λ a, ⟨{a}, is_bounded_singleton, mem_singleton a⟩
 
 lemma comap_cobounded_le_iff [bornology β] {f : α → β} :
- (cobounded β).comap f ≤ cobounded α ↔ ∀ ⦃s⦄, is_bounded s → is_bounded (f '' s) :=
+  (cobounded β).comap f ≤ cobounded α ↔ ∀ ⦃s⦄, is_bounded s → is_bounded (f '' s) :=
 begin
- refine ⟨λ h s hs, _, λ h t ht,
- ⟨(f '' tᶜ)ᶜ, h $ is_cobounded.compl ht, compl_subset_comm.1 $ subset_preimage_image _ _⟩⟩,
- obtain ⟨t, ht, hts⟩ := h hs.compl,
- rw [subset_compl_comm] at hts; rw [ ←preimage_compl] at hts,
- exact (is_cobounded.compl ht).subset ((image_subset f hts).trans $ image_preimage_subset _ _),
+  refine ⟨λ h s hs, _, λ h t ht,
+    ⟨(f '' tᶜ)ᶜ, h $ is_cobounded.compl ht, compl_subset_comm.1 $ subset_preimage_image _ _⟩⟩,
+  obtain ⟨t, ht, hts⟩ := h hs.compl,
+  rw [subset_compl_comm, ←preimage_compl] at hts,
+  exact (is_cobounded.compl ht).subset ((image_subset f hts).trans $ image_preimage_subset _ _),
 end
 
 end
 
 lemma ext_iff' {t t' : bornology α} :
- t = t' ↔ ∀ s, (@cobounded α t).sets s ↔ (@cobounded α t').sets s :=
+  t = t' ↔ ∀ s, (@cobounded α t).sets s ↔ (@cobounded α t').sets s :=
 (ext_iff _ _).trans filter.ext_iff
 
 lemma ext_iff_is_bounded {t t' : bornology α} :
- t = t' ↔ ∀ s, @is_bounded α t s ↔ @is_bounded α t' s :=
+  t = t' ↔ ∀ s, @is_bounded α t s ↔ @is_bounded α t' s :=
 ⟨λ h s, h ▸ iff.rfl, λ h, by { ext, simpa only [is_bounded_def, compl_compl] using h sᶜ, }⟩
 
 variables {s : set α}
 
 lemma is_cobounded_of_bounded_iff (B : set (set α)) {empty_mem subset_mem union_mem sUnion_univ} :
- @is_cobounded _ (of_bounded B empty_mem subset_mem union_mem sUnion_univ) s ↔ sᶜ ∈ B := iff.rfl
+  @is_cobounded _ (of_bounded B empty_mem subset_mem union_mem sUnion_univ) s ↔ sᶜ ∈ B := iff.rfl
 
 lemma is_bounded_of_bounded_iff (B : set (set α)) {empty_mem subset_mem union_mem sUnion_univ} :
- @is_bounded _ (of_bounded B empty_mem subset_mem union_mem sUnion_univ) s ↔ s ∈ B :=
-by rw [is_bounded_def]; rw [ ←filter.mem_sets]; rw [ of_bounded_cobounded_sets]; rw [ set.mem_set_of_eq]; rw [ compl_compl]
+  @is_bounded _ (of_bounded B empty_mem subset_mem union_mem sUnion_univ) s ↔ s ∈ B :=
+by rw [is_bounded_def, ←filter.mem_sets, of_bounded_cobounded_sets, set.mem_set_of_eq, compl_compl]
 
 variables [bornology α]
 
 lemma is_cobounded_bInter {s : set ι} {f : ι → set α} (hs : s.finite) :
- is_cobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, is_cobounded (f i) :=
+  is_cobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, is_cobounded (f i) :=
 bInter_mem hs
 
 @[simp] lemma is_cobounded_bInter_finset (s : finset ι) {f : ι → set α} :
- is_cobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, is_cobounded (f i) :=
+  is_cobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, is_cobounded (f i) :=
 bInter_finset_mem s
 
 @[simp] lemma is_cobounded_Inter [finite ι] {f : ι → set α} :
- is_cobounded (⋂ i, f i) ↔ ∀ i, is_cobounded (f i) :=
+  is_cobounded (⋂ i, f i) ↔ ∀ i, is_cobounded (f i) :=
 Inter_mem
 
 lemma is_cobounded_sInter {S : set (set α)} (hs : S.finite) :
- is_cobounded (⋂₀ S) ↔ ∀ s ∈ S, is_cobounded s :=
+  is_cobounded (⋂₀ S) ↔ ∀ s ∈ S, is_cobounded s :=
 sInter_mem hs
 
 lemma is_bounded_bUnion {s : set ι} {f : ι → set α} (hs : s.finite) :
- is_bounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, is_bounded (f i) :=
+  is_bounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, is_bounded (f i) :=
 by simp only [← is_cobounded_compl_iff, compl_Union, is_cobounded_bInter hs]
 
 lemma is_bounded_bUnion_finset (s : finset ι) {f : ι → set α} :
- is_bounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, is_bounded (f i) :=
+  is_bounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, is_bounded (f i) :=
 is_bounded_bUnion s.finite_to_set
 
 lemma is_bounded_sUnion {S : set (set α)} (hs : S.finite) :
- is_bounded (⋃₀ S) ↔ (∀ s ∈ S, is_bounded s) :=
-by rw [sUnion_eq_bUnion]; rw [ is_bounded_bUnion hs]
+  is_bounded (⋃₀ S) ↔ (∀ s ∈ S, is_bounded s) :=
+by rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
 
 @[simp] lemma is_bounded_Union [finite ι] {s : ι → set α} :
- is_bounded (⋃ i, s i) ↔ ∀ i, is_bounded (s i) :=
-by rw [← sUnion_range]; rw [ is_bounded_sUnion (finite_range s)]; rw [ forall_range_iff]
+  is_bounded (⋃ i, s i) ↔ ∀ i, is_bounded (s i) :=
+by rw [← sUnion_range, is_bounded_sUnion (finite_range s), forall_range_iff]
 
 end bornology
 
@@ -215,7 +215,7 @@ instance : bornology punit := ⟨⊥, bot_le⟩
 /-- The cofinite filter as a bornology -/
 @[reducible] def bornology.cofinite : bornology α :=
 { cobounded := cofinite,
- le_cofinite := le_rfl }
+  le_cofinite := le_rfl }
 
 /-- A space with a `bornology` is a **bounded space** if `set.univ : set α` is bounded. -/
 class bounded_space (α : Type*) [bornology α] : Prop :=
@@ -229,7 +229,7 @@ lemma is_bounded_univ : is_bounded (univ : set α) ↔ bounded_space α :=
 ⟨λ h, ⟨h⟩, λ h, h.1⟩
 
 lemma cobounded_eq_bot_iff : cobounded α = ⊥ ↔ bounded_space α :=
-by rw [← is_bounded_univ]; rw [ is_bounded_def]; rw [ compl_univ]; rw [ empty_mem_iff_bot]
+by rw [← is_bounded_univ, is_bounded_def, compl_univ, empty_mem_iff_bot]
 
 variables [bounded_space α]
 
@@ -241,4 +241,3 @@ variable (α)
 @[simp] lemma cobounded_eq_bot : cobounded α = ⊥ := cobounded_eq_bot_iff.2 ‹_›
 
 end bornology
-

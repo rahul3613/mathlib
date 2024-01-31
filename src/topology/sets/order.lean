@@ -29,7 +29,7 @@ namespace clopen_upper_set
 
 instance : set_like (clopen_upper_set α) α :=
 { coe := λ s, s.carrier,
- coe_injective' := λ s t h, by { obtain ⟨⟨_, _⟩, _⟩ := s, obtain ⟨⟨_, _⟩, _⟩ := t, congr' } }
+  coe_injective' := λ s t h, by { obtain ⟨⟨_, _⟩, _⟩ := s, obtain ⟨⟨_, _⟩, _⟩ := t, congr' } }
 
 lemma upper (s : clopen_upper_set α) : is_upper_set (s : set α) := s.upper'
 lemma clopen (s : clopen_upper_set α) : is_clopen (s : set α) := s.clopen'
@@ -63,4 +63,3 @@ bounded_order.lift (coe : _ → set α) (λ _ _, id) rfl rfl
 instance : inhabited (clopen_upper_set α) := ⟨⊥⟩
 
 end clopen_upper_set
-

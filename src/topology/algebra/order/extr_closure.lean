@@ -21,41 +21,41 @@ open filter set
 open_locale topology
 
 variables {X Y : Type*} [topological_space X] [topological_space Y] [preorder Y]
- [order_closed_topology Y] {f g : X → Y} {s : set X} {a : X}
+  [order_closed_topology Y] {f g : X → Y} {s : set X} {a : X}
 
 protected lemma is_max_on.closure (h : is_max_on f s a) (hc : continuous_on f (closure s)) :
- is_max_on f (closure s) a :=
+  is_max_on f (closure s) a :=
 λ x hx, continuous_within_at.closure_le hx ((hc x hx).mono subset_closure)
- continuous_within_at_const h
+  continuous_within_at_const h
 
 protected lemma is_min_on.closure (h : is_min_on f s a) (hc : continuous_on f (closure s)) :
- is_min_on f (closure s) a :=
+  is_min_on f (closure s) a :=
 h.dual.closure hc
 
 protected lemma is_extr_on.closure (h : is_extr_on f s a) (hc : continuous_on f (closure s)) :
- is_extr_on f (closure s) a :=
+  is_extr_on f (closure s) a :=
 h.elim (λ h, or.inl $ h.closure hc) (λ h, or.inr $ h.closure hc)
 
 protected lemma is_local_max_on.closure (h : is_local_max_on f s a)
- (hc : continuous_on f (closure s)) :
- is_local_max_on f (closure s) a :=
+  (hc : continuous_on f (closure s)) :
+  is_local_max_on f (closure s) a :=
 begin
- rcases mem_nhds_within.1 h with ⟨U, Uo, aU, hU⟩,
- refine mem_nhds_within.2 ⟨U, Uo, aU, _⟩,
- rintro x ⟨hxU, hxs⟩,
- refine continuous_within_at.closure_le _ _ continuous_within_at_const hU,
- { rwa [mem_closure_iff_nhds_within_ne_bot]; rwa [ nhds_within_inter_of_mem]; rwa [ ← mem_closure_iff_nhds_within_ne_bot],
- exact nhds_within_le_nhds (Uo.mem_nhds hxU) },
- { exact (hc _ hxs).mono ((inter_subset_right _ _).trans subset_closure) }
+  rcases mem_nhds_within.1 h with ⟨U, Uo, aU, hU⟩,
+  refine mem_nhds_within.2 ⟨U, Uo, aU, _⟩,
+  rintro x ⟨hxU, hxs⟩,
+  refine continuous_within_at.closure_le _ _ continuous_within_at_const hU,
+  { rwa [mem_closure_iff_nhds_within_ne_bot, nhds_within_inter_of_mem,
+      ← mem_closure_iff_nhds_within_ne_bot],
+    exact nhds_within_le_nhds (Uo.mem_nhds hxU) },
+  { exact (hc _ hxs).mono ((inter_subset_right _ _).trans subset_closure) }
 end
 
 protected lemma is_local_min_on.closure (h : is_local_min_on f s a)
- (hc : continuous_on f (closure s)) :
- is_local_min_on f (closure s) a :=
+  (hc : continuous_on f (closure s)) :
+  is_local_min_on f (closure s) a :=
 is_local_max_on.closure h.dual hc
 
 protected lemma is_local_extr_on.closure (h : is_local_extr_on f s a)
- (hc : continuous_on f (closure s)) :
- is_local_extr_on f (closure s) a :=
+  (hc : continuous_on f (closure s)) :
+  is_local_extr_on f (closure s) a :=
 h.elim (λ h, or.inl $ h.closure hc) (λ h, or.inr $ h.closure hc)
-

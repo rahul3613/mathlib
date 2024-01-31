@@ -30,7 +30,7 @@ lemma equivalence.has_initial_iff (e : C ≌ D) : has_initial C ↔ has_initial 
  λ h, by exactI has_initial_of_equivalence e.functor⟩
 
 lemma has_terminal_of_equivalence (e : D ⥤ C) [is_equivalence e] [has_terminal C] :
- has_terminal D :=
+  has_terminal D :=
 adjunction.has_limits_of_shape_of_equivalence e
 
 lemma equivalence.has_terminal_iff (e : C ≌ D) : has_terminal C ↔ has_terminal D :=
@@ -38,4 +38,3 @@ lemma equivalence.has_terminal_iff (e : C ≌ D) : has_terminal C ↔ has_termin
  λ h, by exactI has_terminal_of_equivalence e.functor⟩
 
 end category_theory
-

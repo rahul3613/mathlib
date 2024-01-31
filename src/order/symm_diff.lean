@@ -23,7 +23,7 @@ Some examples are
 * The symmetric difference on `bool` is `bxor`.
 * The equivalence of propositions. Two propositions are equivalent if they imply each other.
 * The symmetric difference translates to addition when considering a Boolean algebra as a Boolean
- ring.
+  ring.
 
 ## Main declarations
 
@@ -88,18 +88,18 @@ lemma symm_diff_comm : a ∆ b = b ∆ a := by simp only [(∆), sup_comm]
 
 instance symm_diff_is_comm : is_commutative α (∆) := ⟨symm_diff_comm⟩
 
-@[simp] lemma symm_diff_self : a ∆ a = ⊥ := by rw [(∆)]; rw [ sup_idem]; rw [ sdiff_self]
-@[simp] lemma symm_diff_bot : a ∆ ⊥ = a := by rw [(∆)]; rw [ sdiff_bot]; rw [ bot_sdiff]; rw [ sup_bot_eq]
-@[simp] lemma bot_symm_diff : ⊥ ∆ a = a := by rw [symm_diff_comm]; rw [ symm_diff_bot]
+@[simp] lemma symm_diff_self : a ∆ a = ⊥ := by rw [(∆), sup_idem, sdiff_self]
+@[simp] lemma symm_diff_bot : a ∆ ⊥ = a := by rw [(∆), sdiff_bot, bot_sdiff, sup_bot_eq]
+@[simp] lemma bot_symm_diff : ⊥ ∆ a = a := by rw [symm_diff_comm, symm_diff_bot]
 
 @[simp] lemma symm_diff_eq_bot {a b : α} : a ∆ b = ⊥ ↔ a = b :=
 by simp_rw [symm_diff, sup_eq_bot_iff, sdiff_eq_bot_iff, le_antisymm_iff]
 
 lemma symm_diff_of_le {a b : α} (h : a ≤ b) : a ∆ b = b \ a :=
-by rw [symm_diff]; rw [ sdiff_eq_bot_iff.2 h]; rw [ bot_sup_eq]
+by rw [symm_diff, sdiff_eq_bot_iff.2 h, bot_sup_eq]
 
 lemma symm_diff_of_ge {a b : α} (h : b ≤ a) : a ∆ b = a \ b :=
-by rw [symm_diff]; rw [ sdiff_eq_bot_iff.2 h]; rw [ sup_bot_eq]
+by rw [symm_diff, sdiff_eq_bot_iff.2 h, sup_bot_eq]
 
 lemma symm_diff_le {a b c : α} (ha : a ≤ b ⊔ c) (hb : b ≤ a ⊔ c) : a ∆ b ≤ c :=
 sup_le (sdiff_le_iff.2 ha) $ sdiff_le_iff.2 hb
@@ -112,47 +112,47 @@ by simp_rw [symm_diff, sup_le_iff, sdiff_le_iff]
 lemma symm_diff_eq_sup_sdiff_inf : a ∆ b = (a ⊔ b) \ (a ⊓ b) := by simp [sup_sdiff, symm_diff]
 
 lemma disjoint.symm_diff_eq_sup {a b : α} (h : disjoint a b) : a ∆ b = a ⊔ b :=
-by rw [(∆)]; rw [ h.sdiff_eq_left]; rw [ h.sdiff_eq_right]
+by rw [(∆), h.sdiff_eq_left, h.sdiff_eq_right]
 
 lemma symm_diff_sdiff : (a ∆ b) \ c = a \ (b ⊔ c) ⊔ b \ (a ⊔ c) :=
-by rw [symm_diff]; rw [ sup_sdiff_distrib]; rw [ sdiff_sdiff_left]; rw [ sdiff_sdiff_left]
+by rw [symm_diff, sup_sdiff_distrib, sdiff_sdiff_left, sdiff_sdiff_left]
 
 @[simp] lemma symm_diff_sdiff_inf : a ∆ b \ (a ⊓ b) = a ∆ b :=
 by { rw symm_diff_sdiff, simp [symm_diff] }
 
 @[simp] lemma symm_diff_sdiff_eq_sup : a ∆ (b \ a) = a ⊔ b :=
 begin
- rw [symm_diff]; rw [ sdiff_idem],
- exact le_antisymm (sup_le_sup sdiff_le sdiff_le)
- (sup_le le_sdiff_sup $ le_sdiff_sup.trans $ sup_le le_sup_right le_sdiff_sup),
+  rw [symm_diff, sdiff_idem],
+  exact le_antisymm (sup_le_sup sdiff_le sdiff_le)
+    (sup_le le_sdiff_sup $ le_sdiff_sup.trans $ sup_le le_sup_right le_sdiff_sup),
 end
 
 @[simp] lemma sdiff_symm_diff_eq_sup : (a \ b) ∆ b = a ⊔ b :=
-by rw [symm_diff_comm]; rw [ symm_diff_sdiff_eq_sup]; rw [ sup_comm]
+by rw [symm_diff_comm, symm_diff_sdiff_eq_sup, sup_comm]
 
 @[simp] lemma symm_diff_sup_inf : a ∆ b ⊔ a ⊓ b = a ⊔ b :=
 begin
- refine le_antisymm (sup_le symm_diff_le_sup inf_le_sup) _,
- rw [sup_inf_left]; rw [ symm_diff],
- refine sup_le (le_inf le_sup_right _) (le_inf _ le_sup_right),
- { rw sup_right_comm,
- exact le_sup_of_le_left le_sdiff_sup },
- { rw sup_assoc,
- exact le_sup_of_le_right le_sdiff_sup }
+  refine le_antisymm (sup_le symm_diff_le_sup inf_le_sup) _,
+  rw [sup_inf_left, symm_diff],
+  refine sup_le (le_inf le_sup_right _) (le_inf _ le_sup_right),
+  { rw sup_right_comm,
+    exact le_sup_of_le_left le_sdiff_sup },
+  { rw sup_assoc,
+    exact le_sup_of_le_right le_sdiff_sup }
 end
 
-@[simp] lemma inf_sup_symm_diff : a ⊓ b ⊔ a ∆ b = a ⊔ b := by rw [sup_comm]; rw [ symm_diff_sup_inf]
+@[simp] lemma inf_sup_symm_diff : a ⊓ b ⊔ a ∆ b = a ⊔ b := by rw [sup_comm, symm_diff_sup_inf]
 
 @[simp] lemma symm_diff_symm_diff_inf : a ∆ b ∆ (a ⊓ b) = a ⊔ b :=
-by rw [←symm_diff_sdiff_inf a]; rw [ sdiff_symm_diff_eq_sup]; rw [ symm_diff_sup_inf]
+by rw [←symm_diff_sdiff_inf a, sdiff_symm_diff_eq_sup, symm_diff_sup_inf]
 
 @[simp] lemma inf_symm_diff_symm_diff : (a ⊓ b) ∆ (a ∆ b) = a ⊔ b :=
-by rw [symm_diff_comm]; rw [ symm_diff_symm_diff_inf]
+by rw [symm_diff_comm, symm_diff_symm_diff_inf]
 
 lemma symm_diff_triangle : a ∆ c ≤ a ∆ b ⊔ b ∆ c :=
 begin
- refine (sup_le_sup (sdiff_triangle a b c) $ sdiff_triangle _ b _).trans_eq _,
- rw [@sup_comm _ _ (c \ b)]; rw [ sup_sup_sup_comm]; rw [ symm_diff]; rw [ symm_diff],
+  refine (sup_le_sup (sdiff_triangle a b c) $ sdiff_triangle _ b _).trans_eq _,
+  rw [@sup_comm _ _ (c \ b), sup_sup_sup_comm, symm_diff, symm_diff],
 end
 
 end generalized_coheyting_algebra
@@ -167,17 +167,17 @@ lemma bihimp_comm : a ⇔ b = b ⇔ a := by simp only [(⇔), inf_comm]
 
 instance bihimp_is_comm : is_commutative α (⇔) := ⟨bihimp_comm⟩
 
-@[simp] lemma bihimp_self : a ⇔ a = ⊤ := by rw [(⇔)]; rw [ inf_idem]; rw [ himp_self]
-@[simp] lemma bihimp_top : a ⇔ ⊤ = a := by rw [(⇔)]; rw [ himp_top]; rw [ top_himp]; rw [ inf_top_eq]
-@[simp] lemma top_bihimp : ⊤ ⇔ a = a := by rw [bihimp_comm]; rw [ bihimp_top]
+@[simp] lemma bihimp_self : a ⇔ a = ⊤ := by rw [(⇔), inf_idem, himp_self]
+@[simp] lemma bihimp_top : a ⇔ ⊤ = a := by rw [(⇔), himp_top, top_himp, inf_top_eq]
+@[simp] lemma top_bihimp : ⊤ ⇔ a = a := by rw [bihimp_comm, bihimp_top]
 
 @[simp] lemma bihimp_eq_top {a b : α} : a ⇔ b = ⊤ ↔ a = b := @symm_diff_eq_bot αᵒᵈ _ _ _
 
 lemma bihimp_of_le {a b : α} (h : a ≤ b) : a ⇔ b = b ⇨ a :=
-by rw [bihimp]; rw [ himp_eq_top_iff.2 h]; rw [ inf_top_eq]
+by rw [bihimp, himp_eq_top_iff.2 h, inf_top_eq]
 
 lemma bihimp_of_ge {a b : α} (h : b ≤ a) : a ⇔ b = a ⇨ b :=
-by rw [bihimp]; rw [ himp_eq_top_iff.2 h]; rw [ top_inf_eq]
+by rw [bihimp, himp_eq_top_iff.2 h, top_inf_eq]
 
 lemma le_bihimp {a b c : α} (hb : a ⊓ b ≤ c) (hc : a ⊓ c ≤ b) : a ≤ b ⇔ c :=
 le_inf (le_himp_iff.2 hc) $ le_himp_iff.2 hb
@@ -190,10 +190,10 @@ by simp_rw [bihimp, le_inf_iff, le_himp_iff, and.comm]
 lemma bihimp_eq_inf_himp_inf : a ⇔ b = (a ⊔ b) ⇨ (a ⊓ b) := by simp [himp_inf_distrib, bihimp]
 
 lemma codisjoint.bihimp_eq_inf {a b : α} (h : codisjoint a b) : a ⇔ b = a ⊓ b :=
-by rw [(⇔)]; rw [ h.himp_eq_left]; rw [ h.himp_eq_right]
+by rw [(⇔), h.himp_eq_left, h.himp_eq_right]
 
 lemma himp_bihimp : a ⇨ (b ⇔ c) = ((a ⊓ c) ⇨ b) ⊓ ((a ⊓ b) ⇨ c) :=
-by rw [bihimp]; rw [ himp_inf_distrib]; rw [ himp_himp]; rw [ himp_himp]
+by rw [bihimp, himp_inf_distrib, himp_himp, himp_himp]
 
 @[simp] lemma sup_himp_bihimp : (a ⊔ b) ⇨ (a ⇔ b) = a ⇔ b :=
 by { rw himp_bihimp, simp [bihimp] }
@@ -219,14 +219,14 @@ variables [coheyting_algebra α] (a : α)
 
 @[simp] lemma hnot_symm_diff_self : (￢a) ∆ a = ⊤ :=
 begin
- rw [eq_top_iff]; rw [ symm_diff]; rw [ hnot_sdiff]; rw [ sup_sdiff_self],
- exact codisjoint.top_le codisjoint_hnot_left
+  rw [eq_top_iff, symm_diff, hnot_sdiff, sup_sdiff_self],
+  exact codisjoint.top_le codisjoint_hnot_left
 end
 
-@[simp] lemma symm_diff_hnot_self : a ∆ ￢a = ⊤ := by rw [symm_diff_comm]; rw [ hnot_symm_diff_self]
+@[simp] lemma symm_diff_hnot_self : a ∆ ￢a = ⊤ := by rw [symm_diff_comm, hnot_symm_diff_self]
 
 lemma is_compl.symm_diff_eq_top {a b : α} (h : is_compl a b) : a ∆ b = ⊤ :=
-by rw [h.eq_hnot]; rw [ hnot_symm_diff_self]
+by rw [h.eq_hnot, hnot_symm_diff_self]
 
 end coheyting_algebra
 
@@ -240,7 +240,7 @@ variables [heyting_algebra α] (a : α)
 @[simp] lemma bihimp_hnot_self : a ⇔ aᶜ = ⊥ := @symm_diff_hnot_self αᵒᵈ _ _
 
 lemma is_compl.bihimp_eq_bot {a b : α} (h : is_compl a b) : a ⇔ b = ⊥ :=
-by rw [h.eq_compl]; rw [ compl_bihimp_self]
+by rw [h.eq_compl, compl_bihimp_self]
 
 end heyting_algebra
 
@@ -252,12 +252,13 @@ sdiff_eq_symm inf_le_sup (by rw symm_diff_eq_sup_sdiff_inf)
 
 lemma disjoint_symm_diff_inf : disjoint (a ∆ b) (a ⊓ b) :=
 begin
- rw [symm_diff_eq_sup_sdiff_inf],
- exact disjoint_sdiff_self_left,
+  rw [symm_diff_eq_sup_sdiff_inf],
+  exact disjoint_sdiff_self_left,
 end
 
 lemma inf_symm_diff_distrib_left : a ⊓ (b ∆ c) = (a ⊓ b) ∆ (a ⊓ c) :=
-by rw [symm_diff_eq_sup_sdiff_inf]; rw [ inf_sdiff_distrib_left]; rw [ inf_sup_left]; rw [ inf_inf_distrib_left]; rw [ symm_diff_eq_sup_sdiff_inf]
+by rw [symm_diff_eq_sup_sdiff_inf, inf_sdiff_distrib_left, inf_sup_left, inf_inf_distrib_left,
+  symm_diff_eq_sup_sdiff_inf]
 
 lemma inf_symm_diff_distrib_right : (a ∆ b) ⊓ c = (a ⊓ c) ∆ (b ⊓ c) :=
 by simp_rw [@inf_comm _ _ _ c, inf_symm_diff_distrib_left]
@@ -266,55 +267,55 @@ lemma sdiff_symm_diff : c \ (a ∆ b) = (c ⊓ a ⊓ b) ⊔ ((c \ a) ⊓ (c \ b)
 by simp only [(∆), sdiff_sdiff_sup_sdiff']
 
 lemma sdiff_symm_diff' : c \ (a ∆ b) = (c ⊓ a ⊓ b) ⊔ (c \ (a ⊔ b)) :=
-by rw [sdiff_symm_diff]; rw [ sdiff_sup]; rw [ sup_comm]
+by rw [sdiff_symm_diff, sdiff_sup, sup_comm]
 
 @[simp] lemma symm_diff_sdiff_left : (a ∆ b) \ a = b \ a :=
-by rw [symm_diff_def]; rw [ sup_sdiff]; rw [ sdiff_idem]; rw [ sdiff_sdiff_self]; rw [ bot_sup_eq]
+by rw [symm_diff_def, sup_sdiff, sdiff_idem, sdiff_sdiff_self, bot_sup_eq]
 
 @[simp] lemma symm_diff_sdiff_right : (a ∆ b) \ b = a \ b :=
-by rw [symm_diff_comm]; rw [ symm_diff_sdiff_left]
+by rw [symm_diff_comm, symm_diff_sdiff_left]
 
 @[simp] lemma sdiff_symm_diff_left : a \ (a ∆ b) = a ⊓ b := by simp [sdiff_symm_diff]
 @[simp] lemma sdiff_symm_diff_right : b \ (a ∆ b) = a ⊓ b :=
-by rw [symm_diff_comm]; rw [ inf_comm]; rw [ sdiff_symm_diff_left]
+by rw [symm_diff_comm, inf_comm, sdiff_symm_diff_left]
 
 lemma symm_diff_eq_sup : a ∆ b = a ⊔ b ↔ disjoint a b :=
 begin
- refine ⟨λ h, _, disjoint.symm_diff_eq_sup⟩,
- rw [symm_diff_eq_sup_sdiff_inf] at h; rw [ sdiff_eq_self_iff_disjoint] at h,
- exact h.of_disjoint_inf_of_le le_sup_left,
+  refine ⟨λ h, _, disjoint.symm_diff_eq_sup⟩,
+  rw [symm_diff_eq_sup_sdiff_inf, sdiff_eq_self_iff_disjoint] at h,
+  exact h.of_disjoint_inf_of_le le_sup_left,
 end
 
 @[simp] lemma le_symm_diff_iff_left : a ≤ a ∆ b ↔ disjoint a b :=
 begin
- refine ⟨λ h, _, λ h, h.symm_diff_eq_sup.symm ▸ le_sup_left⟩,
- rw symm_diff_eq_sup_sdiff_inf at h,
- exact disjoint_iff_inf_le.mpr (le_sdiff_iff.1 $ inf_le_of_left_le h).le,
+  refine ⟨λ h, _, λ h, h.symm_diff_eq_sup.symm ▸ le_sup_left⟩,
+  rw symm_diff_eq_sup_sdiff_inf at h,
+  exact disjoint_iff_inf_le.mpr (le_sdiff_iff.1 $ inf_le_of_left_le h).le,
 end
 
 @[simp] lemma le_symm_diff_iff_right : b ≤ a ∆ b ↔ disjoint a b :=
-by rw [symm_diff_comm]; rw [ le_symm_diff_iff_left]; rw [ disjoint.comm]
+by rw [symm_diff_comm, le_symm_diff_iff_left, disjoint.comm]
 
 lemma symm_diff_symm_diff_left :
- a ∆ b ∆ c = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔ (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c) :=
-calc a ∆ b ∆ c = ((a ∆ b) \ c) ⊔ (c \ (a ∆ b)) : symm_diff_def _ _
- ... = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔
- ((c \ (a ⊔ b)) ⊔ (c ⊓ a ⊓ b)) :
- by rw [sdiff_symm_diff']; rw [ @sup_comm _ _ (c ⊓ a ⊓ b)]; rw [ symm_diff_sdiff]
- ... = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔
- (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c) : by ac_refl
+  a ∆ b ∆ c = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔ (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c) :=
+calc a ∆ b ∆ c = ((a ∆ b) \ c) ⊔ (c \ (a ∆ b))   : symm_diff_def _ _
+           ... = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔
+                   ((c \ (a ⊔ b)) ⊔ (c ⊓ a ⊓ b)) :
+                                by rw [sdiff_symm_diff', @sup_comm _ _ (c ⊓ a ⊓ b), symm_diff_sdiff]
+           ... = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔
+                   (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c)   : by ac_refl
 
 lemma symm_diff_symm_diff_right :
- a ∆ (b ∆ c) = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔ (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c) :=
+  a ∆ (b ∆ c) = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔ (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c) :=
 calc a ∆ (b ∆ c) = (a \ (b ∆ c)) ⊔ ((b ∆ c) \ a) : symm_diff_def _ _
- ... = (a \ (b ⊔ c)) ⊔ (a ⊓ b ⊓ c) ⊔
- (b \ (c ⊔ a) ⊔ c \ (b ⊔ a)) :
- by rw [sdiff_symm_diff']; rw [ @sup_comm _ _ (a ⊓ b ⊓ c)]; rw [ symm_diff_sdiff]
- ... = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔
- (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c) : by ac_refl
+             ... = (a \ (b ⊔ c)) ⊔ (a ⊓ b ⊓ c) ⊔
+                     (b \ (c ⊔ a) ⊔ c \ (b ⊔ a))   :
+                                by rw [sdiff_symm_diff', @sup_comm _ _ (a ⊓ b ⊓ c), symm_diff_sdiff]
+             ... = (a \ (b ⊔ c)) ⊔ (b \ (a ⊔ c)) ⊔
+                     (c \ (a ⊔ b)) ⊔ (a ⊓ b ⊓ c)   : by ac_refl
 
 lemma symm_diff_assoc : a ∆ b ∆ c = a ∆ (b ∆ c) :=
-by rw [symm_diff_symm_diff_left]; rw [ symm_diff_symm_diff_right]
+by rw [symm_diff_symm_diff_left, symm_diff_symm_diff_right]
 
 instance symm_diff_is_assoc : is_associative α (∆) := ⟨symm_diff_assoc⟩
 
@@ -330,7 +331,7 @@ by simp_rw [symm_diff_assoc, symm_diff_left_comm]
 @[simp] lemma symm_diff_symm_diff_cancel_right : b ∆ a ∆ a = b := by simp [symm_diff_assoc]
 
 @[simp] lemma symm_diff_symm_diff_self' : a ∆ b ∆ a = b :=
-by rw [symm_diff_comm]; rw [symm_diff_symm_diff_cancel_left]
+by rw [symm_diff_comm,symm_diff_symm_diff_cancel_left]
 
 lemma symm_diff_left_involutive (a : α) : involutive (∆ a) := symm_diff_symm_diff_cancel_right _
 lemma symm_diff_right_involutive (a : α) : involutive ((∆) a) := symm_diff_symm_diff_cancel_left _
@@ -349,22 +350,22 @@ variables {a b c}
 
 @[simp] lemma symm_diff_eq_left : a ∆ b = a ↔ b = ⊥ :=
 calc a ∆ b = a ↔ a ∆ b = a ∆ ⊥ : by rw symm_diff_bot
- ... ↔ b = ⊥ : by rw symm_diff_right_inj
+           ... ↔     b = ⊥     : by rw symm_diff_right_inj
 
-@[simp] lemma symm_diff_eq_right : a ∆ b = b ↔ a = ⊥ := by rw [symm_diff_comm]; rw [ symm_diff_eq_left]
+@[simp] lemma symm_diff_eq_right : a ∆ b = b ↔ a = ⊥ := by rw [symm_diff_comm, symm_diff_eq_left]
 
 protected lemma disjoint.symm_diff_left (ha : disjoint a c) (hb : disjoint b c) :
- disjoint (a ∆ b) c :=
+  disjoint (a ∆ b) c :=
 by { rw symm_diff_eq_sup_sdiff_inf, exact (ha.sup_left hb).disjoint_sdiff_left }
 
 protected lemma disjoint.symm_diff_right (ha : disjoint a b) (hb : disjoint a c) :
- disjoint a (b ∆ c) :=
+  disjoint a (b ∆ c) :=
 (ha.symm.symm_diff_left hb.symm).symm
 
 lemma symm_diff_eq_iff_sdiff_eq (ha : a ≤ c) : a ∆ b = c ↔ c \ a = b :=
 begin
- rw ←symm_diff_of_le ha,
- exact ((symm_diff_right_involutive a).to_perm _).apply_eq_iff_eq_symm_apply.trans eq_comm,
+  rw ←symm_diff_of_le ha,
+  exact ((symm_diff_right_involutive a).to_perm _).apply_eq_iff_eq_symm_apply.trans eq_comm,
 end
 
 end generalized_boolean_algebra
@@ -404,14 +405,14 @@ by simp_rw [bihimp_assoc, bihimp_left_comm]
 @[simp] lemma bihimp_bihimp_cancel_left : a ⇔ (a ⇔ b) = b := by simp [←bihimp_assoc]
 @[simp] lemma bihimp_bihimp_cancel_right : b ⇔ a ⇔ a = b := by simp [bihimp_assoc]
 
-@[simp] lemma bihimp_bihimp_self : a ⇔ b ⇔ a = b := by rw [bihimp_comm]; rw [ bihimp_bihimp_cancel_left]
+@[simp] lemma bihimp_bihimp_self : a ⇔ b ⇔ a = b := by rw [bihimp_comm, bihimp_bihimp_cancel_left]
 
 lemma bihimp_left_involutive (a : α) : involutive (⇔ a) := bihimp_bihimp_cancel_right _
 lemma bihimp_right_involutive (a : α) : involutive ((⇔) a) := bihimp_bihimp_cancel_left _
-lemma bihimp_left_injective (a : α) : injective (⇔ a) := @symm_diff_left_injective αᵒᵈ _ _
-lemma bihimp_right_injective (a : α) : injective ((⇔) a) := @symm_diff_right_injective αᵒᵈ _ _
-lemma bihimp_left_surjective (a : α) : surjective (⇔ a) := @symm_diff_left_surjective αᵒᵈ _ _
-lemma bihimp_right_surjective (a : α) : surjective ((⇔) a) := @symm_diff_right_surjective αᵒᵈ _ _
+lemma bihimp_left_injective (a : α) : injective (⇔ a) := @symm_diff_left_injective αᵒᵈ  _ _
+lemma bihimp_right_injective (a : α) : injective ((⇔) a) := @symm_diff_right_injective αᵒᵈ  _ _
+lemma bihimp_left_surjective (a : α) : surjective (⇔ a) := @symm_diff_left_surjective αᵒᵈ  _ _
+lemma bihimp_right_surjective (a : α) : surjective ((⇔) a) := @symm_diff_right_surjective αᵒᵈ  _ _
 
 variables {a b c}
 
@@ -422,11 +423,11 @@ variables {a b c}
 @[simp] lemma bihimp_eq_right : a ⇔ b = b ↔ a = ⊤ := @symm_diff_eq_right αᵒᵈ _ _ _
 
 protected lemma codisjoint.bihimp_left (ha : codisjoint a c) (hb : codisjoint b c) :
- codisjoint (a ⇔ b) c :=
+  codisjoint (a ⇔ b) c :=
 (ha.inf_left hb).mono_left inf_le_bihimp
 
 protected lemma codisjoint.bihimp_right (ha : codisjoint a b) (hb : codisjoint a c) :
- codisjoint a (b ⇔ c) :=
+  codisjoint a (b ⇔ c) :=
 (ha.inf_right hb).mono_right inf_le_bihimp
 
 end cogeneralized_boolean_algebra
@@ -435,7 +436,7 @@ lemma symm_diff_eq : a ∆ b = (a ⊓ bᶜ) ⊔ (b ⊓ aᶜ) := by simp only [(�
 lemma bihimp_eq : a ⇔ b = (a ⊔ bᶜ) ⊓ (b ⊔ aᶜ) := by simp only [(⇔), himp_eq]
 
 lemma symm_diff_eq' : a ∆ b = (a ⊔ b) ⊓ (aᶜ ⊔ bᶜ) :=
-by rw [symm_diff_eq_sup_sdiff_inf]; rw [ sdiff_eq]; rw [ compl_inf]
+by rw [symm_diff_eq_sup_sdiff_inf, sdiff_eq, compl_inf]
 
 lemma bihimp_eq' : a ⇔ b = (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ) := @symm_diff_eq' αᵒᵈ _ _ _
 
@@ -453,36 +454,40 @@ sup_comm.trans $ by simp_rw [compl_sdiff_compl, sdiff_eq, symm_diff_eq]
 @[simp] lemma compl_bihimp_compl : aᶜ ⇔ bᶜ = a ⇔ b := @compl_symm_diff_compl αᵒᵈ _ _ _
 
 @[simp] lemma symm_diff_eq_top : a ∆ b = ⊤ ↔ is_compl a b :=
-by rw [symm_diff_eq']; rw [ ←compl_inf]; rw [ inf_eq_top_iff]; rw [ compl_eq_top]; rw [ is_compl_iff]; rw [ disjoint_iff]; rw [ codisjoint_iff]; rw [ and.comm]
+by rw [symm_diff_eq', ←compl_inf, inf_eq_top_iff, compl_eq_top, is_compl_iff, disjoint_iff,
+ codisjoint_iff, and.comm]
 
 @[simp] lemma bihimp_eq_bot : a ⇔ b = ⊥ ↔ is_compl a b :=
-by rw [bihimp_eq']; rw [ ←compl_sup]; rw [ sup_eq_bot_iff]; rw [ compl_eq_bot]; rw [ is_compl_iff]; rw [ disjoint_iff]; rw [ codisjoint_iff]
+by rw [bihimp_eq', ←compl_sup, sup_eq_bot_iff, compl_eq_bot, is_compl_iff, disjoint_iff,
+ codisjoint_iff]
 
 @[simp] lemma compl_symm_diff_self : aᶜ ∆ a = ⊤ := hnot_symm_diff_self _
 @[simp] lemma symm_diff_compl_self : a ∆ aᶜ = ⊤ := symm_diff_hnot_self _
 
 lemma symm_diff_symm_diff_right' :
- a ∆ (b ∆ c) = (a ⊓ b ⊓ c) ⊔ (a ⊓ bᶜ ⊓ cᶜ) ⊔ (aᶜ ⊓ b ⊓ cᶜ) ⊔ (aᶜ ⊓ bᶜ ⊓ c) :=
+  a ∆ (b ∆ c) = (a ⊓ b ⊓ c) ⊔ (a ⊓ bᶜ ⊓ cᶜ) ⊔ (aᶜ ⊓ b ⊓ cᶜ) ⊔ (aᶜ ⊓ bᶜ ⊓ c) :=
 calc a ∆ (b ∆ c) = (a ⊓ ((b ⊓ c) ⊔ (bᶜ ⊓ cᶜ))) ⊔
- (((b ⊓ cᶜ) ⊔ (c ⊓ bᶜ)) ⊓ aᶜ) : by rw [symm_diff_eq]; rw [ compl_symm_diff]; rw [ bihimp_eq']; rw [ symm_diff_eq]
- ... = (a ⊓ b ⊓ c) ⊔ (a ⊓ bᶜ ⊓ cᶜ) ⊔
- (b ⊓ cᶜ ⊓ aᶜ) ⊔ (c ⊓ bᶜ ⊓ aᶜ) : by rw [inf_sup_left]; rw [ inf_sup_right]; rw [ ←sup_assoc]; rw [ ←inf_assoc]; rw [ ←inf_assoc]
- ... = (a ⊓ b ⊓ c) ⊔ (a ⊓ bᶜ ⊓ cᶜ) ⊔
- (aᶜ ⊓ b ⊓ cᶜ) ⊔ (aᶜ ⊓ bᶜ ⊓ c) : begin
- congr' 1,
- { congr' 1,
- rw [inf_comm]; rw [ inf_assoc], },
- { apply inf_left_right_swap }
- end
+                     (((b ⊓ cᶜ) ⊔ (c ⊓ bᶜ)) ⊓ aᶜ)  : by rw [symm_diff_eq, compl_symm_diff,
+                                                           bihimp_eq', symm_diff_eq]
+             ... = (a ⊓ b ⊓ c) ⊔ (a ⊓ bᶜ ⊓ cᶜ) ⊔
+                     (b ⊓ cᶜ ⊓ aᶜ) ⊔ (c ⊓ bᶜ ⊓ aᶜ) : by rw [inf_sup_left, inf_sup_right,
+                                                            ←sup_assoc, ←inf_assoc, ←inf_assoc]
+             ... = (a ⊓ b ⊓ c) ⊔ (a ⊓ bᶜ ⊓ cᶜ) ⊔
+                     (aᶜ ⊓ b ⊓ cᶜ) ⊔ (aᶜ ⊓ bᶜ ⊓ c) : begin
+                                                       congr' 1,
+                                                       { congr' 1,
+                                                         rw [inf_comm, inf_assoc], },
+                                                       { apply inf_left_right_swap }
+                                                     end
 
 variables {a b c}
 
 lemma disjoint.le_symm_diff_sup_symm_diff_left (h : disjoint a b) : c ≤ a ∆ c ⊔ b ∆ c :=
 begin
- transitivity c \ (a ⊓ b),
- { rw [h.eq_bot]; rw [ sdiff_bot] },
- { rw sdiff_inf,
- exact sup_le_sup le_sup_right le_sup_right }
+  transitivity c \ (a ⊓ b),
+  { rw [h.eq_bot, sdiff_bot] },
+  { rw sdiff_inf,
+    exact sup_le_sup le_sup_right le_sup_right }
 end
 
 lemma disjoint.le_symm_diff_sup_symm_diff_right (h : disjoint b c) : a ≤ a ∆ b ⊔ a ∆ c :=
@@ -501,18 +506,18 @@ end boolean_algebra
 section prod
 
 @[simp] lemma symm_diff_fst [generalized_coheyting_algebra α] [generalized_coheyting_algebra β]
- (a b : α × β) :
- (a ∆ b).1 = a.1 ∆ b.1 := rfl
+  (a b : α × β) :
+  (a ∆ b).1 = a.1 ∆ b.1 := rfl
 @[simp] lemma symm_diff_snd [generalized_coheyting_algebra α] [generalized_coheyting_algebra β]
- (a b : α × β) :
- (a ∆ b).2 = a.2 ∆ b.2 := rfl
+  (a b : α × β) :
+  (a ∆ b).2 = a.2 ∆ b.2 := rfl
 
 @[simp] lemma bihimp_fst [generalized_heyting_algebra α] [generalized_heyting_algebra β]
- (a b : α × β) :
- (a ⇔ b).1 = a.1 ⇔ b.1 := rfl
+  (a b : α × β) :
+  (a ⇔ b).1 = a.1 ⇔ b.1 := rfl
 @[simp] lemma bihimp_snd [generalized_heyting_algebra α] [generalized_heyting_algebra β]
- (a b : α × β) :
- (a ⇔ b).2 = a.2 ⇔ b.2 := rfl
+  (a b : α × β) :
+  (a ⇔ b).2 = a.2 ⇔ b.2 := rfl
 
 end prod
 
@@ -521,16 +526,15 @@ end prod
 namespace pi
 
 lemma symm_diff_def [Π i, generalized_coheyting_algebra (π i)] (a b : Π i, π i) :
- a ∆ b = λ i, a i ∆ b i := rfl
+  a ∆ b = λ i, a i ∆ b i := rfl
 
 lemma bihimp_def [Π i, generalized_heyting_algebra (π i)] (a b : Π i, π i) :
- a ⇔ b = λ i, a i ⇔ b i := rfl
+  a ⇔ b = λ i, a i ⇔ b i := rfl
 
 @[simp] lemma symm_diff_apply [Π i, generalized_coheyting_algebra (π i)] (a b : Π i, π i) (i : ι) :
- (a ∆ b) i = a i ∆ b i := rfl
+  (a ∆ b) i = a i ∆ b i := rfl
 
 @[simp] lemma bihimp_apply [Π i, generalized_heyting_algebra (π i)] (a b : Π i, π i) (i : ι) :
- (a ⇔ b) i = a i ⇔ b i := rfl
+  (a ⇔ b) i = a i ⇔ b i := rfl
 
 end pi
-

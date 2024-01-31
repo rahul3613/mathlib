@@ -68,11 +68,11 @@ measure.univ_pi_Ioo_ae_eq_Icc
 end box
 
 lemma prepartition.measure_Union_to_real [finite ι] {I : box ι} (π : prepartition I)
- (μ : measure (ι → ℝ)) [is_locally_finite_measure μ] :
- (μ π.Union).to_real = ∑ J in π.boxes, (μ J).to_real :=
+  (μ : measure (ι → ℝ)) [is_locally_finite_measure μ] :
+  (μ π.Union).to_real = ∑ J in π.boxes, (μ J).to_real :=
 begin
- erw [← ennreal.to_real_sum]; erw [ π.Union_def]; erw [ measure_bUnion_finset π.pairwise_disjoint],
- exacts [λ J hJ, J.measurable_set_coe, λ J hJ, (J.measure_coe_lt_top μ).ne]
+  erw [← ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint],
+  exacts [λ J hJ, J.measurable_set_coe, λ J hJ, (J.measure_coe_lt_top μ).ne]
 end
 
 end box_integral
@@ -88,9 +88,9 @@ namespace measure
 /-- If `μ` is a locally finite measure on `ℝⁿ`, then `λ J, (μ J).to_real` is a box-additive
 function. -/
 @[simps] def to_box_additive (μ : measure (ι → ℝ)) [is_locally_finite_measure μ] :
- ι →ᵇᵃ[⊤] ℝ :=
+  ι →ᵇᵃ[⊤] ℝ :=
 { to_fun := λ J, (μ J).to_real,
- sum_partition_boxes' := λ J hJ π hπ, by rw [← π.measure_Union_to_real]; rw [ hπ.Union_eq] }
+  sum_partition_boxes' := λ J hJ π hπ, by rw [← π.measure_Union_to_real, hπ.Union_eq] }
 
 end measure
 
@@ -103,12 +103,12 @@ open measure_theory
 namespace box
 
 @[simp] lemma volume_apply (I : box ι) :
- (volume : measure (ι → ℝ)).to_box_additive I = ∏ i, (I.upper i - I.lower i) :=
-by rw [measure.to_box_additive_apply]; rw [ coe_eq_pi]; rw [ real.volume_pi_Ioc_to_real I.lower_le_upper]
+  (volume : measure (ι → ℝ)).to_box_additive I = ∏ i, (I.upper i - I.lower i) :=
+by rw [measure.to_box_additive_apply, coe_eq_pi, real.volume_pi_Ioc_to_real I.lower_le_upper]
 
 lemma volume_face_mul {n} (i : fin (n + 1)) (I : box (fin (n + 1))) :
- (∏ j, ((I.face i).upper j - (I.face i).lower j)) * (I.upper i - I.lower i) =
- ∏ j, (I.upper j - I.lower j) :=
+  (∏ j, ((I.face i).upper j - (I.face i).lower j)) * (I.upper i - I.lower i) =
+    ∏ j, (I.upper j - I.lower j) :=
 by simp only [face_lower, face_upper, (∘), fin.prod_univ_succ_above _ i, mul_comm]
 
 end box
@@ -118,14 +118,13 @@ namespace box_additive_map
 /-- Box-additive map sending each box `I` to the continuous linear endomorphism
 `x ↦ (volume I).to_real • x`. -/
 protected def volume {E : Type*} [normed_add_comm_group E] [normed_space ℝ E] :
- ι →ᵇᵃ (E →L[ℝ] E) :=
+  ι →ᵇᵃ (E →L[ℝ] E) :=
 (volume : measure (ι → ℝ)).to_box_additive.to_smul
 
 lemma volume_apply {E : Type*} [normed_add_comm_group E] [normed_space ℝ E] (I : box ι) (x : E) :
- box_additive_map.volume I x = (∏ j, (I.upper j - I.lower j)) • x :=
+  box_additive_map.volume I x = (∏ j, (I.upper j - I.lower j)) • x :=
 congr_arg2 (•) I.volume_apply rfl
 
 end box_additive_map
 
 end box_integral
-

@@ -30,16 +30,16 @@ and `f'.range = ⊤`. This version is named `implicit_function`.
 ## TODO
 
 * Add a version for a function `f : E × F → G` such that $$\frac{\partial f}{\partial y}$$ is
- invertible.
+  invertible.
 * Add a version for `f : 𝕜 × 𝕜 → 𝕜` proving `has_strict_deriv_at` and `deriv φ = ...`.
 * Prove that in a real vector space the implicit function has the same smoothness as the original
- one.
+  one.
 * If the original function is differentiable in a neighborhood, then the implicit function is
- differentiable in a neighborhood as well. Current setup only proves differentiability at one
- point for the implicit function constructed in this file (as opposed to an unspecified implicit
- function). One of the ways to overcome this difficulty is to use uniqueness of the implicit
- function in the general version of the theorem. Another way is to prove that *any* implicit
- function satisfying some predicate is strictly differentiable.
+  differentiable in a neighborhood as well. Current setup only proves differentiability at one
+  point for the implicit function constructed in this file (as opposed to an unspecified implicit
+  function). One of the ways to overcome this difficulty is to use uniqueness of the implicit
+  function in the general version of the theorem. Another way is to prove that *any* implicit
+  function satisfying some predicate is strictly differentiable.
 
 ## Tags
 
@@ -93,9 +93,9 @@ such that
 * the kernels of the derivatives are complementary subspaces of `E`. -/
 @[nolint has_nonempty_instance]
 structure implicit_function_data (𝕜 : Type*) [nontrivially_normed_field 𝕜]
- (E : Type*) [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
- (F : Type*) [normed_add_comm_group F] [normed_space 𝕜 F] [complete_space F]
- (G : Type*) [normed_add_comm_group G] [normed_space 𝕜 G] [complete_space G] :=
+  (E : Type*) [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
+  (F : Type*) [normed_add_comm_group F] [normed_space 𝕜 F] [complete_space F]
+  (G : Type*) [normed_add_comm_group G] [normed_space 𝕜 G] [complete_space G] :=
 (left_fun : E → F)
 (left_deriv : E →L[𝕜] F)
 (right_fun : E → G)
@@ -110,10 +110,10 @@ structure implicit_function_data (𝕜 : Type*) [nontrivially_normed_field 𝕜]
 namespace implicit_function_data
 
 variables {𝕜 : Type*} [nontrivially_normed_field 𝕜]
- {E : Type*} [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
- {F : Type*} [normed_add_comm_group F] [normed_space 𝕜 F] [complete_space F]
- {G : Type*} [normed_add_comm_group G] [normed_space 𝕜 G] [complete_space G]
- (φ : implicit_function_data 𝕜 E F G)
+  {E : Type*} [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
+  {F : Type*} [normed_add_comm_group F] [normed_space 𝕜 F] [complete_space F]
+  {G : Type*} [normed_add_comm_group G] [normed_space 𝕜 G] [complete_space G]
+  (φ : implicit_function_data 𝕜 E F G)
 
 /-- The function given by `x ↦ (left_fun x, right_fun x)`. -/
 def prod_fun (x : E) : F × G := (φ.left_fun x, φ.right_fun x)
@@ -121,9 +121,9 @@ def prod_fun (x : E) : F × G := (φ.left_fun x, φ.right_fun x)
 @[simp] lemma prod_fun_apply (x : E) : φ.prod_fun x = (φ.left_fun x, φ.right_fun x) := rfl
 
 protected lemma has_strict_fderiv_at :
- has_strict_fderiv_at φ.prod_fun
- (φ.left_deriv.equiv_prod_of_surjective_of_is_compl φ.right_deriv φ.left_range φ.right_range
- φ.is_compl_ker : E →L[𝕜] F × G) φ.pt :=
+  has_strict_fderiv_at φ.prod_fun
+    (φ.left_deriv.equiv_prod_of_surjective_of_is_compl φ.right_deriv φ.left_range φ.right_range
+       φ.is_compl_ker : E →L[𝕜] F × G) φ.pt :=
 φ.left_has_deriv.prod φ.right_has_deriv
 
 /-- Implicit function theorem. If `f : E → F` and `g : E → G` are two maps strictly differentiable
@@ -142,49 +142,49 @@ def implicit_function : F → G → E := function.curry $ φ.to_local_homeomorph
 @[simp] lemma to_local_homeomorph_coe : ⇑(φ.to_local_homeomorph) = φ.prod_fun := rfl
 
 lemma to_local_homeomorph_apply (x : E) :
- φ.to_local_homeomorph x = (φ.left_fun x, φ.right_fun x) :=
+  φ.to_local_homeomorph x = (φ.left_fun x, φ.right_fun x) :=
 rfl
 
 lemma pt_mem_to_local_homeomorph_source :
- φ.pt ∈ φ.to_local_homeomorph.source :=
+  φ.pt ∈ φ.to_local_homeomorph.source :=
 φ.has_strict_fderiv_at.mem_to_local_homeomorph_source
 
 lemma map_pt_mem_to_local_homeomorph_target :
- (φ.left_fun φ.pt, φ.right_fun φ.pt) ∈ φ.to_local_homeomorph.target :=
+  (φ.left_fun φ.pt, φ.right_fun φ.pt) ∈ φ.to_local_homeomorph.target :=
 φ.to_local_homeomorph.map_source $ φ.pt_mem_to_local_homeomorph_source
 
 lemma prod_map_implicit_function :
- ∀ᶠ (p : F × G) in 𝓝 (φ.prod_fun φ.pt), φ.prod_fun (φ.implicit_function p.1 p.2) = p :=
+  ∀ᶠ (p : F × G) in 𝓝 (φ.prod_fun φ.pt), φ.prod_fun (φ.implicit_function p.1 p.2) = p :=
 φ.has_strict_fderiv_at.eventually_right_inverse.mono $ λ ⟨z, y⟩ h, h
 
 lemma left_map_implicit_function :
- ∀ᶠ (p : F × G) in 𝓝 (φ.prod_fun φ.pt), φ.left_fun (φ.implicit_function p.1 p.2) = p.1 :=
+  ∀ᶠ (p : F × G) in 𝓝 (φ.prod_fun φ.pt), φ.left_fun (φ.implicit_function p.1 p.2) = p.1 :=
 φ.prod_map_implicit_function.mono $ λ z, congr_arg prod.fst
 
 lemma right_map_implicit_function :
- ∀ᶠ (p : F × G) in 𝓝 (φ.prod_fun φ.pt), φ.right_fun (φ.implicit_function p.1 p.2) = p.2 :=
+  ∀ᶠ (p : F × G) in 𝓝 (φ.prod_fun φ.pt), φ.right_fun (φ.implicit_function p.1 p.2) = p.2 :=
 φ.prod_map_implicit_function.mono $ λ z, congr_arg prod.snd
 
 lemma implicit_function_apply_image :
- ∀ᶠ x in 𝓝 φ.pt, φ.implicit_function (φ.left_fun x) (φ.right_fun x) = x :=
+  ∀ᶠ x in 𝓝 φ.pt, φ.implicit_function (φ.left_fun x) (φ.right_fun x) = x :=
 φ.has_strict_fderiv_at.eventually_left_inverse
 
 lemma map_nhds_eq : map φ.left_fun (𝓝 φ.pt) = 𝓝 (φ.left_fun φ.pt) :=
 show map (prod.fst ∘ φ.prod_fun) (𝓝 φ.pt) = 𝓝 (φ.prod_fun φ.pt).1,
-by rw [← map_map]; rw [ φ.has_strict_fderiv_at.map_nhds_eq_of_equiv]; rw [ map_fst_nhds]
+by rw [← map_map, φ.has_strict_fderiv_at.map_nhds_eq_of_equiv, map_fst_nhds]
 
 lemma implicit_function_has_strict_fderiv_at
- (g'inv : G →L[𝕜] E) (hg'inv : φ.right_deriv.comp g'inv = continuous_linear_map.id 𝕜 G)
- (hg'invf : φ.left_deriv.comp g'inv = 0) :
- has_strict_fderiv_at (φ.implicit_function (φ.left_fun φ.pt)) g'inv (φ.right_fun φ.pt) :=
+  (g'inv : G →L[𝕜] E) (hg'inv : φ.right_deriv.comp g'inv = continuous_linear_map.id 𝕜 G)
+  (hg'invf : φ.left_deriv.comp g'inv = 0) :
+  has_strict_fderiv_at (φ.implicit_function (φ.left_fun φ.pt)) g'inv (φ.right_fun φ.pt) :=
 begin
- have := φ.has_strict_fderiv_at.to_local_inverse,
- simp only [prod_fun] at this,
- convert this.comp (φ.right_fun φ.pt)
- ((has_strict_fderiv_at_const _ _).prod (has_strict_fderiv_at_id _)),
- simp only [continuous_linear_map.ext_iff, continuous_linear_map.coe_comp', function.comp_app]
- at hg'inv hg'invf ⊢,
- simp [continuous_linear_equiv.eq_symm_apply, *]
+  have := φ.has_strict_fderiv_at.to_local_inverse,
+  simp only [prod_fun] at this,
+  convert this.comp (φ.right_fun φ.pt)
+    ((has_strict_fderiv_at_const _ _).prod (has_strict_fderiv_at_id _)),
+  simp only [continuous_linear_map.ext_iff, continuous_linear_map.coe_comp', function.comp_app]
+    at hg'inv hg'invf ⊢,
+  simp [continuous_linear_equiv.eq_symm_apply, *]
 end
 
 end implicit_function_data
@@ -208,9 +208,9 @@ complementary to `ker f'` lead to different maps `φ`.
 -/
 
 variables {𝕜 : Type*} [nontrivially_normed_field 𝕜]
- {E : Type*} [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
- {F : Type*} [normed_add_comm_group F] [normed_space 𝕜 F] [complete_space F]
- {f : E → F} {f' : E →L[𝕜] F} {a : E}
+  {E : Type*} [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
+  {F : Type*} [normed_add_comm_group F] [normed_space 𝕜 F] [complete_space F]
+  {f : E → F} {f' : E →L[𝕜] F} {a : E}
 
 section defs
 
@@ -219,112 +219,112 @@ variables (f f')
 /-- Data used to apply the generic implicit function theorem to the case of a strictly
 differentiable map such that its derivative is surjective and has a complemented kernel. -/
 @[simp] def implicit_function_data_of_complemented (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- implicit_function_data 𝕜 E F (ker f') :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  implicit_function_data 𝕜 E F (ker f') :=
 { left_fun := f,
- left_deriv := f',
- right_fun := λ x, classical.some hker (x - a),
- right_deriv := classical.some hker,
- pt := a,
- left_has_deriv := hf,
- right_has_deriv := (classical.some hker).has_strict_fderiv_at.comp a
- ((has_strict_fderiv_at_id a).sub_const a),
- left_range := hf',
- right_range := linear_map.range_eq_of_proj (classical.some_spec hker),
- is_compl_ker := linear_map.is_compl_of_proj (classical.some_spec hker) }
+  left_deriv := f',
+  right_fun := λ x, classical.some hker (x - a),
+  right_deriv := classical.some hker,
+  pt := a,
+  left_has_deriv := hf,
+  right_has_deriv := (classical.some hker).has_strict_fderiv_at.comp a
+    ((has_strict_fderiv_at_id a).sub_const a),
+  left_range := hf',
+  right_range := linear_map.range_eq_of_proj (classical.some_spec hker),
+  is_compl_ker := linear_map.is_compl_of_proj (classical.some_spec hker) }
 
 /-- A local homeomorphism between `E` and `F × f'.ker` sending level surfaces of `f`
 to vertical subspaces. -/
 def implicit_to_local_homeomorph_of_complemented (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- local_homeomorph E (F × (ker f')) :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  local_homeomorph E (F × (ker f')) :=
 (implicit_function_data_of_complemented f f' hf hf' hker).to_local_homeomorph
 
 /-- Implicit function `g` defined by `f (g z y) = z`. -/
 def implicit_function_of_complemented (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- F → (ker f') → E :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  F → (ker f') → E :=
 (implicit_function_data_of_complemented f f' hf hf' hker).implicit_function
 
 end defs
 
 @[simp] lemma implicit_to_local_homeomorph_of_complemented_fst (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) (x : E) :
- (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker x).fst = f x :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) (x : E) :
+  (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker x).fst = f x :=
 rfl
 
 lemma implicit_to_local_homeomorph_of_complemented_apply
- (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤)
- (hker : (ker f').closed_complemented) (y : E) :
- hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker y =
- (f y, classical.some hker (y - a)) :=
+  (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤)
+  (hker : (ker f').closed_complemented) (y : E) :
+  hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker y =
+    (f y, classical.some hker (y - a)) :=
 rfl
 
 @[simp] lemma implicit_to_local_homeomorph_of_complemented_apply_ker
- (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤)
- (hker : (ker f').closed_complemented) (y : ker f') :
- hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker (y + a) = (f (y + a), y) :=
+  (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤)
+  (hker : (ker f').closed_complemented) (y : ker f') :
+  hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker (y + a) = (f (y + a), y) :=
 by simp only [implicit_to_local_homeomorph_of_complemented_apply, add_sub_cancel,
- classical.some_spec hker]
+  classical.some_spec hker]
 
 @[simp] lemma implicit_to_local_homeomorph_of_complemented_self
- (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker a = (f a, 0) :=
+  (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker a = (f a, 0) :=
 by simp [hf.implicit_to_local_homeomorph_of_complemented_apply]
 
 lemma mem_implicit_to_local_homeomorph_of_complemented_source (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- a ∈ (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).source :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  a ∈ (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).source :=
 mem_to_local_homeomorph_source _
 
 lemma mem_implicit_to_local_homeomorph_of_complemented_target (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- (f a, (0 : ker f')) ∈ (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).target :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  (f a, (0 : ker f')) ∈ (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).target :=
 by simpa only [implicit_to_local_homeomorph_of_complemented_self] using
- ((hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).map_source $
- (hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker))
+  ((hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).map_source $
+    (hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker))
 
 /-- `implicit_function_of_complemented` sends `(z, y)` to a point in `f ⁻¹' z`. -/
 lemma map_implicit_function_of_complemented_eq (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- ∀ᶠ (p : F × (ker f')) in 𝓝 (f a, 0),
- f (hf.implicit_function_of_complemented f f' hf' hker p.1 p.2) = p.1 :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  ∀ᶠ (p : F × (ker f')) in 𝓝 (f a, 0),
+    f (hf.implicit_function_of_complemented f f' hf' hker p.1 p.2) = p.1 :=
 ((hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).eventually_right_inverse $
- hf.mem_implicit_to_local_homeomorph_of_complemented_target hf' hker).mono $ λ ⟨z, y⟩ h,
- congr_arg prod.fst h
+  hf.mem_implicit_to_local_homeomorph_of_complemented_target hf' hker).mono $ λ ⟨z, y⟩ h,
+    congr_arg prod.fst h
 
 /-- Any point in some neighborhood of `a` can be represented as `implicit_function`
 of some point. -/
 lemma eq_implicit_function_of_complemented (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- ∀ᶠ x in 𝓝 a, hf.implicit_function_of_complemented f f' hf' hker (f x)
- (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker x).snd = x :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  ∀ᶠ x in 𝓝 a, hf.implicit_function_of_complemented f f' hf' hker (f x)
+    (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker x).snd = x :=
 (implicit_function_data_of_complemented f f' hf hf' hker).implicit_function_apply_image
 
 @[simp] lemma implicit_function_of_complemented_apply_image (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- hf.implicit_function_of_complemented f f' hf' hker (f a) 0 = a :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  hf.implicit_function_of_complemented f f' hf' hker (f a) 0 = a :=
 begin
- convert (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).left_inv
- (hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker),
- exact congr_arg prod.snd (hf.implicit_to_local_homeomorph_of_complemented_self hf' hker).symm
+  convert (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).left_inv
+    (hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker),
+  exact congr_arg prod.snd (hf.implicit_to_local_homeomorph_of_complemented_self hf' hker).symm
 end
 
 lemma to_implicit_function_of_complemented (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
- has_strict_fderiv_at (hf.implicit_function_of_complemented f f' hf' hker (f a))
- (ker f').subtypeL 0 :=
+  (hf' : range f' = ⊤) (hker : (ker f').closed_complemented) :
+  has_strict_fderiv_at (hf.implicit_function_of_complemented f f' hf' hker (f a))
+    (ker f').subtypeL 0 :=
 begin
- convert (implicit_function_data_of_complemented f f' hf hf'
- hker).implicit_function_has_strict_fderiv_at (ker f').subtypeL _ _,
- swap,
- { ext, simp only [classical.some_spec hker, implicit_function_data_of_complemented,
- continuous_linear_map.coe_comp', submodule.coe_subtypeL', submodule.coe_subtype,
- function.comp_app, continuous_linear_map.coe_id', id.def] },
- swap,
- { ext, simp only [continuous_linear_map.coe_comp', submodule.coe_subtypeL', submodule.coe_subtype,
- function.comp_app, linear_map.map_coe_ker, continuous_linear_map.zero_apply] },
- simp only [implicit_function_data_of_complemented, map_sub, sub_self],
+  convert (implicit_function_data_of_complemented f f' hf hf'
+    hker).implicit_function_has_strict_fderiv_at (ker f').subtypeL _ _,
+  swap,
+  { ext, simp only [classical.some_spec hker, implicit_function_data_of_complemented,
+                    continuous_linear_map.coe_comp', submodule.coe_subtypeL', submodule.coe_subtype,
+                    function.comp_app, continuous_linear_map.coe_id', id.def] },
+  swap,
+  { ext, simp only [continuous_linear_map.coe_comp', submodule.coe_subtypeL', submodule.coe_subtype,
+                    function.comp_app, linear_map.map_coe_ker, continuous_linear_map.zero_apply] },
+  simp only [implicit_function_data_of_complemented, map_sub, sub_self],
 end
 
 end complemented
@@ -349,86 +349,85 @@ complementary to `ker f'` lead to different maps `φ`.
 section finite_dimensional
 
 variables {𝕜 : Type*} [nontrivially_normed_field 𝕜] [complete_space 𝕜]
- {E : Type*} [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
- {F : Type*} [normed_add_comm_group F] [normed_space 𝕜 F] [finite_dimensional 𝕜 F]
- (f : E → F) (f' : E →L[𝕜] F) {a : E}
+  {E : Type*} [normed_add_comm_group E] [normed_space 𝕜 E] [complete_space E]
+  {F : Type*} [normed_add_comm_group F] [normed_space 𝕜 F] [finite_dimensional 𝕜 F]
+  (f : E → F) (f' : E →L[𝕜] F) {a : E}
 
 /-- Given a map `f : E → F` to a finite dimensional space with a surjective derivative `f'`,
 returns a local homeomorphism between `E` and `F × ker f'`. -/
 def implicit_to_local_homeomorph (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
- local_homeomorph E (F × (ker f')) :=
+  local_homeomorph E (F × (ker f')) :=
 by haveI := finite_dimensional.complete 𝕜 F; exact
 hf.implicit_to_local_homeomorph_of_complemented f f' hf'
- f'.ker_closed_complemented_of_finite_dimensional_range
+  f'.ker_closed_complemented_of_finite_dimensional_range
 
 /-- Implicit function `g` defined by `f (g z y) = z`. -/
 def implicit_function (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
- F → (ker f') → E :=
+  F → (ker f') → E :=
 function.curry $ (hf.implicit_to_local_homeomorph f f' hf').symm
 
 variables {f f'}
 
 @[simp] lemma implicit_to_local_homeomorph_fst (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) (x : E) :
- (hf.implicit_to_local_homeomorph f f' hf' x).fst = f x :=
+  (hf' : range f' = ⊤) (x : E) :
+  (hf.implicit_to_local_homeomorph f f' hf' x).fst = f x :=
 rfl
 
 @[simp] lemma implicit_to_local_homeomorph_apply_ker
- (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) (y : ker f') :
- hf.implicit_to_local_homeomorph f f' hf' (y + a) = (f (y + a), y) :=
+  (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) (y : ker f') :
+  hf.implicit_to_local_homeomorph f f' hf' (y + a) = (f (y + a), y) :=
 by apply implicit_to_local_homeomorph_of_complemented_apply_ker
 
 @[simp] lemma implicit_to_local_homeomorph_self
- (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
- hf.implicit_to_local_homeomorph f f' hf' a = (f a, 0) :=
+  (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
+  hf.implicit_to_local_homeomorph f f' hf' a = (f a, 0) :=
 by apply implicit_to_local_homeomorph_of_complemented_self
 
 lemma mem_implicit_to_local_homeomorph_source (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) :
- a ∈ (hf.implicit_to_local_homeomorph f f' hf').source :=
+  (hf' : range f' = ⊤) :
+  a ∈ (hf.implicit_to_local_homeomorph f f' hf').source :=
 mem_to_local_homeomorph_source _
 
 lemma mem_implicit_to_local_homeomorph_target (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) :
- (f a, (0 : ker f')) ∈ (hf.implicit_to_local_homeomorph f f' hf').target :=
+  (hf' : range f' = ⊤) :
+  (f a, (0 : ker f')) ∈ (hf.implicit_to_local_homeomorph f f' hf').target :=
 by apply mem_implicit_to_local_homeomorph_of_complemented_target
 
 lemma tendsto_implicit_function (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) {α : Type*} {l : filter α} {g₁ : α → F} {g₂ : α → ker f'}
- (h₁ : tendsto g₁ l (𝓝 $ f a)) (h₂ : tendsto g₂ l (𝓝 0)) :
- tendsto (λ t, hf.implicit_function f f' hf' (g₁ t) (g₂ t)) l (𝓝 a) :=
+  (hf' : range f' = ⊤) {α : Type*} {l : filter α} {g₁ : α → F} {g₂ : α → ker f'}
+  (h₁ : tendsto g₁ l (𝓝 $ f a)) (h₂ : tendsto g₂ l (𝓝 0)) :
+  tendsto (λ t, hf.implicit_function f f' hf' (g₁ t) (g₂ t)) l (𝓝 a) :=
 begin
- refine ((hf.implicit_to_local_homeomorph f f' hf').tendsto_symm
- (hf.mem_implicit_to_local_homeomorph_source hf')).comp _,
- rw [implicit_to_local_homeomorph_self],
- exact h₁.prod_mk_nhds h₂
+  refine ((hf.implicit_to_local_homeomorph f f' hf').tendsto_symm
+    (hf.mem_implicit_to_local_homeomorph_source hf')).comp _,
+  rw [implicit_to_local_homeomorph_self],
+  exact h₁.prod_mk_nhds h₂
 end
 
 alias tendsto_implicit_function ← _root_.filter.tendsto.implicit_function
 
 /-- `implicit_function` sends `(z, y)` to a point in `f ⁻¹' z`. -/
 lemma map_implicit_function_eq (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
- ∀ᶠ (p : F × (ker f')) in 𝓝 (f a, 0), f (hf.implicit_function f f' hf' p.1 p.2) = p.1 :=
+  ∀ᶠ (p : F × (ker f')) in 𝓝 (f a, 0), f (hf.implicit_function f f' hf' p.1 p.2) = p.1 :=
 by apply map_implicit_function_of_complemented_eq
 
 @[simp] lemma implicit_function_apply_image (hf : has_strict_fderiv_at f f' a)
- (hf' : range f' = ⊤) :
- hf.implicit_function f f' hf' (f a) 0 = a :=
+  (hf' : range f' = ⊤) :
+  hf.implicit_function f f' hf' (f a) 0 = a :=
 by apply implicit_function_of_complemented_apply_image
 
 /-- Any point in some neighborhood of `a` can be represented as `implicit_function`
 of some point. -/
 lemma eq_implicit_function (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
- ∀ᶠ x in 𝓝 a, hf.implicit_function f f' hf' (f x)
- (hf.implicit_to_local_homeomorph f f' hf' x).snd = x :=
+  ∀ᶠ x in 𝓝 a, hf.implicit_function f f' hf' (f x)
+    (hf.implicit_to_local_homeomorph f f' hf' x).snd = x :=
 by apply eq_implicit_function_of_complemented
 
 lemma to_implicit_function (hf : has_strict_fderiv_at f f' a) (hf' : range f' = ⊤) :
- has_strict_fderiv_at (hf.implicit_function f f' hf' (f a))
- (ker f').subtypeL 0 :=
+  has_strict_fderiv_at (hf.implicit_function f f' hf' (f a))
+    (ker f').subtypeL 0 :=
 by apply to_implicit_function_of_complemented
 
 end finite_dimensional
 
 end has_strict_fderiv_at
-

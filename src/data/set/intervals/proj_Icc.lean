@@ -15,17 +15,17 @@ import data.set.intervals.ord_connected
 Given a linearly ordered type `α`, in this file we define
 
 * `set.proj_Ici (a : α)` to be the map `α → [a, ∞[` sending `]-∞, a]` to `a`,
- and each point `x ∈ [a, ∞[` to itself;
+  and each point `x ∈ [a, ∞[` to itself;
 * `set.proj_Iic (b : α)` to be the map `α → ]-∞, b[` sending `[b, ∞[` to `b`,
- and each point `x ∈ ]-∞, b]` to itself;
+  and each point `x ∈ ]-∞, b]` to itself;
 * `set.proj_Icc (a b : α) (h : a ≤ b)` to be the map `α → [a, b]` sending `(-∞, a]` to `a`, `[b, ∞)`
- to `b`, and each point `x ∈ [a, b]` to itself;
+  to `b`, and each point `x ∈ [a, b]` to itself;
 * `set.Ici_extend {a : α} (f : Ici a → β)` to be the extension of `f` to `α` defined
- as `f ∘ proj_Ici a`.
+  as `f ∘ proj_Ici a`.
 * `set.Iic_extend {b : α} (f : Iic b → β)` to be the extension of `f` to `α` defined
- as `f ∘ proj_Iic b`.
+  as `f ∘ proj_Iic b`.
 * `set.Icc_extend {a b : α} (h : a ≤ b) (f : Icc a b → β)` to be the extension of `f` to `α` defined
- as `f ∘ proj_Icc a b h`.
+  as `f ∘ proj_Icc a b h`.
 
 We also prove some trivial properties of these maps.
 -/
@@ -51,7 +51,7 @@ variables {a b : α} (h : a ≤ b) {x : α}
 @[norm_cast] lemma coe_proj_Ici (a x : α) : (proj_Ici a x : α) = max a x := rfl
 @[norm_cast] lemma coe_proj_Iic (b x : α) : (proj_Iic b x : α) = min b x := rfl
 @[norm_cast] lemma coe_proj_Icc (a b : α) (h : a ≤ b) (x : α) :
- (proj_Icc a b h x : α) = max a (min b x) := rfl
+  (proj_Icc a b h x : α) = max a (min b x) := rfl
 
 lemma proj_Ici_of_le (hx : x ≤ a) : proj_Ici a x = ⟨a, le_rfl⟩ := subtype.ext $ max_eq_left hx
 lemma proj_Iic_of_le (hx : b ≤ x) : proj_Iic b x = ⟨b, le_rfl⟩ := subtype.ext $ min_eq_left hx
@@ -126,11 +126,11 @@ def Icc_extend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
 f ∘ proj_Icc a b h
 
 @[simp] lemma Ici_extend_apply (f : Ici a → β) (x : α) :
- Ici_extend f x = f ⟨max a x, le_max_left _ _⟩ := rfl
+  Ici_extend f x = f ⟨max a x, le_max_left _ _⟩ := rfl
 @[simp] lemma Iic_extend_apply (f : Iic b → β) (x : α) :
- Iic_extend f x = f ⟨min b x, min_le_left _ _⟩ := rfl
+  Iic_extend f x = f ⟨min b x, min_le_left _ _⟩ := rfl
 lemma Icc_extend_apply (h : a ≤ b) (f : Icc a b → β) (x : α) :
- Icc_extend h f x = f ⟨max a (min b x), le_max_left _ _, max_le h (min_le_left _ _)⟩ := rfl
+  Icc_extend h f x = f ⟨max a (min b x), le_max_left _ _, max_le h (min_le_left _ _)⟩ := rfl
 
 @[simp] lemma range_Ici_extend (f : Ici a → β) : range (Ici_extend f) = range f :=
 by simp only [Ici_extend, range_comp f, range_proj_Ici, range_id']
@@ -139,7 +139,7 @@ by simp only [Ici_extend, range_comp f, range_proj_Ici, range_id']
 by simp only [Iic_extend, range_comp f, range_proj_Iic, range_id']
 
 @[simp] lemma Icc_extend_range (f : Icc a b → β) :
- range (Icc_extend h f) = range f :=
+  range (Icc_extend h f) = range f :=
 by simp only [Icc_extend, range_comp f, range_proj_Icc, range_id']
 
 lemma Ici_extend_of_le (f : Ici a → β) (hx : x ≤ a) : Ici_extend f x = f ⟨a, le_rfl⟩ :=
@@ -149,11 +149,11 @@ lemma Iic_extend_of_le (f : Iic b → β) (hx : b ≤ x) : Iic_extend f x = f �
 congr_arg f $ proj_Iic_of_le hx
 
 lemma Icc_extend_of_le_left (f : Icc a b → β) (hx : x ≤ a) :
- Icc_extend h f x = f ⟨a, left_mem_Icc.2 h⟩ :=
+  Icc_extend h f x = f ⟨a, left_mem_Icc.2 h⟩ :=
 congr_arg f $ proj_Icc_of_le_left h hx
 
 lemma Icc_extend_of_right_le (f : Icc a b → β) (hx : b ≤ x) :
- Icc_extend h f x = f ⟨b, right_mem_Icc.2 h⟩ :=
+  Icc_extend h f x = f ⟨b, right_mem_Icc.2 h⟩ :=
 congr_arg f $ proj_Icc_of_right_le h hx
 
 @[simp] lemma Ici_extend_self (f : Ici a → β) : Ici_extend f a = f ⟨a, le_rfl⟩ :=
@@ -163,11 +163,11 @@ Ici_extend_of_le f le_rfl
 Iic_extend_of_le f le_rfl
 
 @[simp] lemma Icc_extend_left (f : Icc a b → β) :
- Icc_extend h f a = f ⟨a, left_mem_Icc.2 h⟩ :=
+  Icc_extend h f a = f ⟨a, left_mem_Icc.2 h⟩ :=
 Icc_extend_of_le_left h f le_rfl
 
 @[simp] lemma Icc_extend_right (f : Icc a b → β) :
- Icc_extend h f b = f ⟨b, right_mem_Icc.2 h⟩ :=
+  Icc_extend h f b = f ⟨b, right_mem_Icc.2 h⟩ :=
 Icc_extend_of_right_le h f le_rfl
 
 lemma Ici_extend_of_mem (f : Ici a → β) (hx : x ∈ Ici a) : Ici_extend f x = f ⟨x, hx⟩ :=
@@ -177,7 +177,7 @@ lemma Iic_extend_of_mem (f : Iic b → β) (hx : x ∈ Iic b) : Iic_extend f x =
 congr_arg f $ proj_Iic_of_mem hx
 
 lemma Icc_extend_of_mem (f : Icc a b → β) (hx : x ∈ Icc a b) :
- Icc_extend h f x = f ⟨x, hx⟩ :=
+  Icc_extend h f x = f ⟨x, hx⟩ :=
 congr_arg f $ proj_Icc_of_mem h hx
 
 @[simp] lemma Ici_extend_coe (f : Ici a → β) (x : Ici a) : Ici_extend f x = f x :=
@@ -187,21 +187,21 @@ congr_arg f $ proj_Ici_coe x
 congr_arg f $ proj_Iic_coe x
 
 @[simp] lemma Icc_extend_coe (f : Icc a b → β) (x : Icc a b) :
- Icc_extend h f x = f x :=
+  Icc_extend h f x = f x :=
 congr_arg f $ proj_Icc_coe h x
 
 /-- If `f : α → β` is a constant both on $(-∞, a]$ and on $[b, +∞)$, then the extension of this
 function from $[a, b]$ to the whole line is equal to the original function. -/
 lemma Icc_extend_eq_self (f : α → β) (ha : ∀ x < a, f x = f a) (hb : ∀ x, b < x → f x = f b) :
- Icc_extend h (f ∘ coe) = f :=
+  Icc_extend h (f ∘ coe) = f :=
 begin
- ext x,
- cases lt_or_le x a with hxa hax,
- { simp [Icc_extend_of_le_left _ _ hxa.le, ha x hxa] },
- { cases le_or_lt x b with hxb hbx,
- { lift x to Icc a b using ⟨hax, hxb⟩,
- rw [Icc_extend_coe] },
- { simp [Icc_extend_of_right_le _ _ hbx.le, hb x hbx] } }
+  ext x,
+  cases lt_or_le x a with hxa hax,
+  { simp [Icc_extend_of_le_left _ _ hxa.le, ha x hxa] },
+  { cases le_or_lt x b with hxb hbx,
+    { lift x to Icc a b using ⟨hax, hxb⟩,
+      rw [Icc_extend_coe] },
+    { simp [Icc_extend_of_right_le _ _ hbx.le, hb x hbx] } }
 end
 
 end set
@@ -220,26 +220,25 @@ protected lemma monotone.Icc_extend (hf : monotone f) : monotone (Icc_extend h f
 hf.comp $ monotone_proj_Icc h
 
 lemma strict_mono.strict_mono_on_Ici_extend {f : Ici a → β} (hf : strict_mono f) :
- strict_mono_on (Ici_extend f) (Ici a) :=
+  strict_mono_on (Ici_extend f) (Ici a) :=
 hf.comp_strict_mono_on strict_mono_on_proj_Ici
 
 lemma strict_mono.strict_mono_on_Iic_extend {f : Iic b → β} (hf : strict_mono f) :
- strict_mono_on (Iic_extend f) (Iic b) :=
+  strict_mono_on (Iic_extend f) (Iic b) :=
 hf.comp_strict_mono_on strict_mono_on_proj_Iic
 
 lemma strict_mono.strict_mono_on_Icc_extend (hf : strict_mono f) :
- strict_mono_on (Icc_extend h f) (Icc a b) :=
+  strict_mono_on (Icc_extend h f) (Icc a b) :=
 hf.comp_strict_mono_on (strict_mono_on_proj_Icc h)
 
 protected lemma set.ord_connected.Ici_extend {s : set (Ici a)} (hs : s.ord_connected) :
- {x | Ici_extend (∈ s) x}.ord_connected :=
+  {x | Ici_extend (∈ s) x}.ord_connected :=
 ⟨λ x hx y hy z hz, hs.out hx hy ⟨max_le_max le_rfl hz.1, max_le_max le_rfl hz.2⟩⟩
 
 protected lemma set.ord_connected.Iic_extend {s : set (Iic b)} (hs : s.ord_connected) :
- {x | Iic_extend (∈ s) x}.ord_connected :=
+  {x | Iic_extend (∈ s) x}.ord_connected :=
 ⟨λ x hx y hy z hz, hs.out hx hy ⟨min_le_min le_rfl hz.1, min_le_min le_rfl hz.2⟩⟩
 
 protected lemma set.ord_connected.restrict (hs : s.ord_connected) :
- {x | restrict t (∈ s) x}.ord_connected :=
+  {x | restrict t (∈ s) x}.ord_connected :=
 ⟨λ x hx y hy z hz, hs.out hx hy hz⟩
-

@@ -25,31 +25,30 @@ def zip_with : vector α n → vector β n → vector γ n :=
 
 @[simp]
 lemma zip_with_to_list (x : vector α n) (y : vector β n) :
- (vector.zip_with f x y).to_list = list.zip_with f x.to_list y.to_list :=
+  (vector.zip_with f x y).to_list = list.zip_with f x.to_list y.to_list :=
 rfl
 
 @[simp]
 lemma zip_with_nth (x : vector α n) (y : vector β n) (i) :
- (vector.zip_with f x y).nth i = f (x.nth i) (y.nth i) :=
+  (vector.zip_with f x y).nth i = f (x.nth i) (y.nth i) :=
 begin
- dsimp only [vector.zip_with, vector.nth],
- cases x, cases y,
- simp only [list.nth_le_zip_with, subtype.coe_mk],
- congr,
+  dsimp only [vector.zip_with, vector.nth],
+  cases x, cases y,
+  simp only [list.nth_le_zip_with, subtype.coe_mk],
+  congr,
 end
 
 @[simp]
 lemma zip_with_tail (x : vector α n) (y : vector β n) :
- (vector.zip_with f x y).tail = vector.zip_with f x.tail y.tail :=
+  (vector.zip_with f x y).tail = vector.zip_with f x.tail y.tail :=
 by { ext, simp [nth_tail], }
 
 @[to_additive]
 lemma prod_mul_prod_eq_prod_zip_with [comm_monoid α] (x y : vector α n) :
- x.to_list.prod * y.to_list.prod = (vector.zip_with (*) x y).to_list.prod :=
+  x.to_list.prod * y.to_list.prod = (vector.zip_with (*) x y).to_list.prod :=
 list.prod_mul_prod_eq_prod_zip_with_of_length_eq x.to_list y.to_list
- ((to_list_length x).trans (to_list_length y).symm)
+  ((to_list_length x).trans (to_list_length y).symm)
 
 end zip_with
 
 end vector
-

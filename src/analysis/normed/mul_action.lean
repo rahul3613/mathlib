@@ -47,25 +47,25 @@ end seminormed_add_group
 
 /-- Left multiplication is bounded. -/
 instance non_unital_semi_normed_ring.to_has_bounded_smul [non_unital_semi_normed_ring α] :
- has_bounded_smul α α :=
+  has_bounded_smul α α :=
 { dist_smul_pair' := λ x y₁ y₂, by simpa [mul_sub, dist_eq_norm] using norm_mul_le x (y₁ - y₂),
- dist_pair_smul' := λ x₁ x₂ y, by simpa [sub_mul, dist_eq_norm] using norm_mul_le (x₁ - x₂) y, }
+  dist_pair_smul' := λ x₁ x₂ y, by simpa [sub_mul, dist_eq_norm] using norm_mul_le (x₁ - x₂) y, }
 
 /-- Right multiplication is bounded. -/
 instance non_unital_semi_normed_ring.to_has_bounded_op_smul [non_unital_semi_normed_ring α] :
- has_bounded_smul αᵐᵒᵖ α :=
+  has_bounded_smul αᵐᵒᵖ α :=
 { dist_smul_pair' := λ x y₁ y₂,
- by simpa [sub_mul, dist_eq_norm, mul_comm] using norm_mul_le (y₁ - y₂) x.unop,
- dist_pair_smul' := λ x₁ x₂ y,
- by simpa [mul_sub, dist_eq_norm, mul_comm] using norm_mul_le y (x₁ - x₂).unop, }
+    by simpa [sub_mul, dist_eq_norm, mul_comm] using norm_mul_le (y₁ - y₂) x.unop,
+  dist_pair_smul' := λ x₁ x₂ y,
+    by simpa [mul_sub, dist_eq_norm, mul_comm] using norm_mul_le y (x₁ - x₂).unop, }
 
 section semi_normed_ring
 variables [semi_normed_ring α] [seminormed_add_comm_group β] [module α β]
 
 lemma has_bounded_smul.of_norm_smul_le (h : ∀ (r : α) (x : β), ‖r • x‖ ≤ ‖r‖ * ‖x‖) :
- has_bounded_smul α β :=
+  has_bounded_smul α β :=
 { dist_smul_pair' := λ a b₁ b₂, by simpa [smul_sub, dist_eq_norm] using h a (b₁ - b₂),
- dist_pair_smul' := λ a₁ a₂ b, by simpa [sub_smul, dist_eq_norm] using h (a₁ - a₂) b }
+  dist_pair_smul' := λ a₁ a₂ b, by simpa [sub_smul, dist_eq_norm] using h (a₁ - a₂) b }
 
 end semi_normed_ring
 
@@ -75,14 +75,14 @@ variables [mul_action_with_zero α β] [has_bounded_smul α β]
 
 lemma norm_smul (r : α) (x : β) : ‖r • x‖ = ‖r‖ * ‖x‖ :=
 begin
- by_cases h : r = 0,
- { simp [h, zero_smul α x] },
- { refine le_antisymm (norm_smul_le r x) _,
- calc ‖r‖ * ‖x‖ = ‖r‖ * ‖r⁻¹ • r • x‖ : by rw [inv_smul_smul₀ h]
- ... ≤ ‖r‖ * (‖r⁻¹‖ * ‖r • x‖) :
- mul_le_mul_of_nonneg_left (norm_smul_le _ _) (norm_nonneg _)
- ... = ‖r • x‖ :
- by rw [norm_inv]; rw [ ← mul_assoc]; rw [ mul_inv_cancel (mt norm_eq_zero.1 h)]; rw [ one_mul] }
+  by_cases h : r = 0,
+  { simp [h, zero_smul α x] },
+  { refine le_antisymm (norm_smul_le r x) _,
+    calc ‖r‖ * ‖x‖ = ‖r‖ * ‖r⁻¹ • r • x‖     : by rw [inv_smul_smul₀ h]
+               ... ≤ ‖r‖ * (‖r⁻¹‖ * ‖r • x‖) :
+      mul_le_mul_of_nonneg_left (norm_smul_le _ _) (norm_nonneg _)
+               ... = ‖r • x‖                 :
+      by rw [norm_inv, ← mul_assoc, mul_inv_cancel (mt norm_eq_zero.1 h), one_mul] }
 end
 
 lemma nnnorm_smul (r : α) (x : β) : ‖r • x‖₊ = ‖r‖₊ * ‖x‖₊ :=
@@ -104,4 +104,3 @@ lemma edist_smul₀ (s : α) (x y : β) : edist (s • x) (s • y) = ‖s‖₊
 by simp only [edist_nndist, nndist_smul₀, ennreal.coe_mul, ennreal.smul_def, smul_eq_mul]
 
 end normed_division_ring_module
-

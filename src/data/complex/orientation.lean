@@ -22,4 +22,3 @@ namespace complex
 protected noncomputable def orientation : orientation ℝ ℂ (fin 2) := complex.basis_one_I.orientation
 
 end complex
-

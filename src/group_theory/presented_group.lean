@@ -18,10 +18,10 @@ given by generators `x : α` and relations `r ∈ rels`.
 ## Main definitions
 
 * `presented_group rels`: the quotient group of the free group on a type `α` by a subset `rels` of
- relations of the free group on `α`.
+  relations of the free group on `α`.
 * `of`: The canonical map from `α` to a presented group with generators `α`.
 * `to_group f`: the canonical group homomorphism `presented_group rels → G`, given a function
- `f : α → G` from a type `α` to a group `G` which satisfies the relations `rels`.
+  `f : α → G` from a type `α` to a group `G` which satisfies the relations `rels`.
 
 ## Tags
 
@@ -73,13 +73,12 @@ quotient_group.lift (subgroup.normal_closure rels) F (to_group_eq_one_of_mem_clo
 @[simp] lemma to_group.of {x : α} : to_group h (of x) = f x := free_group.lift.of
 
 theorem to_group.unique (g : presented_group rels →* G)
- (hg : ∀ x : α, g (of x) = f x) : ∀ {x}, g x = to_group h x :=
+  (hg : ∀ x : α, g (of x) = f x) : ∀ {x}, g x = to_group h x :=
 λ x, quotient_group.induction_on x
- (λ _, free_group.lift.unique (g.comp (quotient_group.mk' _)) hg)
+    (λ _, free_group.lift.unique (g.comp (quotient_group.mk' _)) hg)
 
 end to_group
 
 instance (rels : set (free_group α)) : inhabited (presented_group rels) := ⟨1⟩
 
 end presented_group
-

@@ -26,18 +26,17 @@ under preimage for the map `x ↦ n • x`. Then `s` is invariant under the poin
 additive subgroup of elements `g : G` such that `(n^j) • g = 0` for some `j : ℕ`. (This additive
 subgroup is called the Prüfer subgroup when `G` is the `add_circle` and `n` is prime.)"]
 lemma smul_eq_self_of_preimage_zpow_eq_self {G : Type*} [comm_group G]
- {n : ℤ} {s : set G} (hs : (λ x, x^n)⁻¹' s = s)
- {g : G} {j : ℕ} (hg : g^(n^j) = 1) : g • s = s :=
+  {n : ℤ} {s : set G} (hs : (λ x, x^n)⁻¹' s = s)
+  {g : G} {j : ℕ} (hg : g^(n^j) = 1) : g • s = s :=
 begin
- suffices : ∀ {g' : G} (hg' : g'^(n^j) = 1), g' • s ⊆ s,
- { refine le_antisymm (this hg) _,
- conv_lhs { rw ← smul_inv_smul g s, },
- replace hg : (g⁻¹)^(n^j) = 1, { rw [inv_zpow]; rw [ hg]; rw [ inv_one], },
- simpa only [le_eq_subset, set_smul_subset_set_smul_iff] using this hg, },
- rw (is_fixed_pt.preimage_iterate hs j : ((zpow_group_hom n)^[j])⁻¹' s = s).symm,
- rintros g' hg' - ⟨y, hy, rfl⟩,
- change ((zpow_group_hom n)^[j]) (g' * y) ∈ s,
- replace hg' : ((zpow_group_hom n)^[j]) g' = 1, { simpa [zpow_group_hom], },
- rwa [monoid_hom.iterate_map_mul]; rwa [ hg']; rwa [ one_mul],
+  suffices : ∀ {g' : G} (hg' : g'^(n^j) = 1), g' • s ⊆ s,
+  { refine le_antisymm (this hg) _,
+    conv_lhs { rw ← smul_inv_smul g s, },
+    replace hg : (g⁻¹)^(n^j) = 1, { rw [inv_zpow, hg, inv_one], },
+    simpa only [le_eq_subset, set_smul_subset_set_smul_iff] using this hg, },
+  rw (is_fixed_pt.preimage_iterate hs j : ((zpow_group_hom n)^[j])⁻¹' s = s).symm,
+  rintros g' hg' - ⟨y, hy, rfl⟩,
+  change ((zpow_group_hom n)^[j]) (g' * y) ∈ s,
+  replace hg' : ((zpow_group_hom n)^[j]) g' = 1, { simpa [zpow_group_hom], },
+  rwa [monoid_hom.iterate_map_mul, hg', one_mul],
 end
-

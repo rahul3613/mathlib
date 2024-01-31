@@ -23,8 +23,8 @@ open category_theory.functor
 universes u₁ u₂ u₃ v₁ v₂ v₃
 
 variables {A : Type u₁} [category.{v₁} A]
- {B : Type u₂} [category.{v₂} B]
- {C : Type u₃} [category.{v₃} C]
+          {B : Type u₂} [category.{v₂} B]
+          {C : Type u₃} [category.{v₃} C]
 
 variables {F : A ⥤ C} {G : A ⥤ B} {H : B ⥤ C}
 
@@ -47,4 +47,3 @@ iso_whisker_right h.counit_iso H ≪≫ eq_to_iso (functor.id_comp H)
 (inv_comp_iso i.symm).symm
 
 end category_theory
-

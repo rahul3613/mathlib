@@ -37,7 +37,7 @@ namespace category_theory
 
 /-- A functor `F` is additive provided `F.map` is an additive homomorphism. -/
 class functor.additive {C D : Type*} [category C] [category D]
- [preadditive C] [preadditive D] (F : C ⥤ D) : Prop :=
+  [preadditive C] [preadditive D] (F : C ⥤ D) : Prop :=
 (map_add' : Π {X Y : C} {f g : X ⟶ Y}, F.map (f + g) = F.map f + F.map g . obviously)
 
 section preadditive
@@ -46,7 +46,7 @@ namespace functor
 
 section
 variables {C D : Type*} [category C] [category D] [preadditive C]
- [preadditive D] (F : C ⥤ D) [functor.additive F]
+  [preadditive D] (F : C ⥤ D) [functor.additive F]
 
 @[simp]
 lemma map_add {X Y : C} {f g : X ⟶ Y} : F.map (f + g) = F.map f + F.map g :=
@@ -67,7 +67,7 @@ instance : additive (𝟭 C) :=
 {}
 
 instance {E : Type*} [category E] [preadditive E] (G : D ⥤ E) [functor.additive G] :
- additive (F ⋙ G) :=
+  additive (F ⋙ G) :=
 {}
 
 @[simp]
@@ -89,7 +89,7 @@ open_locale big_operators
 
 @[simp]
 lemma map_sum {X Y : C} {α : Type*} (f : α → (X ⟶ Y)) (s : finset α) :
- F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
+  F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
 (F.map_add_hom : (X ⟶ Y) →+ _).map_sum f s
 
 end
@@ -102,8 +102,8 @@ instance induced_functor_additive : functor.additive (induced_functor F) := {}
 end induced_category
 
 instance full_subcategory_inclusion_additive
- {C : Type*} [category C] [preadditive C] (Z : C → Prop) :
- (full_subcategory_inclusion Z).additive := {}
+  {C : Type*} [category C] [preadditive C] (Z : C → Prop) :
+  (full_subcategory_inclusion Z).additive := {}
 
 section
 -- To talk about preservation of biproducts we need to specify universes explicitly.
@@ -111,7 +111,7 @@ section
 noncomputable theory
 
 variables {C : Type u₁} {D : Type u₂} [category.{v₁} C] [category.{v₂} D]
- [preadditive C] [preadditive D] (F : C ⥤ D)
+  [preadditive C] [preadditive D] (F : C ⥤ D)
 
 open category_theory.limits
 open category_theory.preadditive
@@ -119,21 +119,23 @@ open category_theory.preadditive
 @[priority 100]
 instance preserves_finite_biproducts_of_additive [additive F] : preserves_finite_biproducts F :=
 { preserves := λ J _,
- { preserves := λ f,
- { preserves := λ b hb, by exactI is_bilimit_of_total _
- begin
- simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum],
- dsimp only [map_bicone_X],
- simp_rw [← F.map_id],
- refine congr_arg _ (hb.is_limit.hom_ext (λ j, hb.is_colimit.hom_ext (λ j', _))),
- cases j, cases j',
- dsimp only [limits.bicone.to_cone_π_app],
- simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp],
- end } } }
+  { preserves := λ f,
+    { preserves := λ b hb, by exactI is_bilimit_of_total _
+      begin
+        simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum],
+        dsimp only [map_bicone_X],
+        simp_rw [← F.map_id],
+        refine congr_arg _ (hb.is_limit.hom_ext (λ j, hb.is_colimit.hom_ext (λ j', _))),
+        cases j, cases j',
+        dsimp only [limits.bicone.to_cone_π_app],
+        simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp],
+      end } } }
 
 lemma additive_of_preserves_binary_biproducts [has_binary_biproducts C] [preserves_zero_morphisms F]
- [preserves_binary_biproducts F] : additive F :=
-{ map_add' := λ X Y f g, by rw [biprod.add_eq_lift_id_desc]; rw [ F.map_comp]; rw [ ← biprod.lift_map_biprod]; rw [ ← biprod.map_biprod_hom_desc]; rw [ category.assoc]; rw [ iso.inv_hom_id_assoc]; rw [ F.map_id]; rw [ biprod.add_eq_lift_id_desc] }
+  [preserves_binary_biproducts F] : additive F :=
+{ map_add' := λ X Y f g, by rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_map_biprod,
+    ← biprod.map_biprod_hom_desc, category.assoc, iso.inv_hom_id_assoc, F.map_id,
+    biprod.add_eq_lift_id_desc] }
 
 end
 
@@ -181,12 +183,12 @@ lemma AdditiveFunctor.forget_obj (F : C ⥤+ D) : (AdditiveFunctor.forget C D).o
 rfl
 
 lemma AdditiveFunctor.forget_obj_of (F : C ⥤ D) [F.additive] :
- (AdditiveFunctor.forget C D).obj (AdditiveFunctor.of F) = F :=
+  (AdditiveFunctor.forget C D).obj (AdditiveFunctor.of F) = F :=
 rfl
 
 @[simp]
 lemma AdditiveFunctor.forget_map (F G : C ⥤+ D) (α : F ⟶ G) :
- (AdditiveFunctor.forget C D).map α = α :=
+  (AdditiveFunctor.forget C D).map α = α :=
 rfl
 
 instance : functor.additive (AdditiveFunctor.forget C D) :=
@@ -211,41 +213,40 @@ local attribute [instance] preserves_binary_biproducts_of_preserves_binary_copro
 @[derive full, derive faithful]
 def AdditiveFunctor.of_left_exact : (C ⥤ₗ D) ⥤ (C ⥤+ D) :=
 full_subcategory.map (λ F h, let hF := classical.choice h in
- by exactI functor.additive_of_preserves_binary_biproducts F)
+    by exactI functor.additive_of_preserves_binary_biproducts F)
 
 /-- Turn a right exact functor into an additive functor. -/
 @[derive full, derive faithful]
 def AdditiveFunctor.of_right_exact : (C ⥤ᵣ D) ⥤ (C ⥤+ D) :=
 full_subcategory.map (λ F h, let hF := classical.choice h in
- by exactI functor.additive_of_preserves_binary_biproducts F)
+  by exactI functor.additive_of_preserves_binary_biproducts F)
 
 /-- Turn an exact functor into an additive functor. -/
 @[derive full, derive faithful]
 def AdditiveFunctor.of_exact : (C ⥤ₑ D) ⥤ (C ⥤+ D) :=
 full_subcategory.map (λ F h, let hF := classical.choice h.1 in
- by exactI functor.additive_of_preserves_binary_biproducts F)
+  by exactI functor.additive_of_preserves_binary_biproducts F)
 
 end
 
 variables {C D}
 
 @[simp] lemma AdditiveFunctor.of_left_exact_obj_fst (F : C ⥤ₗ D) :
- ((AdditiveFunctor.of_left_exact C D).obj F).obj = F.obj := rfl
+  ((AdditiveFunctor.of_left_exact C D).obj F).obj = F.obj := rfl
 @[simp] lemma AdditiveFunctor.of_right_exact_obj_fst (F : C ⥤ᵣ D) :
- ((AdditiveFunctor.of_right_exact C D).obj F).obj = F.obj := rfl
+  ((AdditiveFunctor.of_right_exact C D).obj F).obj = F.obj := rfl
 @[simp] lemma AdditiveFunctor.of_exact_obj_fst (F : C ⥤ₑ D) :
- ((AdditiveFunctor.of_exact C D).obj F).obj = F.obj := rfl
+  ((AdditiveFunctor.of_exact C D).obj F).obj = F.obj := rfl
 
 @[simp] lemma Additive_Functor.of_left_exact_map {F G : C ⥤ₗ D} (α : F ⟶ G) :
- (AdditiveFunctor.of_left_exact C D).map α = α := rfl
+  (AdditiveFunctor.of_left_exact C D).map α = α := rfl
 @[simp] lemma Additive_Functor.of_right_exact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) :
- (AdditiveFunctor.of_right_exact C D).map α = α := rfl
+  (AdditiveFunctor.of_right_exact C D).map α = α := rfl
 @[simp] lemma Additive_Functor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
- (AdditiveFunctor.of_exact C D).map α = α := rfl
+  (AdditiveFunctor.of_exact C D).map α = α := rfl
 
 end exact
 
 end preadditive
 
 end category_theory
-

@@ -18,8 +18,8 @@ We formalise the standard computation of (regular) continued fractions for linea
 fields. The algorithm is rather simple. Here is an outline of the procedure adapted from Wikipedia:
 
 Take a value `v`. We call `⌊v⌋` the *integer part* of `v` and `v - ⌊v⌋` the *fractional part* of
-`v`. A continued fraction representation of `v` can then be given by `[⌊v⌋; b₀, b₁, b₂,...]`, where
-`[b₀; b₁, b₂,...]` recursively is the continued fraction representation of `1 / (v - ⌊v⌋)`. This
+`v`.  A continued fraction representation of `v` can then be given by `[⌊v⌋; b₀, b₁, b₂,...]`, where
+`[b₀; b₁, b₂,...]` recursively is the continued fraction representation of `1 / (v - ⌊v⌋)`.  This
 process stops when the fractional part hits 0.
 
 In other words: to calculate a continued fraction representation of a number `v`, write down the
@@ -32,9 +32,9 @@ For an example, refer to `int_fract_pair.stream`.
 ## Main definitions
 
 - `generalized_continued_fraction.int_fract_pair.stream`: computes the stream of integer and
- fractional parts of a given value as described in the summary.
+  fractional parts of a given value as described in the summary.
 - `generalized_continued_fraction.of`: computes the generalised continued fraction of a value `v`.
- In fact, it computes a regular continued fraction that terminates if and only if `v` is rational.
+  In fact, it computes a regular continued fraction that terminates if and only if `v` is rational.
 
 ## Implementation Notes
 
@@ -101,7 +101,7 @@ instance has_coe_to_int_fract_pair : has_coe (int_fract_pair K) (int_fract_pair 
 
 @[simp, norm_cast]
 lemma coe_to_int_fract_pair {b : ℤ} {fr : K} :
- (↑(int_fract_pair.mk b fr) : int_fract_pair β) = int_fract_pair.mk b (↑fr : β) :=
+  (↑(int_fract_pair.mk b fr) : int_fract_pair β) = int_fract_pair.mk b (↑fr : β) :=
 rfl
 
 end coe
@@ -120,7 +120,7 @@ fraction representation of `v` in `generalized_continued_fraction.of`. More prec
 `v : K`, it recursively computes a stream of option `ℤ × K` pairs as follows:
 - `stream v 0 = some ⟨⌊v⌋, v - ⌊v⌋⟩`
 - `stream v (n + 1) = some ⟨⌊frₙ⁻¹⌋, frₙ⁻¹ - ⌊frₙ⁻¹⌋⟩`,
- if `stream v n = some ⟨_, frₙ⟩` and `frₙ ≠ 0`
+    if `stream v n = some ⟨_, frₙ⟩` and `frₙ ≠ 0`
 - `stream v (n + 1) = none`, otherwise
 
 For example, let `(v : ℚ) := 3.4`. The process goes as follows:
@@ -132,7 +132,7 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 protected def stream (v : K) : stream $ option (int_fract_pair K)
 | 0 := some (int_fract_pair.of v)
 | (n + 1) := (stream n).bind $ λ ap_n,
- if ap_n.fr = 0 then none else some (int_fract_pair.of ap_n.fr⁻¹)
+  if ap_n.fr = 0 then none else some (int_fract_pair.of ap_n.fr⁻¹)
 
 
 /--
@@ -153,11 +153,11 @@ it. The setup of rewriting/simplification lemmas that make the definitions easy 
 -/
 protected def seq1 (v : K) : stream.seq1 $ int_fract_pair K :=
 ⟨ int_fract_pair.of v,--the head
- stream.seq.tail -- take the tail of `int_fract_pair.stream` since the first element is already in
- -- the head
- -- create a sequence from `int_fract_pair.stream`
- ⟨ int_fract_pair.stream v, -- the underlying stream
- @stream_is_seq _ _ _ v ⟩ ⟩ -- the proof that the stream is a sequence
+  stream.seq.tail -- take the tail of `int_fract_pair.stream` since the first element is already in
+  -- the head
+  -- create a sequence from `int_fract_pair.stream`
+  ⟨ int_fract_pair.stream v, -- the underlying stream
+    @stream_is_seq _ _ _ v ⟩ ⟩ -- the proof that the stream is a sequence
 
 end int_fract_pair
 
@@ -174,12 +174,11 @@ The implementation uses `int_fract_pair.stream` to obtain the partial denominato
 fraction. Refer to said function for more details about the computation process.
 -/
 protected def of [linear_ordered_field K] [floor_ring K] (v : K) :
- generalized_continued_fraction K :=
+  generalized_continued_fraction K :=
 let ⟨h, s⟩ := int_fract_pair.seq1 v in -- get the sequence of integer and fractional parts.
 ⟨ h.b, -- the head is just the first integer part
- s.map (λ p, ⟨1, p.b⟩) ⟩ -- the sequence consists of the remaining integer parts as the partial
- -- denominators; all partial numerators are simply 1
+  s.map (λ p, ⟨1, p.b⟩) ⟩ -- the sequence consists of the remaining integer parts as the partial
+                          -- denominators; all partial numerators are simply 1
 
 
 end generalized_continued_fraction
-

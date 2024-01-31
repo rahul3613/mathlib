@@ -44,12 +44,12 @@ def comp : Π {X Y Z : Σ i, C i}, sigma_hom X Y → sigma_hom Y Z → sigma_hom
 
 instance : category_struct (Σ i, C i) :=
 { hom := sigma_hom,
- id := id,
- comp := λ X Y Z f g, comp f g }
+  id := id,
+  comp := λ X Y Z f g, comp f g }
 
 @[simp]
 lemma comp_def (i : I) (X Y Z : C i) (f : X ⟶ Y) (g : Y ⟶ Z) :
- comp (mk f) (mk g) = mk (f ≫ g) :=
+  comp (mk f) (mk g) = mk (f ≫ g) :=
 rfl
 
 lemma assoc : ∀ (X Y Z W : Σ i, C i) (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ W), (f ≫ g) ≫ h = f ≫ g ≫ h
@@ -65,20 +65,20 @@ end sigma_hom
 
 instance sigma : category (Σ i, C i) :=
 { id_comp' := sigma_hom.id_comp,
- comp_id' := sigma_hom.comp_id,
- assoc' := sigma_hom.assoc }
+  comp_id' := sigma_hom.comp_id,
+  assoc' := sigma_hom.assoc }
 
 /-- The inclusion functor into the disjoint union of categories. -/
 @[simps map]
 def incl (i : I) : C i ⥤ Σ i, C i :=
 { obj := λ X, ⟨i, X⟩,
- map := λ X Y, sigma_hom.mk }
+  map := λ X Y, sigma_hom.mk }
 
 @[simp] lemma incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ := rfl
 
 instance (i : I) : full (incl i : C i ⥤ Σ i, C i) :=
 { preimage := λ X Y ⟨f⟩, f,
- witness' := λ X Y ⟨f⟩, rfl }.
+  witness' := λ X Y ⟨f⟩, rfl }.
 
 instance (i : I) : faithful (incl i : C i ⥤ Σ i, C i) := {}.
 
@@ -91,12 +91,12 @@ each subcategory.
 -/
 def nat_trans {F G : (Σ i, C i) ⥤ D} (h : Π (i : I), incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G :=
 { app := λ ⟨j, X⟩, (h j).app X,
- naturality' := by { rintro ⟨j, X⟩ ⟨_, _⟩ ⟨f⟩, apply (h j).naturality } }
+  naturality' := by { rintro ⟨j, X⟩ ⟨_, _⟩ ⟨f⟩, apply (h j).naturality } }
 
 @[simp]
 lemma nat_trans_app {F G : (Σ i, C i) ⥤ D} (h : Π (i : I), incl i ⋙ F ⟶ incl i ⋙ G)
- (i : I) (X : C i) :
- (nat_trans h).app ⟨i, X⟩ = (h i).app X :=
+  (i : I) (X : C i) :
+  (nat_trans h).app ⟨i, X⟩ = (h i).app X :=
 rfl
 
 /-- (Implementation). An auxiliary definition to build the functor `desc`. -/
@@ -115,13 +115,13 @@ This witnesses that the sigma-type is the coproduct in Cat.
 @[simps obj]
 def desc : (Σ i, C i) ⥤ D :=
 { obj := λ X, (F X.1).obj X.2,
- map := λ X Y g, desc_map F X Y g,
- map_id' := by { rintro ⟨i, X⟩, apply (F i).map_id },
- map_comp' := by { rintro ⟨i, X⟩ ⟨_, Y⟩ ⟨_, Z⟩ ⟨f⟩ ⟨g⟩, apply (F i).map_comp } }
+  map := λ X Y g, desc_map F X Y g,
+  map_id' := by { rintro ⟨i, X⟩, apply (F i).map_id },
+  map_comp' := by { rintro ⟨i, X⟩ ⟨_, Y⟩ ⟨_, Z⟩ ⟨f⟩ ⟨g⟩, apply (F i).map_comp } }
 
 @[simp]
 lemma desc_map_mk {i : I} (X Y : C i) (f : X ⟶ Y) :
- (desc F).map (sigma_hom.mk f) = (F i).map f :=
+  (desc F).map (sigma_hom.mk f) = (F i).map f :=
 rfl
 
 /--
@@ -134,12 +134,12 @@ nat_iso.of_components (λ X, iso.refl _) (by tidy)
 
 @[simp]
 lemma incl_desc_hom_app (i : I) (X : C i) :
- (incl_desc F i).hom.app X = 𝟙 ((F i).obj X) :=
+  (incl_desc F i).hom.app X = 𝟙 ((F i).obj X) :=
 rfl
 
 @[simp]
 lemma incl_desc_inv_app (i : I) (X : C i) :
- (incl_desc F i).inv.app X = 𝟙 ((F i).obj X) :=
+  (incl_desc F i).inv.app X = 𝟙 ((F i).obj X) :=
 rfl
 
 /--
@@ -148,16 +148,16 @@ If `q` when restricted to each subcategory `C i` agrees with `F i`, then `q` is 
 -/
 def desc_uniq (q : (Σ i, C i) ⥤ D) (h : Π i, incl i ⋙ q ≅ F i) : q ≅ desc F :=
 nat_iso.of_components (λ ⟨i, X⟩, (h i).app X) $
- by { rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩, apply (h i).hom.naturality f }
+  by { rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩, apply (h i).hom.naturality f }
 
 @[simp]
 lemma desc_uniq_hom_app (q : (Σ i, C i) ⥤ D) (h : Π i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
- (desc_uniq F q h).hom.app ⟨i, X⟩ = (h i).hom.app X :=
+  (desc_uniq F q h).hom.app ⟨i, X⟩ = (h i).hom.app X :=
 rfl
 
 @[simp]
 lemma desc_uniq_inv_app (q : (Σ i, C i) ⥤ D) (h : Π i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
- (desc_uniq F q h).inv.app ⟨i, X⟩ = (h i).inv.app X :=
+  (desc_uniq F q h).inv.app ⟨i, X⟩ = (h i).inv.app X :=
 rfl
 
 /--
@@ -165,9 +165,9 @@ If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁
 -/
 @[simps]
 def nat_iso {q₁ q₂ : (Σ i, C i) ⥤ D} (h : Π i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) :
- q₁ ≅ q₂ :=
+  q₁ ≅ q₂ :=
 { hom := nat_trans (λ i, (h i).hom),
- inv := nat_trans (λ i, (h i).inv) }
+  inv := nat_trans (λ i, (h i).inv) }
 
 end
 
@@ -181,7 +181,7 @@ desc (λ j, incl (g j))
 
 @[simp] lemma map_obj (j : J) (X : C (g j)) : (sigma.map C g).obj ⟨j, X⟩ = ⟨g j, X⟩ := rfl
 @[simp] lemma map_map {j : J} {X Y : C (g j)} (f : X ⟶ Y) :
- (sigma.map C g).map (sigma_hom.mk f) = sigma_hom.mk f :=
+  (sigma.map C g).map (sigma_hom.mk f) = sigma_hom.mk f :=
 rfl
 
 /--
@@ -203,7 +203,7 @@ variables {I} {K : Type w₃}
 @[simps]
 def map_comp (f : K → J) (g : J → I) : map (C ∘ g) f ⋙ (map C g : _) ≅ map C (g ∘ f) :=
 desc_uniq _ _ $ λ k,
- (iso_whisker_right (incl_comp_map (C ∘ g) f k) (map C g : _) : _) ≪≫ incl_comp_map _ _ _
+  (iso_whisker_right (incl_comp_map (C ∘ g) f k) (map C g : _) : _) ≪≫ incl_comp_map _ _ _
 
 end
 
@@ -231,15 +231,14 @@ Assemble an `I`-indexed family of natural transformations into a single natural 
 -/
 def sigma (α : Π i, F i ⟶ G i) : functor.sigma F ⟶ functor.sigma G :=
 { app := λ f, sigma_hom.mk ((α f.1).app _),
- naturality' :=
- begin
- rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩,
- change sigma_hom.mk _ = sigma_hom.mk _,
- rw (α i).naturality,
- end }
+  naturality' :=
+  begin
+    rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩,
+    change sigma_hom.mk _ = sigma_hom.mk _,
+    rw (α i).naturality,
+  end }
 
 end nat_trans
 
 end sigma
 end category_theory
-

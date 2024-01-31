@@ -21,16 +21,15 @@ This file contains some results on equality up to units in the integers.
 -/
 
 lemma int.nat_abs_eq_iff_associated {a b : ℤ} :
- a.nat_abs = b.nat_abs ↔ associated a b :=
+  a.nat_abs = b.nat_abs ↔ associated a b :=
 begin
- refine int.nat_abs_eq_nat_abs_iff.trans _,
- split,
- { rintro (rfl | rfl),
- { refl },
- { exact ⟨-1, by simp⟩ } },
- { rintro ⟨u, rfl⟩,
- obtain (rfl | rfl) := int.units_eq_one_or u,
- { exact or.inl (by simp) },
- { exact or.inr (by simp) } }
+  refine int.nat_abs_eq_nat_abs_iff.trans _,
+  split,
+  { rintro (rfl | rfl),
+    { refl },
+    { exact ⟨-1, by simp⟩ } },
+  { rintro ⟨u, rfl⟩,
+    obtain (rfl | rfl) := int.units_eq_one_or u,
+    { exact or.inl (by simp) },
+    { exact or.inr (by simp) } }
 end
-

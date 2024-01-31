@@ -19,7 +19,7 @@ whose rows are indexed by the fintype `m` and
 whose columns are indexed by the fintype `n`. -/
 @[nolint unused_arguments]
 def dmatrix (m : Type u) (n : Type u') [fintype m] [fintype n] (α : m → n → Type v) :
- Type (max u u' v) :=
+  Type (max u u' v) :=
 Π i j, α i j
 
 variables {l m n o : Type*} [fintype l] [fintype m] [fintype n] [fintype o]
@@ -40,17 +40,17 @@ end ext
 
 /-- `M.map f` is the dmatrix obtained by applying `f` to each entry of the matrix `M`. -/
 def map (M : dmatrix m n α) {β : m → n → Type w} (f : Π ⦃i j⦄, α i j → β i j) :
- dmatrix m n β := λ i j, f (M i j)
+  dmatrix m n β := λ i j, f (M i j)
 
 @[simp]
 lemma map_apply {M : dmatrix m n α} {β : m → n → Type w} {f : Π ⦃i j⦄, α i j → β i j}
- {i : m} {j : n} : M.map f i j = f (M i j) :=
+  {i : m} {j : n} : M.map f i j = f (M i j) :=
 rfl
 
 @[simp]
 lemma map_map {M : dmatrix m n α} {β : m → n → Type w} {γ : m → n → Type z}
- {f : Π ⦃i j⦄, α i j → β i j} {g : Π ⦃i j⦄, β i j → γ i j} :
- (M.map f).map g = M.map (λ i j x, g (f x)) :=
+  {f : Π ⦃i j⦄, α i j → β i j} {g : Π ⦃i j⦄, β i j → γ i j} :
+  (M.map f).map g = M.map (λ i j x, g (f x)) :=
 by { ext, simp, }
 
 /-- The transpose of a dmatrix. -/
@@ -84,28 +84,28 @@ instance [∀ i j, subsingleton (α i j)] : subsingleton (dmatrix m n α) := pi.
 
 @[simp] theorem zero_apply [∀ i j, has_zero (α i j)] (i j) : (0 : dmatrix m n α) i j = 0 := rfl
 @[simp] theorem neg_apply [∀ i j, has_neg (α i j)] (M : dmatrix m n α) (i j) :
- (- M) i j = - M i j :=
+  (- M) i j = - M i j :=
 rfl
 @[simp] theorem add_apply [∀ i j, has_add (α i j)] (M N : dmatrix m n α) (i j) :
- (M + N) i j = M i j + N i j :=
+  (M + N) i j = M i j + N i j :=
 rfl
 @[simp] theorem sub_apply [∀ i j, has_sub (α i j)] (M N : dmatrix m n α) (i j) :
- (M - N) i j = M i j - N i j :=
+  (M - N) i j = M i j - N i j :=
 rfl
 
 @[simp] lemma map_zero [∀ i j, has_zero (α i j)] {β : m → n → Type w} [∀ i j, has_zero (β i j)]
- {f : Π ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) :
- (0 : dmatrix m n α).map f = 0 :=
+  {f : Π ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) :
+  (0 : dmatrix m n α).map f = 0 :=
 by { ext, simp [h], }
 
 lemma map_add [∀ i j, add_monoid (α i j)] {β : m → n → Type w} [∀ i j, add_monoid (β i j)]
- (f : Π ⦃i j⦄, α i j →+ β i j) (M N : dmatrix m n α) :
- (M + N).map (λ i j, @f i j) = M.map (λ i j, @f i j) + N.map (λ i j, @f i j) :=
+  (f : Π ⦃i j⦄, α i j →+ β i j) (M N : dmatrix m n α) :
+  (M + N).map (λ i j, @f i j) = M.map (λ i j, @f i j) + N.map (λ i j, @f i j) :=
 by { ext, simp, }
 
 lemma map_sub [∀ i j, add_group (α i j)] {β : m → n → Type w} [∀ i j, add_group (β i j)]
- (f : Π ⦃i j⦄, α i j →+ β i j) (M N : dmatrix m n α) :
- (M - N).map (λ i j, @f i j) = M.map (λ i j, @f i j) - N.map (λ i j, @f i j) :=
+  (f : Π ⦃i j⦄, α i j →+ β i j) (M N : dmatrix m n α) :
+  (M - N).map (λ i j, @f i j) = M.map (λ i j, @f i j) - N.map (λ i j, @f i j) :=
 by { ext, simp }
 
 instance subsingleton_of_empty_left [is_empty m] : subsingleton (dmatrix m n α) :=
@@ -119,16 +119,15 @@ end dmatrix
 /-- The `add_monoid_hom` between spaces of dependently typed matrices
 induced by an `add_monoid_hom` between their coefficients. -/
 def add_monoid_hom.map_dmatrix
- [∀ i j, add_monoid (α i j)] {β : m → n → Type w} [∀ i j, add_monoid (β i j)]
- (f : Π ⦃i j⦄, α i j →+ β i j) :
- dmatrix m n α →+ dmatrix m n β :=
+  [∀ i j, add_monoid (α i j)] {β : m → n → Type w} [∀ i j, add_monoid (β i j)]
+  (f : Π ⦃i j⦄, α i j →+ β i j) :
+  dmatrix m n α →+ dmatrix m n β :=
 { to_fun := λ M, M.map (λ i j, @f i j),
- map_zero' := by simp,
- map_add' := dmatrix.map_add f, }
+  map_zero' := by simp,
+  map_add' := dmatrix.map_add f, }
 
 @[simp] lemma add_monoid_hom.map_dmatrix_apply
- [∀ i j, add_monoid (α i j)] {β : m → n → Type w} [∀ i j, add_monoid (β i j)]
- (f : Π ⦃i j⦄, α i j →+ β i j) (M : dmatrix m n α) :
- add_monoid_hom.map_dmatrix f M = M.map (λ i j, @f i j) :=
+  [∀ i j, add_monoid (α i j)] {β : m → n → Type w} [∀ i j, add_monoid (β i j)]
+  (f : Π ⦃i j⦄, α i j →+ β i j) (M : dmatrix m n α) :
+  add_monoid_hom.map_dmatrix f M = M.map (λ i j, @f i j) :=
 rfl
-

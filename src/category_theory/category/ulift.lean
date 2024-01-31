@@ -19,7 +19,7 @@ instance on `ulift C` where `C` is a type with a category instance.
 1. `category_theory.ulift.up` is the functorial version of the usual `ulift.up`.
 2. `category_theory.ulift.down` is the functorial version of the usual `ulift.down`.
 3. `category_theory.ulift.equivalence` is the categorical equivalence between
- `C` and `ulift C`.
+  `C` and `ulift C`.
 
 # ulift_hom
 
@@ -50,37 +50,37 @@ variables {C : Type u₁} [category.{v₁} C]
 @[simps]
 def ulift.up_functor : C ⥤ (ulift.{u₂} C) :=
 { obj := ulift.up,
- map := λ X Y f, f }
+  map := λ X Y f, f }
 
 /-- The functorial version of `ulift.down`. -/
 @[simps]
 def ulift.down_functor : (ulift.{u₂} C) ⥤ C :=
 { obj := ulift.down,
- map := λ X Y f, f }
+  map := λ X Y f, f }
 
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
 def ulift.equivalence : C ≌ (ulift.{u₂} C) :=
 { functor := ulift.up_functor,
- inverse := ulift.down_functor,
- unit_iso :=
- { hom := 𝟙 _,
- inv := 𝟙 _ },
- counit_iso :=
- { hom :=
- { app := λ X, 𝟙 _,
- naturality' := λ X Y f, by {change f ≫ 𝟙 _ = 𝟙 _ ≫ f, simp} },
- inv :=
- { app := λ X, 𝟙 _,
- naturality' := λ X Y f, by {change f ≫ 𝟙 _ = 𝟙 _ ≫ f, simp} },
- hom_inv_id' := by {ext, change (𝟙 _) ≫ (𝟙 _) = 𝟙 _, simp},
- inv_hom_id' := by {ext, change (𝟙 _) ≫ (𝟙 _) = 𝟙 _, simp} },
- functor_unit_iso_comp' := λ X, by {change (𝟙 X) ≫ (𝟙 X) = 𝟙 X, simp} }
+  inverse := ulift.down_functor,
+  unit_iso :=
+  { hom := 𝟙 _,
+    inv := 𝟙 _ },
+  counit_iso :=
+  { hom :=
+    { app := λ X, 𝟙 _,
+      naturality' := λ X Y f, by {change f ≫ 𝟙 _ = 𝟙 _ ≫ f, simp} },
+    inv :=
+    { app := λ X, 𝟙 _,
+      naturality' := λ X Y f, by {change f ≫ 𝟙 _ = 𝟙 _ ≫ f, simp} },
+  hom_inv_id' := by {ext, change (𝟙 _) ≫ (𝟙 _) = 𝟙 _, simp},
+  inv_hom_id' := by {ext, change (𝟙 _) ≫ (𝟙 _) = 𝟙 _, simp} },
+  functor_unit_iso_comp' := λ X, by {change (𝟙 X) ≫ (𝟙 X) = 𝟙 X, simp} }
 
 section ulift_hom
 
 /-- `ulift_hom.{w} C` is an alias for `C`, which is endowed with a category instance
- whose morphisms are obtained by applying `ulift.{w}` to the morphisms from `C`.
+  whose morphisms are obtained by applying `ulift.{w}` to the morphisms from `C`.
 -/
 def {w u} ulift_hom (C : Type u) := C
 
@@ -97,74 +97,73 @@ def ulift_hom.obj_up {C} (A : C) : ulift_hom C := A
 
 instance : category.{max v₂ v₁} (ulift_hom.{v₂} C) :=
 { hom := λ A B, ulift.{v₂} $ A.obj_down ⟶ B.obj_down,
- id := λ A, ⟨𝟙 _⟩,
- comp := λ A B C f g, ⟨f.down ≫ g.down⟩}
+  id := λ A, ⟨𝟙 _⟩,
+  comp := λ A B C f g, ⟨f.down ≫ g.down⟩}
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
 def ulift_hom.up : C ⥤ ulift_hom C :=
 { obj := ulift_hom.obj_up,
- map := λ X Y f, ⟨f⟩ }
+  map := λ X Y f, ⟨f⟩ }
 
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
 def ulift_hom.down : ulift_hom C ⥤ C :=
 { obj := ulift_hom.obj_down,
- map := λ X Y f, f.down }
+  map := λ X Y f, f.down }
 
 /-- The equivalence between `C` and `ulift_hom C`. -/
 def ulift_hom.equiv : C ≌ ulift_hom C :=
 { functor := ulift_hom.up,
- inverse := ulift_hom.down,
- unit_iso := nat_iso.of_components (λ A, eq_to_iso rfl) (by tidy),
- counit_iso := nat_iso.of_components (λ A, eq_to_iso rfl) (by tidy) }
+  inverse := ulift_hom.down,
+  unit_iso := nat_iso.of_components (λ A, eq_to_iso rfl) (by tidy),
+  counit_iso := nat_iso.of_components (λ A, eq_to_iso rfl) (by tidy) }
 
 end ulift_hom
 
 /-- `as_small C` is a small category equivalent to `C`.
- More specifically, if `C : Type u` is endowed with `category.{v} C`, then
- `as_small.{w} C : Type (max w v u)` is endowed with an instance of a small category.
+  More specifically, if `C : Type u` is endowed with `category.{v} C`, then
+  `as_small.{w} C : Type (max w v u)` is endowed with an instance of a small category.
 
- The objects and morphisms of `as_small C` are defined by applying `ulift` to the
- objects and morphisms of `C`.
+  The objects and morphisms of `as_small C` are defined by applying `ulift` to the
+  objects and morphisms of `C`.
 
- Note: We require a category instance for this definition in order to have direct
- access to the universe level `v`.
+  Note: We require a category instance for this definition in order to have direct
+  access to the universe level `v`.
 -/
 @[nolint unused_arguments]
 def {w v u} as_small (C : Type u) [category.{v} C] := ulift.{max w v} C
 
 instance : small_category (as_small.{w₁} C) :=
 { hom := λ X Y, ulift.{max w₁ u₁} $ X.down ⟶ Y.down,
- id := λ X, ⟨𝟙 _⟩,
- comp := λ X Y Z f g, ⟨f.down ≫ g.down⟩ }
+  id := λ X, ⟨𝟙 _⟩,
+  comp := λ X Y Z f g, ⟨f.down ≫ g.down⟩ }
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def as_small.up : C ⥤ as_small C :=
 { obj := λ X, ⟨X⟩,
- map := λ X Y f, ⟨f⟩ }
+  map := λ X Y f, ⟨f⟩ }
 
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def as_small.down : as_small C ⥤ C :=
 { obj := λ X, X.down,
- map := λ X Y f, f.down }
+  map := λ X Y f, f.down }
 
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
 def as_small.equiv : C ≌ as_small C :=
 { functor := as_small.up,
- inverse := as_small.down,
- unit_iso := nat_iso.of_components (λ X, eq_to_iso rfl) (by tidy),
- counit_iso := nat_iso.of_components (λ X, eq_to_iso $ by { ext, refl }) (by tidy) }
+  inverse := as_small.down,
+  unit_iso := nat_iso.of_components (λ X, eq_to_iso rfl) (by tidy),
+  counit_iso := nat_iso.of_components (λ X, eq_to_iso $ by { ext, refl }) (by tidy) }
 
 instance [inhabited C] : inhabited (as_small C) := ⟨⟨arbitrary _⟩⟩
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def {v' u' v u} ulift_hom_ulift_category.equiv (C : Type u) [category.{v} C] :
- C ≌ ulift_hom.{v'} (ulift.{u'} C) :=
+  C ≌ ulift_hom.{v'} (ulift.{u'} C) :=
 ulift.equivalence.trans ulift_hom.equiv
 
 end category_theory
-

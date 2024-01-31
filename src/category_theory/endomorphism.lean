@@ -57,9 +57,9 @@ end struct
 /-- Endomorphisms of an object form a monoid -/
 instance monoid {C : Type u} [category.{v} C] {X : C} : monoid (End X) :=
 { mul_one := category.id_comp,
- one_mul := category.comp_id,
- mul_assoc := λ x y z, (category.assoc z y x).symm,
- ..End.has_mul X, ..End.has_one X }
+  one_mul := category.comp_id,
+  mul_assoc := λ x y z, (category.assoc z y x).symm,
+  ..End.has_mul X, ..End.has_one X }
 
 section mul_action
 variables {C : Type u} [category.{v} C]
@@ -68,13 +68,13 @@ open opposite
 
 instance mul_action_right {X Y : C} : mul_action (End Y) (X ⟶ Y) :=
 { smul := λ r f, f ≫ r,
- one_smul := category.comp_id,
- mul_smul := λ r s f, eq.symm $ category.assoc _ _ _ }
+  one_smul := category.comp_id,
+  mul_smul := λ r s f, eq.symm $ category.assoc _ _ _ }
 
 instance mul_action_left {X : Cᵒᵖ} {Y : C} : mul_action (End X) (unop X ⟶ Y) :=
 { smul := λ r f, r.unop ≫ f,
- one_smul := category.id_comp,
- mul_smul := λ r s f, category.assoc _ _ _ }
+  one_smul := category.id_comp,
+  mul_smul := λ r s f, category.assoc _ _ _ }
 
 lemma smul_right {X Y : C} {r : End Y} {f : X ⟶ Y} : r • f = f ≫ r := rfl
 lemma smul_left {X : Cᵒᵖ} {Y : C} {r : (End X)} {f : unop X ⟶ Y} : r • f = r.unop ≫ f := rfl
@@ -88,9 +88,9 @@ instance group {C : Type u} [groupoid.{v} C] (X : C) : group (End X) :=
 end End
 
 lemma is_unit_iff_is_iso {C : Type u} [category.{v} C] {X : C} (f : End X) :
- is_unit (f : End X) ↔ is_iso f :=
+  is_unit (f : End X) ↔ is_iso f :=
 ⟨λ h, { out := ⟨h.unit.inv, ⟨h.unit.inv_val, h.unit.val_inv⟩⟩ },
- λ h, by exactI ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
+  λ h, by exactI ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
 
 variables {C : Type u} [category.{v} C] (X : C)
 
@@ -109,14 +109,14 @@ instance inhabited : inhabited (Aut X) := ⟨iso.refl X⟩
 instance : group (Aut X) :=
 by refine_struct
 { one := iso.refl X,
- inv := iso.symm,
- mul := flip iso.trans,
- div := _,
- npow := @npow_rec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩,
- zpow := @zpow_rec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ };
+  inv := iso.symm,
+  mul := flip iso.trans,
+  div := _,
+  npow := @npow_rec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩,
+  zpow := @zpow_rec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ };
 intros; try { refl }; ext;
 simp [flip, (*), monoid.mul, mul_one_class.mul, mul_one_class.one, has_one.one, monoid.one,
- has_inv.inv]
+  has_inv.inv]
 
 lemma Aut_mul_def (f g : Aut X) : f * g = g.trans f := rfl
 
@@ -128,18 +128,18 @@ are (multiplicatively) equivalent to automorphisms of that object.
 -/
 def units_End_equiv_Aut : (End X)ˣ ≃* Aut X :=
 { to_fun := λ f, ⟨f.1, f.2, f.4, f.3⟩,
- inv_fun := λ f, ⟨f.1, f.2, f.4, f.3⟩,
- left_inv := λ ⟨f₁, f₂, f₃, f₄⟩, rfl,
- right_inv := λ ⟨f₁, f₂, f₃, f₄⟩, rfl,
- map_mul' := λ f g, by rcases f; rcases g; refl }
+  inv_fun := λ f, ⟨f.1, f.2, f.4, f.3⟩,
+  left_inv := λ ⟨f₁, f₂, f₃, f₄⟩, rfl,
+  right_inv := λ ⟨f₁, f₂, f₃, f₄⟩, rfl,
+  map_mul' := λ f g, by rcases f; rcases g; refl }
 
 /-- Isomorphisms induce isomorphisms of the automorphism group -/
 def Aut_mul_equiv_of_iso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y :=
 { to_fun := λ x, ⟨h.inv ≫ x.hom ≫ h.hom, h.inv ≫ x.inv ≫ h.hom⟩,
- inv_fun := λ y, ⟨h.hom ≫ y.hom ≫ h.inv, h.hom ≫ y.inv ≫ h.inv⟩,
- left_inv := by tidy,
- right_inv := by tidy,
- map_mul' := by simp [Aut_mul_def] }
+  inv_fun := λ y, ⟨h.hom ≫ y.hom ≫ h.inv, h.hom ≫ y.inv ≫ h.inv⟩,
+  left_inv := by tidy,
+  right_inv := by tidy,
+  map_mul' := by simp [Aut_mul_def] }
 
 end Aut
 
@@ -150,16 +150,15 @@ variables {D : Type u'} [category.{v'} D] (f : C ⥤ D) (X)
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps] def map_End : End X →* End (f.obj X) :=
 { to_fun := functor.map f,
- map_mul' := λ x y, f.map_comp y x,
- map_one' := f.map_id X }
+  map_mul' := λ x y, f.map_comp y x,
+  map_one' := f.map_id X }
 
 /-- `f.map_iso` as a group hom between automorphism groups. -/
 def map_Aut : Aut X →* Aut (f.obj X) :=
 { to_fun := f.map_iso,
- map_mul' := λ x y, f.map_iso_trans y x,
- map_one' := f.map_iso_refl X }
+  map_mul' := λ x y, f.map_iso_trans y x,
+  map_one' := f.map_iso_refl X }
 
 end functor
 
 end category_theory
-

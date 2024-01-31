@@ -40,13 +40,13 @@ def seq : Π {m}, (fin m → (α → β)) → (fin m → α) → fin m → β
 
 @[simp]
 lemma seq_eq : Π {m} (f : fin m → (α → β)) (v : fin m → α),
- seq f v = (λ i, f i (v i))
+  seq f v = (λ i, f i (v i))
 | 0 f v := subsingleton.elim _ _
 | (n + 1) f v := funext $ λ i, begin
- simp_rw [seq, seq_eq],
- refine i.cases _ (λ i, _),
- { refl },
- { simp only [matrix.cons_val_succ], refl },
+  simp_rw [seq, seq_eq],
+  refine i.cases _ (λ i, _),
+  { refl },
+  { simp only [matrix.cons_val_succ], refl },
 end
 
 example {f₁ f₂ : α → β} (a₁ a₂ : α) : seq ![f₁, f₂] ![a₁, a₂] = ![f₁ a₁, f₂ a₂] := rfl
@@ -133,13 +133,12 @@ example [add_comm_monoid α] (a : fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :
 -/
 @[simp]
 lemma sum_eq [add_comm_monoid α] : Π {m} (a : fin m → α),
- sum a = ∑ i, a i
+  sum a = ∑ i, a i
 | 0 a := rfl
 | 1 a := (fintype.sum_unique a).symm
-| (n + 2) a := by rw [fin.sum_univ_cast_succ]; rw [ sum]; rw [ sum_eq]
+| (n + 2) a := by rw [fin.sum_univ_cast_succ, sum, sum_eq]
 
 example [add_comm_monoid α] (a : fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :=
 (sum_eq _).symm
 
 end fin_vec
-

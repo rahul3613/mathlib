@@ -23,7 +23,7 @@ A summand of the partition is called a part.
 ## Main functions
 
 * `p : partition n` is a structure, made of a multiset of integers which are all positive and
- add up to `n`.
+  add up to `n`.
 
 ## Implementation details
 
@@ -61,15 +61,15 @@ namespace partition
 /-- A composition induces a partition (just convert the list to a multiset). -/
 def of_composition (n : ℕ) (c : composition n) : partition n :=
 { parts := c.blocks,
- parts_pos := λ i hi, c.blocks_pos hi,
- parts_sum := by rw [multiset.coe_sum]; rw [ c.blocks_sum] }
+  parts_pos := λ i hi, c.blocks_pos hi,
+  parts_sum := by rw [multiset.coe_sum, c.blocks_sum] }
 
 lemma of_composition_surj {n : ℕ} : function.surjective (of_composition n) :=
 begin
- rintro ⟨b, hb₁, hb₂⟩,
- rcases quotient.exists_rep b with ⟨b, rfl⟩,
- refine ⟨⟨b, λ i hi, hb₁ hi, _⟩, partition.ext _ _ rfl⟩,
- simpa using hb₂
+  rintro ⟨b, hb₁, hb₂⟩,
+  rcases quotient.exists_rep b with ⟨b, rfl⟩,
+  refine ⟨⟨b, λ i hi, hb₁ hi, _⟩, partition.ext _ _ rfl⟩,
+  simpa using hb₂
 end
 
 /--
@@ -80,16 +80,16 @@ without the zeros.
 -- proof obligation `l.sum = n`.
 def of_sums (n : ℕ) (l : multiset ℕ) (hl : l.sum = n) : partition n :=
 { parts := l.filter (≠ 0),
- parts_pos := λ i hi, nat.pos_of_ne_zero $ by apply of_mem_filter hi,
- parts_sum :=
- begin
- have lt : l.filter (= 0) + l.filter (≠ 0) = l := filter_add_not _ l,
- apply_fun multiset.sum at lt,
- have lz : (l.filter (= 0)).sum = 0,
- { rw multiset.sum_eq_zero_iff,
- simp },
- simpa [lz, hl] using lt,
- end }
+  parts_pos := λ i hi, nat.pos_of_ne_zero $ by apply of_mem_filter hi,
+  parts_sum :=
+  begin
+    have lt : l.filter (= 0) + l.filter (≠ 0) = l := filter_add_not _ l,
+    apply_fun multiset.sum at lt,
+    have lz : (l.filter (= 0)).sum = 0,
+    { rw multiset.sum_eq_zero_iff,
+      simp },
+    simpa [lz, hl] using lt,
+  end }
 
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def of_multiset (l : multiset ℕ) : partition l.sum :=
@@ -108,11 +108,11 @@ as the number of times it appears in the multiset `l`.
 this is `0` instead.)
 -/
 lemma count_of_sums_of_ne_zero {n : ℕ} {l : multiset ℕ} (hl : l.sum = n) {i : ℕ} (hi : i ≠ 0) :
- (of_sums n l hl).parts.count i = l.count i :=
+  (of_sums n l hl).parts.count i = l.count i :=
 count_filter_of_pos hi
 
 lemma count_of_sums_zero {n : ℕ} {l : multiset ℕ} (hl : l.sum = n) :
- (of_sums n l hl).parts.count 0 = 0 :=
+  (of_sums n l hl).parts.count 0 = 0 :=
 count_filter_of_neg (λ h, h rfl)
 
 /--
@@ -135,4 +135,3 @@ def odd_distincts (n : ℕ) : finset (partition n) := odds n ∩ distincts n
 
 end partition
 end nat
-

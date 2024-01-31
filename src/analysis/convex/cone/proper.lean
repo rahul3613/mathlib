@@ -41,20 +41,20 @@ namespace convex_cone
 
 variables {𝕜 : Type*} [ordered_semiring 𝕜]
 variables {E : Type*} [add_comm_monoid E] [topological_space E] [has_continuous_add E]
- [has_smul 𝕜 E] [has_continuous_const_smul 𝕜 E]
+  [has_smul 𝕜 E] [has_continuous_const_smul 𝕜 E]
 
 /-- The closure of a convex cone inside a topological space as a convex cone. This
 construction is mainly used for defining maps between proper cones. -/
 protected def closure (K : convex_cone 𝕜 E) : convex_cone 𝕜 E :=
 { carrier := closure ↑K,
- smul_mem' :=
- λ c hc _ h₁, map_mem_closure (continuous_id'.const_smul c) h₁ (λ _ h₂, K.smul_mem hc h₂),
- add_mem' := λ _ h₁ _ h₂, map_mem_closure₂ continuous_add h₁ h₂ K.add_mem }
+  smul_mem' :=
+    λ c hc _ h₁, map_mem_closure (continuous_id'.const_smul c) h₁ (λ _ h₂, K.smul_mem hc h₂),
+  add_mem' := λ _ h₁ _ h₂, map_mem_closure₂ continuous_add h₁ h₂ K.add_mem }
 
 @[simp, norm_cast] lemma coe_closure (K : convex_cone 𝕜 E) : (K.closure : set E) = closure K := rfl
 
 @[simp] protected lemma mem_closure {K : convex_cone 𝕜 E} {a : E} :
- a ∈ K.closure ↔ a ∈ closure (K : set E) := iff.rfl
+  a ∈ K.closure ↔ a ∈ closure (K : set E) := iff.rfl
 
 @[simp] lemma closure_eq {K L : convex_cone 𝕜 E} : K.closure = L ↔ closure (K : set E) = L :=
 set_like.ext'_iff
@@ -65,9 +65,9 @@ end convex_cone
 property that the dual of the dual of a proper cone is itself. This makes them useful for defining
 cone programs and proving duality theorems. -/
 structure proper_cone (𝕜 : Type*) (E : Type*)
- [ordered_semiring 𝕜] [add_comm_monoid E] [topological_space E] [has_smul 𝕜 E]
- extends convex_cone 𝕜 E :=
-(nonempty' : (carrier : set E).nonempty)
+  [ordered_semiring 𝕜] [add_comm_monoid E] [topological_space E] [has_smul 𝕜 E]
+  extends convex_cone 𝕜 E :=
+(nonempty'  : (carrier : set E).nonempty)
 (is_closed' : is_closed (carrier : set E))
 
 namespace proper_cone
@@ -87,7 +87,7 @@ lemma ext' : function.injective (coe : proper_cone 𝕜 E → convex_cone 𝕜 E
 -- TODO: add convex_cone_class that extends set_like and replace the below instance
 instance : set_like (proper_cone 𝕜 E) E :=
 { coe := λ K, K.carrier,
- coe_injective' := λ _ _ h, proper_cone.ext' (set_like.coe_injective h) }
+  coe_injective' := λ _ _ h, proper_cone.ext' (set_like.coe_injective h) }
 
 @[ext] lemma ext {S T : proper_cone 𝕜 E} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T := set_like.ext h
 
@@ -106,8 +106,8 @@ variables {E : Type*} [add_comm_monoid E] [topological_space E] [t1_space E] [mo
 
 instance : has_zero (proper_cone 𝕜 E) :=
 ⟨ { to_convex_cone := 0,
- nonempty' := ⟨0, rfl⟩,
- is_closed' := is_closed_singleton } ⟩
+    nonempty' := ⟨0, rfl⟩,
+    is_closed' := is_closed_singleton } ⟩
 
 instance : inhabited (proper_cone 𝕜 E) := ⟨0⟩
 
@@ -131,15 +131,15 @@ protected lemma pointed (K : proper_cone ℝ E) : (K : convex_cone ℝ E).pointe
 use continuous maps here so that the comap of f is also a map between proper cones. -/
 noncomputable def map (f : E →L[ℝ] F) (K : proper_cone ℝ E) : proper_cone ℝ F :=
 { to_convex_cone := convex_cone.closure (convex_cone.map (f : E →ₗ[ℝ] F) ↑K),
- nonempty' := ⟨ 0, subset_closure $ set_like.mem_coe.2 $ convex_cone.mem_map.2
- ⟨0, K.pointed, map_zero _⟩ ⟩,
- is_closed' := is_closed_closure }
+  nonempty' := ⟨ 0, subset_closure $ set_like.mem_coe.2 $ convex_cone.mem_map.2
+    ⟨0, K.pointed, map_zero _⟩ ⟩,
+  is_closed' := is_closed_closure }
 
 @[simp, norm_cast] lemma coe_map (f : E →L[ℝ] F) (K : proper_cone ℝ E) :
- ↑(K.map f) = (convex_cone.map (f : E →ₗ[ℝ] F) ↑K).closure := rfl
+  ↑(K.map f) = (convex_cone.map (f : E →ₗ[ℝ] F) ↑K).closure := rfl
 
 @[simp] lemma mem_map {f : E →L[ℝ] F} {K : proper_cone ℝ E} {y : F} :
- y ∈ K.map f ↔ y ∈ (convex_cone.map (f : E →ₗ[ℝ] F) ↑K).closure := iff.rfl
+  y ∈ K.map f ↔ y ∈ (convex_cone.map (f : E →ₗ[ℝ] F) ↑K).closure := iff.rfl
 
 @[simp] lemma map_id (K : proper_cone ℝ E) : K.map (continuous_linear_map.id ℝ E) = K :=
 proper_cone.ext' $ by simpa using is_closed.closure_eq K.is_closed
@@ -147,29 +147,29 @@ proper_cone.ext' $ by simpa using is_closed.closure_eq K.is_closed
 /-- The inner dual cone of a proper cone is a proper cone. -/
 def dual (K : proper_cone ℝ E): (proper_cone ℝ E) :=
 { to_convex_cone := (K : set E).inner_dual_cone,
- nonempty' := ⟨0, pointed_inner_dual_cone _⟩,
- is_closed' := is_closed_inner_dual_cone _ }
+  nonempty' := ⟨0, pointed_inner_dual_cone _⟩,
+  is_closed' := is_closed_inner_dual_cone _ }
 
 @[simp, norm_cast]
 lemma coe_dual (K : proper_cone ℝ E) : ↑(dual K) = (K : set E).inner_dual_cone := rfl
 
 @[simp] lemma mem_dual {K : proper_cone ℝ E} {y : E} :
- y ∈ dual K ↔ ∀ ⦃x⦄, x ∈ K → 0 ≤ ⟪x, y⟫_ℝ :=
-by {rw [← mem_coe]; rw [ coe_dual]; rw [ mem_inner_dual_cone _ _], refl}
+  y ∈ dual K ↔ ∀ ⦃x⦄, x ∈ K → 0 ≤ ⟪x, y⟫_ℝ :=
+by {rw [← mem_coe, coe_dual, mem_inner_dual_cone _ _], refl}
 
 /-- The preimage of a proper cone under a continuous `ℝ`-linear map is a proper cone. -/
 noncomputable def comap (f : E →L[ℝ] F) (S : proper_cone ℝ F) : proper_cone ℝ E :=
 { to_convex_cone := convex_cone.comap (f : E →ₗ[ℝ] F) S,
- nonempty' := ⟨ 0,
- begin
- simp only [convex_cone.comap, mem_preimage, map_zero, set_like.mem_coe, mem_coe],
- apply proper_cone.pointed,
- end ⟩,
- is_closed' :=
- begin
- simp only [convex_cone.comap, continuous_linear_map.coe_coe],
- apply is_closed.preimage f.2 S.is_closed,
- end }
+  nonempty' := ⟨ 0,
+  begin
+    simp only [convex_cone.comap, mem_preimage, map_zero, set_like.mem_coe, mem_coe],
+    apply proper_cone.pointed,
+  end ⟩,
+  is_closed' :=
+  begin
+    simp only [convex_cone.comap, continuous_linear_map.coe_coe],
+    apply is_closed.preimage f.2 S.is_closed,
+  end }
 
 @[simp] lemma coe_comap (f : E →L[ℝ] F) (S : proper_cone ℝ F) : (S.comap f : set E) = f ⁻¹' S :=
 rfl
@@ -178,7 +178,7 @@ rfl
 set_like.coe_injective preimage_id
 
 lemma comap_comap (g : F →L[ℝ] G) (f : E →L[ℝ] F) (S : proper_cone ℝ G) :
- (S.comap g).comap f = S.comap (g.comp f) :=
+  (S.comap g).comap f = S.comap (g.comp f) :=
 set_like.coe_injective $ preimage_comp.symm
 
 @[simp] lemma mem_comap {f : E →L[ℝ] F} {S : proper_cone ℝ F} {x : E} : x ∈ S.comap f ↔ f x ∈ S :=
@@ -193,55 +193,54 @@ variables {F : Type*} [normed_add_comm_group F] [inner_product_space ℝ F] [com
 
 /-- The dual of the dual of a proper cone is itself. -/
 @[simp] theorem dual_dual (K : proper_cone ℝ E) : K.dual.dual = K := proper_cone.ext' $
- (K : convex_cone ℝ E).inner_dual_cone_of_inner_dual_cone_eq_self K.nonempty K.is_closed
+  (K : convex_cone ℝ E).inner_dual_cone_of_inner_dual_cone_eq_self K.nonempty K.is_closed
 
 /-- This is a relative version of
 `convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem`, which we recover by setting
 `f` to be the identity map. This is a geometric interpretation of the Farkas' lemma
 stated using proper cones. -/
 theorem hyperplane_separation (K : proper_cone ℝ E) {f : E →L[ℝ] F} {b : F} :
- b ∈ K.map f ↔ ∀ y : F, (adjoint f y) ∈ K.dual → 0 ≤ ⟪y, b⟫_ℝ := iff.intro
+  b ∈ K.map f ↔ ∀ y : F, (adjoint f y) ∈ K.dual → 0 ≤ ⟪y, b⟫_ℝ := iff.intro
 begin
- -- suppose `b ∈ K.map f`
- simp only [proper_cone.mem_map, proper_cone.mem_dual, adjoint_inner_right,
- convex_cone.mem_closure, mem_closure_iff_seq_limit],
+  -- suppose `b ∈ K.map f`
+  simp only [proper_cone.mem_map, proper_cone.mem_dual, adjoint_inner_right,
+    convex_cone.mem_closure, mem_closure_iff_seq_limit],
 
- -- there is a sequence `seq : ℕ → F` in the image of `f` that converges to `b`
- rintros ⟨seq, hmem, htends⟩ y hinner,
+  -- there is a sequence `seq : ℕ → F` in the image of `f` that converges to `b`
+  rintros ⟨seq, hmem, htends⟩ y hinner,
 
- suffices h : ∀ n, 0 ≤ ⟪y, seq n⟫_ℝ, from ge_of_tendsto' (continuous.seq_continuous
- (continuous.inner (@continuous_const _ _ _ _ y) continuous_id) htends) h,
+  suffices h : ∀ n, 0 ≤ ⟪y, seq n⟫_ℝ, from ge_of_tendsto' (continuous.seq_continuous
+    (continuous.inner (@continuous_const _ _ _ _ y) continuous_id) htends) h,
 
- intro n,
- obtain ⟨_, h, hseq⟩ := hmem n,
- simpa only [← hseq, real_inner_comm] using (hinner h),
+  intro n,
+  obtain ⟨_, h, hseq⟩ := hmem n,
+  simpa only [← hseq, real_inner_comm] using (hinner h),
 end
 begin
- -- proof by contradiction
- -- suppose `b ∉ K.map f`
- intro h,
- contrapose! h,
+  -- proof by contradiction
+  -- suppose `b ∉ K.map f`
+  intro h,
+  contrapose! h,
 
- -- as `b ∉ K.map f`, there is a hyperplane `y` separating `b` from `K.map f`
- obtain ⟨y, hxy, hyb⟩ := convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem _
- (K.map f).nonempty (K.map f).is_closed h,
+  -- as `b ∉ K.map f`, there is a hyperplane `y` separating `b` from `K.map f`
+  obtain ⟨y, hxy, hyb⟩ := convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem _
+    (K.map f).nonempty (K.map f).is_closed h,
 
- -- the rest of the proof is a straightforward algebraic manipulation
- refine ⟨y, _, hyb⟩,
- simp_rw [proper_cone.mem_dual, adjoint_inner_right],
- intros x hxK,
- apply hxy (f x),
- rw [to_convex_cone_eq_coe]; rw [ proper_cone.coe_map],
- apply subset_closure,
- rw [set_like.mem_coe]; rw [ convex_cone.mem_map],
- use ⟨x, hxK, rfl⟩,
+  -- the rest of the proof is a straightforward algebraic manipulation
+  refine ⟨y, _, hyb⟩,
+  simp_rw [proper_cone.mem_dual, adjoint_inner_right],
+  intros x hxK,
+  apply hxy (f x),
+  rw [to_convex_cone_eq_coe, proper_cone.coe_map],
+  apply subset_closure,
+  rw [set_like.mem_coe, convex_cone.mem_map],
+  use ⟨x, hxK, rfl⟩,
 end
 
 theorem hyperplane_separation_of_nmem (K : proper_cone ℝ E) {f : E →L[ℝ] F} {b : F}
- (disj : b ∉ K.map f) : ∃ y : F, (adjoint f y) ∈ K.dual ∧ ⟪y, b⟫_ℝ < 0 :=
+  (disj : b ∉ K.map f) : ∃ y : F, (adjoint f y) ∈ K.dual ∧ ⟪y, b⟫_ℝ < 0 :=
 by { contrapose! disj, rwa K.hyperplane_separation }
 
 end complete_space
 
 end proper_cone
-

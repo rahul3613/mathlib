@@ -31,16 +31,15 @@ but created a new metavariable for the resulting sub-goal.
 -/
 meta def show_term (t : itactic) : itactic :=
 do
- g :: _ ← get_goals,
- t,
- g ← tactic_statement g,
- trace g
+  g :: _ ← get_goals,
+  t,
+  g ← tactic_statement g,
+  trace g
 
 add_tactic_doc
 { name := "show_term",
- category := doc_category.tactic,
- decl_names := [``show_term],
- tags := ["debugging"] }
+  category := doc_category.tactic,
+  decl_names := [``show_term],
+  tags := ["debugging"] }
 
 end tactic.interactive
-

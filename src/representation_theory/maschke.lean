@@ -18,7 +18,7 @@ in the formulation that every submodule of a `k[G]` module has a complement,
 when `k` is a field with `invertible (fintype.card G : k)`.
 
 We do the core computation in greater generality.
-For any `[comm_ring k]` in which `[invertible (fintype.card G : k)]`,
+For any `[comm_ring k]` in which  `[invertible (fintype.card G : k)]`,
 and a `k[G]`-linear map `i : V → W` which admits a `k`-linear retraction `π`,
 we produce a `k[G]`-linear retraction by
 taking the average over `G` of the conjugates of `π`.
@@ -83,10 +83,10 @@ include h
 
 lemma conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v :=
 begin
- dsimp [conjugate],
- simp only [←i.map_smul, h, ←mul_smul, single_mul_single, mul_one, mul_left_inv],
- change (1 : monoid_algebra k G) • v = v,
- simp,
+  dsimp [conjugate],
+  simp only [←i.map_smul, h, ←mul_smul, single_mul_single, mul_one, mul_left_inv],
+  change (1 : monoid_algebra k G) • v = v,
+  simp,
 end
 end
 
@@ -106,16 +106,16 @@ In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear
 def sum_of_conjugates_equivariant : W →ₗ[monoid_algebra k G] V :=
 monoid_algebra.equivariant_of_linear_of_comm (π.sum_of_conjugates G) (λ g v,
 begin
- simp only [sum_of_conjugates, linear_map.sum_apply,
- -- We have a `module (monoid_algebra k G)` instance but are working with `finsupp`s,
- -- so help the elaborator unfold everything correctly.
- @finset.smul_sum (monoid_algebra k G)],
- dsimp [conjugate],
- conv_lhs
- { rw [←finset.univ_map_embedding (mul_right_embedding g⁻¹)],
- simp only [mul_right_embedding], },
- simp only [←mul_smul, single_mul_single, mul_inv_rev, mul_one, function.embedding.coe_fn_mk,
- finset.sum_map, inv_inv, inv_mul_cancel_right]
+  simp only [sum_of_conjugates, linear_map.sum_apply,
+    -- We have a `module (monoid_algebra k G)` instance but are working with `finsupp`s,
+    -- so help the elaborator unfold everything correctly.
+    @finset.smul_sum (monoid_algebra k G)],
+  dsimp [conjugate],
+  conv_lhs
+  { rw [←finset.univ_map_embedding (mul_right_embedding g⁻¹)],
+    simp only [mul_right_embedding], },
+  simp only [←mul_smul, single_mul_single, mul_inv_rev, mul_one, function.embedding.coe_fn_mk,
+    finset.sum_map, inv_inv, inv_mul_cancel_right]
 end)
 
 section
@@ -133,10 +133,12 @@ include h
 
 lemma equivariant_projection_condition (v : V) : (π.equivariant_projection G) (i v) = v :=
 begin
- rw [equivariant_projection]; rw [ smul_apply]; rw [ sum_of_conjugates_equivariant]; rw [ equivariant_of_linear_of_comm_apply]; rw [ sum_of_conjugates],
- rw [linear_map.sum_apply],
- simp only [conjugate_i π i h],
- rw [finset.sum_const]; rw [ finset.card_univ]; rw [ nsmul_eq_smul_cast k]; rw [ ←mul_smul]; rw [ invertible.inv_of_mul_self]; rw [ one_smul],
+  rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
+    equivariant_of_linear_of_comm_apply, sum_of_conjugates],
+  rw [linear_map.sum_apply],
+  simp only [conjugate_i π i h],
+  rw [finset.sum_const, finset.card_univ, nsmul_eq_smul_cast k,
+    ←mul_smul, invertible.inv_of_mul_self, one_smul],
 end
 end
 end linear_map
@@ -162,26 +164,26 @@ variables {W : Type u} [add_comm_group W] [module k W] [module (monoid_algebra k
 variables [is_scalar_tower k (monoid_algebra k G) W]
 
 lemma exists_left_inverse_of_injective
- (f : V →ₗ[monoid_algebra k G] W) (hf : f.ker = ⊥) :
- ∃ (g : W →ₗ[monoid_algebra k G] V), g.comp f = linear_map.id :=
+  (f : V →ₗ[monoid_algebra k G] W) (hf : f.ker = ⊥) :
+  ∃ (g : W →ₗ[monoid_algebra k G] V), g.comp f = linear_map.id :=
 begin
- obtain ⟨φ, hφ⟩ := (f.restrict_scalars k).exists_left_inverse_of_injective
- (by simp only [hf, submodule.restrict_scalars_bot, linear_map.ker_restrict_scalars]),
- refine ⟨φ.equivariant_projection G, _⟩,
- apply linear_map.ext,
- intro v,
- simp only [linear_map.id_coe, id.def, linear_map.comp_apply],
- apply linear_map.equivariant_projection_condition,
- intro v,
- have := congr_arg linear_map.to_fun hφ,
- exact congr_fun this v
+  obtain ⟨φ, hφ⟩ := (f.restrict_scalars k).exists_left_inverse_of_injective
+    (by simp only [hf, submodule.restrict_scalars_bot, linear_map.ker_restrict_scalars]),
+  refine ⟨φ.equivariant_projection G, _⟩,
+  apply linear_map.ext,
+  intro v,
+  simp only [linear_map.id_coe, id.def, linear_map.comp_apply],
+  apply linear_map.equivariant_projection_condition,
+  intro v,
+  have := congr_arg linear_map.to_fun hφ,
+  exact congr_fun this v
 end
 
 namespace submodule
 
 lemma exists_is_compl
- (p : submodule (monoid_algebra k G) V) :
- ∃ q : submodule (monoid_algebra k G) V, is_compl p q :=
+  (p : submodule (monoid_algebra k G) V) :
+  ∃ q : submodule (monoid_algebra k G) V, is_compl p q :=
 let ⟨f, hf⟩ := monoid_algebra.exists_left_inverse_of_injective p.subtype p.ker_subtype in
 ⟨f.ker, linear_map.is_compl_of_proj $ linear_map.ext_iff.1 hf⟩
 
@@ -191,4 +193,3 @@ instance complemented_lattice : complemented_lattice (submodule (monoid_algebra 
 
 end submodule
 end monoid_algebra
-

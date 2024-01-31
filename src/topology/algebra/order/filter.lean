@@ -29,12 +29,11 @@ protected lemma tendsto_nhds_at_bot [no_min_order X] : tendsto 𝓝 (at_bot : fi
 @filter.tendsto_nhds_at_top Xᵒᵈ _ _ _ _
 
 lemma tendsto.nhds_at_top [no_max_order X] {f : α → X} {l : filter α} (h : tendsto f l at_top) :
- tendsto (𝓝 ∘ f) l (𝓝 at_top) :=
+  tendsto (𝓝 ∘ f) l (𝓝 at_top) :=
 filter.tendsto_nhds_at_top.comp h
 
 lemma tendsto.nhds_at_bot [no_min_order X] {f : α → X} {l : filter α} (h : tendsto f l at_bot) :
- tendsto (𝓝 ∘ f) l (𝓝 at_bot) :=
+  tendsto (𝓝 ∘ f) l (𝓝 at_bot) :=
 @tendsto.nhds_at_top α Xᵒᵈ _ _ _ _ _ _ h
 
 end filter
-

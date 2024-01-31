@@ -16,9 +16,9 @@ This file contains definitions and properties concerning orthogonality of rows a
 ## Main results
 
 - `matrix.has_orthogonal_rows`:
- `A.has_orthogonal_rows` means `A` has orthogonal (with respect to `dot_product`) rows.
+  `A.has_orthogonal_rows` means `A` has orthogonal (with respect to `dot_product`) rows.
 - `matrix.has_orthogonal_cols`:
- `A.has_orthogonal_cols` means `A` has orthogonal (with respect to `dot_product`) columns.
+  `A.has_orthogonal_cols` means `A` has orthogonal (with respect to `dot_product`) columns.
 
 ## Tags
 
@@ -45,31 +45,30 @@ has_orthogonal_rows Aᵀ
 
 /-- `Aᵀ` has orthogonal rows iff `A` has orthogonal columns. -/
 @[simp] lemma transpose_has_orthogonal_rows_iff_has_orthogonal_cols [fintype m] :
- Aᵀ.has_orthogonal_rows ↔ A.has_orthogonal_cols :=
+  Aᵀ.has_orthogonal_rows ↔ A.has_orthogonal_cols :=
 iff.rfl
 
 /-- `Aᵀ` has orthogonal columns iff `A` has orthogonal rows. -/
 @[simp] lemma transpose_has_orthogonal_cols_iff_has_orthogonal_rows [fintype n] :
- Aᵀ.has_orthogonal_cols ↔ A.has_orthogonal_rows :=
+  Aᵀ.has_orthogonal_cols ↔ A.has_orthogonal_rows :=
 iff.rfl
 
 variables {A}
 
 lemma has_orthogonal_rows.has_orthogonal_cols
- [fintype m] (h : Aᵀ.has_orthogonal_rows) :
- A.has_orthogonal_cols := h
+  [fintype m] (h : Aᵀ.has_orthogonal_rows) :
+  A.has_orthogonal_cols := h
 
 lemma has_orthogonal_cols.transpose_has_orthogonal_rows
- [fintype m] (h : A.has_orthogonal_cols) :
- Aᵀ.has_orthogonal_rows := h
+  [fintype m] (h : A.has_orthogonal_cols) :
+  Aᵀ.has_orthogonal_rows := h
 
 lemma has_orthogonal_cols.has_orthogonal_rows
- [fintype n] (h : Aᵀ.has_orthogonal_cols) :
- A.has_orthogonal_rows := h
+  [fintype n] (h : Aᵀ.has_orthogonal_cols) :
+  A.has_orthogonal_rows := h
 
 lemma has_orthogonal_rows.transpose_has_orthogonal_cols
- [fintype n] (h : A.has_orthogonal_rows) :
- Aᵀ.has_orthogonal_cols := h
+  [fintype n] (h : A.has_orthogonal_rows) :
+  Aᵀ.has_orthogonal_cols := h
 
 end matrix
-

@@ -39,7 +39,7 @@ namespace FinBoolAlg
 instance : has_coe_to_sort FinBoolAlg Type* := ⟨λ X, X.to_BoolAlg⟩
 instance (X : FinBoolAlg) : boolean_algebra X := X.to_BoolAlg.str
 
-attribute [instance] FinBoolAlg.is_fintype
+attribute [instance]  FinBoolAlg.is_fintype
 
 @[simp] lemma coe_to_BoolAlg (X : FinBoolAlg) : ↥X.to_BoolAlg = ↥X := rfl
 
@@ -61,7 +61,7 @@ induced_category.has_forget₂ FinBoolAlg.to_BoolAlg
 
 instance has_forget_to_FinBddDistLat : has_forget₂ FinBoolAlg FinBddDistLat :=
 { forget₂ := { obj := λ X, FinBddDistLat.of X, map := λ X Y f, f },
- forget_comp := rfl }
+  forget_comp := rfl }
 
 instance forget_to_BoolAlg_full : full (forget₂ FinBoolAlg BoolAlg) := induced_category.full _
 instance forget_to_BoolAlg_faithful : faithful (forget₂ FinBoolAlg BoolAlg) :=
@@ -69,7 +69,7 @@ induced_category.faithful _
 
 @[simps] instance has_forget_to_FinPartOrd : has_forget₂ FinBoolAlg FinPartOrd :=
 { forget₂ := { obj := λ X, FinPartOrd.of X, map := λ X Y f,
- show order_hom X Y, from ↑(show bounded_lattice_hom X Y, from f) } }
+    show order_hom X Y, from ↑(show bounded_lattice_hom X Y, from f) } }
 
 instance forget_to_FinPartOrd_faithful : faithful (forget₂ FinBoolAlg FinPartOrd) :=
 ⟨λ X Y f g h, by { have := congr_arg (coe_fn : _ → X → Y) h, exact fun_like.coe_injective this }⟩
@@ -78,9 +78,9 @@ instance forget_to_FinPartOrd_faithful : faithful (forget₂ FinBoolAlg FinPartO
 them. -/
 @[simps] def iso.mk {α β : FinBoolAlg.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := (e : bounded_lattice_hom α β),
- inv := (e.symm : bounded_lattice_hom β α),
- hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
- inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+  inv := (e.symm : bounded_lattice_hom β α),
+  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 /-- `order_dual` as a functor. -/
 @[simps] def dual : FinBoolAlg ⥤ FinBoolAlg :=
@@ -89,18 +89,17 @@ them. -/
 /-- The equivalence between `FinBoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps functor inverse] def dual_equiv : FinBoolAlg ≌ FinBoolAlg :=
 equivalence.mk dual dual
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
 
 end FinBoolAlg
 
 lemma FinBoolAlg_dual_comp_forget_to_FinBddDistLat :
- FinBoolAlg.dual ⋙ forget₂ FinBoolAlg FinBddDistLat =
- forget₂ FinBoolAlg FinBddDistLat ⋙ FinBddDistLat.dual := rfl
+  FinBoolAlg.dual ⋙ forget₂ FinBoolAlg FinBddDistLat =
+    forget₂ FinBoolAlg FinBddDistLat ⋙ FinBddDistLat.dual := rfl
 
 /-- The powerset functor. `set` as a functor. -/
 @[simps] def Fintype_to_FinBoolAlg_op : Fintype ⥤ FinBoolAlgᵒᵖ :=
 { obj := λ X, op $ FinBoolAlg.of (set X),
- map := λ X Y f, quiver.hom.op $
- (complete_lattice_hom.set_preimage f : bounded_lattice_hom (set Y) (set X)) }
-
+  map := λ X Y f, quiver.hom.op $
+    (complete_lattice_hom.set_preimage f : bounded_lattice_hom (set Y) (set X)) }

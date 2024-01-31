@@ -19,36 +19,36 @@ variable {α : Type*}
 open function
 
 lemma lt_add_one [has_one α] [add_zero_class α] [partial_order α] [zero_le_one_class α]
- [ne_zero (1 : α)] [covariant_class α α (+) (<)] (a : α) : a < a + 1 :=
+  [ne_zero (1 : α)] [covariant_class α α (+) (<)] (a : α) : a < a + 1 :=
 lt_add_of_pos_right _ zero_lt_one
 
 lemma lt_one_add [has_one α] [add_zero_class α] [partial_order α] [zero_le_one_class α]
- [ne_zero (1 : α)] [covariant_class α α (swap (+)) (<)] (a : α) : a < 1 + a :=
+  [ne_zero (1 : α)] [covariant_class α α (swap (+)) (<)] (a : α) : a < 1 + a :=
 lt_add_of_pos_left _ zero_lt_one
 
 variable [add_monoid_with_one α]
 
 lemma zero_le_two [preorder α] [zero_le_one_class α] [covariant_class α α (+) (≤)] :
- (0 : α) ≤ 2 :=
+  (0 : α) ≤ 2 :=
 add_nonneg zero_le_one zero_le_one
 
 lemma zero_le_three [preorder α] [zero_le_one_class α] [covariant_class α α (+) (≤)] :
- (0 : α) ≤ 3 :=
+  (0 : α) ≤ 3 :=
 add_nonneg zero_le_two zero_le_one
 
 lemma zero_le_four [preorder α] [zero_le_one_class α] [covariant_class α α (+) (≤)] :
- (0 : α) ≤ 4 :=
+  (0 : α) ≤ 4 :=
 add_nonneg zero_le_two zero_le_two
 
 lemma one_le_two [has_le α] [zero_le_one_class α] [covariant_class α α (+) (≤)] :
- (1 : α) ≤ 2 :=
+  (1 : α) ≤ 2 :=
 calc 1 = 1 + 0 : (add_zero 1).symm
- ... ≤ 1 + 1 : add_le_add_left zero_le_one _
+   ... ≤ 1 + 1 : add_le_add_left zero_le_one _
 
 lemma one_le_two' [has_le α] [zero_le_one_class α] [covariant_class α α (swap (+)) (≤)] :
- (1 : α) ≤ 2 :=
+  (1 : α) ≤ 2 :=
 calc 1 = 0 + 1 : (zero_add 1).symm
- ... ≤ 1 + 1 : add_le_add_right zero_le_one _
+   ... ≤ 1 + 1 : add_le_add_right zero_le_one _
 
 section
 variables [partial_order α] [zero_le_one_class α] [ne_zero (1 : α)]
@@ -85,4 +85,3 @@ end
 alias zero_lt_two ← two_pos
 alias zero_lt_three ← three_pos
 alias zero_lt_four ← four_pos
-

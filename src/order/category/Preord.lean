@@ -28,9 +28,9 @@ namespace Preord
 
 instance : bundled_hom @order_hom :=
 { to_fun := @order_hom.to_fun,
- id := @order_hom.id,
- comp := @order_hom.comp,
- hom_ext := @order_hom.ext }
+  id := @order_hom.id,
+  comp := @order_hom.comp,
+  hom_ext := @order_hom.ext }
 
 attribute [derive [large_category, concrete_category]] Preord
 
@@ -48,9 +48,9 @@ instance (α : Preord) : preorder α := α.str
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps] def iso.mk {α β : Preord.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := e,
- inv := e.symm,
- hom_inv_id' := by { ext, exact e.symm_apply_apply x },
- inv_hom_id' := by { ext, exact e.apply_symm_apply x } }
+  inv := e.symm,
+  hom_inv_id' := by { ext, exact e.symm_apply_apply x },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply x } }
 
 /-- `order_dual` as a functor. -/
 @[simps] def dual : Preord ⥤ Preord :=
@@ -59,8 +59,8 @@ instance (α : Preord) : preorder α := α.str
 /-- The equivalence between `Preord` and itself induced by `order_dual` both ways. -/
 @[simps functor inverse] def dual_equiv : Preord ≌ Preord :=
 equivalence.mk dual dual
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
 
 end Preord
 
@@ -70,14 +70,13 @@ The embedding of `Preord` into `Cat`.
 @[simps]
 def Preord_to_Cat : Preord.{u} ⥤ Cat :=
 { obj := λ X, Cat.of X.1,
- map := λ X Y f, f.monotone.functor,
- map_id' := λ X, begin apply category_theory.functor.ext, tidy end,
- map_comp' := λ X Y Z f g, begin apply category_theory.functor.ext, tidy end }
+  map := λ X Y f, f.monotone.functor,
+  map_id' := λ X, begin apply category_theory.functor.ext, tidy end,
+  map_comp' := λ X Y Z f g, begin apply category_theory.functor.ext, tidy end }
 
 instance : faithful Preord_to_Cat.{u} :=
 { map_injective' := λ X Y f g h, begin ext x, exact functor.congr_obj h x end }
 
 instance : full Preord_to_Cat.{u} :=
 { preimage := λ X Y f, ⟨f.obj, f.monotone⟩,
- witness' := λ X Y f, begin apply category_theory.functor.ext, tidy end }
-
+  witness' := λ X Y f, begin apply category_theory.functor.ext, tidy end }

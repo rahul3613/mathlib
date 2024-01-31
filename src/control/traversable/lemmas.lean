@@ -46,8 +46,8 @@ variables f : β → γ
 to `F`, defined by `pure : Π {α}, α → F α`. -/
 def pure_transformation : applicative_transformation id F :=
 { app := @pure F _,
- preserves_pure' := λ α x, rfl,
- preserves_seq' := λ α β f x, by { simp only [map_pure, seq_pure], refl } }
+  preserves_pure' := λ α x, rfl,
+  preserves_seq' := λ α β f x, by { simp only [map_pure, seq_pure], refl } }
 
 @[simp] theorem pure_transformation_apply {α} (x : id α) : pure_transformation F x = pure x := rfl
 
@@ -58,33 +58,33 @@ funext $ λ y, (traverse_eq_map_id f y).symm
 
 theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g) x :=
 begin
- rw @map_eq_traverse_id t _ _ _ _ f,
- refine (comp_traverse (id.mk ∘ f) g x).symm.trans _,
- congr, apply comp.applicative_comp_id
+  rw @map_eq_traverse_id t _ _ _ _ f,
+  refine (comp_traverse (id.mk ∘ f) g x).symm.trans _,
+  congr, apply comp.applicative_comp_id
 end
 
 theorem traverse_map (f : β → F γ) (g : α → β) (x : t α) :
- traverse f (g <$> x) = traverse (f ∘ g) x :=
+  traverse f (g <$> x) = traverse (f ∘ g) x :=
 begin
- rw @map_eq_traverse_id t _ _ _ _ g,
- refine (comp_traverse f (id.mk ∘ g) x).symm.trans _,
- congr, apply comp.applicative_id_comp
+  rw @map_eq_traverse_id t _ _ _ _ g,
+  refine (comp_traverse f (id.mk ∘ g) x).symm.trans _,
+  congr, apply comp.applicative_id_comp
 end
 
 lemma pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) :=
 by have : traverse pure x = pure (traverse id.mk x) :=
- (naturality (pure_transformation F) id.mk x).symm;
- rwa id_traverse at this
+     (naturality (pure_transformation F) id.mk x).symm;
+   rwa id_traverse at this
 
 lemma id_sequence (x : t α) : sequence (id.mk <$> x) = id.mk x :=
 by simp [sequence, traverse_map, id_traverse]; refl
 
 lemma comp_sequence (x : t (F (G α))) :
- sequence (comp.mk <$> x) = comp.mk (sequence <$> sequence x) :=
+  sequence (comp.mk <$> x) = comp.mk (sequence <$> sequence x) :=
 by simp [sequence, traverse_map]; rw ← comp_traverse; simp [map_id]
 
 lemma naturality' (η : applicative_transformation F G) (x : t (F α)) :
- η (sequence x) = sequence (@η _ <$> x) :=
+  η (sequence x) = sequence (@η _ <$> x) :=
 by simp [sequence, naturality, traverse_map]
 
 @[functor_norm]
@@ -93,8 +93,8 @@ by { ext, exact id_traverse _ }
 
 @[functor_norm]
 lemma traverse_comp (g : α → F β) (h : β → G γ) :
- traverse (comp.mk ∘ map h ∘ g) =
- (comp.mk ∘ map (traverse h) ∘ traverse g : t α → comp F G (t γ)) :=
+  traverse (comp.mk ∘ map h ∘ g) =
+  (comp.mk ∘ map (traverse h) ∘ traverse g : t α → comp F G (t γ)) :=
 by { ext, exact comp_traverse _ _ _ }
 
 lemma traverse_eq_map_id' (f : β → γ) : traverse (id.mk ∘ f) = id.mk ∘ (map f : t β → t γ) :=
@@ -102,16 +102,15 @@ by { ext, exact traverse_eq_map_id _ _ }
 
 -- @[functor_norm]
 lemma traverse_map' (g : α → β) (h : β → G γ) :
- traverse (h ∘ g) = (traverse h ∘ map g : t α → G (t γ)) :=
-by { ext, rw [comp_app]; rw [ traverse_map] }
+  traverse (h ∘ g) = (traverse h ∘ map g : t α → G (t γ)) :=
+by { ext, rw [comp_app, traverse_map] }
 
 lemma map_traverse' (g : α → G β) (h : β → γ) :
- traverse (map h ∘ g) = (map (map h) ∘ traverse g : t α → G (t γ)) :=
-by { ext, rw [comp_app]; rw [ map_traverse] }
+  traverse (map h ∘ g) = (map (map h) ∘ traverse g : t α → G (t γ)) :=
+by { ext, rw [comp_app, map_traverse] }
 
 lemma naturality_pf (η : applicative_transformation F G) (f : α → F β) :
- traverse (@η _ ∘ f) = @η _ ∘ (traverse f : t α → F (t β)) :=
-by { ext, rw [comp_app]; rw [ naturality] }
+  traverse (@η _ ∘ f) = @η _ ∘ (traverse f : t α → F (t β)) :=
+by { ext, rw [comp_app, naturality] }
 
 end traversable
-

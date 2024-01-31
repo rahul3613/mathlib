@@ -27,7 +27,7 @@ from the natural numbers into it is injective.
 -/
 
 /-- Typeclass for monoids with characteristic zero.
- (This is usually stated on fields but it makes sense for any additive monoid with 1.)
+  (This is usually stated on fields but it makes sense for any additive monoid with 1.)
 
 *Warning*: for a semiring `R`, `char_zero R` and `char_p R 0` need not coincide.
 * `char_zero R` requires an injection `ℕ ↪ R`;
@@ -41,11 +41,11 @@ class char_zero (R : Type*) [add_monoid_with_one R] : Prop :=
 (cast_injective : function.injective (coe : ℕ → R))
 
 theorem char_zero_of_inj_zero {R : Type*} [add_group_with_one R]
- (H : ∀ n:ℕ, (n:R) = 0 → n = 0) : char_zero R :=
+  (H : ∀ n:ℕ, (n:R) = 0 → n = 0) : char_zero R :=
 ⟨λ m n h, begin
- induction m with m ih generalizing n, { rw H n, rw [← h]; rw [ nat.cast_zero] },
- cases n with n, { apply H, rw [h]; rw [ nat.cast_zero], },
- simp_rw [nat.cast_succ, add_right_cancel_iff] at h, rwa ih,
+  induction m with m ih generalizing n, { rw H n, rw [← h, nat.cast_zero] },
+  cases n with n, { apply H, rw [h, nat.cast_zero], },
+  simp_rw [nat.cast_succ, add_right_cancel_iff] at h, rwa ih,
 end⟩
 
 namespace nat
@@ -58,7 +58,7 @@ char_zero.cast_injective
 cast_injective.eq_iff
 
 @[simp, norm_cast] theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 :=
-by rw [← cast_zero]; rw [ cast_inj]
+by rw [← cast_zero, cast_inj]
 
 @[norm_cast] theorem cast_ne_zero {n : ℕ} : (n : R) ≠ 0 ↔ n ≠ 0 :=
 not_congr cast_eq_zero
@@ -67,7 +67,7 @@ lemma cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 :=
 by exact_mod_cast n.succ_ne_zero
 
 @[simp, norm_cast] theorem cast_eq_one {n : ℕ} : (n : R) = 1 ↔ n = 1 :=
-by rw [←cast_one]; rw [ cast_inj]
+by rw [←cast_one, cast_inj]
 
 @[norm_cast] theorem cast_ne_one {n : ℕ} : (n : R) ≠ 1 ↔ n ≠ 1 :=
 cast_eq_one.not
@@ -77,8 +77,7 @@ end nat
 namespace ne_zero
 
 instance char_zero {M} {n : ℕ}
- [ne_zero n] [add_monoid_with_one M] [char_zero M] : ne_zero (n : M) :=
+  [ne_zero n] [add_monoid_with_one M] [char_zero M] : ne_zero (n : M) :=
 ⟨nat.cast_ne_zero.mpr out⟩
 
 end ne_zero
-

@@ -70,4 +70,3 @@ map_mul to_ennreal_ring_hom m n
 with_top.map_sub nat.cast_tsub nat.cast_zero m n
 
 end enat
-

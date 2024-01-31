@@ -49,7 +49,7 @@ lemma pairwise_of_forall (s : set α) (r : α → α → Prop) (h : ∀ a b, r a
 λ a _ b _ _, h a b
 
 lemma pairwise.imp_on (h : s.pairwise r) (hrp : s.pairwise (λ ⦃a b : α⦄, r a b → p a b)) :
- s.pairwise p :=
+  s.pairwise p :=
 λ a ha b hb hab, hrp ha hb hab $ h ha hb hab
 
 lemma pairwise.imp (h : s.pairwise r) (hpq : ∀ ⦃a b : α⦄, r a b → p a b) : s.pairwise p :=
@@ -59,12 +59,12 @@ protected lemma pairwise.eq (hs : s.pairwise r) (ha : a ∈ s) (hb : b ∈ s) (h
 of_not_not $ λ hab, h $ hs ha hb hab
 
 lemma _root_.reflexive.set_pairwise_iff (hr : reflexive r) :
- s.pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
+  s.pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
 forall₄_congr $ λ a _ b _, or_iff_not_imp_left.symm.trans $ or_iff_right_of_imp $ eq.rec $ hr a
 
 lemma pairwise.on_injective (hs : s.pairwise r) (hf : function.injective f)
- (hfs : ∀ x, f x ∈ s) :
- pairwise (r on f) :=
+  (hfs : ∀ x, f x ∈ s) :
+  pairwise (r on f) :=
 λ i j hij, hs (hfs i) (hfs j) (hf.ne hij)
 
 end set
@@ -72,4 +72,3 @@ end set
 lemma pairwise.set_pairwise (h : pairwise r) (s : set α) : s.pairwise r := λ x hx y hy w, h w
 
 end pairwise
-

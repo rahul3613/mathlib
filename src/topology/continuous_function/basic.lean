@@ -29,8 +29,8 @@ you should parametrize over `{F : Type*} [continuous_map_class F α β] (f : F)`
 When you extend this structure, make sure to extend `continuous_map_class`. -/
 @[protect_proj]
 structure continuous_map (α β : Type*) [topological_space α] [topological_space β] :=
-(to_fun : α → β)
-(continuous_to_fun : continuous to_fun . tactic.interactive.continuity')
+(to_fun             : α → β)
+(continuous_to_fun  : continuous to_fun . tactic.interactive.continuity')
 
 notation `C(` α `, ` β `)` := continuous_map α β
 
@@ -40,8 +40,8 @@ set_option old_structure_cmd true
 
 You should extend this class when you extend `continuous_map`. -/
 class continuous_map_class (F : Type*) (α β : out_param $ Type*) [topological_space α]
- [topological_space β]
- extends fun_like F α (λ _, β) :=
+  [topological_space β]
+  extends fun_like F α (λ _, β) :=
 (map_continuous (f : F) : continuous f)
 
 end
@@ -67,12 +67,12 @@ end continuous_map_class
 
 namespace continuous_map
 variables {α β γ δ : Type*} [topological_space α] [topological_space β] [topological_space γ]
- [topological_space δ]
+  [topological_space δ]
 
 instance : continuous_map_class C(α, β) α β :=
 { coe := continuous_map.to_fun,
- coe_injective' := λ f g h, by cases f; cases g; congr',
- map_continuous := continuous_map.continuous_to_fun }
+  coe_injective' := λ f g h, by cases f; cases g; congr',
+  map_continuous := continuous_map.continuous_to_fun }
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -92,7 +92,7 @@ lemma coe_coe {F : Type*} [continuous_map_class F α β] (f : F) : ⇑(f : C(α,
 equalities. -/
 protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) : C(α, β) :=
 { to_fun := f',
- continuous_to_fun := h.symm ▸ f.continuous_to_fun }
+  continuous_to_fun := h.symm ▸ f.continuous_to_fun }
 
 @[simp] lemma coe_copy (f : C(α, β)) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' := rfl
 lemma copy_eq (f : C(α, β)) (f' : α → β) (h : f' = f) : f.copy f' h = f := fun_like.ext' h
@@ -116,7 +116,7 @@ lemma coe_injective : @function.injective (C(α, β)) (α → β) coe_fn :=
 λ f g h, by cases f; cases g; congr'
 
 @[simp] lemma coe_mk (f : α → β) (h : continuous f) :
- ⇑(⟨f, h⟩ : C(α, β)) = f := rfl
+  ⇑(⟨f, h⟩ : C(α, β)) = f := rfl
 
 lemma map_specializes (f : C(α, β)) {x y : α} (h : x ⤳ y) : f x ⤳ f y := h.map f.2
 
@@ -129,7 +129,7 @@ The continuous functions from `α` to `β` are the same as the plain functions w
 @[simps]
 def equiv_fn_of_discrete [discrete_topology α] : C(α, β) ≃ (α → β) :=
 ⟨(λ f, f), (λ f, ⟨f, continuous_of_discrete_topology⟩),
- λ f, by { ext, refl, }, λ f, by { ext, refl, }⟩
+  λ f, by { ext, refl, }, λ f, by { ext, refl, }⟩
 
 end
 
@@ -159,7 +159,7 @@ def comp (f : C(β, γ)) (g : C(α, β)) : C(α, γ) := ⟨f ∘ g⟩
 @[simp] lemma coe_comp (f : C(β, γ)) (g : C(α, β)) : ⇑(comp f g) = f ∘ g := rfl
 @[simp] lemma comp_apply (f : C(β, γ)) (g : C(α, β)) (a : α) : comp f g a = f (g a) := rfl
 @[simp] lemma comp_assoc (f : C(γ, δ)) (g : C(β, γ)) (h : C(α, β)) :
- (f.comp g).comp h = f.comp (g.comp h) := rfl
+  (f.comp g).comp h = f.comp (g.comp h) := rfl
 @[simp] lemma id_comp (f : C(α, β)) : (continuous_map.id _).comp f = f := ext $ λ _, rfl
 @[simp] lemma comp_id (f : C(α, β)) : f.comp (continuous_map.id _) = f := ext $ λ _, rfl
 @[simp] lemma const_comp (c : γ) (f : C(α, β)) : (const β c).comp f = const α c := ext $ λ _, rfl
@@ -167,51 +167,51 @@ def comp (f : C(β, γ)) (g : C(α, β)) : C(α, γ) := ⟨f ∘ g⟩
 ext $ λ _, rfl
 
 lemma cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : surjective g) :
- f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
+  f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
 ⟨λ h, ext $ hg.forall.2 $ fun_like.ext_iff.1 h, congr_arg _⟩
 
 lemma cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : injective f) :
- f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
-⟨λ h, ext $ λ a, hf $ by rw [←comp_apply]; rw [ h]; rw [ comp_apply], congr_arg _⟩
+  f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
+⟨λ h, ext $ λ a, hf $ by rw [←comp_apply, h, comp_apply], congr_arg _⟩
 
 instance [nonempty α] [nontrivial β] : nontrivial C(α, β) :=
 ⟨let ⟨b₁, b₂, hb⟩ := exists_pair_ne β in
- ⟨const _ b₁, const _ b₂, λ h, hb $ fun_like.congr_fun h $ classical.arbitrary α⟩⟩
+    ⟨const _ b₁, const _ b₂, λ h, hb $ fun_like.congr_fun h $ classical.arbitrary α⟩⟩
 
 section prod
 
 variables {α₁ α₂ β₁ β₂ : Type*}
- [topological_space α₁] [topological_space α₂]
- [topological_space β₁] [topological_space β₂]
+          [topological_space α₁] [topological_space α₂]
+          [topological_space β₁] [topological_space β₂]
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
 def prod_mk (f : C(α, β₁)) (g : C(α, β₂)) :
- C(α, β₁ × β₂) :=
+  C(α, β₁ × β₂) :=
 { to_fun := (λ x, (f x, g x)),
- continuous_to_fun := continuous.prod_mk f.continuous g.continuous }
+  continuous_to_fun := continuous.prod_mk f.continuous g.continuous }
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
 @[simps] def prod_map (f : C(α₁, α₂)) (g : C(β₁, β₂)) :
- C(α₁ × β₁, α₂ × β₂) :=
+  C(α₁ × β₁, α₂ × β₂) :=
 { to_fun := prod.map f g,
- continuous_to_fun := continuous.prod_map f.continuous g.continuous }
+  continuous_to_fun := continuous.prod_map f.continuous g.continuous }
 
 @[simp] lemma prod_eval (f : C(α, β₁)) (g : C(α, β₂)) (a : α) :
- (prod_mk f g) a = (f a, g a) := rfl
+  (prod_mk f g) a = (f a, g a) := rfl
 
 end prod
 
 section pi
 
 variables {I A : Type*} {X : I → Type*}
- [topological_space A] [∀ i, topological_space (X i)]
+          [topological_space A] [∀ i, topological_space (X i)]
 
 /-- Abbreviation for product of continuous maps, which is continuous -/
 def pi (f : Π i, C(A, X i)) : C(A, Π i, X i) :=
 { to_fun := λ (a : A) (i : I), f i a, }
 
 @[simp] lemma pi_eval (f : Π i, C(A, X i)) (a : A) :
- (pi f) a = λ i : I, (f i) a := rfl
+  (pi f) a = λ i : I, (f i) a := rfl
 
 end pi
 
@@ -227,7 +227,7 @@ def restrict (f : C(α, β)) : C(s, β) := ⟨f ∘ coe⟩
 @[simp] lemma restrict_apply (f : C(α, β)) (s : set α) (x : s) : f.restrict s x = f x := rfl
 
 @[simp] lemma restrict_apply_mk (f : C(α, β)) (s : set α) (x : α) (hx : x ∈ s) :
- f.restrict s ⟨x, hx⟩ = f x :=
+  f.restrict s ⟨x, hx⟩ = f x :=
 rfl
 
 /-- The restriction of a continuous map to the preimage of a set. -/
@@ -240,10 +240,10 @@ end restrict
 section gluing
 
 variables {ι : Type*}
- (S : ι → set α)
- (φ : Π i : ι, C(S i, β))
- (hφ : ∀ i j (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩)
- (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
+  (S : ι → set α)
+  (φ : Π i : ι, C(S i, β))
+  (hφ : ∀ i j (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩)
+  (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
 
 include hφ hS
 
@@ -252,15 +252,15 @@ of each point in `α` and the functions `φ i` agree pairwise on intersections, 
 construct a continuous map in `C(α, β)`. -/
 noncomputable def lift_cover : C(α, β) :=
 begin
- have H : (⋃ i, S i) = set.univ,
- { rw set.eq_univ_iff_forall,
- intros x,
- rw set.mem_Union,
- obtain ⟨i, hi⟩ := hS x,
- exact ⟨i, mem_of_mem_nhds hi⟩ },
- refine ⟨set.lift_cover S (λ i, φ i) hφ H, continuous_of_cover_nhds hS $ λ i, _⟩,
- rw [continuous_on_iff_continuous_restrict],
- simpa only [set.restrict, set.lift_cover_coe] using (φ i).continuous
+  have H : (⋃ i, S i) = set.univ,
+  { rw set.eq_univ_iff_forall,
+    intros x,
+    rw set.mem_Union,
+    obtain ⟨i, hi⟩ := hS x,
+    exact ⟨i, mem_of_mem_nhds hi⟩ },
+  refine ⟨set.lift_cover S (λ i, φ i) hφ H, continuous_of_cover_nhds hS $ λ i, _⟩,
+  rw [continuous_on_iff_continuous_restrict],
+  simpa only [set.restrict, set.lift_cover_coe] using (φ i).continuous
 end
 
 variables {S φ hφ hS}
@@ -274,10 +274,10 @@ ext $ lift_cover_coe
 omit hφ hS
 
 variables (A : set (set α))
- (F : Π (s : set α) (hi : s ∈ A), C(s, β))
- (hF : ∀ s (hs : s ∈ A) t (ht : t ∈ A) (x : α) (hxi : x ∈ s) (hxj : x ∈ t),
- F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
- (hA : ∀ x : α, ∃ i ∈ A, i ∈ nhds x)
+  (F : Π (s : set α) (hi : s ∈ A), C(s, β))
+  (hF : ∀ s (hs : s ∈ A) t (ht : t ∈ A) (x : α) (hxi : x ∈ s) (hxj : x ∈ t),
+    F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
+  (hA : ∀ x : α, ∃ i ∈ A, i ∈ nhds x)
 
 include hF hA
 
@@ -286,22 +286,22 @@ of sets in `α` which contain a neighbourhood of each point in `α` and (2) the 
 pairwise on intersections, can be glued to construct a continuous map in `C(α, β)`. -/
 noncomputable def lift_cover' : C(α, β) :=
 begin
- let S : A → set α := coe,
- let F : Π i : A, C(i, β) := λ i, F i i.prop,
- refine lift_cover S F (λ i j, hF i i.prop j j.prop) _,
- intros x,
- obtain ⟨s, hs, hsx⟩ := hA x,
- exact ⟨⟨s, hs⟩, hsx⟩
+  let S : A → set α := coe,
+  let F : Π i : A, C(i, β) := λ i, F i i.prop,
+  refine lift_cover S F (λ i j, hF i i.prop j j.prop) _,
+  intros x,
+  obtain ⟨s, hs, hsx⟩ := hA x,
+  exact ⟨⟨s, hs⟩, hsx⟩
 end
 
 variables {A F hF hA}
 
 @[simp] lemma lift_cover_coe' {s : set α} {hs : s ∈ A} (x : s) :
- lift_cover' A F hF hA x = F s hs x :=
+  lift_cover' A F hF hA x = F s hs x :=
 let x' : (coe : A → set α) ⟨s, hs⟩ := x in lift_cover_coe x'
 
 @[simp] lemma lift_cover_restrict' {s : set α} {hs : s ∈ A} :
- (lift_cover' A F hF hA).restrict s = F s hs :=
+  (lift_cover' A F hF hA).restrict s = F s hs :=
 ext $ lift_cover_coe'
 
 end gluing
@@ -327,13 +327,12 @@ lemma to_continuous_map_as_coe : f.to_continuous_map = f := rfl
 
 /-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
 @[simp] lemma symm_comp_to_continuous_map :
- (f.symm : C(β, α)).comp (f : C(α, β)) = continuous_map.id α :=
-by rw [← coe_trans]; rw [ self_trans_symm]; rw [ coe_refl]
+  (f.symm : C(β, α)).comp (f : C(α, β)) = continuous_map.id α :=
+by rw [← coe_trans, self_trans_symm, coe_refl]
 
 /-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
 @[simp] lemma to_continuous_map_comp_symm :
- (f : C(α, β)).comp (f.symm : C(β, α)) = continuous_map.id β :=
-by rw [← coe_trans]; rw [ symm_trans_self]; rw [ coe_refl]
+  (f : C(α, β)).comp (f.symm : C(β, α)) = continuous_map.id β :=
+by rw [← coe_trans, symm_trans_self, coe_refl]
 
 end homeomorph
-

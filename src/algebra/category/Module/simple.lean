@@ -41,6 +41,5 @@ local attribute [instance] module_of_algebra_Module is_scalar_tower_of_algebra_M
 
 /-- Any `k`-algebra module which is 1-dimensional over `k` is simple. -/
 lemma simple_of_finrank_eq_one {k : Type*} [field k] [algebra k R]
- {V : Module R} (h : finrank k V = 1) : simple V :=
+  {V : Module R} (h : finrank k V = 1) : simple V :=
 (simple_iff_is_simple_module' V).mpr (is_simple_module_of_finrank_eq_one h)
-

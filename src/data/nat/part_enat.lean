@@ -74,19 +74,19 @@ instance (n : ℕ) : decidable (some n).dom := is_true trivial
 @[simp] lemma dom_some (x : ℕ) : (some x).dom := trivial
 
 instance : add_comm_monoid part_enat :=
-{ add := (+),
- zero := (0),
- add_comm := λ x y, part.ext' and.comm (λ _ _, add_comm _ _),
- zero_add := λ x, part.ext' (true_and _) (λ _ _, zero_add _),
- add_zero := λ x, part.ext' (and_true _) (λ _ _, add_zero _),
- add_assoc := λ x y z, part.ext' and.assoc (λ _ _, add_assoc _ _ _) }
+{ add       := (+),
+  zero      := (0),
+  add_comm  := λ x y, part.ext' and.comm (λ _ _, add_comm _ _),
+  zero_add  := λ x, part.ext' (true_and _) (λ _ _, zero_add _),
+  add_zero  := λ x, part.ext' (and_true _) (λ _ _, add_zero _),
+  add_assoc := λ x y z, part.ext' and.assoc (λ _ _, add_assoc _ _ _) }
 
 instance : add_comm_monoid_with_one part_enat :=
 { one := 1,
- nat_cast := some,
- nat_cast_zero := rfl,
- nat_cast_succ := λ _, part.ext' (true_and _).symm (λ _ _, rfl),
- .. part_enat.add_comm_monoid }
+  nat_cast := some,
+  nat_cast_zero := rfl,
+  nat_cast_succ := λ _, part.ext' (true_and _).symm (λ _ _, rfl),
+  .. part_enat.add_comm_monoid }
 
 lemma some_eq_coe (n : ℕ) : some n = n := rfl
 
@@ -102,47 +102,47 @@ instance : has_bot part_enat := ⟨0⟩
 instance : has_sup part_enat := ⟨λ x y, ⟨x.dom ∧ y.dom, λ h, x.get h.1 ⊔ y.get h.2⟩⟩
 
 lemma le_def (x y : part_enat) :
- x ≤ y ↔ ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy :=
+  x ≤ y ↔ ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy :=
 iff.rfl
 
 @[elab_as_eliminator] protected lemma cases_on' {P : part_enat → Prop} :
- ∀ a : part_enat, P ⊤ → (∀ n : ℕ, P (some n)) → P a :=
+  ∀ a : part_enat, P ⊤ → (∀ n : ℕ, P (some n)) → P a :=
 part.induction_on
 
 @[elab_as_eliminator] protected lemma cases_on {P : part_enat → Prop} :
- ∀ a : part_enat, P ⊤ → (∀ n : ℕ, P n) → P a :=
+  ∀ a : part_enat, P ⊤ → (∀ n : ℕ, P n) → P a :=
 by { simp only [← some_eq_coe], exact part_enat.cases_on' }
 
 @[simp] lemma top_add (x : part_enat) : ⊤ + x = ⊤ :=
 part.ext' (false_and _) (λ h, h.left.elim)
 
 @[simp] lemma add_top (x : part_enat) : x + ⊤ = ⊤ :=
-by rw [add_comm]; rw [ top_add]
+by rw [add_comm, top_add]
 
 @[simp] lemma coe_get {x : part_enat} (h : x.dom) : (x.get h : part_enat) = x :=
 by { rw [← some_eq_coe], exact part.ext' (iff_of_true trivial h) (λ _ _, rfl) }
 
 @[simp, norm_cast] lemma get_coe' (x : ℕ) (h : (x : part_enat).dom) : get (x : part_enat) h = x :=
-by rw [← coe_inj]; rw [ coe_get]
+by rw [← coe_inj, coe_get]
 
 lemma get_coe {x : ℕ} : get (x : part_enat) (dom_coe x) = x := get_coe' _ _
 
 lemma coe_add_get {x : ℕ} {y : part_enat} (h : ((x : part_enat) + y).dom) :
- get ((x : part_enat) + y) h = x + get y h.2 :=
+  get ((x : part_enat) + y) h = x + get y h.2 :=
 by { simp only [← some_eq_coe] at h ⊢, refl }
 
 @[simp] lemma get_add {x y : part_enat} (h : (x + y).dom) :
- get (x + y) h = x.get h.1 + y.get h.2 := rfl
+  get (x + y) h = x.get h.1 + y.get h.2 := rfl
 
 @[simp] lemma get_zero (h : (0 : part_enat).dom) : (0 : part_enat).get h = 0 := rfl
 
 @[simp] lemma get_one (h : (1 : part_enat).dom) : (1 : part_enat).get h = 1 := rfl
 
 lemma get_eq_iff_eq_some {a : part_enat} {ha : a.dom} {b : ℕ} :
- a.get ha = b ↔ a = some b := get_eq_iff_eq_some
+  a.get ha = b ↔ a = some b := get_eq_iff_eq_some
 
 lemma get_eq_iff_eq_coe {a : part_enat} {ha : a.dom} {b : ℕ} :
- a.get ha = b ↔ a = b := by rw [get_eq_iff_eq_some]; rw [ some_eq_coe]
+  a.get ha = b ↔ a = b := by rw [get_eq_iff_eq_some, some_eq_coe]
 
 lemma dom_of_le_of_dom {x y : part_enat} : x ≤ y → y.dom → x.dom := λ ⟨h, _⟩, h
 
@@ -154,9 +154,9 @@ by { rw [← some_eq_coe] at h, exact dom_of_le_some h }
 instance decidable_le (x y : part_enat) [decidable x.dom] [decidable y.dom] : decidable (x ≤ y) :=
 if hx : x.dom
 then decidable_of_decidable_of_iff
- (show decidable (∀ (hy : (y : part_enat).dom), x.get hx ≤ (y : part_enat).get hy),
- from forall_prop_decidable _) $
- by { dsimp [(≤)], simp only [hx, exists_prop_of_true, forall_true_iff] }
+  (show decidable (∀ (hy : (y : part_enat).dom), x.get hx ≤ (y : part_enat).get hy),
+    from forall_prop_decidable _) $
+  by { dsimp [(≤)], simp only [hx, exists_prop_of_true, forall_true_iff] }
 else if hy : y.dom
 then is_false $ λ h, hx $ dom_of_le_of_dom h hy
 else is_true ⟨λ h, (hy h).elim, λ h, (hy h).elim⟩
@@ -167,44 +167,44 @@ def coe_hom : ℕ →+ part_enat := ⟨coe, nat.cast_zero, nat.cast_add⟩
 @[simp] lemma coe_coe_hom : ⇑coe_hom = coe := rfl
 
 instance : partial_order part_enat :=
-{ le := (≤),
- le_refl := λ x, ⟨id, λ _, le_rfl⟩,
- le_trans := λ x y z ⟨hxy₁, hxy₂⟩ ⟨hyz₁, hyz₂⟩,
- ⟨hxy₁ ∘ hyz₁, λ _, le_trans (hxy₂ _) (hyz₂ _)⟩,
- le_antisymm := λ x y ⟨hxy₁, hxy₂⟩ ⟨hyx₁, hyx₂⟩, part.ext' ⟨hyx₁, hxy₁⟩
- (λ _ _, le_antisymm (hxy₂ _) (hyx₂ _)) }
+{ le          := (≤),
+  le_refl     := λ x, ⟨id, λ _, le_rfl⟩,
+  le_trans    := λ x y z ⟨hxy₁, hxy₂⟩ ⟨hyz₁, hyz₂⟩,
+    ⟨hxy₁ ∘ hyz₁, λ _, le_trans (hxy₂ _) (hyz₂ _)⟩,
+  le_antisymm := λ x y ⟨hxy₁, hxy₂⟩ ⟨hyx₁, hyx₂⟩, part.ext' ⟨hyx₁, hxy₁⟩
+    (λ _ _, le_antisymm (hxy₂ _) (hyx₂ _)) }
 
 lemma lt_def (x y : part_enat) : x < y ↔ ∃ (hx : x.dom), ∀ (hy : y.dom), x.get hx < y.get hy :=
 begin
- rw [lt_iff_le_not_le]; rw [ le_def]; rw [ le_def]; rw [ not_exists],
- split,
- { rintro ⟨⟨hyx, H⟩, h⟩,
- by_cases hx : x.dom,
- { use hx, intro hy,
- specialize H hy, specialize h (λ _, hy),
- rw not_forall at h, cases h with hx' h,
- rw not_le at h, exact h },
- { specialize h (λ hx', (hx hx').elim),
- rw not_forall at h, cases h with hx' h,
- exact (hx hx').elim } },
- { rintro ⟨hx, H⟩, exact ⟨⟨λ _, hx, λ hy, (H hy).le⟩, λ hxy h, not_lt_of_le (h _) (H _)⟩ }
+  rw [lt_iff_le_not_le, le_def, le_def, not_exists],
+  split,
+  { rintro ⟨⟨hyx, H⟩, h⟩,
+    by_cases hx : x.dom,
+    { use hx, intro hy,
+      specialize H hy, specialize h (λ _, hy),
+      rw not_forall at h, cases h with hx' h,
+      rw not_le at h, exact h },
+    { specialize h (λ hx', (hx hx').elim),
+      rw not_forall at h, cases h with hx' h,
+      exact (hx hx').elim } },
+  { rintro ⟨hx, H⟩, exact ⟨⟨λ _, hx, λ hy, (H hy).le⟩, λ hxy h, not_lt_of_le (h _) (H _)⟩ }
 end
 
 @[simp, norm_cast] lemma coe_le_coe {x y : ℕ} : (x : part_enat) ≤ y ↔ x ≤ y :=
-by { rw [← some_eq_coe]; rw [ ← some_eq_coe], exact ⟨λ ⟨_, h⟩, h trivial, λ h, ⟨λ _, trivial, λ _, h⟩⟩ }
+by { rw [← some_eq_coe, ← some_eq_coe], exact ⟨λ ⟨_, h⟩, h trivial, λ h, ⟨λ _, trivial, λ _, h⟩⟩ }
 
 @[simp, norm_cast] lemma coe_lt_coe {x y : ℕ} : (x : part_enat) < y ↔ x < y :=
-by rw [lt_iff_le_not_le]; rw [ lt_iff_le_not_le]; rw [ coe_le_coe]; rw [ coe_le_coe]
+by rw [lt_iff_le_not_le, lt_iff_le_not_le, coe_le_coe, coe_le_coe]
 
 @[simp] lemma get_le_get {x y : part_enat} {hx : x.dom} {hy : y.dom} :
- x.get hx ≤ y.get hy ↔ x ≤ y :=
-by conv { to_lhs, rw [← coe_le_coe]; rw [ coe_get]; rw [ coe_get]}
+  x.get hx ≤ y.get hy ↔ x ≤ y :=
+by conv { to_lhs, rw [← coe_le_coe, coe_get, coe_get]}
 
 lemma le_coe_iff (x : part_enat) (n : ℕ) : x ≤ n ↔ ∃ h : x.dom, x.get h ≤ n :=
 begin
- rw [← some_eq_coe],
- show (∃ (h : true → x.dom), _) ↔ ∃ h : x.dom, x.get h ≤ n,
- simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
+  rw [← some_eq_coe],
+  show (∃ (h : true → x.dom), _) ↔ ∃ h : x.dom, x.get h ≤ n,
+  simp only [forall_prop_of_true, some_eq_coe, dom_coe, get_coe']
 end
 
 lemma lt_coe_iff (x : part_enat) (n : ℕ) : x < n ↔ ∃ h : x.dom, x.get h < n :=
@@ -212,35 +212,35 @@ by simp only [lt_def, forall_prop_of_true, get_coe', dom_coe]
 
 lemma coe_le_iff (n : ℕ) (x : part_enat) : (n : part_enat) ≤ x ↔ ∀ h : x.dom, n ≤ x.get h :=
 begin
- rw [← some_eq_coe],
- simp only [le_def, exists_prop_of_true, dom_some, forall_true_iff],
- refl,
+  rw [← some_eq_coe],
+  simp only [le_def, exists_prop_of_true, dom_some, forall_true_iff],
+  refl,
 end
 
 lemma coe_lt_iff (n : ℕ) (x : part_enat) : (n : part_enat) < x ↔ ∀ h : x.dom, n < x.get h :=
 begin
- rw [← some_eq_coe],
- simp only [lt_def, exists_prop_of_true, dom_some, forall_true_iff],
- refl,
+  rw [← some_eq_coe],
+  simp only [lt_def, exists_prop_of_true, dom_some, forall_true_iff],
+  refl,
 end
 
 instance ne_zero.one : ne_zero (1 : part_enat) := ⟨coe_inj.not.mpr dec_trivial⟩
 
 instance semilattice_sup : semilattice_sup part_enat :=
 { sup := (⊔),
- le_sup_left := λ _ _, ⟨and.left, λ _, le_sup_left⟩,
- le_sup_right := λ _ _, ⟨and.right, λ _, le_sup_right⟩,
- sup_le := λ x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩, ⟨λ hz, ⟨hx₁ hz, hy₁ hz⟩,
- λ _, sup_le (hx₂ _) (hy₂ _)⟩,
- ..part_enat.partial_order }
+  le_sup_left := λ _ _, ⟨and.left, λ _, le_sup_left⟩,
+  le_sup_right := λ _ _, ⟨and.right, λ _, le_sup_right⟩,
+  sup_le := λ x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩, ⟨λ hz, ⟨hx₁ hz, hy₁ hz⟩,
+    λ _, sup_le (hx₂ _) (hy₂ _)⟩,
+  ..part_enat.partial_order }
 
 instance order_bot : order_bot part_enat :=
 { bot := (⊥),
- bot_le := λ _, ⟨λ _, trivial, λ _, nat.zero_le _⟩ }
+  bot_le := λ _, ⟨λ _, trivial, λ _, nat.zero_le _⟩ }
 
 instance order_top : order_top part_enat :=
 { top := (⊤),
- le_top := λ x, ⟨λ h, false.elim h, λ hy, false.elim hy⟩ }
+  le_top := λ x, ⟨λ h, false.elim h, λ hy, false.elim hy⟩ }
 
 lemma eq_zero_iff {x : part_enat} : x = 0 ↔ x ≤ 0 := eq_bot_iff
 lemma ne_zero_iff {x : part_enat} : x ≠ 0 ↔ ⊥ < x := bot_lt_iff_ne_bot.symm
@@ -272,9 +272,9 @@ ne_of_lt $ lt_of_lt_of_le h le_top
 
 lemma eq_top_iff_forall_lt (x : part_enat) : x = ⊤ ↔ ∀ n : ℕ, (n : part_enat) < x :=
 begin
- split,
- { rintro rfl n, exact coe_lt_top _ },
- { contrapose!, rw ne_top_iff, rintro ⟨n, rfl⟩, exact ⟨n, irrefl _⟩ }
+  split,
+  { rintro rfl n, exact coe_lt_top _ },
+  { contrapose!, rw ne_top_iff, rintro ⟨n, rfl⟩, exact ⟨n, irrefl _⟩ }
 end
 
 lemma eq_top_iff_forall_le (x : part_enat) : x = ⊤ ↔ ∀ n : ℕ, (n : part_enat) ≤ x :=
@@ -283,74 +283,74 @@ lemma eq_top_iff_forall_le (x : part_enat) : x = ⊤ ↔ ∀ n : ℕ, (n : part_
 
 lemma pos_iff_one_le {x : part_enat} : 0 < x ↔ 1 ≤ x :=
 part_enat.cases_on x (by simp only [iff_true, le_top, coe_lt_top, ← @nat.cast_zero part_enat]) $
- λ n, by { rw [← nat.cast_zero]; rw [ ← nat.cast_one]; rw [ part_enat.coe_lt_coe]; rw [ part_enat.coe_le_coe], refl }
+  λ n, by { rw [← nat.cast_zero, ← nat.cast_one, part_enat.coe_lt_coe, part_enat.coe_le_coe], refl }
 
 instance : is_total part_enat (≤) :=
 { total := λ x y, part_enat.cases_on x
- (or.inr le_top) (part_enat.cases_on y (λ _, or.inl le_top)
- (λ x y, (le_total x y).elim (or.inr ∘ coe_le_coe.2)
- (or.inl ∘ coe_le_coe.2))) }
+    (or.inr le_top) (part_enat.cases_on y (λ _, or.inl le_top)
+      (λ x y, (le_total x y).elim (or.inr ∘ coe_le_coe.2)
+        (or.inl ∘ coe_le_coe.2))) }
 
 noncomputable instance : linear_order part_enat :=
 { le_total := is_total.total,
- decidable_le := classical.dec_rel _,
- max := (⊔),
- max_def := @sup_eq_max_default _ _ (id _) _,
- ..part_enat.partial_order }
+  decidable_le := classical.dec_rel _,
+  max := (⊔),
+  max_def := @sup_eq_max_default _ _ (id _) _,
+  ..part_enat.partial_order }
 
 instance : bounded_order part_enat :=
 { ..part_enat.order_top,
- ..part_enat.order_bot }
+  ..part_enat.order_bot }
 
 noncomputable instance : lattice part_enat :=
 { inf := min,
- inf_le_left := min_le_left,
- inf_le_right := min_le_right,
- le_inf := λ _ _ _, le_min,
- ..part_enat.semilattice_sup }
+  inf_le_left := min_le_left,
+  inf_le_right := min_le_right,
+  le_inf := λ _ _ _, le_min,
+  ..part_enat.semilattice_sup }
 
 instance : ordered_add_comm_monoid part_enat :=
 { add_le_add_left := λ a b ⟨h₁, h₂⟩ c,
- part_enat.cases_on c (by simp)
- (λ c, ⟨λ h, and.intro (dom_coe _) (h₁ h.2),
- λ h, by simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩),
- ..part_enat.linear_order,
- ..part_enat.add_comm_monoid }
+    part_enat.cases_on c (by simp)
+      (λ c, ⟨λ h, and.intro (dom_coe _) (h₁ h.2),
+        λ h, by simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩),
+  ..part_enat.linear_order,
+  ..part_enat.add_comm_monoid }
 
 instance : canonically_ordered_add_monoid part_enat :=
 { le_self_add := λ a b, part_enat.cases_on b (le_top.trans_eq (add_top _).symm) $
- λ b, part_enat.cases_on a (top_add _).ge $
- λ a, (coe_le_coe.2 le_self_add).trans_eq (nat.cast_add _ _),
- exists_add_of_le := λ a b, part_enat.cases_on b (λ _, ⟨⊤, (add_top _).symm⟩) $
- λ b, part_enat.cases_on a (λ h, ((coe_lt_top _).not_le h).elim) $ λ a h, ⟨(b - a : ℕ),
- by rw [←nat.cast_add]; rw [ coe_inj]; rw [ add_comm]; rw [ tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩,
- ..part_enat.semilattice_sup,
- ..part_enat.order_bot,
- ..part_enat.ordered_add_comm_monoid }
+    λ b, part_enat.cases_on a (top_add _).ge $
+      λ a, (coe_le_coe.2 le_self_add).trans_eq (nat.cast_add _ _),
+  exists_add_of_le := λ a b, part_enat.cases_on b (λ _, ⟨⊤, (add_top _).symm⟩) $
+    λ b, part_enat.cases_on a (λ h, ((coe_lt_top _).not_le h).elim) $ λ a h, ⟨(b - a : ℕ),
+        by rw [←nat.cast_add, coe_inj, add_comm, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩,
+  ..part_enat.semilattice_sup,
+  ..part_enat.order_bot,
+  ..part_enat.ordered_add_comm_monoid }
 
 lemma eq_coe_sub_of_add_eq_coe {x y : part_enat} {n : ℕ} (h : x + y = n) :
- x = ↑(n - y.get (dom_of_le_coe ((le_add_left le_rfl).trans_eq h))) :=
+  x = ↑(n - y.get (dom_of_le_coe ((le_add_left le_rfl).trans_eq h))) :=
 begin
- lift x to ℕ using dom_of_le_coe ((le_add_right le_rfl).trans_eq h),
- lift y to ℕ using dom_of_le_coe ((le_add_left le_rfl).trans_eq h),
- rw [← nat.cast_add] at h; rw [ coe_inj] at h,
- rw [get_coe]; rw [ coe_inj]; rw [ eq_tsub_of_add_eq h]
+  lift x to ℕ using dom_of_le_coe ((le_add_right le_rfl).trans_eq h),
+  lift y to ℕ using dom_of_le_coe ((le_add_left le_rfl).trans_eq h),
+  rw [← nat.cast_add, coe_inj] at h,
+  rw [get_coe, coe_inj, eq_tsub_of_add_eq h]
 end
 
 protected lemma add_lt_add_right {x y z : part_enat} (h : x < y) (hz : z ≠ ⊤) : x + z < y + z :=
 begin
- rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩,
- rcases ne_top_iff.mp hz with ⟨k, rfl⟩,
- induction y using part_enat.cases_on with n,
- { rw [top_add], apply_mod_cast coe_lt_top },
- norm_cast at h, apply_mod_cast add_lt_add_right h
+  rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩,
+  rcases ne_top_iff.mp hz with ⟨k, rfl⟩,
+  induction y using part_enat.cases_on with n,
+  { rw [top_add], apply_mod_cast coe_lt_top },
+  norm_cast at h, apply_mod_cast add_lt_add_right h
 end
 
 protected lemma add_lt_add_iff_right {x y z : part_enat} (hz : z ≠ ⊤) : x + z < y + z ↔ x < y :=
 ⟨lt_of_add_lt_add_right, λ h, part_enat.add_lt_add_right h hz⟩
 
 protected lemma add_lt_add_iff_left {x y z : part_enat} (hz : z ≠ ⊤) : z + x < z + y ↔ x < y :=
-by rw [add_comm z]; rw [ add_comm z]; rw [ part_enat.add_lt_add_iff_right hz]
+by rw [add_comm z, add_comm z, part_enat.add_lt_add_iff_right hz]
 
 protected lemma lt_add_iff_pos_right {x y : part_enat} (hx : x ≠ ⊤) : x < x + y ↔ 0 < y :=
 by { conv_rhs { rw [← part_enat.add_lt_add_iff_left hx] }, rw [add_zero] }
@@ -360,55 +360,55 @@ by { rw [part_enat.lt_add_iff_pos_right hx], norm_cast, norm_num }
 
 lemma le_of_lt_add_one {x y : part_enat} (h : x < y + 1) : x ≤ y :=
 begin
- induction y using part_enat.cases_on with n, apply le_top,
- rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩,
- apply_mod_cast nat.le_of_lt_succ, apply_mod_cast h
+  induction y using part_enat.cases_on with n, apply le_top,
+  rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩,
+  apply_mod_cast nat.le_of_lt_succ, apply_mod_cast h
 end
 
 lemma add_one_le_of_lt {x y : part_enat} (h : x < y) : x + 1 ≤ y :=
 begin
- induction y using part_enat.cases_on with n, apply le_top,
- rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩,
- apply_mod_cast nat.succ_le_of_lt, apply_mod_cast h
+  induction y using part_enat.cases_on with n, apply le_top,
+  rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩,
+  apply_mod_cast nat.succ_le_of_lt, apply_mod_cast h
 end
 
 lemma add_one_le_iff_lt {x y : part_enat} (hx : x ≠ ⊤) : x + 1 ≤ y ↔ x < y :=
 begin
- split, swap, exact add_one_le_of_lt,
- intro h, rcases ne_top_iff.mp hx with ⟨m, rfl⟩,
- induction y using part_enat.cases_on with n, apply coe_lt_top,
- apply_mod_cast nat.lt_of_succ_le, apply_mod_cast h
+  split, swap, exact add_one_le_of_lt,
+  intro h, rcases ne_top_iff.mp hx with ⟨m, rfl⟩,
+  induction y using part_enat.cases_on with n, apply coe_lt_top,
+  apply_mod_cast nat.lt_of_succ_le, apply_mod_cast h
 end
 
 lemma coe_succ_le_iff {n : ℕ} {e : part_enat} : ↑n.succ ≤ e ↔ ↑n < e:=
-by rw [nat.succ_eq_add_one n]; rw [ nat.cast_add]; rw [ nat.cast_one]; rw [ add_one_le_iff_lt (coe_ne_top n)]
+by rw [nat.succ_eq_add_one n, nat.cast_add, nat.cast_one, add_one_le_iff_lt (coe_ne_top n)]
 
 lemma lt_add_one_iff_lt {x y : part_enat} (hx : x ≠ ⊤) : x < y + 1 ↔ x ≤ y :=
 begin
- split, exact le_of_lt_add_one,
- intro h, rcases ne_top_iff.mp hx with ⟨m, rfl⟩,
- induction y using part_enat.cases_on with n, { rw [top_add], apply coe_lt_top },
- apply_mod_cast nat.lt_succ_of_le, apply_mod_cast h
+  split, exact le_of_lt_add_one,
+  intro h, rcases ne_top_iff.mp hx with ⟨m, rfl⟩,
+  induction y using part_enat.cases_on with n, { rw [top_add], apply coe_lt_top },
+  apply_mod_cast nat.lt_succ_of_le, apply_mod_cast h
 end
 
 lemma lt_coe_succ_iff_le {x : part_enat} {n : ℕ} (hx : x ≠ ⊤) : x < n.succ ↔ x ≤ n :=
-by rw [nat.succ_eq_add_one n]; rw [ nat.cast_add]; rw [ nat.cast_one]; rw [ lt_add_one_iff_lt hx]
+by rw [nat.succ_eq_add_one n, nat.cast_add, nat.cast_one, lt_add_one_iff_lt hx]
 
 lemma add_eq_top_iff {a b : part_enat} : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ :=
 by apply part_enat.cases_on a; apply part_enat.cases_on b;
- simp; simp only [(nat.cast_add _ _).symm, part_enat.coe_ne_top]; simp
+  simp; simp only [(nat.cast_add _ _).symm, part_enat.coe_ne_top]; simp
 
 protected lemma add_right_cancel_iff {a b c : part_enat} (hc : c ≠ ⊤) : a + c = b + c ↔ a = b :=
 begin
- rcases ne_top_iff.1 hc with ⟨c, rfl⟩,
- apply part_enat.cases_on a; apply part_enat.cases_on b;
- simp [add_eq_top_iff, coe_ne_top, @eq_comm _ (⊤ : part_enat)];
- simp only [(nat.cast_add _ _).symm, add_left_cancel_iff, part_enat.coe_inj, add_comm];
- tauto
+  rcases ne_top_iff.1 hc with ⟨c, rfl⟩,
+  apply part_enat.cases_on a; apply part_enat.cases_on b;
+  simp [add_eq_top_iff, coe_ne_top, @eq_comm _ (⊤ : part_enat)];
+  simp only [(nat.cast_add _ _).symm, add_left_cancel_iff, part_enat.coe_inj, add_comm];
+  tauto
 end
 
 protected lemma add_left_cancel_iff {a b c : part_enat} (ha : a ≠ ⊤) : a + b = a + c ↔ b = c :=
-by rw [add_comm a]; rw [ add_comm a]; rw [ part_enat.add_right_cancel_iff ha]
+by rw [add_comm a, add_comm a, part_enat.add_right_cancel_iff ha]
 
 section with_top
 
@@ -431,15 +431,15 @@ lemma to_with_top_coe (n : ℕ) {_ : decidable (n : part_enat).dom} : to_with_to
 by simp only [← some_eq_coe, ← to_with_top_some]
 
 @[simp] lemma to_with_top_coe' (n : ℕ) {h : decidable (n : part_enat).dom} :
- to_with_top (n : part_enat) = n :=
+  to_with_top (n : part_enat) = n :=
 by convert to_with_top_coe n
 
 @[simp] lemma to_with_top_le {x y : part_enat} : Π [decidable x.dom]
- [decidable y.dom], by exactI to_with_top x ≤ to_with_top y ↔ x ≤ y :=
+  [decidable y.dom], by exactI to_with_top x ≤ to_with_top y ↔ x ≤ y :=
 part_enat.cases_on y (by simp) (part_enat.cases_on x (by simp) (by intros; simp))
 
 @[simp] lemma to_with_top_lt {x y : part_enat} [decidable x.dom] [decidable y.dom] :
- to_with_top x < to_with_top y ↔ x < y :=
+  to_with_top x < to_with_top y ↔ x < y :=
 lt_iff_lt_of_le_iff_le to_with_top_le
 
 end with_top
@@ -449,16 +449,16 @@ section with_top_equiv
 open_locale classical
 
 @[simp] lemma to_with_top_add {x y : part_enat} :
- to_with_top (x + y) = to_with_top x + to_with_top y :=
+  to_with_top (x + y) = to_with_top x + to_with_top y :=
 by apply part_enat.cases_on y; apply part_enat.cases_on x; simp [← nat.cast_add, ← enat.coe_add]
 
 /-- `equiv` between `part_enat` and `ℕ∞` (for the order isomorphism see
 `with_top_order_iso`). -/
 noncomputable def with_top_equiv : part_enat ≃ ℕ∞ :=
 { to_fun := λ x, to_with_top x,
- inv_fun := λ x, match x with (option.some n) := coe n | none := ⊤ end,
- left_inv := λ x, by apply part_enat.cases_on x; intros; simp; refl,
- right_inv := λ x, by cases x; simp [with_top_equiv._match_1]; refl }
+  inv_fun := λ x, match x with (option.some n) := coe n | none := ⊤ end,
+  left_inv := λ x, by apply part_enat.cases_on x; intros; simp; refl,
+  right_inv := λ x, by cases x; simp [with_top_equiv._match_1]; refl }
 
 @[simp] lemma with_top_equiv_top : with_top_equiv ⊤ = ⊤ :=
 to_with_top_top'
@@ -478,7 +478,7 @@ to_with_top_lt
 /-- `to_with_top` induces an order isomorphism between `part_enat` and `ℕ∞`. -/
 noncomputable def with_top_order_iso : part_enat ≃o ℕ∞ :=
 { map_rel_iff' := λ _ _, with_top_equiv_le,
- .. with_top_equiv}
+  .. with_top_equiv}
 
 @[simp] lemma with_top_equiv_symm_top : with_top_equiv.symm ⊤ = ⊤ :=
 rfl
@@ -490,26 +490,26 @@ rfl
 rfl
 
 @[simp] lemma with_top_equiv_symm_le {x y : ℕ∞} :
- with_top_equiv.symm x ≤ with_top_equiv.symm y ↔ x ≤ y :=
+  with_top_equiv.symm x ≤ with_top_equiv.symm y ↔ x ≤ y :=
 by rw ← with_top_equiv_le; simp
 
 @[simp] lemma with_top_equiv_symm_lt {x y : ℕ∞} :
- with_top_equiv.symm x < with_top_equiv.symm y ↔ x < y :=
+  with_top_equiv.symm x < with_top_equiv.symm y ↔ x < y :=
 by rw ← with_top_equiv_lt; simp
 
 /-- `to_with_top` induces an additive monoid isomorphism between `part_enat` and `ℕ∞`. -/
 noncomputable def with_top_add_equiv : part_enat ≃+ ℕ∞ :=
 { map_add' := λ x y, by simp only [with_top_equiv]; convert to_with_top_add,
- ..with_top_equiv}
+  ..with_top_equiv}
 
 end with_top_equiv
 
 lemma lt_wf : @well_founded part_enat (<) :=
 begin
- classical,
- change well_founded (λ a b : part_enat, a < b),
- simp_rw ←to_with_top_lt,
- exact inv_image.wf _ (with_top.well_founded_lt nat.lt_wf)
+  classical,
+  change well_founded (λ a b : part_enat, a < b),
+  simp_rw ←to_with_top_lt,
+  exact inv_image.wf _ (with_top.well_founded_lt nat.lt_wf)
 end
 
 instance : well_founded_lt part_enat := ⟨lt_wf⟩
@@ -529,19 +529,19 @@ lemma find_dom (h : ∃ n, P n) : (find P).dom := h
 
 lemma lt_find (n : ℕ) (h : ∀ m ≤ n, ¬P m) : (n : part_enat) < find P :=
 begin
- rw coe_lt_iff, intro h', rw find_get,
- have := @nat.find_spec P _ h',
- contrapose! this,
- exact h _ this
+  rw coe_lt_iff, intro h', rw find_get,
+  have := @nat.find_spec P _ h',
+  contrapose! this,
+  exact h _ this
 end
 
 lemma lt_find_iff (n : ℕ) : (n : part_enat) < find P ↔ (∀ m ≤ n, ¬P m) :=
 begin
- refine ⟨_, lt_find P n⟩,
- intros h m hm,
- by_cases H : (find P).dom,
- { apply nat.find_min H, rw coe_lt_iff at h, specialize h H, exact lt_of_le_of_lt hm h },
- { exact not_exists.mp H m }
+  refine ⟨_, lt_find P n⟩,
+  intros h m hm,
+  by_cases H : (find P).dom,
+  { apply nat.find_min H, rw coe_lt_iff at h, specialize h H, exact lt_of_le_of_lt hm h },
+  { exact not_exists.mp H m }
 end
 
 lemma find_le (n : ℕ) (h : P n) : find P ≤ n :=
@@ -555,20 +555,19 @@ end find
 
 noncomputable instance : linear_ordered_add_comm_monoid_with_top part_enat :=
 { top_add' := top_add,
- .. part_enat.linear_order,
- .. part_enat.ordered_add_comm_monoid,
- .. part_enat.order_top }
+  .. part_enat.linear_order,
+  .. part_enat.ordered_add_comm_monoid,
+  .. part_enat.order_top }
 
 noncomputable instance : complete_linear_order part_enat :=
 { inf := (⊓),
- sup := (⊔),
- top := ⊤,
- bot := ⊥,
- le := (≤),
- lt := (<),
- .. part_enat.lattice,
- .. with_top_order_iso.symm.to_galois_insertion.lift_complete_lattice,
- .. part_enat.linear_order, }
+  sup := (⊔),
+  top := ⊤,
+  bot := ⊥,
+  le := (≤),
+  lt := (<),
+  .. part_enat.lattice,
+  .. with_top_order_iso.symm.to_galois_insertion.lift_complete_lattice,
+  .. part_enat.linear_order, }
 
 end part_enat
-

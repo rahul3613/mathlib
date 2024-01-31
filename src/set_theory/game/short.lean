@@ -29,27 +29,27 @@ namespace pgame
 /-- A short game is a game with a finite set of moves at every turn. -/
 inductive short : pgame.{u} → Type (u+1)
 | mk : Π {α β : Type u} {L : α → pgame.{u}} {R : β → pgame.{u}}
- (sL : ∀ i : α, short (L i)) (sR : ∀ j : β, short (R j))
- [fintype α] [fintype β],
- short ⟨α, β, L, R⟩
+         (sL : ∀ i : α, short (L i)) (sR : ∀ j : β, short (R j))
+         [fintype α] [fintype β],
+       short ⟨α, β, L, R⟩
 
 instance subsingleton_short : Π (x : pgame), subsingleton (short x)
 | (mk xl xr xL xR) :=
 ⟨λ a b, begin
- cases a, cases b,
- congr,
- { funext,
- apply @subsingleton.elim _ (subsingleton_short (xL x)) },
- { funext,
- apply @subsingleton.elim _ (subsingleton_short (xR x)) },
+  cases a, cases b,
+  congr,
+  { funext,
+    apply @subsingleton.elim _ (subsingleton_short (xL x)) },
+  { funext,
+    apply @subsingleton.elim _ (subsingleton_short (xR x)) },
 end⟩
 using_well_founded { dec_tac := pgame_wf_tac }
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
 def short.mk' {x : pgame} [fintype x.left_moves] [fintype x.right_moves]
- (sL : ∀ i : x.left_moves, short (x.move_left i))
- (sR : ∀ j : x.right_moves, short (x.move_right j)) :
- short x :=
+  (sL : ∀ i : x.left_moves, short (x.move_left i))
+  (sR : ∀ j : x.right_moves, short (x.move_right j)) :
+  short x :=
 by unfreezingI { cases x, dsimp at * }; exact short.mk sL sR
 
 attribute [class] short
@@ -59,7 +59,7 @@ Extracting the `fintype` instance for the indexing type for Left's moves in a sh
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
 def fintype_left {α β : Type u} {L : α → pgame.{u}} {R : β → pgame.{u}} [S : short ⟨α, β, L, R⟩] :
- fintype α :=
+  fintype α :=
 by { casesI S with _ _ _ _ _ _ F _, exact F }
 local attribute [instance] fintype_left
 instance fintype_left_moves (x : pgame) [S : short x] : fintype (x.left_moves) :=
@@ -69,7 +69,7 @@ Extracting the `fintype` instance for the indexing type for Right's moves in a s
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
 def fintype_right {α β : Type u} {L : α → pgame.{u}} {R : β → pgame.{u}} [S : short ⟨α, β, L, R⟩] :
- fintype β :=
+  fintype β :=
 by { casesI S with _ _ _ _ _ _ _ F, exact F }
 local attribute [instance] fintype_right
 instance fintype_right_moves (x : pgame) [S : short x] : fintype (x.right_moves) :=
@@ -99,17 +99,17 @@ local attribute [instance] move_right_short'
 theorem short_birthday : ∀ (x : pgame.{u}) [short x], x.birthday < ordinal.omega
 | ⟨xl, xr, xL, xR⟩ hs :=
 begin
- haveI := hs,
- unfreezingI { rcases hs with ⟨sL, sR⟩ },
- rw [birthday]; rw [ max_lt_iff],
- split, all_goals
- { rw ←cardinal.ord_aleph_0,
- refine cardinal.lsub_lt_ord_of_is_regular.{u u} cardinal.is_regular_aleph_0
- (cardinal.lt_aleph_0_of_finite _) (λ i, _),
- rw cardinal.ord_aleph_0,
- apply short_birthday _ },
- { exact move_left_short' xL xR i },
- { exact move_right_short' xL xR i }
+  haveI := hs,
+  unfreezingI { rcases hs with ⟨sL, sR⟩ },
+  rw [birthday, max_lt_iff],
+  split, all_goals
+  { rw ←cardinal.ord_aleph_0,
+    refine cardinal.lsub_lt_ord_of_is_regular.{u u} cardinal.is_regular_aleph_0
+      (cardinal.lt_aleph_0_of_finite _) (λ i, _),
+    rw cardinal.ord_aleph_0,
+    apply short_birthday _ },
+  { exact move_left_short' xL xR i },
+  { exact move_right_short' xL xR i }
 end
 
 /-- This leads to infinite loops if made into an instance. -/
@@ -131,28 +131,28 @@ attribute [class] list_short
 attribute [instance] list_short.nil list_short.cons
 
 instance list_short_nth_le : Π (L : list pgame.{u}) [list_short L] (i : fin (list.length L)),
- short (list.nth_le L i i.is_lt)
+  short (list.nth_le L i i.is_lt)
 | [] _ n := begin exfalso, rcases n with ⟨_, ⟨⟩⟩, end
 | (hd :: tl) (@list_short.cons _ S _ _) ⟨0, _⟩ := S
 | (hd :: tl) (@list_short.cons _ _ _ S) ⟨n+1, h⟩ :=
- @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
+  @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
 
 instance short_of_lists : Π (L R : list pgame) [list_short L] [list_short R],
- short (pgame.of_lists L R)
+  short (pgame.of_lists L R)
 | L R _ _ := by { resetI, apply short.mk,
- { intros, apply_instance },
- { intros, apply pgame.list_short_nth_le /- where does the subtype.val come from? -/ } }
+  { intros, apply_instance },
+  { intros, apply pgame.list_short_nth_le /- where does the subtype.val come from? -/ } }
 
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 def short_of_relabelling : Π {x y : pgame.{u}} (R : relabelling x y) (S : short x), short y
 | x y ⟨L, R, rL, rR⟩ S :=
 begin
- resetI,
- haveI := fintype.of_equiv _ L,
- haveI := fintype.of_equiv _ R,
- exact short.mk'
- (λ i, by { rw ←(L.right_inv i), apply short_of_relabelling (rL (L.symm i)) infer_instance, })
- (λ j, by simpa using short_of_relabelling (rR (R.symm j)) infer_instance)
+  resetI,
+  haveI := fintype.of_equiv _ L,
+  haveI := fintype.of_equiv _ R,
+  exact short.mk'
+    (λ i, by { rw ←(L.right_inv i), apply short_of_relabelling (rL (L.symm i)) infer_instance, })
+    (λ j, by simpa using short_of_relabelling (rR (R.symm j)) infer_instance)
 end
 
 instance short_neg : Π (x : pgame.{u}) [short x], short (-x)
@@ -163,11 +163,11 @@ using_well_founded { dec_tac := pgame_wf_tac }
 instance short_add : Π (x y : pgame.{u}) [short x] [short y], short (x + y)
 | (mk xl xr xL xR) (mk yl yr yL yR) _ _ :=
 begin
- resetI,
- apply short.mk, all_goals
- { rintro ⟨i⟩,
- { apply short_add },
- { change short (mk xl xr xL xR + _), apply short_add } }
+  resetI,
+  apply short.mk, all_goals
+  { rintro ⟨i⟩,
+    { apply short_add },
+    { change short (mk xl xr xL xR + _), apply short_add } }
 end
 using_well_founded { dec_tac := pgame_wf_tac }
 
@@ -186,27 +186,27 @@ We build `decidable (x ≤ y)` and `decidable (x ⧏ y)` in a simultaneous induc
 Instances for the two projections separately are provided below.
 -/
 def le_lf_decidable : Π (x y : pgame.{u}) [short x] [short y],
- decidable (x ≤ y) × decidable (x ⧏ y)
+  decidable (x ≤ y) × decidable (x ⧏ y)
 | (mk xl xr xL xR) (mk yl yr yL yR) shortx shorty :=
 begin
- resetI,
- split,
- { refine @decidable_of_iff' _ _ mk_le_mk (id _),
- apply @and.decidable _ _ _ _,
- { apply @fintype.decidable_forall_fintype xl _ _ (by apply_instance),
- intro i,
- apply (@le_lf_decidable _ _ _ _).2; apply_instance, },
- { apply @fintype.decidable_forall_fintype yr _ _ (by apply_instance),
- intro i,
- apply (@le_lf_decidable _ _ _ _).2; apply_instance, }, },
- { refine @decidable_of_iff' _ _ mk_lf_mk (id _),
- apply @or.decidable _ _ _ _,
- { apply @fintype.decidable_exists_fintype yl _ _ (by apply_instance),
- intro i,
- apply (@le_lf_decidable _ _ _ _).1; apply_instance, },
- { apply @fintype.decidable_exists_fintype xr _ _ (by apply_instance),
- intro i,
- apply (@le_lf_decidable _ _ _ _).1; apply_instance, }, },
+  resetI,
+  split,
+  { refine @decidable_of_iff' _ _ mk_le_mk (id _),
+    apply @and.decidable _ _ _ _,
+    { apply @fintype.decidable_forall_fintype xl _ _ (by apply_instance),
+      intro i,
+      apply (@le_lf_decidable _ _ _ _).2; apply_instance, },
+    { apply @fintype.decidable_forall_fintype yr _ _ (by apply_instance),
+      intro i,
+      apply (@le_lf_decidable _ _ _ _).2; apply_instance, }, },
+  { refine @decidable_of_iff' _ _ mk_lf_mk (id _),
+    apply @or.decidable _ _ _ _,
+    { apply @fintype.decidable_exists_fintype yl _ _ (by apply_instance),
+      intro i,
+      apply (@le_lf_decidable _ _ _ _).1; apply_instance, },
+    { apply @fintype.decidable_exists_fintype xr _ _ (by apply_instance),
+      intro i,
+      apply (@le_lf_decidable _ _ _ _).1; apply_instance, }, },
 end
 using_well_founded { dec_tac := pgame_wf_tac }
 
@@ -239,4 +239,3 @@ example : decidable ((1 : pgame) ≤ 1) := by apply_instance
 -- example : (1 : pgame) ≤ 1 := dec_trivial
 
 end pgame
-

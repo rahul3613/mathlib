@@ -12,7 +12,7 @@ import data.W.basic
 > Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines polynomial functors and the W-type construction as a
-polynomial functor. (For the M-type construction, see
+polynomial functor.  (For the M-type construction, see
 pfunctor/M.lean.)
 -/
 
@@ -48,14 +48,14 @@ instance obj.inhabited [inhabited P.A] [inhabited α] : inhabited (P.obj α) := 
 instance : functor P.obj := {map := @map P}
 
 protected theorem map_eq {α β : Type*} (f : α → β) (a : P.A) (g : P.B a → α) :
- @functor.map P.obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
+  @functor.map P.obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
 rfl
 
 protected theorem id_map {α : Type*} : ∀ x : P.obj α, id <$> x = id x :=
 λ ⟨a, b⟩, rfl
 
 protected theorem comp_map {α β γ : Type*} (f : α → β) (g : β → γ) :
- ∀ x : P.obj α, (g ∘ f) <$> x = g <$> (f <$> x) :=
+  ∀ x : P.obj α, (g ∘ f) <$> x = g <$> (f <$> x) :=
 λ ⟨a, b⟩, rfl
 
 instance : is_lawful_functor P.obj :=
@@ -71,7 +71,7 @@ such that `P.B a` is empty to yield a finite tree -/
 attribute [nolint has_nonempty_instance] W
 variables {P}
 
-/-- root element of a W tree -/
+/-- root element  of a W tree -/
 def W.head : W P → P.A
 | ⟨a, f⟩ := a
 
@@ -109,20 +109,20 @@ variables {P}
 a default value -/
 def obj.iget [decidable_eq P.A] {α} [inhabited α] (x : P.obj α) (i : P.Idx) : α :=
 if h : i.1 = x.1
- then x.2 (cast (congr_arg _ h) i.2)
- else default
+  then x.2 (cast (congr_arg _ h) i.2)
+  else default
 
 @[simp]
 lemma fst_map {α β : Type u} (x : P.obj α) (f : α → β) :
- (f <$> x).1 = x.1 := by { cases x; refl }
+  (f <$> x).1 = x.1 := by { cases x; refl }
 
 @[simp]
 lemma iget_map [decidable_eq P.A] {α β : Type u} [inhabited α] [inhabited β]
- (x : P.obj α) (f : α → β) (i : P.Idx)
- (h : i.1 = x.1) :
- (f <$> x).iget i = f (x.iget i) :=
+  (x : P.obj α) (f : α → β) (i : P.Idx)
+  (h : i.1 = x.1) :
+  (f <$> x).iget i = f (x.iget i) :=
 by { simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true],
- cases x, refl }
+     cases x, refl }
 
 end pfunctor
 
@@ -135,11 +135,11 @@ namespace pfunctor
 /-- functor composition for polynomial functors -/
 def comp (P₂ P₁ : pfunctor.{u}) : pfunctor.{u} :=
 ⟨ Σ a₂ : P₂.1, P₂.2 a₂ → P₁.1,
- λ a₂a₁, Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u) ⟩
+  λ a₂a₁, Σ u : P₂.2 a₂a₁.1, P₁.2 (a₂a₁.2 u) ⟩
 
 /-- constructor for composition -/
 def comp.mk (P₂ P₁ : pfunctor.{u}) {α : Type} (x : P₂.obj (P₁.obj α)) : (comp P₂ P₁).obj α :=
-⟨ ⟨ x.1, sigma.fst ∘ x.2 ⟩, λ a₂a₁, (x.2 a₂a₁.1).2 a₂a₁.2 ⟩
+⟨ ⟨ x.1, sigma.fst ∘ x.2 ⟩, λ a₂a₁, (x.2 a₂a₁.1).2 a₂a₁.2  ⟩
 
 /-- destructor for composition -/
 def comp.get (P₂ P₁ : pfunctor.{u}) {α : Type} (x : (comp P₂ P₁).obj α) : P₂.obj (P₁.obj α) :=
@@ -156,53 +156,52 @@ variables {P : pfunctor.{u}}
 open functor
 
 theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.obj α) :
- liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) :=
+  liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) :=
 begin
- split,
- { rintros ⟨y, hy⟩, cases h : y with a f,
- refine ⟨a, λ i, (f i).val, _, λ i, (f i).property⟩,
- rw [←hy]; rw [ h]; rw [ pfunctor.map_eq] },
- rintros ⟨a, f, xeq, pf⟩,
- use ⟨a, λ i, ⟨f i, pf i⟩⟩,
- rw [xeq], reflexivity
+  split,
+  { rintros ⟨y, hy⟩, cases h : y with a f,
+    refine ⟨a, λ i, (f i).val, _, λ i, (f i).property⟩,
+    rw [←hy, h, pfunctor.map_eq] },
+  rintros ⟨a, f, xeq, pf⟩,
+  use ⟨a, λ i, ⟨f i, pf i⟩⟩,
+  rw [xeq], reflexivity
 end
 
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
- @liftp.{u} P.obj _ α p ⟨a,f⟩ ↔ ∀ i, p (f i) :=
+  @liftp.{u} P.obj _ α p ⟨a,f⟩ ↔ ∀ i, p (f i) :=
 begin
- simp only [liftp_iff, sigma.mk.inj_iff]; split; intro,
- { casesm* [Exists _, _ ∧ _], subst_vars, assumption },
- repeat { constructor <|> assumption }
+  simp only [liftp_iff, sigma.mk.inj_iff]; split; intro,
+  { casesm* [Exists _, _ ∧ _], subst_vars, assumption },
+  repeat { constructor <|> assumption }
 end
 
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.obj α) :
- liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) :=
+  liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) :=
 begin
- split,
- { rintros ⟨u, xeq, yeq⟩, cases h : u with a f,
- use [a, λ i, (f i).val.fst, λ i, (f i).val.snd],
- split, { rw [←xeq]; rw [ h], refl },
- split, { rw [←yeq]; rw [ h], refl },
- intro i, exact (f i).property },
- rintros ⟨a, f₀, f₁, xeq, yeq, h⟩,
- use ⟨a, λ i, ⟨(f₀ i, f₁ i), h i⟩⟩,
- split,
- { rw [xeq], refl },
- rw [yeq], refl
+  split,
+  { rintros ⟨u, xeq, yeq⟩, cases h : u with a f,
+    use [a, λ i, (f i).val.fst, λ i, (f i).val.snd],
+    split, { rw [←xeq, h], refl },
+    split, { rw [←yeq, h], refl },
+    intro i, exact (f i).property },
+  rintros ⟨a, f₀, f₁, xeq, yeq, h⟩,
+  use ⟨a, λ i, ⟨(f₀ i, f₁ i), h i⟩⟩,
+  split,
+  { rw [xeq], refl },
+  rw [yeq], refl
 end
 
 open set
 
 theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) :
- @supp.{u} P.obj _ α (⟨a,f⟩ : P.obj α) = f '' univ :=
+  @supp.{u} P.obj _ α  (⟨a,f⟩ : P.obj α) = f '' univ :=
 begin
- ext, simp only [supp, image_univ, mem_range, mem_set_of_eq],
- split; intro h,
- { apply @h (λ x, ∃ (y : P.B a), f y = x),
- rw liftp_iff', intro, refine ⟨_,rfl⟩ },
- { simp only [liftp_iff'], cases h, subst x,
- tauto }
+  ext, simp only [supp, image_univ, mem_range, mem_set_of_eq],
+  split; intro h,
+  { apply @h (λ x, ∃ (y : P.B a), f y = x),
+    rw liftp_iff', intro, refine ⟨_,rfl⟩ },
+  { simp only [liftp_iff'], cases h, subst x,
+    tauto }
 end
 
 end pfunctor
-

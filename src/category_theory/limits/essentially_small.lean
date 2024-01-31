@@ -26,20 +26,19 @@ namespace category_theory.limits
 variables (J : Type u₂) [category.{v₂} J] (C : Type u₁) [category.{v₁} C]
 
 lemma has_limits_of_shape_of_essentially_small [essentially_small.{w₁} J]
- [has_limits_of_size.{w₁ w₁} C] : has_limits_of_shape J C :=
+  [has_limits_of_size.{w₁ w₁} C] : has_limits_of_shape J C :=
 has_limits_of_shape_of_equivalence $ equivalence.symm $ equiv_small_model.{w₁} J
 
 lemma has_colimits_of_shape_of_essentially_small [essentially_small.{w₁} J]
- [has_colimits_of_size.{w₁ w₁} C] : has_colimits_of_shape J C :=
+  [has_colimits_of_size.{w₁ w₁} C] : has_colimits_of_shape J C :=
 has_colimits_of_shape_of_equivalence $ equivalence.symm $ equiv_small_model.{w₁} J
 
 lemma has_products_of_shape_of_small (β : Type w₂) [small.{w₁} β] [has_products.{w₁} C] :
- has_products_of_shape β C :=
+  has_products_of_shape β C :=
 has_limits_of_shape_of_equivalence $ discrete.equivalence $ equiv.symm $ equiv_shrink β
 
 lemma has_coproducts_of_shape_of_small (β : Type w₂) [small.{w₁} β] [has_coproducts.{w₁} C] :
- has_coproducts_of_shape β C :=
+  has_coproducts_of_shape β C :=
 has_colimits_of_shape_of_equivalence $ discrete.equivalence $ equiv.symm $ equiv_shrink β
 
 end category_theory.limits
-

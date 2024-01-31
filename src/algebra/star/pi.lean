@@ -17,7 +17,7 @@ complex conjugation of vectors.
 -/
 
 universes u v w
-variable {I : Type u} -- The indexing type
+variable {I : Type u}     -- The indexing type
 variable {f : I → Type v} -- The family of types already equipped with instances
 
 namespace pi
@@ -30,7 +30,7 @@ instance [Π i, has_star (f i)] : has_star (Π i, f i) :=
 lemma star_def [Π i, has_star (f i)] (x : Π i, f i) : star x = λ i, star (x i) := rfl
 
 instance [Π i, has_star (f i)] [∀ i, has_trivial_star (f i)] : has_trivial_star (Π i, f i) :=
-{ star_trivial := λ _, funext $ λ _, star_trivial _ }
+{ star_trivial  := λ _, funext $ λ _, star_trivial _ }
 
 instance [Π i, has_involutive_star (f i)] : has_involutive_star (Π i, f i) :=
 { star_involutive := λ _, funext $ λ _, star_star _ }
@@ -45,13 +45,13 @@ instance [Π i, non_unital_semiring (f i)] [Π i, star_ring (f i)] : star_ring (
 { ..pi.star_add_monoid, ..(pi.star_semigroup : star_semigroup (Π i, f i)) }
 
 instance {R : Type w}
- [Π i, has_smul R (f i)] [has_star R] [Π i, has_star (f i)] [Π i, star_module R (f i)] :
- star_module R (Π i, f i) :=
+  [Π i, has_smul R (f i)] [has_star R] [Π i, has_star (f i)] [Π i, star_module R (f i)] :
+  star_module R (Π i, f i) :=
 { star_smul := λ r x, funext $ λ i, star_smul r (x i) }
 
 lemma single_star [Π i, add_monoid (f i)] [Π i, star_add_monoid (f i)] [decidable_eq I]
- (i : I) (a : f i) :
- pi.single i (star a) = star (pi.single i a) :=
+  (i : I) (a : f i) :
+  pi.single i (star a) = star (pi.single i a) :=
 single_op (λ i, @star (f i) _) (λ i, star_zero _) i a
 
 end pi
@@ -59,13 +59,12 @@ end pi
 namespace function
 
 lemma update_star [Π i, has_star (f i)] [decidable_eq I]
- (h : Π (i : I), f i) (i : I) (a : f i) :
- function.update (star h) i (star a) = star (function.update h i a) :=
+  (h : Π (i : I), f i) (i : I) (a : f i) :
+  function.update (star h) i (star a) = star (function.update h i a) :=
 funext $ λ j, (apply_update (λ i, star) h i a j).symm
 
 lemma star_sum_elim {I J α : Type*} (x : I → α) (y : J → α) [has_star α] :
- star (sum.elim x y) = sum.elim (star x) (star y) :=
+  star (sum.elim x y) = sum.elim (star x) (star y) :=
 by { ext x, cases x; simp }
 
 end function
-

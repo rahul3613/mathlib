@@ -48,8 +48,8 @@ definition: (k, default) ∈ m
 
 protected def mem (k : α) (m : rbmap α β lt) : Prop :=
 match m.val with
-| rbnode.leaf := false
-| rbnode.red_node _ e _ := rbtree.mem (k, e.2) m
+| rbnode.leaf             := false
+| rbnode.red_node _ e _   := rbtree.mem (k, e.2) m
 | rbnode.black_node _ e _ := rbtree.mem (k, e.2) m
 end
 
@@ -69,13 +69,13 @@ def insert (m : rbmap α β lt) (k : α) (v : β) : rbmap α β lt :=
 
 def find_entry (m : rbmap α β lt) (k : α) : option (α × β) :=
 match m.val with
-| rbnode.leaf := none
-| rbnode.red_node _ e _ := @rbtree.find _ _ rbmap_lt_dec m (k, e.2)
+| rbnode.leaf             := none
+| rbnode.red_node _ e _   := @rbtree.find _ _ rbmap_lt_dec m (k, e.2)
 | rbnode.black_node _ e _ := @rbtree.find _ _ rbmap_lt_dec m (k, e.2)
 end
 
 def to_value : option (α × β) → option β
-| none := none
+| none     := none
 | (some e) := some e.2
 
 def find (m : rbmap α β lt) (k : α) : option β :=
@@ -85,12 +85,11 @@ def contains (m : rbmap α β lt) (k : α) : bool :=
 (find_entry m k).is_some
 
 def from_list (l : list (α × β)) (lt : α → α → Prop . rbtree.default_lt) [decidable_rel lt] :
- rbmap α β lt :=
-l.foldl (λ m p, insert m p.1 p.2) (mk_rbmap α β lt)
+  rbmap α β lt :=
+l.foldl (λ m p, insert m p.1 p.2)  (mk_rbmap α β lt)
 
 end rbmap
 
 def rbmap_of {α : Type u} {β : Type v} (l : list (α × β)) (lt : α → α → Prop . rbtree.default_lt)
- [decidable_rel lt] : rbmap α β lt :=
+  [decidable_rel lt] : rbmap α β lt :=
 rbmap.from_list l lt
-

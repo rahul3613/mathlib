@@ -47,25 +47,24 @@ same direction as `G`. -/
 Sheaf_to_presheaf J A ⋙ Lan G.op ⋙ presheaf_to_Sheaf K A
 
 instance (G : C ⥤ D) [representably_flat G] :
- preserves_finite_limits (sites.pushforward A J K G) :=
+  preserves_finite_limits (sites.pushforward A J K G) :=
 begin
- apply_with comp_preserves_finite_limits { instances := ff },
- { apply_instance },
- apply_with comp_preserves_finite_limits { instances := ff },
- { apply category_theory.Lan_preserves_finite_limits_of_flat },
- { apply category_theory.presheaf_to_Sheaf.limits.preserves_finite_limits.{u₁ v₁ v₁},
- apply_instance }
+  apply_with comp_preserves_finite_limits { instances := ff },
+  { apply_instance },
+  apply_with comp_preserves_finite_limits { instances := ff },
+  { apply category_theory.Lan_preserves_finite_limits_of_flat },
+  { apply category_theory.presheaf_to_Sheaf.limits.preserves_finite_limits.{u₁ v₁ v₁},
+    apply_instance }
 end
 
 /-- The pushforward functor is left adjoint to the pullback functor. -/
 def sites.pullback_pushforward_adjunction {G : C ⥤ D} (hG₁ : compatible_preserving K G)
- (hG₂ : cover_preserving J K G) : sites.pushforward A J K G ⊣ sites.pullback A hG₁ hG₂ :=
+  (hG₂ : cover_preserving J K G) : sites.pushforward A J K G ⊣ sites.pullback A hG₁ hG₂ :=
 ((Lan.adjunction A G.op).comp (sheafification_adjunction K A)).restrict_fully_faithful
- (Sheaf_to_presheaf J A) (𝟭 _)
- (nat_iso.of_components (λ _, iso.refl _)
- (λ _ _ _,(category.comp_id _).trans (category.id_comp _).symm))
- (nat_iso.of_components (λ _, iso.refl _)
- (λ _ _ _,(category.comp_id _).trans (category.id_comp _).symm))
+  (Sheaf_to_presheaf J A) (𝟭 _)
+  (nat_iso.of_components (λ _, iso.refl _)
+    (λ _ _ _,(category.comp_id _).trans (category.id_comp _).symm))
+  (nat_iso.of_components (λ _, iso.refl _)
+    (λ _ _ _,(category.comp_id _).trans (category.id_comp _).symm))
 
 end category_theory
-

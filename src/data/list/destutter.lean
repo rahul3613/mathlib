@@ -35,17 +35,17 @@ namespace list
 @[simp] lemma destutter'_nil : destutter' R a [] = [a] := rfl
 
 lemma destutter'_cons :
- (b :: l).destutter' R a = if R a b then a :: destutter' R b l else destutter' R a l := rfl
+  (b :: l).destutter' R a = if R a b then a :: destutter' R b l else destutter' R a l := rfl
 
 variables {R}
 
 @[simp] lemma destutter'_cons_pos (h : R b a) :
- (a :: l).destutter' R b = b :: l.destutter' R a :=
-by rw [destutter']; rw [ if_pos h]
+  (a :: l).destutter' R b = b :: l.destutter' R a :=
+by rw [destutter', if_pos h]
 
 @[simp] lemma destutter'_cons_neg (h : ¬ R b a) :
- (a :: l).destutter' R b = l.destutter' R b :=
-by rw [destutter']; rw [ if_neg h]
+  (a :: l).destutter' R b = l.destutter' R b :=
+by rw [destutter', if_neg h]
 
 variables (R)
 
@@ -54,55 +54,55 @@ by split_ifs; simp! [h]
 
 lemma destutter'_sublist (a) : l.destutter' R a <+ a :: l :=
 begin
- induction l with b l hl generalizing a,
- { simp },
- rw destutter',
- split_ifs,
- { exact sublist.cons2 _ _ _ (hl b) },
- { exact (hl a).trans ((l.sublist_cons b).cons_cons a) }
+  induction l with b l hl generalizing a,
+  { simp },
+  rw destutter',
+  split_ifs,
+  { exact sublist.cons2 _ _ _ (hl b) },
+  { exact (hl a).trans ((l.sublist_cons b).cons_cons a) }
 end
 
 lemma mem_destutter' (a) : a ∈ l.destutter' R a :=
 begin
- induction l with b l hl,
- { simp },
- rw destutter',
- split_ifs,
- { simp },
- { assumption }
+  induction l with b l hl,
+  { simp },
+  rw destutter',
+  split_ifs,
+  { simp },
+  { assumption }
 end
 
 lemma destutter'_is_chain : ∀ l : list α, ∀ {a b}, R a b → (l.destutter' R b).chain R a
 | [] a b h := chain_singleton.mpr h
 | (c :: l) a b h :=
 begin
- rw destutter',
- split_ifs with hbc,
- { rw chain_cons,
- exact ⟨h, destutter'_is_chain l hbc⟩ },
- { exact destutter'_is_chain l h },
+  rw destutter',
+  split_ifs with hbc,
+  { rw chain_cons,
+    exact ⟨h, destutter'_is_chain l hbc⟩ },
+  { exact destutter'_is_chain l h },
 end
 
 lemma destutter'_is_chain' (a) : (l.destutter' R a).chain' R :=
 begin
- induction l with b l hl generalizing a,
- { simp },
- rw destutter',
- split_ifs,
- { exact destutter'_is_chain R l h },
- { exact hl a },
+  induction l with b l hl generalizing a,
+  { simp },
+  rw destutter',
+  split_ifs,
+  { exact destutter'_is_chain R l h },
+  { exact hl a },
 end
 
 lemma destutter'_of_chain (h : l.chain R a) : l.destutter' R a = a :: l :=
 begin
- induction l with b l hb generalizing a,
- { simp },
- obtain ⟨h, hc⟩ := chain_cons.mp h,
- rw [l.destutter'_cons_pos h]; rw [ hb hc]
+  induction l with b l hb generalizing a,
+  { simp },
+  obtain ⟨h, hc⟩ := chain_cons.mp h,
+  rw [l.destutter'_cons_pos h, hb hc]
 end
 
 @[simp] lemma destutter'_eq_self_iff (a) : l.destutter' R a = a :: l ↔ l.chain R a :=
-⟨λ h, by { rw [←chain']; rw [ ←h], exact l.destutter'_is_chain' R a }, destutter'_of_chain _ _⟩
+⟨λ h, by { rw [←chain', ←h], exact l.destutter'_is_chain' R a }, destutter'_of_chain _ _⟩
 
 lemma destutter'_ne_nil : l.destutter' R a ≠ [] :=
 ne_nil_of_mem $ l.mem_destutter' R a
@@ -112,7 +112,7 @@ ne_nil_of_mem $ l.mem_destutter' R a
 lemma destutter_cons' : (a :: l).destutter R = destutter' R a l := rfl
 
 lemma destutter_cons_cons : (a :: b :: l).destutter R =
- if R a b then a :: destutter' R b l else destutter' R a l := rfl
+  if R a b then a :: destutter' R b l else destutter' R a l := rfl
 
 @[simp] lemma destutter_singleton : destutter R [a] = [a] := rfl
 
@@ -143,4 +143,3 @@ destutter_of_chain' R _ $ l.destutter_is_chain' R
 | (a :: l) := ⟨λ h, absurd h $ l.destutter'_ne_nil R, λ h, match h with end⟩
 
 end list
-

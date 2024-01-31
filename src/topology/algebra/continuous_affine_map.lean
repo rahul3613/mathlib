@@ -33,9 +33,9 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 
 /-- A continuous map of affine spaces. -/
 structure continuous_affine_map (R : Type*) {V W : Type*} (P Q : Type*) [ring R]
- [add_comm_group V] [module R V] [topological_space P] [add_torsor V P]
- [add_comm_group W] [module R W] [topological_space Q] [add_torsor W Q]
- extends P →ᵃ[R] Q :=
+  [add_comm_group V] [module R V] [topological_space P] [add_torsor V P]
+  [add_comm_group W] [module R W] [topological_space Q] [add_torsor W Q]
+  extends P →ᵃ[R] Q :=
 (cont : continuous to_fun)
 
 notation P ` →A[`:25 R `] ` Q := continuous_affine_map R P Q
@@ -56,8 +56,8 @@ by { cases f, cases g, congr' }
 
 instance : continuous_map_class (P →A[R] Q) P Q :=
 { coe := λ f, f.to_affine_map,
- coe_injective' := λ f g h, to_affine_map_injective $ fun_like.coe_injective h,
- map_continuous := cont }
+  coe_injective' := λ f g h, to_affine_map_injective $ fun_like.coe_injective h,
+  map_continuous := cont }
 
 /-- Helper instance for when there's too many metavariables to apply
 `fun_like.has_coe_to_fun` directly. -/
@@ -85,38 +85,38 @@ instance : has_coe (P →A[R] Q) (C(P, Q)) :=
 ⟨to_continuous_map⟩
 
 @[simp] lemma to_affine_map_eq_coe (f : P →A[R] Q) :
- f.to_affine_map = ↑f :=
+  f.to_affine_map = ↑f :=
 rfl
 
 @[simp] lemma to_continuous_map_coe (f : P →A[R] Q) : f.to_continuous_map = ↑f :=
 rfl
 
 @[simp, norm_cast] lemma coe_to_affine_map (f : P →A[R] Q) :
- ((f : P →ᵃ[R] Q) : P → Q) = f :=
+  ((f : P →ᵃ[R] Q) : P → Q) = f :=
 rfl
 
 @[simp, norm_cast] lemma coe_to_continuous_map (f : P →A[R] Q) :
- ((f : C(P, Q)) : P → Q) = f :=
+  ((f : C(P, Q)) : P → Q) = f :=
 rfl
 
 lemma to_continuous_map_injective {f g : P →A[R] Q}
- (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
+  (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
 by { ext a, exact continuous_map.congr_fun h a, }
 
 @[norm_cast] lemma coe_affine_map_mk (f : P →ᵃ[R] Q) (h) :
- ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
+  ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
 rfl
 
 @[norm_cast] lemma coe_continuous_map_mk (f : P →ᵃ[R] Q) (h) :
- ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
+  ((⟨f, h⟩ : P →A[R] Q) : C(P, Q)) = ⟨f, h⟩ :=
 rfl
 
 @[simp] lemma coe_mk (f : P →ᵃ[R] Q) (h) :
- ((⟨f, h⟩ : P →A[R] Q) : P → Q) = f :=
+  ((⟨f, h⟩ : P →A[R] Q) : P → Q) = f :=
 rfl
 
 @[simp] lemma mk_coe (f : P →A[R] Q) (h) :
- (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f :=
+  (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q) = f :=
 by { ext, refl, }
 
 @[continuity]
@@ -127,8 +127,8 @@ variables (R P)
 /-- The constant map is a continuous affine map. -/
 def const (q : Q) : P →A[R] Q :=
 { to_fun := affine_map.const R P q,
- cont := continuous_const,
- .. affine_map.const R P q, }
+  cont   := continuous_const,
+  .. affine_map.const R P q, }
 
 @[simp] lemma coe_const (q : Q) : (const R P q : P → Q) = function.const P q := rfl
 
@@ -143,14 +143,14 @@ include W₂
 /-- The composition of morphisms is a morphism. -/
 def comp (f : Q →A[R] Q₂) (g : P →A[R] Q) : P →A[R] Q₂ :=
 { cont := f.cont.comp g.cont,
- .. (f : Q →ᵃ[R] Q₂).comp (g : P →ᵃ[R] Q), }
+  .. (f : Q →ᵃ[R] Q₂).comp (g : P →ᵃ[R] Q), }
 
 @[simp, norm_cast] lemma coe_comp (f : Q →A[R] Q₂) (g : P →A[R] Q) :
- (f.comp g : P → Q₂) = (f : Q → Q₂) ∘ (g : P → Q) :=
+  (f.comp g : P → Q₂) = (f : Q → Q₂) ∘ (g : P → Q) :=
 rfl
 
 lemma comp_apply (f : Q →A[R] Q₂) (g : P →A[R] Q) (x : P) :
- f.comp g x = f (g x) :=
+  f.comp g x = f (g x) :=
 rfl
 
 omit W₂
@@ -210,16 +210,16 @@ lemma neg_apply (f : P →A[R] W) (x : P) : (-f) x = -(f x) := rfl
 
 instance : add_comm_group (P →A[R] W) :=
 coe_injective.add_comm_group _ coe_zero coe_add coe_neg coe_sub
- (λ _ _, coe_smul _ _) (λ _ _, coe_smul _ _)
+  (λ _ _, coe_smul _ _) (λ _ _, coe_smul _ _)
 
 instance [monoid S] [distrib_mul_action S W] [smul_comm_class R S W]
- [has_continuous_const_smul S W] :
- distrib_mul_action S (P →A[R] W) :=
+  [has_continuous_const_smul S W] :
+  distrib_mul_action S (P →A[R] W) :=
 function.injective.distrib_mul_action ⟨λ f, f.to_affine_map.to_fun, rfl, coe_add⟩
- coe_injective coe_smul
+  coe_injective coe_smul
 
 instance [semiring S] [module S W] [smul_comm_class R S W] [has_continuous_const_smul S W] :
- module S (P →A[R] W) :=
+  module S (P →A[R] W) :=
 function.injective.module S ⟨λ f, f.to_affine_map.to_fun, rfl, coe_add⟩ coe_injective coe_smul
 
 end module_valued_maps
@@ -234,18 +234,17 @@ variables [add_comm_group W] [module R W] [topological_space W]
 
 /-- A continuous linear map can be regarded as a continuous affine map. -/
 def to_continuous_affine_map (f : V →L[R] W) : V →A[R] W :=
-{ to_fun := f,
- linear := f,
- map_vadd' := by simp,
- cont := f.cont, }
+{ to_fun    := f,
+  linear    := f,
+  map_vadd' := by simp,
+  cont      := f.cont, }
 
 @[simp] lemma coe_to_continuous_affine_map (f : V →L[R] W) :
- ⇑f.to_continuous_affine_map = f :=
+  ⇑f.to_continuous_affine_map = f :=
 rfl
 
 @[simp] lemma to_continuous_affine_map_map_zero (f : V →L[R] W) :
- f.to_continuous_affine_map 0 = 0 :=
+  f.to_continuous_affine_map 0 = 0 :=
 by simp
 
 end continuous_linear_map
-

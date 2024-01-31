@@ -31,12 +31,12 @@ namespace category_theory
 @[simps]
 def nerve (C : Type u) [category.{v} C] : sSet.{max u v} :=
 { obj := λ Δ, (simplex_category.to_Cat.obj Δ.unop) ⥤ C,
- map := λ Δ₁ Δ₂ f x, simplex_category.to_Cat.map f.unop ⋙ x,
- map_id' := λ Δ, begin
- rw [unop_id]; rw [ functor.map_id],
- ext x,
- apply functor.id_comp,
- end, }
+  map := λ Δ₁ Δ₂ f x, simplex_category.to_Cat.map f.unop ⋙ x,
+  map_id' := λ Δ, begin
+    rw [unop_id, functor.map_id],
+    ext x,
+    apply functor.id_comp,
+  end, }
 
 instance {C : Type*} [category C] {Δ : simplex_categoryᵒᵖ} : category ((nerve C).obj Δ) :=
 (infer_instance : category ((simplex_category.to_Cat.obj Δ.unop) ⥤ C))
@@ -45,12 +45,11 @@ instance {C : Type*} [category C] {Δ : simplex_categoryᵒᵖ} : category ((ner
 @[simps]
 def nerve_functor : Cat ⥤ sSet :=
 { obj := λ C, nerve C,
- map := λ C C' F,
- { app := λ Δ x, x ⋙ F, },
- map_id' := λ C, begin
- ext Δ x,
- apply functor.comp_id,
- end, }
+  map := λ C C' F,
+  { app := λ Δ x, x ⋙ F, },
+  map_id' := λ C, begin
+    ext Δ x,
+    apply functor.comp_id,
+  end, }
 
 end category_theory
-

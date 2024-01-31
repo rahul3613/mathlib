@@ -23,12 +23,12 @@ namespace clause
 /-- holds v c := clause c holds under valuation v -/
 def holds (v : nat → int) : clause → Prop
 | (eqs,les) :=
- ( (∀ t : term, t ∈ eqs → 0 = term.val v t)
- ∧ (∀ t : term, t ∈ les → 0 ≤ term.val v t) )
+  ( (∀ t : term, t ∈ eqs → 0 = term.val v t)
+    ∧ (∀ t : term, t ∈ les → 0 ≤ term.val v t) )
 
 /-- sat c := there exists a valuation v under which c holds -/
 def sat (c : clause) : Prop :=
- ∃ v : nat → int, holds v c
+  ∃ v : nat → int, holds v c
 
 /-- unsat c := there is no valuation v under which c holds -/
 def unsat (c : clause) : Prop := ¬ c.sat
@@ -40,12 +40,12 @@ def append (c1 c2 : clause) : clause :=
 lemma holds_append {v : nat → int} {c1 c2 : clause} :
 holds v c1 → holds v c2 → holds v (append c1 c2) :=
 begin
- intros h1 h2,
- cases c1 with eqs1 les1,
- cases c2 with eqs2 les2,
- cases h1, cases h2,
- constructor; rw list.forall_mem_append;
- constructor; assumption,
+  intros h1 h2,
+  cases c1 with eqs1 les1,
+  cases c2 with eqs2 les2,
+  cases h1, cases h2,
+  constructor; rw list.forall_mem_append;
+  constructor; assumption,
 end
 
 end clause
@@ -61,13 +61,12 @@ lemma clauses.unsat_nil : clauses.unsat [] :=
 begin intro h1, rcases h1 with ⟨c,h1,h2⟩, cases h1 end
 
 lemma clauses.unsat_cons (c : clause) (cs : list clause) :
- clause.unsat c → clauses.unsat cs →
- clauses.unsat (c::cs) | h1 h2 h3 :=
+  clause.unsat c → clauses.unsat cs →
+  clauses.unsat (c::cs) | h1 h2 h3 :=
 begin
- unfold clauses.sat at h3,
- rw list.exists_mem_cons_iff at h3,
- cases h3; contradiction,
+  unfold clauses.sat at h3,
+  rw list.exists_mem_cons_iff at h3,
+  cases h3; contradiction,
 end
 
 end omega
-

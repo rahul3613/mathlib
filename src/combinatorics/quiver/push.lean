@@ -31,7 +31,7 @@ instance [h : nonempty W] : nonempty (push σ) := h
 /-- The quiver structure obtained by pushing arrows of `V` along the map `σ : V → W` -/
 @[nolint has_nonempty_instance]
 inductive push_quiver {V : Type u} [quiver.{v} V] {W : Type u₂} (σ : V → W) :
- W → W → Type (max u u₂ v)
+  W → W → Type (max u u₂ v)
 | arrow {X Y : V} (f : X ⟶ Y) : push_quiver (σ X) (σ Y)
 
 instance : quiver (push σ) := ⟨push_quiver σ⟩
@@ -41,7 +41,7 @@ namespace push
 /-- The prefunctor induced by pushing arrows via `σ` -/
 def of : V ⥤q push σ :=
 { obj := σ,
- map := λ X Y f, push_quiver.arrow f }
+  map := λ X Y f, push_quiver.arrow f }
 
 @[simp] lemma of_obj : (of σ).obj = σ := rfl
 
@@ -53,34 +53,33 @@ a prefunctor `W ⥤q W'` if `τ` and `σ` factorize `φ` at the level of objects
 the pushforward quiver structure `push σ`. -/
 def lift : push σ ⥤q W' :=
 { obj := τ,
- map := @push_quiver.rec V _ W σ
- (λ X Y f, τ X ⟶ τ Y)
- (λ X Y f, by { rw [←h X]; rw [ ←h Y], exact φ.map f, }) }
+  map := @push_quiver.rec V _ W σ
+    (λ X Y f, τ X ⟶ τ Y)
+    (λ X Y f, by { rw [←h X, ←h Y], exact φ.map f, }) }
 
 lemma lift_obj : (lift σ φ τ h).obj = τ := rfl
 
 lemma lift_comp : of σ ⋙q lift σ φ τ h = φ :=
 begin
- fapply prefunctor.ext,
- { rintros, simp only [prefunctor.comp_obj], symmetry, exact h X, },
- { rintros _ _ f, simp only [prefunctor.comp_map],
- apply eq_of_heq,
- iterate 2 { apply (cast_heq _ _).trans },
- symmetry,
- iterate 2 { apply (eq_rec_heq _ _).trans },
- refl, },
+  fapply prefunctor.ext,
+  { rintros, simp only [prefunctor.comp_obj], symmetry, exact h X, },
+  { rintros _ _ f, simp only [prefunctor.comp_map],
+    apply eq_of_heq,
+    iterate 2 { apply (cast_heq _ _).trans },
+    symmetry,
+    iterate 2 { apply (eq_rec_heq _ _).trans },
+    refl, },
 end
 
 lemma lift_unique (Φ : push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : of σ ⋙q Φ = φ) :
- Φ = lift σ φ τ h :=
+  Φ = lift σ φ τ h :=
 begin
- dsimp only [of,lift],
- fapply prefunctor.ext,
- { rintros, simp_rw [←Φ₀], },
- { rintros _ _ ⟨⟩, subst_vars, simp only [prefunctor.comp_map, cast_eq], refl, }
+  dsimp only [of,lift],
+  fapply prefunctor.ext,
+  { rintros, simp_rw [←Φ₀], },
+  { rintros _ _ ⟨⟩, subst_vars, simp only [prefunctor.comp_map, cast_eq], refl, }
 end
 
 end push
 
 end quiver
-

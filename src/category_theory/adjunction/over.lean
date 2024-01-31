@@ -50,4 +50,3 @@ Note that the binary products assumption is necessary: the existence of a right 
 instance [has_binary_products C] : is_left_adjoint (over.forget X) := ⟨_, forget_adj_star X⟩
 
 end category_theory
-

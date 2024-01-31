@@ -14,7 +14,7 @@ import algebra.add_torsor
 In this file we introduce the following notation:
 
 * `affine_space V P` is an alternative notation for `add_torsor V P` introduced at the end of this
- file.
+  file.
 
 We tried to use an `abbreviation` instead of a `notation` but this led to hard-to-debug elaboration
 errors. So, we introduce a localized notation instead. When this notation is enabled with
@@ -35,10 +35,9 @@ files:
 
 Some key definitions are not yet present.
 
-* Affine frames. An affine frame might perhaps be represented as an `affine_equiv` to a `finsupp`
- (in the general case) or function type (in the finite-dimensional case) that gives the
- coordinates, with appropriate proofs of existence when `k` is a field.
+* Affine frames.  An affine frame might perhaps be represented as an `affine_equiv` to a `finsupp`
+  (in the general case) or function type (in the finite-dimensional case) that gives the
+  coordinates, with appropriate proofs of existence when `k` is a field.
  -/
 
 localized "notation (name := add_torsor) `affine_space` := add_torsor" in affine
-

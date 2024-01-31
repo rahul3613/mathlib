@@ -33,13 +33,13 @@ op ⁻¹' s
 iff.rfl
 
 @[simp] lemma op_mem_op {s : set α} {a : α} : op a ∈ s.op ↔ a ∈ s :=
-by rw [mem_op]; rw [ unop_op]
+by rw [mem_op, unop_op]
 
 @[simp] lemma mem_unop {s : set αᵒᵖ} {a : α} : a ∈ s.unop ↔ op a ∈ s :=
 iff.rfl
 
 @[simp] lemma unop_mem_unop {s : set αᵒᵖ} {a : αᵒᵖ} : unop a ∈ s.unop ↔ a ∈ s :=
-by rw [mem_unop]; rw [ op_unop]
+by rw [mem_unop, op_unop]
 
 @[simp] lemma op_unop (s : set α) : s.op.unop = s :=
 ext (by simp only [mem_unop, op_mem_op, iff_self, implies_true_iff])
@@ -68,4 +68,3 @@ by simp only [singleton_unop, opposite.unop_op]
 by simp only [singleton_op, opposite.op_unop]
 
 end set
-

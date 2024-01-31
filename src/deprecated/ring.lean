@@ -50,11 +50,11 @@ lemma id : is_semiring_hom (@id α) := by refine {..}; intros; refl
 
 /-- The composition of two semiring homomorphisms is a semiring homomorphism. -/
 lemma comp (hf : is_semiring_hom f) {γ} [semiring γ] {g : β → γ} (hg : is_semiring_hom g) :
- is_semiring_hom (g ∘ f) :=
+  is_semiring_hom (g ∘ f) :=
 { map_zero := by simpa [map_zero hf] using map_zero hg,
- map_one := by simpa [map_one hf] using map_one hg,
- map_add := λ x y, by simp [map_add hf, map_add hg],
- map_mul := λ x y, by simp [map_mul hf, map_mul hg] }
+  map_one := by simpa [map_one hf] using map_one hg,
+  map_add := λ x y, by simp [map_add hf, map_add hg],
+  map_mul := λ x y, by simp [map_mul hf, map_mul hg] }
 
 /-- A semiring homomorphism is an additive monoid homomorphism. -/
 lemma to_is_add_monoid_hom (hf : is_semiring_hom f) : is_add_monoid_hom f :=
@@ -84,12 +84,12 @@ variables {f : α → β} (hf : is_ring_hom f) {x y : α}
 /-- Ring homomorphisms map zero to zero. -/
 lemma map_zero (hf : is_ring_hom f) : f 0 = 0 :=
 calc f 0 = f (0 + 0) - f 0 : by rw [hf.map_add]; simp
- ... = 0 : by simp
+     ... = 0 : by simp
 
 /-- Ring homomorphisms preserve additive inverses. -/
 lemma map_neg (hf : is_ring_hom f) : f (-x) = -f x :=
 calc f (-x) = f (-x + x) - f x : by rw [hf.map_add]; simp
- ... = -f x : by simp [hf.map_zero]
+        ... = -f x : by simp [hf.map_zero]
 
 /-- Ring homomorphisms preserve subtraction. -/
 lemma map_sub (hf : is_ring_hom f) : f (x - y) = f x - f y :=
@@ -101,10 +101,10 @@ lemma id : is_ring_hom (@id α) := by refine {..}; intros; refl
 /-- The composition of two ring homomorphisms is a ring homomorphism. -/
 -- see Note [no instance on morphisms]
 lemma comp (hf : is_ring_hom f) {γ} [ring γ] {g : β → γ} (hg : is_ring_hom g) :
- is_ring_hom (g ∘ f) :=
+  is_ring_hom (g ∘ f) :=
 { map_add := λ x y, by simp [map_add hf]; rw map_add hg; refl,
- map_mul := λ x y, by simp [map_mul hf]; rw map_mul hg; refl,
- map_one := by simp [map_one hf]; exact map_one hg }
+  map_mul := λ x y, by simp [map_mul hf]; rw map_mul hg; refl,
+  map_one := by simp [map_one hf]; exact map_one hg }
 
 /-- A ring homomorphism is also a semiring homomorphism. -/
 lemma to_is_semiring_hom (hf : is_ring_hom f) : is_semiring_hom f :=
@@ -125,16 +125,16 @@ include rα rβ
 /-- Interpret `f : α → β` with `is_semiring_hom f` as a ring homomorphism. -/
 def of {f : α → β} (hf : is_semiring_hom f) : α →+* β :=
 { to_fun := f,
- .. monoid_hom.of hf.to_is_monoid_hom,
- .. add_monoid_hom.of hf.to_is_add_monoid_hom }
+  .. monoid_hom.of hf.to_is_monoid_hom,
+  .. add_monoid_hom.of hf.to_is_add_monoid_hom }
 
 @[simp] lemma coe_of {f : α → β} (hf : is_semiring_hom f) : ⇑(of hf) = f := rfl
 
 lemma to_is_semiring_hom (f : α →+* β) : is_semiring_hom f :=
 { map_zero := f.map_zero,
- map_one := f.map_one,
- map_add := f.map_add,
- map_mul := f.map_mul }
+  map_one := f.map_one,
+  map_add := f.map_add,
+  map_mul := f.map_mul }
 
 end
 
@@ -142,4 +142,3 @@ lemma to_is_ring_hom {α γ} [ring α] [ring γ] (g : α →+* γ) : is_ring_hom
 is_ring_hom.of_semiring g.to_is_semiring_hom
 
 end ring_hom
-

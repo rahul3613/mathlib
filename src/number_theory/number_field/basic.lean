@@ -15,9 +15,9 @@ This file defines a number field and the ring of integers corresponding to it.
 
 ## Main definitions
  - `number_field` defines a number field as a field which has characteristic zero and is finite
- dimensional over ℚ.
+    dimensional over ℚ.
  - `ring_of_integers` defines the ring of integers (or number ring) corresponding to a number field
- as the integral closure of ℤ in the number field.
+    as the integral closure of ℤ in the number field.
 
 ## Implementation notes
 The definitions that involve a field of fractions choose a canonical field of fractions,
@@ -63,16 +63,17 @@ is the integral closure of ℤ in the number field. -/
 def ring_of_integers := integral_closure ℤ K
 
 localized "notation (name := ring_of_integers)
- `𝓞` := number_field.ring_of_integers" in number_field
+  `𝓞` := number_field.ring_of_integers" in number_field
 
 lemma mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ is_integral ℤ x := iff.rfl
 
 lemma is_integral_of_mem_ring_of_integers {K : Type*} [field K] {x : K} (hx : x ∈ 𝓞 K) :
- is_integral ℤ (⟨x, hx⟩ : 𝓞 K) :=
+  is_integral ℤ (⟨x, hx⟩ : 𝓞 K) :=
 begin
- obtain ⟨P, hPm, hP⟩ := hx,
- refine ⟨P, hPm, _⟩,
- rw [← polynomial.aeval_def]; rw [ ← subalgebra.coe_eq_zero]; rw [ polynomial.aeval_subalgebra_coe]; rw [ polynomial.aeval_def]; rw [ subtype.coe_mk]; rw [ hP]
+  obtain ⟨P, hPm, hP⟩ := hx,
+  refine ⟨P, hPm, _⟩,
+  rw [← polynomial.aeval_def, ← subalgebra.coe_eq_zero, polynomial.aeval_subalgebra_coe,
+    polynomial.aeval_def,  subtype.coe_mk, hP]
 end
 
 /-- Given an algebra between two fields, create an algebra between their two rings of integers.
@@ -82,10 +83,10 @@ For now, this is not an instance by default as it creates an equal-but-not-defeq
 will likely change in Lean 4. -/
 def ring_of_integers_algebra [algebra K L] : algebra (𝓞 K) (𝓞 L) := ring_hom.to_algebra
 { to_fun := λ k, ⟨algebra_map K L k, is_integral.algebra_map k.2⟩,
- map_zero' := subtype.ext $ by simp only [subtype.coe_mk, subalgebra.coe_zero, map_zero],
- map_one' := subtype.ext $ by simp only [subtype.coe_mk, subalgebra.coe_one, map_one],
- map_add' := λ x y, subtype.ext $ by simp only [map_add, subalgebra.coe_add, subtype.coe_mk],
- map_mul' := λ x y, subtype.ext $ by simp only [subalgebra.coe_mul, map_mul, subtype.coe_mk] }
+  map_zero' := subtype.ext $ by simp only [subtype.coe_mk, subalgebra.coe_zero, map_zero],
+  map_one'  := subtype.ext $ by simp only [subtype.coe_mk, subalgebra.coe_one, map_one],
+  map_add' := λ x y, subtype.ext $ by simp only [map_add, subalgebra.coe_add, subtype.coe_mk],
+  map_mul' := λ x y, subtype.ext $ by simp only [subalgebra.coe_mul, map_mul, subtype.coe_mk] }
 
 namespace ring_of_integers
 
@@ -104,12 +105,12 @@ lemma is_integral_coe (x : 𝓞 K) : is_integral ℤ (x : K) :=
 x.2
 
 lemma map_mem {F L : Type*} [field L] [char_zero K] [char_zero L]
- [alg_hom_class F ℚ K L] (f : F) (x : 𝓞 K) : f x ∈ 𝓞 L :=
+  [alg_hom_class F ℚ K L] (f : F) (x : 𝓞 K) : f x ∈ 𝓞 L :=
 (mem_ring_of_integers _ _).2 $ map_is_integral_int f $ ring_of_integers.is_integral_coe x
 
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
 protected noncomputable def equiv (R : Type*) [comm_ring R] [algebra R K]
- [is_integral_closure R ℤ K] : 𝓞 K ≃+* R :=
+  [is_integral_closure R ℤ K] : 𝓞 K ≃+* R :=
 (is_integral_closure.equiv ℤ R K _).symm.to_ring_equiv
 
 variable (K)
@@ -122,11 +123,11 @@ instance : is_noetherian ℤ (𝓞 K) := is_integral_closure.is_noetherian _ ℚ
 /-- The ring of integers of a number field is not a field. -/
 lemma not_is_field : ¬ is_field (𝓞 K) :=
 begin
- have h_inj : function.injective ⇑(algebra_map ℤ (𝓞 K)),
- { exact ring_hom.injective_int (algebra_map ℤ (𝓞 K)) },
- intro hf,
- exact int.not_is_field
- (((is_integral_closure.is_integral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
+  have h_inj : function.injective ⇑(algebra_map ℤ (𝓞 K)),
+  { exact ring_hom.injective_int (algebra_map ℤ (𝓞 K)) },
+  intro hf,
+  exact int.not_is_field
+    (((is_integral_closure.is_integral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
 end
 
 instance : is_dedekind_domain (𝓞 K) :=
@@ -151,11 +152,11 @@ basis.localization_localization ℚ (non_zero_divisors ℤ) K (ring_of_integers.
 
 @[simp]
 lemma integral_basis_apply (i : free.choose_basis_index ℤ (𝓞 K)) :
- integral_basis K i = algebra_map (𝓞 K) K (ring_of_integers.basis K i) :=
+  integral_basis K i = algebra_map (𝓞 K) K (ring_of_integers.basis K i) :=
 basis.localization_localization_apply ℚ (non_zero_divisors ℤ) K (ring_of_integers.basis K) i
 
-lemma ring_of_integers.rank :
- finite_dimensional.finrank ℤ (𝓞 K) = finite_dimensional.finrank ℚ K :=
+lemma ring_of_integers.rank  :
+  finite_dimensional.finrank ℤ (𝓞 K) = finite_dimensional.finrank ℚ K :=
 is_integral_closure.rank ℤ ℚ K (𝓞 K)
 
 end number_field
@@ -166,12 +167,12 @@ open number_field
 
 instance number_field : number_field ℚ :=
 { to_char_zero := infer_instance,
- to_finite_dimensional :=
- -- The vector space structure of `ℚ` over itself can arise in multiple ways:
- -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
- -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
- -- Show that these coincide:
- by convert (infer_instance : finite_dimensional ℚ ℚ), }
+  to_finite_dimensional :=
+    -- The vector space structure of `ℚ` over itself can arise in multiple ways:
+    -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
+    -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
+    -- Show that these coincide:
+    by convert (infer_instance : finite_dimensional ℚ ℚ), }
 
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
 noncomputable def ring_of_integers_equiv : ring_of_integers ℚ ≃+* ℤ :=
@@ -191,8 +192,7 @@ local attribute [-instance] algebra_rat
 is a number field. -/
 instance {f : ℚ[X]} [hf : fact (irreducible f)] : number_field (adjoin_root f) :=
 { to_char_zero := char_zero_of_injective_algebra_map (algebra_map ℚ _).injective,
- to_finite_dimensional := by convert (adjoin_root.power_basis hf.out.ne_zero).finite_dimensional }
+  to_finite_dimensional := by convert (adjoin_root.power_basis hf.out.ne_zero).finite_dimensional }
 end
 
 end adjoin_root
-

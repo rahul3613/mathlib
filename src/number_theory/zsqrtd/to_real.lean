@@ -26,8 +26,7 @@ noncomputable def to_real {d : ℤ} (h : 0 ≤ d) : ℤ√d →+* ℝ :=
 lift ⟨real.sqrt d, real.mul_self_sqrt (int.cast_nonneg.mpr h)⟩
 
 lemma to_real_injective {d : ℤ} (h0d : 0 ≤ d) (hd : ∀ n : ℤ, d ≠ n*n) :
- function.injective (to_real h0d) :=
+  function.injective (to_real h0d) :=
 lift_injective _ hd
 
 end zsqrtd
-

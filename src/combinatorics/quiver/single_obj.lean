@@ -50,9 +50,9 @@ def has_reverse (rev : α → α) : has_reverse (single_obj α) := ⟨λ _ _, re
 /-- Equip `single_obj α` with an involutive reverse operation. -/
 @[reducible] -- See note [reducible non-instances]
 def has_involutive_reverse (rev : α → α) (h : function.involutive rev) :
- has_involutive_reverse (single_obj α) :=
+  has_involutive_reverse (single_obj α) :=
 { to_has_reverse := has_reverse rev,
- inv' := λ _ _, h}
+  inv' := λ _ _, h}
 
 /-- The type of arrows from `star α` to itself is equivalent to the original type `α`. -/
 @[simps] def to_hom : α ≃ (star α ⟶ star α) := equiv.refl _
@@ -62,23 +62,23 @@ Prefunctors between two `single_obj` quivers correspond to functions between the
 arrows types.
 -/
 @[simps] def to_prefunctor :
- (α → β) ≃ (single_obj α ⥤q single_obj β) :=
+  (α → β) ≃ (single_obj α ⥤q single_obj β) :=
 { to_fun := λ f, ⟨id, λ _ _, f⟩,
- inv_fun := λ f a, f.map (to_hom a),
- left_inv := λ _, rfl,
- right_inv := λ f, by cases f; obviously }
+  inv_fun := λ f a, f.map (to_hom a),
+  left_inv := λ _, rfl,
+  right_inv :=  λ f, by cases f; obviously }
 
 lemma to_prefunctor_id : to_prefunctor id = 𝟭q (single_obj α) := rfl
 
 @[simp] lemma to_prefunctor_symm_id :
- to_prefunctor.symm (𝟭q (single_obj α)) = id := rfl
+  to_prefunctor.symm (𝟭q (single_obj α)) = id := rfl
 
 lemma to_prefunctor_comp (f : α → β) (g : β → γ) :
- to_prefunctor (g ∘ f) = to_prefunctor f ⋙q to_prefunctor g := rfl
+  to_prefunctor (g ∘ f) = to_prefunctor f ⋙q to_prefunctor g := rfl
 
 @[simp] lemma to_prefunctor_symm_comp (f : single_obj α ⥤q single_obj β)
- (g : single_obj β ⥤q single_obj γ) : to_prefunctor.symm (f ⋙q g) =
- to_prefunctor.symm g ∘ to_prefunctor.symm f :=
+  (g : single_obj β ⥤q single_obj γ) : to_prefunctor.symm (f ⋙q g) =
+  to_prefunctor.symm g ∘ to_prefunctor.symm f :=
 by simp only [equiv.symm_apply_eq, to_prefunctor_comp, equiv.apply_symm_apply]
 
 /--
@@ -98,11 +98,11 @@ Converts a list of elements of type `α` into a path in the quiver `single_obj �
 | (a :: l) := (list_to_path l).cons a
 
 lemma path_to_list_to_path {x : single_obj α} (p : path (star α) x) :
- list_to_path (path_to_list p) = p.cast rfl (unit.ext) :=
+  list_to_path (path_to_list p) = p.cast rfl (unit.ext) :=
 by { induction p with y z p a ih, refl, tidy, }
 
 lemma list_to_path_to_list (l : list α) :
- path_to_list (list_to_path l) = l :=
+  path_to_list (list_to_path l) = l :=
 by { induction l with a l ih, refl, simp [ih] }
 
 /-- Paths in `single_obj α` quiver correspond to lists of elements of type `α`. -/
@@ -112,14 +112,13 @@ def path_equiv_list : path (star α) (star α) ≃ list α :=
 @[simp] lemma path_equiv_list_nil : path_equiv_list path.nil = ([] : list α) := rfl
 
 @[simp] lemma path_equiv_list_cons (p : path (star α) (star α)) (a : star α ⟶ star α) :
- path_equiv_list (path.cons p a) = a :: path_to_list p := rfl
+  path_equiv_list (path.cons p a) =  a :: path_to_list p := rfl
 
 @[simp] lemma path_equiv_list_symm_nil : path_equiv_list.symm ([] : list α) = path.nil := rfl
 
 @[simp] lemma path_equiv_list_symm_cons (l : list α) (a : α) :
- path_equiv_list.symm (a :: l) = path.cons (path_equiv_list.symm l) a := rfl
+  path_equiv_list.symm (a :: l) =  path.cons (path_equiv_list.symm l) a := rfl
 
 end single_obj
 
 end quiver
-

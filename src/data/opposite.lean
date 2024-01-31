@@ -22,25 +22,25 @@ variable (α : Sort u)
 
 /-- The type of objects of the opposite of `α`; used to define the opposite category.
 
- In order to avoid confusion between `α` and its opposite type, we
- set up the type of objects `opposite α` using the following pattern,
- which will be repeated later for the morphisms.
+  In order to avoid confusion between `α` and its opposite type, we
+  set up the type of objects `opposite α` using the following pattern,
+  which will be repeated later for the morphisms.
 
- 1. Define `opposite α := α`.
- 2. Define the isomorphisms `op : α → opposite α`, `unop : opposite α → α`.
- 3. Make the definition `opposite` irreducible.
+  1. Define `opposite α := α`.
+  2. Define the isomorphisms `op : α → opposite α`, `unop : opposite α → α`.
+  3. Make the definition `opposite` irreducible.
 
- This has the following consequences.
+  This has the following consequences.
 
- * `opposite α` and `α` are distinct types in the elaborator, so you
- must use `op` and `unop` explicitly to convert between them.
- * Both `unop (op X) = X` and `op (unop X) = X` are definitional
- equalities. Notably, every object of the opposite category is
- definitionally of the form `op X`, which greatly simplifies the
- definition of the structure of the opposite category, for example.
+  * `opposite α` and `α` are distinct types in the elaborator, so you
+    must use `op` and `unop` explicitly to convert between them.
+  * Both `unop (op X) = X` and `op (unop X) = X` are definitional
+    equalities. Notably, every object of the opposite category is
+    definitionally of the form `op X`, which greatly simplifies the
+    definition of the structure of the opposite category, for example.
 
- (If Lean supported definitional eta equality for records, we could
- achieve the same goals using a structure with one field.)
+  (If Lean supported definitional eta equality for records, we could
+  achieve the same goals using a structure with one field.)
 -/
 def opposite : Sort u := α
 
@@ -74,9 +74,9 @@ attribute [irreducible] opposite
 /-- The type-level equivalence between a type and its opposite. -/
 def equiv_to_opposite : α ≃ αᵒᵖ :=
 { to_fun := op,
- inv_fun := unop,
- left_inv := unop_op,
- right_inv := op_unop }
+  inv_fun := unop,
+  left_inv := unop_op,
+  right_inv := op_unop }
 
 @[simp]
 lemma equiv_to_opposite_coe : (equiv_to_opposite : α → αᵒᵖ) = op := rfl
@@ -107,15 +107,15 @@ namespace op_induction
 /-- Test if `e : expr` is of type `opposite α` for some `α`. -/
 meta def is_opposite (e : expr) : tactic bool :=
 do t ← infer_type e,
- `(opposite _) ← whnf t | return ff,
- return tt
+   `(opposite _) ← whnf t | return ff,
+   return tt
 
 /-- Find the first hypothesis of type `opposite _`. Fail if no such hypothesis exist in the local
 context. -/
 meta def find_opposite_hyp : tactic name :=
 do lc ← local_context,
- h :: _ ← lc.mfilter $ is_opposite | fail "No hypotheses of the form Xᵒᵖ",
- return h.local_pp_name
+   h :: _ ← lc.mfilter $ is_opposite | fail "No hypotheses of the form Xᵒᵖ",
+   return h.local_pp_name
 
 end op_induction
 
@@ -126,8 +126,7 @@ automatically, for use with `local attribute [tidy] op_induction'`. This is nece
 `induction x` is not able to deduce that `opposite.rec` should be used. -/
 meta def op_induction' : tactic unit :=
 do h ← find_opposite_hyp,
- h' ← tactic.get_local h,
- tactic.induction' h' [] `opposite.rec
+   h' ← tactic.get_local h,
+   tactic.induction' h' [] `opposite.rec
 
 end tactic
-

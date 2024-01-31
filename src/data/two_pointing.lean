@@ -22,7 +22,7 @@ bipointed types. Two-pointed types form a full subcategory of those.
 ## References
 
 * [nLab, *Coalgebra of the real interval*]
- (https://ncatlab.org/nlab/show/coalgebra+of+the+real+interval)
+  (https://ncatlab.org/nlab/show/coalgebra+of+the+real+interval)
 -/
 
 open function
@@ -60,8 +60,8 @@ variables (α) [nonempty α]
 /-- The two-pointing of constant functions. -/
 def pi : two_pointing (α → β) :=
 { fst := λ _, q.fst,
- snd := λ _, q.snd,
- fst_ne_snd := λ h, q.fst_ne_snd $ by convert congr_fun h (classical.arbitrary α) }
+  snd := λ _, q.snd,
+  fst_ne_snd := λ h, q.fst_ne_snd $ by convert congr_fun h (classical.arbitrary α) }
 
 @[simp] lemma pi_fst : (q.pi α).fst = const α (q.fst) := rfl
 @[simp] lemma pi_snd : (q.pi α).snd = const α (q.snd) := rfl
@@ -71,8 +71,8 @@ end pi
 /-- The product of two two-pointings. -/
 def prod : two_pointing (α × β) :=
 { fst := (p.fst, q.fst),
- snd := (p.snd, q.snd),
- fst_ne_snd := λ h, p.fst_ne_snd (congr_arg prod.fst h) }
+  snd := (p.snd, q.snd),
+  fst_ne_snd := λ h, p.fst_ne_snd (congr_arg prod.fst h) }
 
 @[simp] lemma prod_fst : (p.prod q).fst = (p.fst, q.fst) := rfl
 @[simp] lemma prod_snd : (p.prod q).snd = (p.snd, q.snd) := rfl
@@ -99,4 +99,3 @@ protected def «Prop» : two_pointing Prop := ⟨(false, true), false_ne_true⟩
 @[simp] lemma Prop_snd : two_pointing.Prop.snd = true := rfl
 
 end two_pointing
-

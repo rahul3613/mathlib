@@ -35,10 +35,10 @@ def core (C : Type u₁) := C
 variables {C : Type u₁} [category.{v₁} C]
 
 instance core_category : groupoid.{v₁} (core C) :=
-{ hom := λ X Y : C, X ≅ Y,
- inv := λ X Y f, iso.symm f,
- id := λ X, iso.refl X,
- comp := λ X Y Z f g, iso.trans f g }
+{ hom  := λ X Y : C, X ≅ Y,
+  inv  := λ X Y f, iso.symm f,
+  id   := λ X, iso.refl X,
+  comp := λ X Y Z f g, iso.trans f g }
 
 namespace core
 @[simp] lemma id_hom (X : core C) : iso.hom (𝟙 X) = 𝟙 X := rfl
@@ -50,7 +50,7 @@ variables (C)
 /-- The core of a category is naturally included in the category. -/
 def inclusion : core C ⥤ C :=
 { obj := id,
- map := λ X Y f, f.hom }
+  map := λ X Y f, f.hom }
 
 instance : faithful (inclusion C) := {}
 
@@ -62,7 +62,7 @@ variables {C} {G : Type u₂} [groupoid.{v₂} G]
 noncomputable
 def functor_to_core (F : G ⥤ C) : G ⥤ core C :=
 { obj := λ X, F.obj X,
- map := λ X Y f, ⟨F.map f, F.map (inv f)⟩ }
+  map := λ X Y f, ⟨F.map f, F.map (inv f)⟩ }
 
 /--
 We can functorially associate to any functor from a groupoid to the core of a category `C`,
@@ -76,18 +76,17 @@ end core
 to a categorical functor `core (Type u₁) ⥤ core (Type u₂)`.
 -/
 def of_equiv_functor (m : Type u₁ → Type u₂) [equiv_functor m] :
- core (Type u₁) ⥤ core (Type u₂) :=
-{ obj := m,
- map := λ α β f, (equiv_functor.map_equiv m f.to_equiv).to_iso,
- -- These are not very pretty.
- map_id' := λ α, begin ext, exact (congr_fun (equiv_functor.map_refl _) x), end,
- map_comp' := λ α β γ f g,
- begin
- ext,
- simp only [equiv_functor.map_equiv_apply, equiv.to_iso_hom,
- function.comp_app, core.comp_hom, types_comp],
- erw [iso.to_equiv_comp]; erw [ equiv_functor.map_trans],
- end, }
+  core (Type u₁) ⥤ core (Type u₂) :=
+{ obj       := m,
+  map       := λ α β f, (equiv_functor.map_equiv m f.to_equiv).to_iso,
+  -- These are not very pretty.
+  map_id' := λ α, begin ext, exact (congr_fun (equiv_functor.map_refl _) x), end,
+  map_comp' := λ α β γ f g,
+  begin
+    ext,
+    simp only [equiv_functor.map_equiv_apply, equiv.to_iso_hom,
+      function.comp_app, core.comp_hom, types_comp],
+    erw [iso.to_equiv_comp, equiv_functor.map_trans],
+  end, }
 
 end category_theory
-

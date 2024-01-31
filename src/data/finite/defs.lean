@@ -16,7 +16,7 @@ is equivalent to `fin n` for some `n`. We also define `infinite α` as a typecla
 `¬finite α`.
 
 The `finite` predicate has no computational relevance and, being `Prop`-valued, gets to enjoy proof
-irrelevance -- it represents the mere fact that the type is finite. While the `fintype` class also
+irrelevance -- it represents the mere fact that the type is finite.  While the `fintype` class also
 represents finiteness of a type, a key difference is that a `fintype` instance represents finiteness
 in a computable way: it gives a concrete algorithm to produce a `finset` whose elements enumerate
 the terms of the given type. As such, one generally relies on congruence lemmas when rewriting
@@ -101,4 +101,3 @@ protected lemma finite.false [infinite α] (h : finite α) : false := not_finite
 protected lemma infinite.false [finite α] (h : infinite α) : false := not_finite α
 
 alias not_infinite_iff_finite ↔ finite.of_not_infinite finite.not_infinite
-

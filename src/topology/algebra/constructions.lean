@@ -45,8 +45,8 @@ continuous_induced_rng.2 continuous_id
 @[to_additive "`add_opposite.op` as a homeomorphism.", simps]
 def op_homeomorph : M ≃ₜ Mᵐᵒᵖ :=
 { to_equiv := op_equiv,
- continuous_to_fun := continuous_op,
- continuous_inv_fun := continuous_unop }
+  continuous_to_fun := continuous_op,
+  continuous_inv_fun := continuous_unop }
 
 @[to_additive] instance [t2_space M] : t2_space Mᵐᵒᵖ :=
 op_homeomorph.symm.embedding.t2_space
@@ -82,23 +82,23 @@ instance : topological_space Mˣ := prod.topological_space.induced (embed_produc
 ⟨inducing_embed_product, embed_product_injective M⟩
 
 @[to_additive] lemma topology_eq_inf :
- units.topological_space = topological_space.induced (coe : Mˣ → M) ‹_› ⊓
- topological_space.induced (λ u, ↑u⁻¹ : Mˣ → M) ‹_› :=
+  units.topological_space = topological_space.induced (coe : Mˣ → M) ‹_› ⊓
+    topological_space.induced (λ u, ↑u⁻¹ : Mˣ → M) ‹_› :=
 by simp only [inducing_embed_product.1, prod.topological_space, induced_inf,
- mul_opposite.topological_space, induced_compose]; refl
+  mul_opposite.topological_space, induced_compose]; refl
 
 /-- An auxiliary lemma that can be used to prove that coercion `Mˣ → M` is a topological embedding.
 Use `units.coe_embedding₀`, `units.coe_embedding`, or `to_units_homeomorph` instead. -/
 @[to_additive "An auxiliary lemma that can be used to prove that coercion `add_units M → M` is a
 topological embedding. Use `add_units.coe_embedding` or `to_add_units_homeomorph` instead."]
 lemma embedding_coe_mk {M : Type*} [division_monoid M] [topological_space M]
- (h : continuous_on has_inv.inv {x : M | is_unit x}) : embedding (coe : Mˣ → M) :=
+  (h : continuous_on has_inv.inv {x : M | is_unit x}) : embedding (coe : Mˣ → M) :=
 begin
- refine ⟨⟨_⟩, ext⟩,
- rw [topology_eq_inf]; rw [ inf_eq_left]; rw [ ← continuous_iff_le_induced]; rw [ continuous_iff_continuous_at],
- intros u s hs,
- simp only [coe_inv, nhds_induced, filter.mem_map] at hs ⊢,
- exact ⟨_, mem_inf_principal.1 (h u u.is_unit hs), λ u' hu', hu' u'.is_unit⟩
+  refine ⟨⟨_⟩, ext⟩,
+  rw [topology_eq_inf, inf_eq_left, ← continuous_iff_le_induced, continuous_iff_continuous_at],
+  intros u s hs,
+  simp only [coe_inv, nhds_induced, filter.mem_map] at hs ⊢,
+  exact ⟨_, mem_inf_principal.1 (h u u.is_unit hs), λ u' hu', hu' u'.is_unit⟩
 end
 
 @[to_additive] lemma continuous_embed_product : continuous (embed_product M) :=
@@ -108,12 +108,11 @@ continuous_induced_dom
 (@continuous_embed_product M _ _).fst
 
 @[to_additive] protected lemma continuous_iff {f : X → Mˣ} :
- continuous f ↔ continuous (coe ∘ f : X → M) ∧ continuous (λ x, ↑(f x)⁻¹ : X → M) :=
+  continuous f ↔ continuous (coe ∘ f : X → M) ∧ continuous (λ x, ↑(f x)⁻¹ : X → M) :=
 by simp only [inducing_embed_product.continuous_iff, embed_product_apply, (∘), continuous_prod_mk,
- op_homeomorph.symm.inducing.continuous_iff, op_homeomorph_symm_apply, unop_op]
+  op_homeomorph.symm.inducing.continuous_iff, op_homeomorph_symm_apply, unop_op]
 
 @[to_additive] lemma continuous_coe_inv : continuous (λ u, ↑u⁻¹ : Mˣ → M) :=
 (units.continuous_iff.1 continuous_id).2
 
 end units
-

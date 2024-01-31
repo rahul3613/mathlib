@@ -52,8 +52,7 @@ end has_smul
 
 instance [monoid M] [mul_action M α] : mul_action M (option α) :=
 { smul := (•),
- one_smul := λ b, by { cases b, exacts [rfl, congr_arg some (one_smul _ _)] },
- mul_smul := λ a₁ a₂ b, by { cases b, exacts [rfl, congr_arg some (mul_smul _ _ _)] } }
+  one_smul := λ b, by { cases b, exacts [rfl, congr_arg some (one_smul _ _)] },
+  mul_smul := λ a₁ a₂ b, by { cases b, exacts [rfl, congr_arg some (mul_smul _ _ _)] } }
 
 end option
-

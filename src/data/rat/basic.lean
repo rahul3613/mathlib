@@ -36,20 +36,19 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom
 namespace rat
 
 instance : field ℚ :=
-{ zero := 0,
- add := (+),
- neg := has_neg.neg,
- one := 1,
- mul := (*),
- inv := has_inv.inv,
- rat_cast := id,
- rat_cast_mk := λ a b h1 h2, (num_div_denom _).symm,
- qsmul := (*),
- .. rat.comm_ring,
- .. rat.comm_group_with_zero}
+{ zero             := 0,
+  add              := (+),
+  neg              := has_neg.neg,
+  one              := 1,
+  mul              := (*),
+  inv              := has_inv.inv,
+  rat_cast         := id,
+  rat_cast_mk      := λ a b h1 h2, (num_div_denom _).symm,
+  qsmul            := (*),
+  .. rat.comm_ring,
+  .. rat.comm_group_with_zero}
 
 /- Extra instances to short-circuit type class resolution -/
-instance : division_ring ℚ := by apply_instance
+instance : division_ring ℚ      := by apply_instance
 
 end rat
-

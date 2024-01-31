@@ -14,17 +14,17 @@ import tactic.monotonicity.basic
 
 The `has_mem` typeclass is used to let terms of a type have elements.
 Many instances of `has_mem` have a set-like extensionality property:
-things are equal iff they have the same elements. The `set_like`
+things are equal iff they have the same elements.  The `set_like`
 typeclass provides a unified interface to define a `has_mem` that is
 extensional in this way.
 
 The main use of `set_like` is for algebraic subobjects (such as
 `submonoid` and `submodule`), whose non-proof data consists only of a
-carrier set. In such a situation, the projection to the carrier set
+carrier set.  In such a situation, the projection to the carrier set
 is injective.
 
 In general, a type `A` is `set_like` with elements of type `B` if it
-has an injective map to `set B`. This module provides standard
+has an injective map to `set B`.  This module provides standard
 boilerplate for every `set_like`: a `coe_sort`, a `coe` to set, a
 `partial_order`, and various extensionality and simp lemmas.
 
@@ -49,10 +49,10 @@ instance : set_like (my_subobject X) X :=
 equalities. See Note [range copy pattern]. -/
 protected def copy (p : my_subobject X) (s : set X) (hs : s = ↑p) : my_subobject X :=
 { carrier := s,
- op_mem' := hs.symm ▸ p.op_mem' }
+  op_mem' := hs.symm ▸ p.op_mem' }
 
 @[simp] lemma coe_copy (p : my_subobject X) (s : set X) (hs : s = ↑p) :
- (p.copy s hs : set X) = s := rfl
+  (p.copy s hs : set X) = s := rfl
 
 lemma copy_eq (p : my_subobject X) (s : set X) (hs : s = ↑p) : p.copy s hs = p :=
 set_like.coe_injective hs
@@ -86,7 +86,7 @@ to normalize terms.
 If you declare an unbundled subclass of `set_like`, for example:
 ```
 class mul_mem_class (S : Type*) (M : Type*) [has_mul M] [set_like S M] where
- ...
+  ...
 ```
 Then you should *not* repeat the `out_param` declaration, `set_like` will supply the value instead.
 This ensures in Lean 4 your subclass will not have issues with synthesis of the `[has_mul M]`
@@ -119,10 +119,10 @@ variables (p q : A)
 variables {p q}
 
 protected theorem «exists» {q : p → Prop} :
- (∃ x, q x) ↔ (∃ x ∈ p, q ⟨x, ‹_›⟩) := set_coe.exists
+  (∃ x, q x) ↔ (∃ x ∈ p, q ⟨x, ‹_›⟩) := set_coe.exists
 
 protected theorem «forall» {q : p → Prop} :
- (∀ x, q x) ↔ (∀ x ∈ p, q ⟨x, ‹_›⟩) := set_coe.forall
+  (∀ x, q x) ↔ (∀ x ∈ p, q ⟨x, ‹_›⟩) := set_coe.forall
 
 theorem coe_injective : function.injective (coe : A → set B) :=
 λ x y h, set_like.coe_injective' h
@@ -151,7 +151,7 @@ theorem ext_iff : p = q ↔ (∀ x, x ∈ p ↔ x ∈ q) := coe_injective.eq_iff
 @[nolint dangerous_instance, priority 100]
 instance : partial_order A :=
 { le := λ H K, ∀ ⦃x⦄, x ∈ H → x ∈ K,
- .. partial_order.lift (coe : A → set B) coe_injective }
+  .. partial_order.lift (coe : A → set B) coe_injective }
 
 lemma le_def {S T : A} : S ≤ T ↔ ∀ ⦃x : B⦄, x ∈ S → x ∈ T := iff.rfl
 
@@ -170,7 +170,6 @@ lemma not_le_iff_exists : ¬(p ≤ q) ↔ ∃ x ∈ p, x ∉ q := set.not_subset
 lemma exists_of_lt : p < q → ∃ x ∈ q, x ∉ p := set.exists_of_ssubset
 
 lemma lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p :=
-by rw [lt_iff_le_not_le]; rw [ not_le_iff_exists]
+by rw [lt_iff_le_not_le, not_le_iff_exists]
 
 end set_like
-

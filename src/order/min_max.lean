@@ -57,37 +57,37 @@ lemma min_le_max : min a b ≤ max a b := le_trans (min_le_left a b) (le_max_lef
 @[simp] lemma max_eq_right_iff : max a b = b ↔ a ≤ b := sup_eq_right
 
 /-- For elements `a` and `b` of a linear order, either `min a b = a` and `a ≤ b`,
- or `min a b = b` and `b < a`.
- Use cases on this lemma to automate linarith in inequalities -/
+    or `min a b = b` and `b < a`.
+    Use cases on this lemma to automate linarith in inequalities -/
 lemma min_cases (a b : α) : min a b = a ∧ a ≤ b ∨ min a b = b ∧ b < a :=
 begin
- by_cases a ≤ b,
- { left,
- exact ⟨min_eq_left h, h⟩ },
- { right,
- exact ⟨min_eq_right (le_of_lt (not_le.mp h)), (not_le.mp h)⟩ }
+  by_cases a ≤ b,
+  { left,
+    exact ⟨min_eq_left h, h⟩ },
+  { right,
+    exact ⟨min_eq_right (le_of_lt (not_le.mp h)), (not_le.mp h)⟩ }
 end
 
 /-- For elements `a` and `b` of a linear order, either `max a b = a` and `b ≤ a`,
- or `max a b = b` and `a < b`.
- Use cases on this lemma to automate linarith in inequalities -/
+    or `max a b = b` and `a < b`.
+    Use cases on this lemma to automate linarith in inequalities -/
 lemma max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b := @min_cases αᵒᵈ _ a b
 
 lemma min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a :=
 begin
- split,
- { intro h,
- refine or.imp (λ h', _) (λ h', _) (le_total a b);
- exact ⟨by simpa [h'] using h, h'⟩ },
- { rintro (⟨rfl, h⟩|⟨rfl, h⟩);
- simp [h] }
+  split,
+  { intro h,
+    refine or.imp (λ h', _) (λ h', _) (le_total a b);
+    exact ⟨by simpa [h'] using h, h'⟩ },
+  { rintro (⟨rfl, h⟩|⟨rfl, h⟩);
+    simp [h] }
 end
 
 lemma max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b := @min_eq_iff αᵒᵈ _ a b c
 
 lemma min_lt_min_left_iff : min a c < min b c ↔ a < b ∧ a < c :=
 by { simp_rw [lt_min_iff, min_lt_iff, or_iff_left (lt_irrefl _)],
- exact and_congr_left (λ h, or_iff_left_of_imp h.trans) }
+  exact and_congr_left (λ h, or_iff_left_of_imp h.trans) }
 
 lemma min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a :=
 by simp_rw [min_comm a, min_lt_min_left_iff]
@@ -118,19 +118,19 @@ theorem max.right_comm (a b c : α) : max (max a b) c = max (max a c) b :=
 right_comm max max_comm max_assoc a b c
 
 lemma monotone_on.map_max (hf : monotone_on f s) (ha : a ∈ s) (hb : b ∈ s) :
- f (max a b) = max (f a) (f b) :=
+  f (max a b) = max (f a) (f b) :=
 by cases le_total a b; simp only [max_eq_right, max_eq_left, hf ha hb, hf hb ha, h]
 
 lemma monotone_on.map_min (hf : monotone_on f s) (ha : a ∈ s) (hb : b ∈ s) :
- f (min a b) = min (f a) (f b) :=
+  f (min a b) = min (f a) (f b) :=
 hf.dual.map_max ha hb
 
 lemma antitone_on.map_max (hf : antitone_on f s) (ha : a ∈ s) (hb : b ∈ s) :
- f (max a b) = min (f a) (f b) :=
+  f (max a b) = min (f a) (f b) :=
 hf.dual_right.map_max ha hb
 
 lemma antitone_on.map_min (hf : antitone_on f s) (ha : a ∈ s) (hb : b ∈ s) :
- f (min a b) = max (f a) (f b) :=
+  f (min a b) = max (f a) (f b) :=
 hf.dual.map_max ha hb
 
 lemma monotone.map_max (hf : monotone f) : f (max a b) = max (f a) (f b) :=
@@ -176,4 +176,3 @@ lemma min_left_commutative : left_commutative (min : α → α → α) :=
 min_left_comm
 
 end
-

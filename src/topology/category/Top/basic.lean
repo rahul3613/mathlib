@@ -39,10 +39,10 @@ instance : has_coe_to_sort Top Type* := bundled.has_coe_to_sort
 instance topological_space_unbundled (x : Top) : topological_space x := x.str
 
 @[simp] lemma id_app (X : Top.{u}) (x : X) :
- (𝟙 X : X → X) x = x := rfl
+  (𝟙 X : X → X) x = x := rfl
 
 @[simp] lemma comp_app {X Y Z : Top.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
- (f ≫ g : X → Z) x = g (f x) := rfl
+  (f ≫ g : X → Z) x = g (f x) := rfl
 
 /-- Construct a bundled `Top` from the underlying type and the typeclass. -/
 def of (X : Type u) [topological_space X] : Top := ⟨X⟩
@@ -56,28 +56,28 @@ instance : inhabited Top := ⟨Top.of empty⟩
 /-- The discrete topology on any type. -/
 def discrete : Type u ⥤ Top.{u} :=
 { obj := λ X, ⟨X, ⊥⟩,
- map := λ X Y f, { to_fun := f, continuous_to_fun := continuous_bot } }
+  map := λ X Y f, { to_fun := f, continuous_to_fun := continuous_bot } }
 
 instance {X : Type u} : discrete_topology (discrete.obj X) := ⟨rfl⟩
 
 /-- The trivial topology on any type. -/
 def trivial : Type u ⥤ Top.{u} :=
 { obj := λ X, ⟨X, ⊤⟩,
- map := λ X Y f, { to_fun := f, continuous_to_fun := continuous_top } }
+  map := λ X Y f, { to_fun := f, continuous_to_fun := continuous_top } }
 
 /-- Any homeomorphisms induces an isomorphism in `Top`. -/
 @[simps] def iso_of_homeo {X Y : Top.{u}} (f : X ≃ₜ Y) : X ≅ Y :=
 { hom := ⟨f⟩,
- inv := ⟨f.symm⟩ }
+  inv := ⟨f.symm⟩ }
 
 /-- Any isomorphism in `Top` induces a homeomorphism. -/
 @[simps] def homeo_of_iso {X Y : Top.{u}} (f : X ≅ Y) : X ≃ₜ Y :=
 { to_fun := f.hom,
- inv_fun := f.inv,
- left_inv := λ x, by simp,
- right_inv := λ x, by simp,
- continuous_to_fun := f.hom.continuous,
- continuous_inv_fun := f.inv.continuous }
+  inv_fun := f.inv,
+  left_inv := λ x, by simp,
+  right_inv := λ x, by simp,
+  continuous_to_fun := f.hom.continuous,
+  continuous_inv_fun := f.inv.continuous }
 
 @[simp] lemma of_iso_of_homeo {X Y : Top.{u}} (f : X ≃ₜ Y) : homeo_of_iso (iso_of_homeo f) = f :=
 by { ext, refl }
@@ -87,19 +87,18 @@ by { ext, refl }
 
 @[simp]
 lemma open_embedding_iff_comp_is_iso {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [is_iso g] :
- open_embedding (f ≫ g) ↔ open_embedding f :=
+  open_embedding (f ≫ g) ↔ open_embedding f :=
 (Top.homeo_of_iso (as_iso g)).open_embedding.of_comp_iff f
 
 @[simp]
 lemma open_embedding_iff_is_iso_comp {X Y Z : Top} (f : X ⟶ Y) (g : Y ⟶ Z) [is_iso f] :
- open_embedding (f ≫ g) ↔ open_embedding g :=
+  open_embedding (f ≫ g) ↔ open_embedding g :=
 begin
- split,
- { intro h,
- convert h.comp (Top.homeo_of_iso (as_iso f).symm).open_embedding,
- exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm },
- { exact λ h, h.comp (Top.homeo_of_iso (as_iso f)).open_embedding }
+  split,
+  { intro h,
+    convert h.comp (Top.homeo_of_iso (as_iso f).symm).open_embedding,
+    exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm },
+  { exact λ h, h.comp (Top.homeo_of_iso (as_iso f)).open_embedding }
 end
 
 end Top
-

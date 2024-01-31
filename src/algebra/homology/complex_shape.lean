@@ -75,8 +75,8 @@ This is mostly only useful so we can describe the relation of "related in `k` st
 @[simps]
 def refl (ι : Type*) : complex_shape ι :=
 { rel := λ i j, i = j,
- next_eq := λ i j j' w w', w.symm.trans w',
- prev_eq := λ i i' j w w', w.trans w'.symm, }
+  next_eq := λ i j j' w w', w.symm.trans w',
+  prev_eq := λ i i' j w w', w.trans w'.symm, }
 
 /--
 The reverse of a `complex_shape`.
@@ -84,8 +84,8 @@ The reverse of a `complex_shape`.
 @[simps]
 def symm (c : complex_shape ι) : complex_shape ι :=
 { rel := λ i j, c.rel j i,
- next_eq := λ i j j' w w', c.prev_eq w w',
- prev_eq := λ i i' j w w', c.next_eq w w', }
+  next_eq := λ i j j' w w', c.prev_eq w w',
+  prev_eq := λ i i' j w w', c.next_eq w w', }
 
 @[simp]
 lemma symm_symm (c : complex_shape ι) : c.symm.symm = c :=
@@ -99,37 +99,37 @@ We need this to define "related in k steps" later.
 @[simp]
 def trans (c₁ c₂ : complex_shape ι) : complex_shape ι :=
 { rel := relation.comp c₁.rel c₂.rel,
- next_eq := λ i j j' w w',
- begin
- obtain ⟨k, w₁, w₂⟩ := w,
- obtain ⟨k', w₁', w₂'⟩ := w',
- rw c₁.next_eq w₁ w₁' at w₂,
- exact c₂.next_eq w₂ w₂',
- end,
- prev_eq := λ i i' j w w',
- begin
- obtain ⟨k, w₁, w₂⟩ := w,
- obtain ⟨k', w₁', w₂'⟩ := w',
- rw c₂.prev_eq w₂ w₂' at w₁,
- exact c₁.prev_eq w₁ w₁',
- end }
+  next_eq := λ i j j' w w',
+  begin
+    obtain ⟨k, w₁, w₂⟩ := w,
+    obtain ⟨k', w₁', w₂'⟩ := w',
+    rw c₁.next_eq w₁ w₁' at w₂,
+    exact c₂.next_eq w₂ w₂',
+  end,
+  prev_eq := λ i i' j w w',
+  begin
+    obtain ⟨k, w₁, w₂⟩ := w,
+    obtain ⟨k', w₁', w₂'⟩ := w',
+    rw c₂.prev_eq w₂ w₂' at w₁,
+    exact c₁.prev_eq w₁ w₁',
+  end }
 
 instance subsingleton_next (c : complex_shape ι) (i : ι) :
- subsingleton { j // c.rel i j } :=
+  subsingleton { j // c.rel i j } :=
 begin
- fsplit,
- rintros ⟨j, rij⟩ ⟨k, rik⟩,
- congr,
- exact c.next_eq rij rik,
+  fsplit,
+  rintros ⟨j, rij⟩ ⟨k, rik⟩,
+  congr,
+  exact c.next_eq rij rik,
 end
 
 instance subsingleton_prev (c : complex_shape ι) (j : ι) :
- subsingleton { i // c.rel i j } :=
+  subsingleton { i // c.rel i j } :=
 begin
- fsplit,
- rintros ⟨i, rik⟩ ⟨j, rjk⟩,
- congr,
- exact c.prev_eq rik rjk,
+  fsplit,
+  rintros ⟨i, rik⟩ ⟨j, rjk⟩,
+  congr,
+  exact c.prev_eq rik rjk,
 end
 
 /--
@@ -159,8 +159,8 @@ The `complex_shape` allowing differentials from `X i` to `X (i+a)`.
 @[simps]
 def up' {α : Type*} [add_right_cancel_semigroup α] (a : α) : complex_shape α :=
 { rel := λ i j , i + a = j,
- next_eq := λ i j k hi hj, hi.symm.trans hj,
- prev_eq := λ i j k hi hj, add_right_cancel (hi.trans hj.symm), }
+  next_eq := λ i j k hi hj, hi.symm.trans hj,
+  prev_eq := λ i j k hi hj, add_right_cancel (hi.trans hj.symm), }
 
 /--
 The `complex_shape` allowing differentials from `X (j+a)` to `X j`.
@@ -169,11 +169,11 @@ The `complex_shape` allowing differentials from `X (j+a)` to `X j`.
 @[simps]
 def down' {α : Type*} [add_right_cancel_semigroup α] (a : α) : complex_shape α :=
 { rel := λ i j , j + a = i,
- next_eq := λ i j k hi hj, add_right_cancel (hi.trans (hj.symm)),
- prev_eq := λ i j k hi hj, hi.symm.trans hj, }
+  next_eq := λ i j k hi hj, add_right_cancel (hi.trans (hj.symm)),
+  prev_eq := λ i j k hi hj, hi.symm.trans hj, }
 
 lemma down'_mk {α : Type*} [add_right_cancel_semigroup α] (a : α)
- (i j : α) (h : j + a = i) : (down' a).rel i j := h
+  (i j : α) (h : j + a = i) : (down' a).rel i j := h
 
 /--
 The `complex_shape` appropriate for cohomology, so `d : X i ⟶ X j` only when `j = i + 1`.
@@ -190,8 +190,7 @@ def down (α : Type*) [add_right_cancel_semigroup α] [has_one α] : complex_sha
 down' 1
 
 lemma down_mk {α : Type*} [add_right_cancel_semigroup α] [has_one α]
- (i j : α) (h : j + 1 = i) : (down α).rel i j :=
+  (i j : α) (h : j + 1 = i) : (down α).rel i j :=
 down'_mk (1 : α) i j h
 
 end complex_shape
-

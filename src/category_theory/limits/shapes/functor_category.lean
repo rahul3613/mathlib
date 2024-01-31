@@ -27,8 +27,7 @@ instance functor_category_has_finite_limits [has_finite_limits D] : has_finite_l
 { out := λ J _ _, by exactI infer_instance, }
 
 instance functor_category_has_finite_colimits [has_finite_colimits D] :
- has_finite_colimits (C ⥤ D) :=
+  has_finite_colimits (C ⥤ D) :=
 { out := λ J _ _, by exactI infer_instance, }
 
 end category_theory.limits
-

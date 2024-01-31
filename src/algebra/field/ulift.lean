@@ -40,4 +40,3 @@ instance field [field α] : field (ulift α) :=
 { ..ulift.semifield, ..ulift.division_ring }
 
 end ulift
-

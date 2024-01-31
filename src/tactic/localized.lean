@@ -23,40 +23,40 @@ open lean lean.parser interactive tactic native
 @[user_attribute]
 meta def localized_attr : user_attribute (rb_lmap name string) unit :=
 { name := "_localized",
- descr := "(interal) attribute that flags localized commands",
- parser := failed,
- cache_cfg := ⟨λ ns, (do dcls ← ns.mmap (λ n, mk_const n >>= eval_expr (name × string)),
- return $ rb_lmap.of_list dcls), []⟩ }
+  descr := "(interal) attribute that flags localized commands",
+  parser := failed,
+  cache_cfg := ⟨λ ns, (do dcls ← ns.mmap (λ n, mk_const n >>= eval_expr (name × string)),
+                          return $ rb_lmap.of_list dcls), []⟩ }
 
 /-- Get all commands in the given locale and return them as a list of strings -/
 meta def get_localized (ns : list name) : tactic (list string) :=
 do m ← localized_attr.get_cache,
- ns.mfoldl (λ l nm, match m.find nm with
- | [] := fail format!"locale {nm} does not exist"
- | new_l := return $ l.append new_l
- end) []
+   ns.mfoldl (λ l nm, match m.find nm with
+   | [] := fail format!"locale {nm} does not exist"
+   | new_l := return $ l.append new_l
+   end) []
 
 /-- Execute all commands in the given locale -/
 @[user_command] meta def open_locale_cmd (_ : parse $ tk "open_locale") : parser unit :=
 do ns ← many ident,
- cmds ← get_localized ns,
- cmds.mmap' emit_code_here
+   cmds ← get_localized ns,
+   cmds.mmap' emit_code_here
 
 /-- Add a new command to a locale and execute it right now.
- The new command is added as a declaration to the environment with name `_localized_decl.<number>`.
- This declaration has attribute `_localized` and as value a name-string pair. -/
+  The new command is added as a declaration to the environment with name `_localized_decl.<number>`.
+  This declaration has attribute `_localized` and as value a name-string pair. -/
 @[user_command] meta def localized_cmd (_ : parse $ tk "localized") : parser unit :=
 do cmd ← parser.pexpr, cmd ← i_to_expr cmd, cmd ← eval_expr string cmd,
- let cmd := "local " ++ cmd,
- emit_code_here cmd,
- tk "in",
- nm ← ident,
- env ← get_env,
- let dummy_decl_name := mk_num_name `_localized_decl
- ((string.hash (cmd ++ nm.to_string) + env.fingerprint) % unsigned_sz),
- add_decl (declaration.defn dummy_decl_name [] `(name × string)
- (reflect (⟨nm, cmd⟩ : name × string)) (reducibility_hints.regular 1 tt) ff),
- localized_attr.set dummy_decl_name unit.star tt
+   let cmd := "local " ++ cmd,
+   emit_code_here cmd,
+   tk "in",
+   nm ← ident,
+   env ← get_env,
+   let dummy_decl_name := mk_num_name `_localized_decl
+     ((string.hash (cmd ++ nm.to_string) + env.fingerprint) % unsigned_sz),
+   add_decl (declaration.defn dummy_decl_name [] `(name × string)
+    (reflect (⟨nm, cmd⟩ : name × string)) (reducibility_hints.regular 1 tt) ff),
+   localized_attr.set dummy_decl_name unit.star tt
 
 /--
 This consists of two user-commands which allow you to declare notation and commands localized to a
@@ -68,10 +68,10 @@ localized "infix (name := my_add) ` ⊹ `:60 := my_add" in my.add
 ```
 
 * After this command it will be available in the same section/namespace/file, just as if you wrote
- `local infix (name := my_add) ` ⊹ `:60 := my_add`
+  `local infix (name := my_add) ` ⊹ `:60 := my_add`
 
 * You can open it in other places. The following command will declare the notation again as local
- notation in that section/namespace/file:
+  notation in that section/namespace/file:
 ```lean
 open_locale my.add
 ```
@@ -94,20 +94,20 @@ run_cmd print_localized_commands [`my.add].
 * To see a list of all locales with localized commands, run:
 ```lean
 run_cmd do
- m ← localized_attr.get_cache,
- tactic.trace m.keys -- change to `tactic.trace m.to_list` to list all the commands in each locale
+  m ← localized_attr.get_cache,
+  tactic.trace m.keys -- change to `tactic.trace m.to_list` to list all the commands in each locale
 ```
 
 * Warning: You have to give full names of all declarations used in localized notation,
- so that the localized notation also works when the appropriate namespaces are not opened.
+  so that the localized notation also works when the appropriate namespaces are not opened.
 
 * Note: In mathlib, you should always provide names for localized notations using the
- `(name := ...)` parameter. This prevents issues if the localized notation overrides
- an existing notation when it gets opened.
+  `(name := ...)` parameter. This prevents issues if the localized notation overrides
+  an existing notation when it gets opened.
 
 * Warning: Due to limitations in the implementation, you cannot use `_` in localized notations.
- (Otherwise `open_locale foo` will fail if `foo` is already opened or partially opened.)
- Instead, you should use the `hole!` notation as a drop-in replacement. For example:
+  (Otherwise `open_locale foo` will fail if `foo` is already opened or partially opened.)
+  Instead, you should use the `hole!` notation as a drop-in replacement. For example:
 ```lean
 -- BAD
 -- localized "infix (name := my_add) ` ⊹[` R `] ` := my_add _ R" in foo
@@ -116,10 +116,10 @@ localized "infix (name := my_add) ` ⊹[` R `] ` := my_add hole! R" in foo
 ```
 -/
 add_tactic_doc
-{ name := "localized notation",
- category := doc_category.cmd,
- decl_names := [`localized_cmd, `open_locale_cmd],
- tags := ["notation", "type classes"] }
+{ name                     := "localized notation",
+  category                 := doc_category.cmd,
+  decl_names               := [`localized_cmd, `open_locale_cmd],
+  tags                     := ["notation", "type classes"] }
 
 /-- Print all commands in a given locale -/
 meta def print_localized_commands (ns : list name) : tactic unit :=
@@ -138,4 +138,3 @@ localized "attribute [instance, priority 8] eq.decidable" in classical
 
 localized "postfix (name := parser.optional) `?`:9001 := optional" in parser
 localized "postfix (name := parser.many) *:9001 := lean.parser.many" in parser
-

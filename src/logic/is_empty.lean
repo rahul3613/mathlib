@@ -26,9 +26,9 @@ variables {α β γ : Sort*}
 class is_empty (α : Sort*) : Prop :=
 (false : α → false)
 
-instance : is_empty empty := ⟨empty.elim⟩
-instance : is_empty pempty := ⟨pempty.elim⟩
-instance : is_empty false := ⟨id⟩
+instance : is_empty empty   := ⟨empty.elim⟩
+instance : is_empty pempty  := ⟨pempty.elim⟩
+instance : is_empty false   := ⟨id⟩
 instance : is_empty (fin 0) := ⟨λ n, nat.not_lt_zero n.1 n.2⟩
 
 protected lemma function.is_empty [is_empty β] (f : α → β) : is_empty α :=
@@ -79,7 +79,7 @@ protected def elim (h : is_empty α) {p : α → Sort*} (a : α) : p a :=
 is_empty_elim a
 
 /-- Non-dependent version of `is_empty.elim`. Helpful if the elaborator cannot elaborate `h.elim a`
- correctly. -/
+  correctly. -/
 protected def elim' {β : Sort*} (h : is_empty α) (a : α) : β :=
 h.elim a
 
@@ -112,11 +112,11 @@ by simp only [← not_nonempty_iff, nonempty_Prop]
 by simp only [← not_nonempty_iff, classical.nonempty_pi, not_forall]
 
 @[simp] lemma is_empty_sigma {α} {E : α → Type*} :
- is_empty (sigma E) ↔ ∀ a, is_empty (E a) :=
+  is_empty (sigma E) ↔ ∀ a, is_empty (E a) :=
 by simp only [← not_nonempty_iff, nonempty_sigma, not_exists]
 
 @[simp] lemma is_empty_psigma {α} {E : α → Sort*} :
- is_empty (psigma E) ↔ ∀ a, is_empty (E a) :=
+  is_empty (psigma E) ↔ ∀ a, is_empty (E a) :=
 by simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
 
 @[simp] lemma is_empty_subtype (p : α → Prop) : is_empty (subtype p) ↔ ∀ x, ¬p x :=
@@ -154,6 +154,5 @@ not_is_empty_iff.mpr h
 variable {α}
 
 lemma function.extend_of_empty [is_empty α] (f : α → β) (g : α → γ) (h : β → γ) :
- function.extend f g h = h :=
+  function.extend f g h = h :=
 funext $ λ x, function.extend_apply' _ _ _ $ λ ⟨a, h⟩, is_empty_elim a
-

@@ -53,10 +53,10 @@ localized "notation (name := set.uIcc) `[`a `, ` b `]` := set.uIcc a b" in inter
 @[simp] lemma dual_uIcc (a b : α) : [to_dual a, to_dual b] = of_dual ⁻¹' [a, b] := dual_Icc
 
 @[simp] lemma uIcc_of_le (h : a ≤ b) : [a, b] = Icc a b :=
-by rw [uIcc]; rw [ inf_eq_left.2 h]; rw [ sup_eq_right.2 h]
+by rw [uIcc, inf_eq_left.2 h, sup_eq_right.2 h]
 
 @[simp] lemma uIcc_of_ge (h : b ≤ a) : [a, b] = Icc b a :=
-by rw [uIcc]; rw [ inf_eq_right.2 h]; rw [ sup_eq_left.2 h]
+by rw [uIcc, inf_eq_right.2 h, sup_eq_left.2 h]
 
 lemma uIcc_comm (a b : α) : [a, b] = [b, a] := by simp_rw [uIcc, inf_comm, sup_comm]
 
@@ -92,14 +92,14 @@ lemma uIcc_subset_uIcc_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] := uIcc_subs
 lemma uIcc_subset_uIcc_left (h : x ∈ [a, b]) : [a, x] ⊆ [a, b] := uIcc_subset_uIcc left_mem_uIcc h
 
 lemma bdd_below_bdd_above_iff_subset_uIcc (s : set α) :
- bdd_below s ∧ bdd_above s ↔ ∃ a b, s ⊆ [a, b] :=
+  bdd_below s ∧ bdd_above s ↔ ∃ a b, s ⊆ [a, b] :=
 bdd_below_bdd_above_iff_subset_Icc.trans
- ⟨λ ⟨a, b, h⟩, ⟨a, b, λ x hx, Icc_subset_uIcc (h hx)⟩, λ ⟨a, b, h⟩, ⟨_, _, h⟩⟩
+  ⟨λ ⟨a, b, h⟩, ⟨a, b, λ x hx, Icc_subset_uIcc (h hx)⟩, λ ⟨a, b, h⟩, ⟨_, _, h⟩⟩
 
 section prod
 
 @[simp] lemma uIcc_prod_uIcc (a₁ a₂ : α) (b₁ b₂ : β) :
- [a₁, a₂] ×ˢ [b₁, b₂] = [(a₁, b₁), (a₂, b₂)] :=
+  [a₁, a₂] ×ˢ [b₁, b₂] = [(a₁, b₁), (a₂, b₂)] :=
 Icc_prod_Icc _ _ _ _
 
 lemma uIcc_prod_eq (a b : α × β) : [a, b] = [a.1, b.1] ×ˢ [a.2, b.2] := by simp
@@ -121,7 +121,7 @@ by simpa only [uIcc_comm a] using eq_of_mem_uIcc_of_mem_uIcc
 
 lemma uIcc_injective_right (a : α) : injective (λ b, uIcc b a) :=
 λ b c h, by { rw ext_iff at h,
- exact eq_of_mem_uIcc_of_mem_uIcc ((h _).1 left_mem_uIcc) ((h _).2 left_mem_uIcc) }
+  exact eq_of_mem_uIcc_of_mem_uIcc ((h _).1 left_mem_uIcc) ((h _).2 left_mem_uIcc) }
 
 lemma uIcc_injective_left (a : α) : injective (uIcc a) :=
 by simpa only [uIcc_comm] using uIcc_injective_right a
@@ -135,14 +135,14 @@ section lattice
 variables [lattice β] {f : α → β} {s : set α} {a b : α}
 
 lemma _root_.monotone_on.image_uIcc_subset (hf : monotone_on f (uIcc a b)) :
- f '' uIcc a b ⊆ uIcc (f a) (f b) :=
+  f '' uIcc a b ⊆ uIcc (f a) (f b) :=
 hf.image_Icc_subset.trans $
- by rw [hf.map_sup left_mem_uIcc right_mem_uIcc]; rw [ hf.map_inf left_mem_uIcc right_mem_uIcc]; rw [ uIcc]
+  by rw [hf.map_sup left_mem_uIcc right_mem_uIcc, hf.map_inf left_mem_uIcc right_mem_uIcc, uIcc]
 
 lemma _root_.antitone_on.image_uIcc_subset (hf : antitone_on f (uIcc a b)) :
- f '' uIcc a b ⊆ uIcc (f a) (f b) :=
+  f '' uIcc a b ⊆ uIcc (f a) (f b) :=
 hf.image_Icc_subset.trans $
- by rw [hf.map_sup left_mem_uIcc right_mem_uIcc]; rw [ hf.map_inf left_mem_uIcc right_mem_uIcc]; rw [ uIcc]
+  by rw [hf.map_sup left_mem_uIcc right_mem_uIcc, hf.map_inf left_mem_uIcc right_mem_uIcc, uIcc]
 
 lemma _root_.monotone.image_uIcc_subset (hf : monotone f) : f '' uIcc a b ⊆ uIcc (f a) (f b) :=
 (hf.monotone_on _).image_uIcc_subset
@@ -159,7 +159,7 @@ lemma Icc_min_max : Icc (min a b) (max a b) = [a, b] := rfl
 lemma uIcc_of_not_le (h : ¬ a ≤ b) : [a, b] = Icc b a := uIcc_of_gt $ lt_of_not_ge h
 lemma uIcc_of_not_ge (h : ¬ b ≤ a) : [a, b] = Icc a b := uIcc_of_lt $ lt_of_not_ge h
 
-lemma uIcc_eq_union : [a, b] = Icc a b ∪ Icc b a := by rw [Icc_union_Icc']; rw [ max_comm]; refl
+lemma uIcc_eq_union : [a, b] = Icc a b ∪ Icc b a := by rw [Icc_union_Icc', max_comm]; refl
 
 lemma mem_uIcc : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [uIcc_eq_union]
 
@@ -170,7 +170,7 @@ lemma not_mem_uIcc_of_gt (ha : a < c) (hb : b < c) : c ∉ [a, b] :=
 not_mem_Icc_of_gt $ max_lt_iff.mpr ⟨ha, hb⟩
 
 lemma uIcc_subset_uIcc_iff_le :
- [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
+  [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
 uIcc_subset_uIcc_iff_le'
 
 /-- A sort of triangle inequality. -/
@@ -178,22 +178,22 @@ lemma uIcc_subset_uIcc_union_uIcc : [a, c] ⊆ [a, b] ∪ [b, c] :=
 λ x, by simp only [mem_uIcc, mem_union]; cases le_total a c; cases le_total x b; tauto
 
 lemma monotone_or_antitone_iff_uIcc :
- monotone f ∨ antitone f ↔ ∀ a b c, c ∈ [a, b] → f c ∈ [f a, f b] :=
+  monotone f ∨ antitone f ↔ ∀ a b c, c ∈ [a, b] → f c ∈ [f a, f b] :=
 begin
- split,
- { rintro (hf | hf) a b c; simp_rw [←Icc_min_max, ←hf.map_min, ←hf.map_max],
- exacts [λ hc, ⟨hf hc.1, hf hc.2⟩, λ hc, ⟨hf hc.2, hf hc.1⟩] },
- contrapose!,
- rw not_monotone_not_antitone_iff_exists_le_le,
- rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩,
- { exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, λ h, h.2.not_lt $ max_lt hfab hfcb⟩ },
- { exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, λ h, h.1.not_lt $ lt_min hfba hfbc⟩ }
+  split,
+  { rintro (hf | hf) a b c; simp_rw [←Icc_min_max, ←hf.map_min, ←hf.map_max],
+    exacts [λ hc, ⟨hf hc.1, hf hc.2⟩, λ hc, ⟨hf hc.2, hf hc.1⟩] },
+  contrapose!,
+  rw not_monotone_not_antitone_iff_exists_le_le,
+  rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩,
+  { exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, λ h, h.2.not_lt $ max_lt hfab hfcb⟩ },
+  { exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, λ h, h.1.not_lt $ lt_min hfba hfbc⟩ }
 end
 
 lemma monotone_on_or_antitone_on_iff_uIcc :
- monotone_on f s ∨ antitone_on f s ↔ ∀ a b c ∈ s, c ∈ [a, b] → f c ∈ [f a, f b] :=
+  monotone_on f s ∨ antitone_on f s ↔ ∀ a b c ∈ s, c ∈ [a, b] → f c ∈ [f a, f b] :=
 by simp [monotone_on_iff_monotone, antitone_on_iff_antitone, monotone_or_antitone_iff_uIcc,
- mem_uIcc]
+  mem_uIcc]
 
 /-- The open-closed interval with unordered bounds. -/
 def uIoc : α → α → set α := λ a b, Ioc (min a b) (max a b)
@@ -215,8 +215,8 @@ by { simp only [uIoc_eq_union, mem_union, mem_Ioc, not_lt, ←not_le], tauto }
 @[simp] lemma left_mem_uIoc : a ∈ Ι a b ↔ b < a := by simp [mem_uIoc]
 @[simp] lemma right_mem_uIoc : b ∈ Ι a b ↔ a < b := by simp [mem_uIoc]
 
-lemma forall_uIoc_iff {P : α → Prop} :
- (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ Ioc a b, P x) ∧ (∀ x ∈ Ioc b a, P x) :=
+lemma forall_uIoc_iff  {P : α → Prop} :
+  (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ Ioc a b, P x) ∧ (∀ x ∈ Ioc b a, P x) :=
 by simp only [uIoc_eq_union, mem_union, or_imp_distrib, forall_and_distrib]
 
 lemma uIoc_subset_uIoc_of_uIcc_subset_uIcc (h : [a, b] ⊆ [c, d]) : Ι a b ⊆ Ι c d :=
@@ -229,29 +229,29 @@ lemma Ioc_subset_uIoc' : Ioc a b ⊆ Ι b a := Ioc_subset_Ioc (min_le_right _ _)
 
 lemma eq_of_mem_uIoc_of_mem_uIoc : a ∈ Ι b c → b ∈ Ι a c → a = b :=
 by simp_rw mem_uIoc; rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩); apply le_antisymm;
- assumption <|> exact le_of_lt ‹_› <|> exact le_trans ‹_› (le_of_lt ‹_›)
+  assumption <|> exact le_of_lt ‹_› <|> exact le_trans ‹_› (le_of_lt ‹_›)
 
 lemma eq_of_mem_uIoc_of_mem_uIoc' : b ∈ Ι a c → c ∈ Ι a b → b = c :=
 by simpa only [uIoc_swap a] using eq_of_mem_uIoc_of_mem_uIoc
 
 lemma eq_of_not_mem_uIoc_of_not_mem_uIoc (ha : a ≤ c) (hb : b ≤ c) :
- a ∉ Ι b c → b ∉ Ι a c → a = b :=
+  a ∉ Ι b c → b ∉ Ι a c → a = b :=
 by simp_rw not_mem_uIoc; rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩); apply le_antisymm;
- assumption <|> exact le_of_lt ‹_› <|> cases not_le_of_lt ‹_› ‹_›
+    assumption <|> exact le_of_lt ‹_› <|> cases not_le_of_lt ‹_› ‹_›
 
 lemma uIoc_injective_right (a : α) : injective (λ b, Ι b a) :=
 begin
- rintro b c h,
- rw ext_iff at h,
- obtain ha | ha := le_or_lt b a,
- { have hb := (h b).not,
- simp only [ha, left_mem_uIoc, not_lt, true_iff, not_mem_uIoc, ←not_le, and_true,
- not_true, false_and, not_false_iff, true_iff, or_false] at hb,
- refine hb.eq_of_not_lt (λ hc, _),
- simpa [ha, and_iff_right hc, ←@not_le _ _ _ a, -not_le] using h c },
- { refine eq_of_mem_uIoc_of_mem_uIoc ((h _).1 $ left_mem_uIoc.2 ha)
- ((h _).2 $ left_mem_uIoc.2 $ ha.trans_le _),
- simpa [ha, ha.not_le, mem_uIoc] using h b }
+  rintro b c h,
+  rw ext_iff at h,
+  obtain ha | ha := le_or_lt b a,
+  { have hb := (h b).not,
+    simp only [ha, left_mem_uIoc, not_lt, true_iff, not_mem_uIoc, ←not_le, and_true,
+      not_true, false_and, not_false_iff, true_iff, or_false] at hb,
+    refine hb.eq_of_not_lt (λ hc, _),
+    simpa [ha, and_iff_right hc, ←@not_le _ _ _ a, -not_le] using h c },
+  { refine eq_of_mem_uIoc_of_mem_uIoc ((h _).1 $ left_mem_uIoc.2 ha)
+      ((h _).2 $ left_mem_uIoc.2 $ ha.trans_le _),
+    simpa [ha, ha.not_le, mem_uIoc] using h b }
 end
 
 lemma uIoc_injective_left (a : α) : injective (Ι a) :=
@@ -259,4 +259,3 @@ by simpa only [uIoc_swap] using uIoc_injective_right a
 
 end linear_order
 end set
-

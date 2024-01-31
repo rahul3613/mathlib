@@ -32,24 +32,23 @@ namespace category_theory
 variables {C : Type u} [category.{v} C] [preadditive C]
 
 instance preserves_limits_preadditive_yoneda_obj (X : C) :
- preserves_limits (preadditive_yoneda_obj X) :=
+  preserves_limits (preadditive_yoneda_obj X) :=
 have preserves_limits (preadditive_yoneda_obj X ⋙ forget _),
- from (infer_instance : preserves_limits (yoneda.obj X)),
+  from (infer_instance : preserves_limits (yoneda.obj X)),
 by exactI preserves_limits_of_reflects_of_preserves _ (forget _)
 
 instance preserves_limits_preadditive_coyoneda_obj (X : Cᵒᵖ) :
- preserves_limits (preadditive_coyoneda_obj X) :=
+  preserves_limits (preadditive_coyoneda_obj X) :=
 have preserves_limits (preadditive_coyoneda_obj X ⋙ forget _),
- from (infer_instance : preserves_limits (coyoneda.obj X)),
+  from (infer_instance : preserves_limits (coyoneda.obj X)),
 by exactI preserves_limits_of_reflects_of_preserves _ (forget _)
 
 instance preserves_limits_preadditive_yoneda.obj (X : C) :
- preserves_limits (preadditive_yoneda.obj X) :=
+  preserves_limits (preadditive_yoneda.obj X) :=
 show preserves_limits (preadditive_yoneda_obj X ⋙ forget₂ _ _), from infer_instance
 
 instance preserves_limits_preadditive_coyoneda.obj (X : Cᵒᵖ) :
- preserves_limits (preadditive_coyoneda.obj X) :=
+  preserves_limits (preadditive_coyoneda.obj X) :=
 show preserves_limits (preadditive_coyoneda_obj X ⋙ forget₂ _ _), from infer_instance
 
 end category_theory
-

@@ -17,8 +17,7 @@ exiled here to minimize imports to `data.rat.order` for porting purposes.
 -/
 
 theorem nat.cast_with_top (n : ℕ) :
- @coe ℕ (with_top ℕ) (@coe_to_lift _ _ nat.cast_coe) n = n := rfl
+  @coe ℕ (with_top ℕ) (@coe_to_lift _ _ nat.cast_coe) n = n := rfl
 
 theorem nat.cast_with_bot (n : ℕ) :
- @coe ℕ (with_bot ℕ) (@coe_to_lift _ _ nat.cast_coe) n = n := rfl
-
+  @coe ℕ (with_bot ℕ) (@coe_to_lift _ _ nat.cast_coe) n = n := rfl

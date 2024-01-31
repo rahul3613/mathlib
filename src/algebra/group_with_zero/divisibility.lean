@@ -28,7 +28,7 @@ theorem eq_zero_of_zero_dvd (h : 0 ∣ a) : a = 0 :=
 dvd.elim h (λ c H', H'.trans (zero_mul c))
 
 /-- Given an element `a` of a commutative semigroup with zero, there exists another element whose
- product with zero equals `a` iff `a` equals zero. -/
+    product with zero equals `a` iff `a` equals zero. -/
 @[simp] lemma zero_dvd_iff : 0 ∣ a ↔ a = 0 :=
 ⟨eq_zero_of_zero_dvd, λ h, by { rw h, use 0, simp }⟩
 
@@ -39,14 +39,14 @@ end semigroup_with_zero
 /-- Given two elements `b`, `c` of a `cancel_monoid_with_zero` and a nonzero element `a`,
  `a*b` divides `a*c` iff `b` divides `c`. -/
 theorem mul_dvd_mul_iff_left [cancel_monoid_with_zero α] {a b c : α}
- (ha : a ≠ 0) : a * b ∣ a * c ↔ b ∣ c :=
-exists_congr $ λ d, by rw [mul_assoc]; rw [ mul_right_inj' ha]
+  (ha : a ≠ 0) : a * b ∣ a * c ↔ b ∣ c :=
+exists_congr $ λ d, by rw [mul_assoc, mul_right_inj' ha]
 
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
- element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
+  element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
 theorem mul_dvd_mul_iff_right [cancel_comm_monoid_with_zero α] {a b c : α} (hc : c ≠ 0) :
- a * c ∣ b * c ↔ a ∣ b :=
-exists_congr $ λ d, by rw [mul_right_comm]; rw [ mul_left_inj' hc]
+  a * c ∣ b * c ↔ a ∣ b :=
+exists_congr $ λ d, by rw [mul_right_comm, mul_left_inj' hc]
 
 section comm_monoid_with_zero
 
@@ -57,34 +57,34 @@ is not a unit. -/
 def dvd_not_unit (a b : α) : Prop := a ≠ 0 ∧ ∃ x, ¬is_unit x ∧ b = a * x
 
 lemma dvd_not_unit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬ b ∣ a) :
- dvd_not_unit a b :=
+  dvd_not_unit a b :=
 begin
- split,
- { rintro rfl, exact hnd (dvd_zero _) },
- { rcases hd with ⟨c, rfl⟩,
- refine ⟨c, _, rfl⟩,
- rintro ⟨u, rfl⟩,
- simpa using hnd }
+  split,
+  { rintro rfl, exact hnd (dvd_zero _) },
+  { rcases hd with ⟨c, rfl⟩,
+    refine ⟨c, _, rfl⟩,
+    rintro ⟨u, rfl⟩,
+    simpa using hnd }
 end
 
 end comm_monoid_with_zero
 
 lemma dvd_and_not_dvd_iff [cancel_comm_monoid_with_zero α] {x y : α} :
- x ∣ y ∧ ¬y ∣ x ↔ dvd_not_unit x y :=
+  x ∣ y ∧ ¬y ∣ x ↔ dvd_not_unit x y :=
 ⟨λ ⟨⟨d, hd⟩, hyx⟩, ⟨λ hx0, by simpa [hx0] using hyx, ⟨d,
- mt is_unit_iff_dvd_one.1 (λ ⟨e, he⟩, hyx ⟨e, by rw [hd]; rw [ mul_assoc]; rw [ ← he]; rw [ mul_one]⟩), hd⟩⟩,
- λ ⟨hx0, d, hdu, hdx⟩, ⟨⟨d, hdx⟩, λ ⟨e, he⟩, hdu (is_unit_of_dvd_one _
- ⟨e, mul_left_cancel₀ hx0 $ by conv {to_lhs, rw [he]; rw [ hdx]};simp [mul_assoc]⟩)⟩⟩
+    mt is_unit_iff_dvd_one.1 (λ ⟨e, he⟩, hyx ⟨e, by rw [hd, mul_assoc, ← he, mul_one]⟩), hd⟩⟩,
+  λ ⟨hx0, d, hdu, hdx⟩, ⟨⟨d, hdx⟩, λ ⟨e, he⟩, hdu (is_unit_of_dvd_one _
+    ⟨e, mul_left_cancel₀ hx0 $ by conv {to_lhs, rw [he, hdx]};simp [mul_assoc]⟩)⟩⟩
 
 section monoid_with_zero
 
 variable [monoid_with_zero α]
 
 theorem ne_zero_of_dvd_ne_zero {p q : α} (h₁ : q ≠ 0)
- (h₂ : p ∣ q) : p ≠ 0 :=
+  (h₂ : p ∣ q) : p ≠ 0 :=
 begin
- rcases h₂ with ⟨u, rfl⟩,
- exact left_ne_zero_of_mul h₁,
+  rcases h₂ with ⟨u, rfl⟩,
+  exact left_ne_zero_of_mul h₁,
 end
 
 end monoid_with_zero
@@ -94,9 +94,9 @@ variables [cancel_comm_monoid_with_zero α] [subsingleton αˣ] {a b : α}
 
 lemma dvd_antisymm : a ∣ b → b ∣ a → a = b :=
 begin
- rintro ⟨c, rfl⟩ ⟨d, hcd⟩,
- rw [mul_assoc] at hcd; rw [ eq_comm] at hcd; rw [ mul_right_eq_self₀] at hcd; rw [ mul_eq_one] at hcd,
- obtain ⟨rfl, -⟩ | rfl := hcd; simp,
+  rintro ⟨c, rfl⟩ ⟨d, hcd⟩,
+  rw [mul_assoc, eq_comm, mul_right_eq_self₀, mul_eq_one] at hcd,
+  obtain ⟨rfl, -⟩ | rfl := hcd; simp,
 end
 
 attribute [protected] nat.dvd_antisymm --This lemma is in core, so we protect it here
@@ -113,4 +113,3 @@ lemma eq_of_forall_dvd' (h : ∀ c, c ∣ a ↔ c ∣ b) : a = b :=
 ((h _).1 dvd_rfl).antisymm $ (h _).2 dvd_rfl
 
 end cancel_comm_monoid_with_zero
-

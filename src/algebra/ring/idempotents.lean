@@ -18,11 +18,11 @@ This file defines idempotents for an arbitary multiplication and proves some bas
 including:
 
 * `is_idempotent_elem.mul_of_commute`: In a semigroup, the product of two commuting idempotents is
- an idempotent;
+  an idempotent;
 * `is_idempotent_elem.one_sub_iff`: In a (non-associative) ring, `p` is an idempotent if and only if
- `1-p` is an idempotent.
+  `1-p` is an idempotent.
 * `is_idempotent_elem.pow_succ_eq`: In a monoid `p ^ (n+1) = p` for `p` an idempotent and `n` a
- natural number.
+  natural number.
 
 ## Tags
 
@@ -31,7 +31,7 @@ projection, idempotent
 
 variables {M N S M₀ M₁ R G G₀ : Type*}
 variables [has_mul M] [monoid N] [semigroup S] [mul_zero_class M₀] [mul_one_class M₁]
- [non_assoc_ring R] [group G] [cancel_monoid_with_zero G₀]
+  [non_assoc_ring R] [group G] [cancel_monoid_with_zero G₀]
 
 /--
 An element `p` is said to be idempotent if `p * p = p`
@@ -46,35 +46,35 @@ is_idempotent.idempotent a
 lemma eq {p : M} (h : is_idempotent_elem p) : p * p = p := h
 
 lemma mul_of_commute {p q : S} (h : commute p q) (h₁ : is_idempotent_elem p)
- (h₂ : is_idempotent_elem q) : is_idempotent_elem (p * q) :=
-by rw [is_idempotent_elem]; rw [ mul_assoc]; rw [ ← mul_assoc q]; rw [ ← h.eq]; rw [ mul_assoc p]; rw [ h₂.eq]; rw [ ← mul_assoc]; rw [ h₁.eq]
+  (h₂ : is_idempotent_elem q) : is_idempotent_elem (p * q)  :=
+by rw [is_idempotent_elem, mul_assoc, ← mul_assoc q, ← h.eq, mul_assoc p, h₂.eq, ← mul_assoc, h₁.eq]
 
 lemma zero : is_idempotent_elem (0 : M₀) := mul_zero _
 
 lemma one : is_idempotent_elem (1 : M₁) := mul_one _
 
 lemma one_sub {p : R} (h : is_idempotent_elem p) : is_idempotent_elem (1 - p) :=
-by rw [is_idempotent_elem]; rw [ mul_sub]; rw [ mul_one]; rw [ sub_mul]; rw [ one_mul]; rw [ h.eq]; rw [ sub_self]; rw [ sub_zero]
+by rw [is_idempotent_elem, mul_sub, mul_one, sub_mul, one_mul, h.eq, sub_self, sub_zero]
 
 @[simp] lemma one_sub_iff {p : R} : is_idempotent_elem (1 - p) ↔ is_idempotent_elem p :=
 ⟨ λ h, sub_sub_cancel 1 p ▸ h.one_sub, is_idempotent_elem.one_sub ⟩
 
 lemma pow {p : N} (n : ℕ) (h : is_idempotent_elem p) : is_idempotent_elem (p ^ n) :=
 nat.rec_on n ((pow_zero p).symm ▸ one) (λ n ih, show p ^ n.succ * p ^ n.succ = p ^ n.succ,
- by { nth_rewrite 2 ←h.eq, rw [←sq]; rw [ ←sq]; rw [ ←pow_mul]; rw [ ←pow_mul'] })
+  by { nth_rewrite 2 ←h.eq, rw [←sq, ←sq, ←pow_mul, ←pow_mul'] })
 
 lemma pow_succ_eq {p : N} (n : ℕ) (h : is_idempotent_elem p) : p ^ (n + 1) = p :=
-nat.rec_on n ((nat.zero_add 1).symm ▸ pow_one p) (λ n ih, by rw [pow_succ]; rw [ ih]; rw [ h.eq])
+nat.rec_on n ((nat.zero_add 1).symm ▸ pow_one p) (λ n ih, by rw [pow_succ, ih, h.eq])
 
 @[simp] lemma iff_eq_one {p : G} : is_idempotent_elem p ↔ p = 1 :=
 iff.intro (λ h, mul_left_cancel ((mul_one p).symm ▸ h.eq : p * p = p * 1)) (λ h, h.symm ▸ one)
 
-@[simp] lemma iff_eq_zero_or_one {p : G₀} : is_idempotent_elem p ↔ p = 0 ∨ p = 1 :=
+@[simp] lemma iff_eq_zero_or_one {p : G₀}  : is_idempotent_elem p ↔ p = 0 ∨ p = 1 :=
 begin
- refine iff.intro
- (λ h, or_iff_not_imp_left.mpr (λ hp, _))
- (λ h, h.elim (λ hp, hp.symm ▸ zero) (λ hp, hp.symm ▸ one)),
- exact mul_left_cancel₀ hp (h.trans (mul_one p).symm)
+  refine iff.intro
+    (λ h, or_iff_not_imp_left.mpr (λ hp, _))
+    (λ h, h.elim (λ hp, hp.symm ▸ zero) (λ hp, hp.symm ▸ one)),
+  exact mul_left_cancel₀ hp (h.trans (mul_one p).symm)
 end
 
 /-! ### Instances on `subtype is_idempotent_elem` -/
@@ -102,4 +102,3 @@ subtype.ext $ sub_sub_cancel _ _
 end instances
 
 end is_idempotent_elem
-

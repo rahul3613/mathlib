@@ -33,4 +33,3 @@ lemma mdifferentiable_coe : mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → �
 smooth_coe.mdifferentiable
 
 end upper_half_plane
-

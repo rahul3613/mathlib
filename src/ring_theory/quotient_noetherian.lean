@@ -14,6 +14,5 @@ import ring_theory.quotient_nilpotent
 -/
 
 instance ideal.quotient.is_noetherian_ring {R : Type*} [comm_ring R] [h : is_noetherian_ring R]
- (I : ideal R) : is_noetherian_ring (R ⧸ I) :=
+  (I : ideal R) : is_noetherian_ring (R ⧸ I) :=
 is_noetherian_ring_iff.mpr $ is_noetherian_of_tower R $ submodule.quotient.is_noetherian _
-

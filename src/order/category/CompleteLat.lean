@@ -36,23 +36,23 @@ instance : inhabited CompleteLat := ⟨of punit⟩
 
 instance : bundled_hom @complete_lattice_hom :=
 { to_fun := λ _ _ _ _, coe_fn,
- id := @complete_lattice_hom.id,
- comp := @complete_lattice_hom.comp,
- hom_ext := λ X Y _ _, by exactI fun_like.coe_injective }
+  id := @complete_lattice_hom.id,
+  comp := @complete_lattice_hom.comp,
+  hom_ext := λ X Y _ _, by exactI fun_like.coe_injective }
 instance : large_category.{u} CompleteLat := bundled_hom.category complete_lattice_hom
 instance : concrete_category CompleteLat := bundled_hom.concrete_category complete_lattice_hom
 
 instance has_forget_to_BddLat : has_forget₂ CompleteLat BddLat :=
 { forget₂ := { obj := λ X, BddLat.of X,
- map := λ X Y, complete_lattice_hom.to_bounded_lattice_hom },
- forget_comp := rfl }
+               map := λ X Y, complete_lattice_hom.to_bounded_lattice_hom },
+  forget_comp := rfl }
 
 /-- Constructs an isomorphism of complete lattices from an order isomorphism between them. -/
 @[simps] def iso.mk {α β : CompleteLat.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := e,
- inv := e.symm,
- hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
- inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+  inv := e.symm,
+  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 /-- `order_dual` as a functor. -/
 @[simps] def dual : CompleteLat ⥤ CompleteLat :=
@@ -61,12 +61,11 @@ instance has_forget_to_BddLat : has_forget₂ CompleteLat BddLat :=
 /-- The equivalence between `CompleteLat` and itself induced by `order_dual` both ways. -/
 @[simps functor inverse] def dual_equiv : CompleteLat ≌ CompleteLat :=
 equivalence.mk dual dual
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
- (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
 
 end CompleteLat
 
 lemma CompleteLat_dual_comp_forget_to_BddLat :
- CompleteLat.dual ⋙ forget₂ CompleteLat BddLat =
- forget₂ CompleteLat BddLat ⋙ BddLat.dual := rfl
-
+  CompleteLat.dual ⋙ forget₂ CompleteLat BddLat =
+    forget₂ CompleteLat BddLat ⋙ BddLat.dual := rfl

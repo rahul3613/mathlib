@@ -54,7 +54,7 @@ class is_split_mono {X Y : C} (f : X ⟶ Y) : Prop :=
 
 /-- A constructor for `is_split_mono f` taking a `split_mono f` as an argument -/
 lemma is_split_mono.mk' {X Y : C} {f : X ⟶ Y} (sm : split_mono f) :
- is_split_mono f := ⟨nonempty.intro sm⟩
+  is_split_mono f := ⟨nonempty.intro sm⟩
 
 /--
 A split epimorphism is a morphism `f : X ⟶ Y` with a given section `section_ f : Y ⟶ X`
@@ -77,7 +77,7 @@ class is_split_epi {X Y : C} (f : X ⟶ Y) : Prop :=
 
 /-- A constructor for `is_split_epi f` taking a `split_epi f` as an argument -/
 lemma is_split_epi.mk' {X Y : C} {f : X ⟶ Y} (se : split_epi f) :
- is_split_epi f := ⟨nonempty.intro se⟩
+  is_split_epi f := ⟨nonempty.intro se⟩
 
 /-- The chosen retraction of a split monomorphism. -/
 noncomputable def retraction {X Y : C} (f : X ⟶ Y) [hf : is_split_mono f] : Y ⟶ X :=
@@ -117,7 +117,7 @@ def split_epi.split_mono {X Y : C} {f : X ⟶ Y} (se : split_epi f) : split_mono
 
 /-- The section of a split epimorphism is itself a split monomorphism. -/
 instance section_is_split_mono {X Y : C} (f : X ⟶ Y) [hf : is_split_epi f] :
- is_split_mono (section_ f) :=
+  is_split_mono (section_ f) :=
 is_split_mono.mk' (split_epi.split_mono _)
 
 /-- A split epi which is mono is an iso. -/
@@ -152,36 +152,36 @@ hf.exists_split_epi.some.epi
 
 /-- Every split mono whose retraction is mono is an iso. -/
 lemma is_iso.of_mono_retraction' {X Y : C} {f : X ⟶ Y} (hf : split_mono f)
- [mono $ hf.retraction] : is_iso f :=
+  [mono $ hf.retraction] : is_iso f :=
 ⟨⟨hf.retraction, ⟨by simp, (cancel_mono_id $ hf.retraction).mp (by simp)⟩⟩⟩
 
 /-- Every split mono whose retraction is mono is an iso. -/
 lemma is_iso.of_mono_retraction {X Y : C} (f : X ⟶ Y) [hf : is_split_mono f]
- [hf' : mono $ retraction f] : is_iso f :=
+  [hf' : mono $ retraction f] : is_iso f :=
 @is_iso.of_mono_retraction' _ _ _ _ _ hf.exists_split_mono.some hf'
 
 /-- Every split epi whose section is epi is an iso. -/
 lemma is_iso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : split_epi f)
- [epi $ hf.section_] : is_iso f :=
+  [epi $ hf.section_] : is_iso f :=
 ⟨⟨hf.section_, ⟨(cancel_epi_id $ hf.section_).mp (by simp), by simp⟩⟩⟩
 
 /-- Every split epi whose section is epi is an iso. -/
 lemma is_iso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : is_split_epi f]
- [hf' : epi $ section_ f] : is_iso f :=
+  [hf' : epi $ section_ f] : is_iso f :=
 @is_iso.of_epi_section' _ _ _ _ _ hf.exists_split_epi.some hf'
 
 /-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
 -- FIXME this has unnecessarily become noncomputable!
 noncomputable
 def groupoid.of_trunc_split_mono
- (all_split_mono : ∀ {X Y : C} (f : X ⟶ Y), trunc (is_split_mono f)) :
- groupoid.{v₁} C :=
+  (all_split_mono : ∀ {X Y : C} (f : X ⟶ Y), trunc (is_split_mono f)) :
+  groupoid.{v₁} C :=
 begin
- apply groupoid.of_is_iso,
- intros X Y f,
- trunc_cases all_split_mono f,
- trunc_cases all_split_mono (retraction f),
- apply is_iso.of_mono_retraction,
+  apply groupoid.of_is_iso,
+  intros X Y f,
+  trunc_cases all_split_mono f,
+  trunc_cases all_split_mono (retraction f),
+  apply is_iso.of_mono_retraction,
 end
 
 section
@@ -198,15 +198,15 @@ class split_epi_category :=
 end
 
 /-- In a category in which every monomorphism is split, every monomorphism splits. This is not an
- instance because it would create an instance loop. -/
+    instance because it would create an instance loop. -/
 lemma is_split_mono_of_mono [split_mono_category C] {X Y : C} (f : X ⟶ Y) [mono f] :
- is_split_mono f :=
+  is_split_mono f :=
 split_mono_category.is_split_mono_of_mono _
 
 /-- In a category in which every epimorphism is split, every epimorphism splits. This is not an
- instance because it would create an instance loop. -/
+    instance because it would create an instance loop. -/
 lemma is_split_epi_of_epi [split_epi_category C] {X Y : C} (f : X ⟶ Y) [epi f] :
- is_split_epi f := split_epi_category.is_split_epi_of_epi _
+  is_split_epi f := split_epi_category.is_split_epi_of_epi _
 
 section
 variables {D : Type u₂} [category.{v₂} D]
@@ -214,16 +214,16 @@ variables {D : Type u₂} [category.{v₂} D]
 /-- Split monomorphisms are also absolute monomorphisms. -/
 @[simps]
 def split_mono.map {X Y : C} {f : X ⟶ Y} (sm : split_mono f) (F : C ⥤ D ) :
- split_mono (F.map f) :=
+  split_mono (F.map f) :=
 { retraction := F.map (sm.retraction),
- id' := by { rw [←functor.map_comp]; rw [ split_mono.id]; rw [ functor.map_id], } }
+  id' := by { rw [←functor.map_comp, split_mono.id, functor.map_id], } }
 
 /-- Split epimorphisms are also absolute epimorphisms. -/
 @[simps]
 def split_epi.map {X Y : C} {f : X ⟶ Y} (se : split_epi f) (F : C ⥤ D ) :
- split_epi (F.map f) :=
+  split_epi (F.map f) :=
 { section_ := F.map (se.section_),
- id' := by { rw [←functor.map_comp]; rw [ split_epi.id]; rw [ functor.map_id], } }
+  id' := by { rw [←functor.map_comp, split_epi.id, functor.map_id], } }
 
 instance {X Y : C} (f : X ⟶ Y) [hf : is_split_mono f] (F : C ⥤ D) : is_split_mono (F.map f) :=
 is_split_mono.mk' (hf.exists_split_mono.some.map F)
@@ -234,4 +234,3 @@ is_split_epi.mk' (hf.exists_split_epi.some.map F)
 end
 
 end category_theory
-

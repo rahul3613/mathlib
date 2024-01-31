@@ -19,12 +19,12 @@ namespace int
 
 @[norm_cast] theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
 ⟨λ ⟨a, ae⟩, m.eq_zero_or_pos.elim
- (λm0, by simp [m0] at ae; simp [ae, m0])
- (λm0l, by
- { cases eq_coe_of_zero_le (@nonneg_of_mul_nonneg_right ℤ _ m a
- (by simp [ae.symm]) (by simpa using m0l)) with k e,
- subst a, exact ⟨k, int.coe_nat_inj ae⟩ }),
- λ ⟨k, e⟩, dvd.intro k $ by rw [e]; rw [ int.coe_nat_mul]⟩
+  (λm0, by simp [m0] at ae; simp [ae, m0])
+  (λm0l, by
+  { cases eq_coe_of_zero_le (@nonneg_of_mul_nonneg_right ℤ _ m a
+      (by simp [ae.symm]) (by simpa using m0l)) with k e,
+    subst a, exact ⟨k, int.coe_nat_inj ae⟩ }),
+ λ ⟨k, e⟩, dvd.intro k $ by rw [e, int.coe_nat_mul]⟩
 
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.nat_abs :=
 by rcases nat_abs_eq z with eq | eq; rw eq; simp [←coe_nat_dvd]
@@ -35,29 +35,28 @@ by rcases nat_abs_eq z with eq | eq; rw eq; simp [←coe_nat_dvd]
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
 match a, b, eq_succ_of_zero_lt bpos, H with
 | (m : ℕ), ._, ⟨n, rfl⟩, H := coe_nat_le_coe_nat_of_le $
- nat.le_of_dvd n.succ_pos $ coe_nat_dvd.1 H
+  nat.le_of_dvd n.succ_pos $ coe_nat_dvd.1 H
 | -[1+ m], ._, ⟨n, rfl⟩, _ :=
- le_trans (le_of_lt $ neg_succ_lt_zero _) (coe_zero_le _)
+  le_trans (le_of_lt $ neg_succ_lt_zero _) (coe_zero_le _)
 end
 
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
 match a, eq_coe_of_zero_le H, H' with
 | ._, ⟨n, rfl⟩, H' := congr_arg coe $
- nat.eq_one_of_dvd_one $ coe_nat_dvd.1 H'
+  nat.eq_one_of_dvd_one $ coe_nat_dvd.1 H'
 end
 
 theorem eq_one_of_mul_eq_one_right {a b : ℤ} (H : 0 ≤ a) (H' : a * b = 1) : a = 1 :=
 eq_one_of_dvd_one H ⟨b, H'.symm⟩
 
 theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b = 1 :=
-eq_one_of_mul_eq_one_right H (by rw [mul_comm]; rw [ H'])
+eq_one_of_mul_eq_one_right H (by rw [mul_comm, H'])
 
 theorem dvd_antisymm {a b : ℤ} (H1 : 0 ≤ a) (H2 : 0 ≤ b) : a ∣ b → b ∣ a → a = b :=
 begin
- rw [← abs_of_nonneg H1]; rw [ ← abs_of_nonneg H2]; rw [ abs_eq_nat_abs]; rw [ abs_eq_nat_abs],
- rw [coe_nat_dvd]; rw [ coe_nat_dvd]; rw [ coe_nat_inj'],
- apply nat.dvd_antisymm
+  rw [← abs_of_nonneg H1, ← abs_of_nonneg H2, abs_eq_nat_abs, abs_eq_nat_abs],
+  rw [coe_nat_dvd, coe_nat_dvd, coe_nat_inj'],
+  apply nat.dvd_antisymm
 end
 
 end int
-

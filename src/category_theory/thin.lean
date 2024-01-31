@@ -36,7 +36,7 @@ section
 variables [category_struct.{v₁} C] [quiver.is_thin C]
 
 /-- Construct a category instance from a category_struct, using the fact that
- hom spaces are subsingletons to prove the axioms. -/
+    hom spaces are subsingletons to prove the axioms. -/
 def thin_category : category C := {}.
 end
 
@@ -58,4 +58,3 @@ instance subsingleton_iso {X Y : C} : subsingleton (X ≅ Y) :=
 ⟨by { intros i₁ i₂, ext1, apply subsingleton.elim }⟩
 
 end category_theory
-

@@ -16,7 +16,7 @@ import order.basic
 This file provides two type synonyms for order theory:
 * `order_dual α`: Type synonym of `α` to equip it with the dual order (`a ≤ b` becomes `b ≤ a`).
 * `lex α`: Type synonym of `α` to equip it with its lexicographic order. The precise meaning depends
- on the type we take the lex of. Examples include `prod`, `sigma`, `list`, `finset`.
+  on the type we take the lex of. Examples include `prod`, `sigma`, `list`, `finset`.
 
 ## Notation
 
@@ -48,10 +48,10 @@ namespace order_dual
 
 instance [h : nontrivial α] : nontrivial (αᵒᵈ) := h
 
-/-- `to_dual` is the identity function to the `order_dual` of a linear order. -/
+/-- `to_dual` is the identity function to the `order_dual` of a linear order.  -/
 def to_dual : α ≃ αᵒᵈ := equiv.refl _
 
-/-- `of_dual` is the identity function from the `order_dual` of a linear order. -/
+/-- `of_dual` is the identity function from the `order_dual` of a linear order.  -/
 def of_dual : αᵒᵈ ≃ α := equiv.refl _
 
 @[simp] lemma to_dual_symm_eq : (@to_dual α).symm = of_dual := rfl
@@ -89,10 +89,10 @@ end order_dual
 /-- A type synonym to equip a type with its lexicographic order. -/
 def lex (α : Type*) := α
 
-/-- `to_lex` is the identity function to the `lex` of a type. -/
+/-- `to_lex` is the identity function to the `lex` of a type.  -/
 @[pattern] def to_lex : α ≃ lex α := equiv.refl _
 
-/-- `of_lex` is the identity function from the `lex` of a type. -/
+/-- `of_lex` is the identity function from the `lex` of a type.  -/
 @[pattern] def of_lex : lex α ≃ α := equiv.refl _
 
 @[simp] lemma to_lex_symm_eq : (@to_lex α).symm = of_lex := rfl
@@ -100,8 +100,7 @@ def lex (α : Type*) := α
 @[simp] lemma to_lex_of_lex (a : lex α) : to_lex (of_lex a) = a := rfl
 @[simp] lemma of_lex_to_lex (a : α) : of_lex (to_lex a) = a := rfl
 @[simp] lemma to_lex_inj {a b : α} : to_lex a = to_lex b ↔ a = b := iff.rfl
-@[simp] lemma of_lex_inj {a b : lex α} : of_lex a = of_lex b ↔ a = b := iff.rfl
+@[simp] lemma of_lex_inj {a b : lex α} :  of_lex a = of_lex b ↔ a = b := iff.rfl
 
 /-- A recursor for `lex`. Use as `induction x using lex.rec`. -/
 protected def lex.rec {β : lex α → Sort*} (h : Π a, β (to_lex a)) : Π a, β a := λ a, h (of_lex a)
-

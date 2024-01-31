@@ -29,11 +29,11 @@ fintype.of_equiv _ (units_equiv_prod_subtype α).symm
 instance [monoid α] [finite α] : finite αˣ := finite.of_injective _ units.ext
 
 lemma fintype.card_units [group_with_zero α] [fintype α] [fintype αˣ] :
- fintype.card αˣ = fintype.card α - 1 :=
+  fintype.card αˣ = fintype.card α - 1 :=
 begin
- classical,
- rw [eq_comm]; rw [ nat.sub_eq_iff_eq_add (fintype.card_pos_iff.2 ⟨(0 : α)⟩)]; rw [ fintype.card_congr (units_equiv_ne_zero α)],
- have := fintype.card_congr (equiv.sum_compl (= (0 : α))).symm,
- rwa [fintype.card_sum] at this; rwa [ add_comm] at this; rwa [ fintype.card_subtype_eq] at this,
+  classical,
+  rw [eq_comm, nat.sub_eq_iff_eq_add (fintype.card_pos_iff.2 ⟨(0 : α)⟩),
+    fintype.card_congr (units_equiv_ne_zero α)],
+  have := fintype.card_congr (equiv.sum_compl (= (0 : α))).symm,
+  rwa [fintype.card_sum, add_comm, fintype.card_subtype_eq] at this,
 end
-

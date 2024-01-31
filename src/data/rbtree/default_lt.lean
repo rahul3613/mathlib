@@ -5,4 +5,3 @@ Authors: Leonardo de Moura
 -/
 meta def rbtree.default_lt : tactic unit :=
 `[apply has_lt.lt]
-

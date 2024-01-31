@@ -53,23 +53,23 @@ namespace add_monoid_hom
 /-- Left multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
 def mul_left {R : Type*} [non_unital_non_assoc_semiring R] (r : R) : R →+ R :=
 { to_fun := (*) r,
- map_zero' := mul_zero r,
- map_add' := mul_add r }
+  map_zero' := mul_zero r,
+  map_add' := mul_add r }
 
 @[simp] lemma coe_mul_left {R : Type*} [non_unital_non_assoc_semiring R] (r : R) :
- ⇑(mul_left r) = (*) r := rfl
+  ⇑(mul_left r) = (*) r := rfl
 
 /-- Right multiplication by an element of a (semi)ring is an `add_monoid_hom` -/
 def mul_right {R : Type*} [non_unital_non_assoc_semiring R] (r : R) : R →+ R :=
 { to_fun := λ a, a * r,
- map_zero' := zero_mul r,
- map_add' := λ _ _, add_mul _ _ r }
+  map_zero' := zero_mul r,
+  map_add' := λ _ _, add_mul _ _ r }
 
 @[simp] lemma coe_mul_right {R : Type*} [non_unital_non_assoc_semiring R] (r : R) :
- ⇑(mul_right r) = (* r) := rfl
+  ⇑(mul_right r) = (* r) := rfl
 
 lemma mul_right_apply {R : Type*} [non_unital_non_assoc_semiring R] (a r : R) :
- mul_right r a = a * r := rfl
+  mul_right r a = a * r := rfl
 
 end add_monoid_hom
 
@@ -82,8 +82,8 @@ open mul_opposite
 
 instance : has_distrib_neg αᵐᵒᵖ :=
 { neg_mul := λ _ _, unop_injective $ mul_neg _ _,
- mul_neg := λ _ _, unop_injective $ neg_mul _ _,
- ..mul_opposite.has_involutive_neg _ }
+  mul_neg := λ _ _, unop_injective $ neg_mul _ _,
+  ..mul_opposite.has_involutive_neg _ }
 
 end has_mul
 
@@ -91,7 +91,7 @@ section group
 variables [group α] [has_distrib_neg α]
 
 @[simp] lemma inv_neg' (a : α) : (- a)⁻¹ = - a⁻¹ :=
-by rw [eq_comm]; rw [ eq_inv_iff_mul_eq_one]; rw [ neg_mul]; rw [ mul_neg]; rw [neg_neg]; rw [ mul_left_inv]
+by rw [eq_comm, eq_inv_iff_mul_eq_one, neg_mul, mul_neg,neg_neg, mul_left_inv]
 
 end group
 
@@ -103,15 +103,15 @@ variables [non_unital_comm_ring α] {a b c : α}
 local attribute [simp] add_assoc add_comm add_left_comm mul_comm
 
 /-- Vieta's formula for a quadratic equation, relating the coefficients of the polynomial with
- its roots. This particular version states that if we have a root `x` of a monic quadratic
- polynomial, then there is another root `y` such that `x + y` is negative the `a_1` coefficient
- and `x * y` is the `a_0` coefficient. -/
+  its roots. This particular version states that if we have a root `x` of a monic quadratic
+  polynomial, then there is another root `y` such that `x + y` is negative the `a_1` coefficient
+  and `x * y` is the `a_0` coefficient. -/
 lemma Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
- ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c :=
+  ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c :=
 begin
- have : c = x * (b - x) := (eq_neg_of_add_eq_zero_right h).trans (by simp [mul_sub, mul_comm]),
- refine ⟨b - x, _, by simp, by rw this⟩,
- rw [this]; rw [ sub_add]; rw [ ← sub_mul]; rw [ sub_self]
+  have : c = x * (b - x) := (eq_neg_of_add_eq_zero_right h).trans (by simp [mul_sub, mul_comm]),
+  refine ⟨b - x, _, by simp, by rw this⟩,
+  rw [this, sub_add, ← sub_mul, sub_self]
 end
 
 end non_unital_comm_ring
@@ -127,45 +127,45 @@ section no_zero_divisors
 variable (α)
 
 lemma is_left_cancel_mul_zero.to_no_zero_divisors [ring α] [is_left_cancel_mul_zero α] :
- no_zero_divisors α :=
+  no_zero_divisors α :=
 begin
- refine ⟨λ x y h, _⟩,
- by_cases hx : x = 0,
- { left, exact hx },
- { right,
- rw [← sub_zero (x * y)] at h; rw [ ← mul_zero x] at h; rw [ ← mul_sub] at h,
- convert (is_left_cancel_mul_zero.mul_left_cancel_of_ne_zero) hx h,
- rw [sub_zero] }
+  refine ⟨λ x y h, _⟩,
+  by_cases hx : x = 0,
+  { left, exact hx },
+  { right,
+    rw [← sub_zero (x * y), ← mul_zero x, ← mul_sub] at h,
+    convert (is_left_cancel_mul_zero.mul_left_cancel_of_ne_zero) hx h,
+    rw [sub_zero] }
 end
 
 lemma is_right_cancel_mul_zero.to_no_zero_divisors [ring α] [is_right_cancel_mul_zero α] :
- no_zero_divisors α :=
+  no_zero_divisors α :=
 begin
- refine ⟨λ x y h, _⟩,
- by_cases hy : y = 0,
- { right, exact hy },
- { left,
- rw [← sub_zero (x * y)] at h; rw [ ← zero_mul y] at h; rw [ ← sub_mul] at h,
- convert (is_right_cancel_mul_zero.mul_right_cancel_of_ne_zero) hy h,
- rw [sub_zero] }
+  refine ⟨λ x y h, _⟩,
+  by_cases hy : y = 0,
+  { right, exact hy },
+  { left,
+    rw [← sub_zero (x * y), ← zero_mul y, ← sub_mul] at h,
+    convert (is_right_cancel_mul_zero.mul_right_cancel_of_ne_zero) hy h,
+    rw [sub_zero] }
 end
 
 @[priority 100]
 instance no_zero_divisors.to_is_cancel_mul_zero [ring α] [no_zero_divisors α] :
- is_cancel_mul_zero α :=
+  is_cancel_mul_zero α :=
 { mul_left_cancel_of_ne_zero := λ a b c ha h,
- begin
- rw [← sub_eq_zero] at h; rw [ ← mul_sub] at h,
- exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
- end,
- mul_right_cancel_of_ne_zero := λ a b c hb h,
- begin
- rw [← sub_eq_zero] at h; rw [ ← sub_mul] at h,
- exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)
- end }
+  begin
+    rw [← sub_eq_zero, ← mul_sub] at h,
+    exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_left ha)
+  end,
+  mul_right_cancel_of_ne_zero := λ a b c hb h,
+  begin
+    rw [← sub_eq_zero, ← sub_mul] at h,
+    exact sub_eq_zero.1 ((eq_zero_or_eq_zero_of_mul_eq_zero h).resolve_right hb)
+  end }
 
 lemma no_zero_divisors.to_is_domain [ring α] [h : nontrivial α] [no_zero_divisors α] :
- is_domain α :=
+  is_domain α :=
 { .. no_zero_divisors.to_is_cancel_mul_zero α, .. h }
 
 @[priority 100]
@@ -173,4 +173,3 @@ instance is_domain.to_no_zero_divisors [ring α] [is_domain α] : no_zero_diviso
 is_right_cancel_mul_zero.to_no_zero_divisors α
 
 end no_zero_divisors
-

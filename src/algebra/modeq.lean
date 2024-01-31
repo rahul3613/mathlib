@@ -98,23 +98,23 @@ protected lemma of_zsmul : a ≡ b [PMOD (z • p)] → a ≡ b [PMOD p] :=
 λ ⟨m, hm⟩, ⟨m * z, by rwa [mul_smul]⟩
 
 protected lemma of_nsmul : a ≡ b [PMOD (n • p)] → a ≡ b [PMOD p] :=
-λ ⟨m, hm⟩, ⟨m * n, by rwa [mul_smul]; rwa [ coe_nat_zsmul]⟩
+λ ⟨m, hm⟩, ⟨m * n, by rwa [mul_smul, coe_nat_zsmul]⟩
 
 protected lemma zsmul : a ≡ b [PMOD p] → z • a ≡ z • b [PMOD (z • p)] :=
-Exists.imp $ λ m hm, by rw [←smul_sub]; rw [ hm]; rw [ smul_comm]
+Exists.imp $ λ m hm, by rw [←smul_sub, hm, smul_comm]
 
 protected lemma nsmul : a ≡ b [PMOD p] → n • a ≡ n • b [PMOD (n • p)] :=
-Exists.imp $ λ m hm, by rw [←smul_sub]; rw [ hm]; rw [ smul_comm]
+Exists.imp $ λ m hm, by rw [←smul_sub, hm, smul_comm]
 
 end modeq
 
 @[simp] lemma zsmul_modeq_zsmul [no_zero_smul_divisors ℤ α] (hn : z ≠ 0) :
- z • a ≡ z • b [PMOD (z • p)] ↔ a ≡ b [PMOD p] :=
-exists_congr $ λ m, by rw [←smul_sub]; rw [ smul_comm]; rw [ smul_right_inj hn]; apply_instance
+  z • a ≡ z • b [PMOD (z • p)] ↔ a ≡ b [PMOD p] :=
+exists_congr $ λ m, by rw [←smul_sub, smul_comm, smul_right_inj hn]; apply_instance
 
 @[simp] lemma nsmul_modeq_nsmul [no_zero_smul_divisors ℕ α] (hn : n ≠ 0) :
- n • a ≡ n • b [PMOD (n • p)] ↔ a ≡ b [PMOD p] :=
-exists_congr $ λ m, by rw [←smul_sub]; rw [ smul_comm]; rw [ smul_right_inj hn]; apply_instance
+  n • a ≡ n • b [PMOD (n • p)] ↔ a ≡ b [PMOD p] :=
+exists_congr $ λ m, by rw [←smul_sub, smul_comm, smul_right_inj hn]; apply_instance
 
 alias zsmul_modeq_zsmul ↔ modeq.zsmul_cancel _
 alias nsmul_modeq_nsmul ↔ modeq.nsmul_cancel _
@@ -122,24 +122,24 @@ alias nsmul_modeq_nsmul ↔ modeq.nsmul_cancel _
 namespace modeq
 
 @[simp] protected lemma add_iff_left :
- a₁ ≡ b₁ [PMOD p] → (a₁ + a₂ ≡ b₁ + b₂ [PMOD p] ↔ a₂ ≡ b₂ [PMOD p]) :=
+  a₁ ≡ b₁ [PMOD p] → (a₁ + a₂ ≡ b₁ + b₂ [PMOD p] ↔ a₂ ≡ b₂ [PMOD p]) :=
 λ ⟨m, hm⟩, (equiv.add_left m).symm.exists_congr_left.trans $
- by simpa [add_sub_add_comm, hm, add_smul]
+  by simpa [add_sub_add_comm, hm, add_smul]
 
 @[simp] protected lemma add_iff_right :
- a₂ ≡ b₂ [PMOD p] → (a₁ + a₂ ≡ b₁ + b₂ [PMOD p] ↔ a₁ ≡ b₁ [PMOD p]) :=
+  a₂ ≡ b₂ [PMOD p] → (a₁ + a₂ ≡ b₁ + b₂ [PMOD p] ↔ a₁ ≡ b₁ [PMOD p]) :=
 λ ⟨m, hm⟩, (equiv.add_right m).symm.exists_congr_left.trans $
- by simpa [add_sub_add_comm, hm, add_smul]
+  by simpa [add_sub_add_comm, hm, add_smul]
 
 @[simp] protected lemma sub_iff_left :
- a₁ ≡ b₁ [PMOD p] → (a₁ - a₂ ≡ b₁ - b₂ [PMOD p] ↔ a₂ ≡ b₂ [PMOD p]) :=
+  a₁ ≡ b₁ [PMOD p] → (a₁ - a₂ ≡ b₁ - b₂ [PMOD p] ↔ a₂ ≡ b₂ [PMOD p]) :=
 λ ⟨m, hm⟩, (equiv.sub_left m).symm.exists_congr_left.trans $
- by simpa [sub_sub_sub_comm, hm, sub_smul]
+  by simpa [sub_sub_sub_comm, hm, sub_smul]
 
 @[simp] protected lemma sub_iff_right :
- a₂ ≡ b₂ [PMOD p] → (a₁ - a₂ ≡ b₁ - b₂ [PMOD p] ↔ a₁ ≡ b₁ [PMOD p]) :=
+  a₂ ≡ b₂ [PMOD p] → (a₁ - a₂ ≡ b₁ - b₂ [PMOD p] ↔ a₁ ≡ b₁ [PMOD p]) :=
 λ ⟨m, hm⟩, (equiv.sub_right m).symm.exists_congr_left.trans $
- by simpa [sub_sub_sub_comm, hm, sub_smul]
+  by simpa [sub_sub_sub_comm, hm, sub_smul]
 
 alias modeq.add_iff_left ↔ add_left_cancel add
 alias modeq.add_iff_right ↔ add_right_cancel _
@@ -188,13 +188,14 @@ lemma modeq_iff_eq_add_zsmul : a ≡ b [PMOD p] ↔ ∃ z : ℤ, b = a + z • p
 by simp_rw [modeq, sub_eq_iff_eq_add']
 
 lemma not_modeq_iff_ne_add_zsmul : ¬a ≡ b [PMOD p] ↔ ∀ z : ℤ, b ≠ a + z • p :=
-by rw [modeq_iff_eq_add_zsmul]; rw [ not_exists]
+by rw [modeq_iff_eq_add_zsmul, not_exists]
 
 lemma modeq_iff_eq_mod_zmultiples : a ≡ b [PMOD p] ↔ (b : α ⧸ add_subgroup.zmultiples p) = a :=
-by simp_rw [modeq_iff_eq_add_zsmul, quotient_add_group.eq_iff_sub_mem, add_subgroup.mem_zmultiples_iff, eq_sub_iff_add_eq', eq_comm]
+by simp_rw [modeq_iff_eq_add_zsmul, quotient_add_group.eq_iff_sub_mem,
+    add_subgroup.mem_zmultiples_iff, eq_sub_iff_add_eq', eq_comm]
 
 lemma not_modeq_iff_ne_mod_zmultiples :
- ¬a ≡ b [PMOD p] ↔ (b : α ⧸ add_subgroup.zmultiples p) ≠ a :=
+  ¬a ≡ b [PMOD p] ↔ (b : α ⧸ add_subgroup.zmultiples p) ≠ a :=
 modeq_iff_eq_mod_zmultiples.not
 
 end add_comm_group
@@ -211,11 +212,11 @@ by simp_rw [modeq, ←int.cast_mul_eq_zsmul_cast]; norm_cast
 
 @[simp, norm_cast]
 lemma nat_cast_modeq_nat_cast {a b n : ℕ} : a ≡ b [PMOD (n : α)] ↔ a ≡ b [MOD n] :=
-by simp_rw [←int.coe_nat_modeq_iff, ←modeq_iff_int_modeq, ←@int_cast_modeq_int_cast α, int.cast_coe_nat]
+by simp_rw [←int.coe_nat_modeq_iff, ←modeq_iff_int_modeq, ←@int_cast_modeq_int_cast α,
+  int.cast_coe_nat]
 
 alias int_cast_modeq_int_cast ↔ modeq.of_int_cast modeq.int_cast
 alias nat_cast_modeq_nat_cast ↔ _root_.nat.modeq.of_nat_cast modeq.nat_cast
 
 end add_comm_group_with_one
 end add_comm_group
-

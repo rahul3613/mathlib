@@ -18,9 +18,9 @@ The main application lies in proving that higher homotopy groups (`πₙ` for `n
 ## Main declarations
 
 * `eckmann_hilton.comm_monoid`: If a type carries a unital magma structure that distributes
- over a unital binary operation, then the magma is a commutative monoid.
+  over a unital binary operation, then the magma is a commutative monoid.
 * `eckmann_hilton.comm_group`: If a type carries a group structure that distributes
- over a unital binary operation, then the group is commutative.
+  over a unital binary operation, then the group is commutative.
 
 -/
 
@@ -59,11 +59,11 @@ then these operations are equal.
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 lemma mul : m₁ = m₂ :=
 begin
- funext a b,
- calc m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) :
- by simp only [one h₁ h₂ distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
- ... = m₂ a b :
- by simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
+  funext a b,
+  calc m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) :
+    by simp only [one h₁ h₂ distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
+          ... = m₂ a b :
+    by simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
 end
 
 /-- If a type carries two unital binary operations that distribute over each other,
@@ -87,21 +87,20 @@ operations, then the magma structure is a commutative monoid. -/
 @[reducible, to_additive "If a type carries a unital additive magma structure that distributes over
 a unital binary operations, then the additive magma structure is a commutative additive monoid."]
 def comm_monoid [h : mul_one_class X]
- (distrib : ∀ a b c d, ((a * b) <m₁> (c * d)) = ((a <m₁> c) * (b <m₁> d))) : comm_monoid X :=
+  (distrib : ∀ a b c d, ((a * b) <m₁> (c * d)) = ((a <m₁> c) * (b <m₁> d))) : comm_monoid X :=
 { mul := (*),
- one := 1,
- mul_comm := (mul_comm h₁ mul_one_class.is_unital distrib).comm,
- mul_assoc := (mul_assoc h₁ mul_one_class.is_unital distrib).assoc,
- ..h }
+  one := 1,
+  mul_comm := (mul_comm h₁ mul_one_class.is_unital distrib).comm,
+  mul_assoc := (mul_assoc h₁ mul_one_class.is_unital distrib).assoc,
+  ..h }
 
 /-- If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/
 @[reducible, to_additive "If a type carries an additive group structure that
 distributes over a unital binary operation, then the additive group is commutative."]
 def comm_group [G : group X]
- (distrib : ∀ a b c d, ((a * b) <m₁> (c * d)) = ((a <m₁> c) * (b <m₁> d))) : comm_group X :=
+  (distrib : ∀ a b c d, ((a * b) <m₁> (c * d)) = ((a <m₁> c) * (b <m₁> d))) : comm_group X :=
 { ..(eckmann_hilton.comm_monoid h₁ distrib),
- ..G }
+  ..G }
 
 end eckmann_hilton
-

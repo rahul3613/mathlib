@@ -53,8 +53,8 @@ typical_variable_names `(ℕ) = [`n, `m, `o]
 -/
 meta def typical_variable_names (t : expr) : tactic (list name) :=
 (do
- names ← to_expr ``(has_variable_names.names %%t),
- eval_expr (list name) names)
+  names ← to_expr ``(has_variable_names.names %%t),
+  eval_expr (list name) names)
 <|> fail! "typical_variable_names: unable to get typical variable names for type {t}"
 
 end tactic
@@ -69,9 +69,9 @@ the generated instance for `β` has names `as`, `bs`, ... This can be used to
 create instances for 'containers' such as lists or sets.
 -/
 def make_listlike_instance (α : Sort u) [has_variable_names α]
- {β : Sort v} : has_variable_names β :=
+  {β : Sort v} : has_variable_names β :=
 ⟨ (names α).map $ λ n, n.append_suffix "s",
- by simp [names_nonempty] ⟩
+  by simp [names_nonempty] ⟩
 
 /--
 `@make_inheriting_instance α _ β` creates an instance `has_variable_names β`
@@ -80,7 +80,7 @@ same variable names as that of `α`. This can be used to create instances for
 'wrapper' types like `option` and `subtype`.
 -/
 def make_inheriting_instance (α : Sort u) [has_variable_names α]
- {β : Sort v} : has_variable_names β :=
+  {β : Sort v} : has_variable_names β :=
 ⟨names α, names_nonempty⟩
 
 end has_variable_names
@@ -137,7 +137,7 @@ instance {α} : has_variable_names (bin_tree α) :=
 ⟨[`t]⟩
 
 instance {α} [has_variable_names α] {lt : α → α → Prop} :
- has_variable_names (rbtree α lt) :=
+  has_variable_names (rbtree α lt) :=
 make_listlike_instance α
 
 meta instance {α} [has_variable_names α] : has_variable_names (native.rb_set α) :=
@@ -172,4 +172,3 @@ meta instance : has_variable_names level :=
 
 instance : has_variable_names binder_info :=
 ⟨[`bi]⟩
-

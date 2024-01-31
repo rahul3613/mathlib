@@ -35,9 +35,8 @@ pprod.exists
 end pprod
 
 lemma function.injective.pprod_map {f : α → β} {g : γ → δ} (hf : injective f) (hg : injective g) :
- injective (λ x, ⟨f x.1, g x.2⟩ : pprod α γ → pprod β δ) :=
+  injective (λ x, ⟨f x.1, g x.2⟩ : pprod α γ → pprod β δ) :=
 λ ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ h,
 have A : _ := congr_arg pprod.fst h,
 have B : _ := congr_arg pprod.snd h,
 congr_arg2 pprod.mk (hf A) (hg B)
-

@@ -27,7 +27,7 @@ variables {ι κ R α : Type*}
 
 section non_unital_non_assoc_semiring
 variables [non_unital_non_assoc_semiring α] [topological_space α] [topological_semiring α]
- {f g : ι → α} {a a₁ a₂ : α}
+  {f g : ι → α} {a a₁ a₂ : α}
 
 lemma has_sum.mul_left (a₂) (h : has_sum f a₁) : has_sum (λ i, a₂ * f i) (a₂ * a₁) :=
 by simpa only using h.map (add_monoid_hom.mul_left a₂) (continuous_const.mul continuous_id)
@@ -52,9 +52,9 @@ lemma summable.tsum_mul_right (a) (hf : summable f) : ∑' i, f i * a = (∑' i,
 
 lemma commute.tsum_right (a) (h : ∀ i, commute a (f i)) : commute a (∑' i, f i) :=
 if hf : summable f then
- (hf.tsum_mul_left a).symm.trans ((congr_arg _ $ funext h).trans (hf.tsum_mul_right a))
+  (hf.tsum_mul_left a).symm.trans ((congr_arg _ $ funext h).trans (hf.tsum_mul_right a))
 else
- (tsum_eq_zero_of_not_summable hf).symm ▸ commute.zero_right _
+  (tsum_eq_zero_of_not_summable hf).symm ▸ commute.zero_right _
 
 lemma commute.tsum_left (a) (h : ∀ i, commute (f i) a) : commute (∑' i, f i) a :=
 (commute.tsum_right _ $ λ i, (h i).symm).symm
@@ -64,7 +64,7 @@ end non_unital_non_assoc_semiring
 
 section division_semiring
 variables [division_semiring α] [topological_space α] [topological_semiring α] {f g : ι → α}
- {a a₁ a₂ : α}
+  {a a₁ a₂ : α}
 
 lemma has_sum.div_const (h : has_sum f a) (b : α) : has_sum (λ i, f i / b) (a / b) :=
 by simp only [div_eq_mul_inv, h.mul_right b⁻¹]
@@ -93,12 +93,14 @@ by simpa only [div_eq_mul_inv] using summable_mul_right_iff (inv_ne_zero h)
 lemma tsum_mul_left [t2_space α] : (∑' x, a * f x) = a * ∑' x, f x :=
 if hf : summable f then hf.tsum_mul_left a
 else if ha : a = 0 then by simp [ha]
-else by rw [tsum_eq_zero_of_not_summable hf]; rw [ tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).mp hf)]; rw [ mul_zero]
+else by rw [tsum_eq_zero_of_not_summable hf,
+  tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).mp hf), mul_zero]
 
 lemma tsum_mul_right [t2_space α] : (∑' x, f x * a) = (∑' x, f x) * a :=
 if hf : summable f then hf.tsum_mul_right a
 else if ha : a = 0 then by simp [ha]
-else by rw [tsum_eq_zero_of_not_summable hf]; rw [ tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).mp hf)]; rw [ zero_mul]
+else by rw [tsum_eq_zero_of_not_summable hf,
+  tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).mp hf), zero_mul]
 
 lemma tsum_div_const [t2_space α] : (∑' x, f x / a) = (∑' x, f x) / a :=
 by simpa only [div_eq_mul_inv] using tsum_mul_right
@@ -122,30 +124,30 @@ We first establish results about arbitrary index types, `ι` and `κ`, and then 
 
 section tsum_mul_tsum
 variables [topological_space α] [t3_space α] [non_unital_non_assoc_semiring α]
- [topological_semiring α] {f : ι → α} {g : κ → α} {s t u : α}
+  [topological_semiring α] {f : ι → α} {g : κ → α} {s t u : α}
 
 lemma has_sum.mul_eq (hf : has_sum f s) (hg : has_sum g t)
- (hfg : has_sum (λ (x : ι × κ), f x.1 * g x.2) u) :
- s * t = u :=
+  (hfg : has_sum (λ (x : ι × κ), f x.1 * g x.2) u) :
+  s * t = u :=
 have key₁ : has_sum (λ i, f i * t) (s * t),
- from hf.mul_right t,
+  from hf.mul_right t,
 have this : ∀ i : ι, has_sum (λ c : κ, f i * g c) (f i * t),
- from λ i, hg.mul_left (f i),
+  from λ i, hg.mul_left (f i),
 have key₂ : has_sum (λ i, f i * t) u,
- from has_sum.prod_fiberwise hfg this,
+  from has_sum.prod_fiberwise hfg this,
 key₁.unique key₂
 
 lemma has_sum.mul (hf : has_sum f s) (hg : has_sum g t)
- (hfg : summable (λ (x : ι × κ), f x.1 * g x.2)) :
- has_sum (λ (x : ι × κ), f x.1 * g x.2) (s * t) :=
+  (hfg : summable (λ (x : ι × κ), f x.1 * g x.2)) :
+  has_sum (λ (x : ι × κ), f x.1 * g x.2) (s * t) :=
 let ⟨u, hu⟩ := hfg in
 (hf.mul_eq hg hu).symm ▸ hu
 
 /-- Product of two infinites sums indexed by arbitrary types.
- See also `tsum_mul_tsum_of_summable_norm` if `f` and `g` are abolutely summable. -/
+    See also `tsum_mul_tsum_of_summable_norm` if `f` and `g` are abolutely summable. -/
 lemma tsum_mul_tsum (hf : summable f) (hg : summable g)
- (hfg : summable (λ (x : ι × κ), f x.1 * g x.2)) :
- (∑' x, f x) * (∑' y, g y) = (∑' z : ι × κ, f z.1 * g z.2) :=
+  (hfg : summable (λ (x : ι × κ), f x.1 * g x.2)) :
+  (∑' x, f x) * (∑' y, g y) = (∑' z : ι × κ, f z.1 * g z.2) :=
 hf.has_sum.mul_eq hg.has_sum hfg.has_sum
 
 end tsum_mul_tsum
@@ -167,18 +169,18 @@ variables [topological_space α] [non_unital_non_assoc_semiring α] {f g : ℕ �
 /- The family `(k, l) : ℕ × ℕ ↦ f k * g l` is summable if and only if the family
 `(n, k, l) : Σ (n : ℕ), nat.antidiagonal n ↦ f k * g l` is summable. -/
 lemma summable_mul_prod_iff_summable_mul_sigma_antidiagonal :
- summable (λ x : ℕ × ℕ, f x.1 * g x.2) ↔
- summable (λ x : (Σ (n : ℕ), nat.antidiagonal n), f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2) :=
+  summable (λ x : ℕ × ℕ, f x.1 * g x.2) ↔
+    summable (λ x : (Σ (n : ℕ), nat.antidiagonal n), f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2) :=
 nat.sigma_antidiagonal_equiv_prod.summable_iff.symm
 
 variables [t3_space α] [topological_semiring α]
 
 lemma summable_sum_mul_antidiagonal_of_summable_mul (h : summable (λ x : ℕ × ℕ, f x.1 * g x.2)) :
- summable (λ n, ∑ kl in nat.antidiagonal n, f kl.1 * g kl.2) :=
+  summable (λ n, ∑ kl in nat.antidiagonal n, f kl.1 * g kl.2) :=
 begin
- rw summable_mul_prod_iff_summable_mul_sigma_antidiagonal at h,
- conv {congr, funext, rw [← finset.sum_finset_coe]; rw [ ← tsum_fintype]},
- exact h.sigma' (λ n, (has_sum_fintype _).summable),
+  rw summable_mul_prod_iff_summable_mul_sigma_antidiagonal at h,
+  conv {congr, funext, rw [← finset.sum_finset_coe, ← tsum_fintype]},
+  exact h.sigma' (λ n, (has_sum_fintype _).summable),
 end
 
 /-- The **Cauchy product formula** for the product of two infinites sums indexed by `ℕ`, expressed
@@ -187,20 +189,20 @@ by summing on `finset.nat.antidiagonal`.
 See also `tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm` if `f` and `g` are absolutely
 summable. -/
 lemma tsum_mul_tsum_eq_tsum_sum_antidiagonal (hf : summable f) (hg : summable g)
- (hfg : summable (λ (x : ℕ × ℕ), f x.1 * g x.2)) :
- (∑' n, f n) * (∑' n, g n) = (∑' n, ∑ kl in nat.antidiagonal n, f kl.1 * g kl.2) :=
+  (hfg : summable (λ (x : ℕ × ℕ), f x.1 * g x.2)) :
+  (∑' n, f n) * (∑' n, g n) = (∑' n, ∑ kl in nat.antidiagonal n, f kl.1 * g kl.2) :=
 begin
- conv_rhs {congr, funext, rw [← finset.sum_finset_coe]; rw [ ← tsum_fintype]},
- rw [tsum_mul_tsum hf hg hfg]; rw [ ← nat.sigma_antidiagonal_equiv_prod.tsum_eq (_ : ℕ × ℕ → α)],
- exact tsum_sigma' (λ n, (has_sum_fintype _).summable)
- (summable_mul_prod_iff_summable_mul_sigma_antidiagonal.mp hfg)
+  conv_rhs {congr, funext, rw [← finset.sum_finset_coe, ← tsum_fintype]},
+  rw [tsum_mul_tsum hf hg hfg, ← nat.sigma_antidiagonal_equiv_prod.tsum_eq (_ : ℕ × ℕ → α)],
+  exact tsum_sigma' (λ n, (has_sum_fintype _).summable)
+    (summable_mul_prod_iff_summable_mul_sigma_antidiagonal.mp hfg)
 end
 
 lemma summable_sum_mul_range_of_summable_mul (h : summable (λ x : ℕ × ℕ, f x.1 * g x.2)) :
- summable (λ n, ∑ k in range (n+1), f k * g (n - k)) :=
+  summable (λ n, ∑ k in range (n+1), f k * g (n - k)) :=
 begin
- simp_rw ← nat.sum_antidiagonal_eq_sum_range_succ (λ k l, f k * g l),
- exact summable_sum_mul_antidiagonal_of_summable_mul h
+  simp_rw ← nat.sum_antidiagonal_eq_sum_range_succ (λ k l, f k * g l),
+  exact summable_sum_mul_antidiagonal_of_summable_mul h
 end
 
 /-- The **Cauchy product formula** for the product of two infinites sums indexed by `ℕ`, expressed
@@ -209,12 +211,11 @@ by summing on `finset.range`.
 See also `tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm` if `f` and `g` are absolutely summable.
 -/
 lemma tsum_mul_tsum_eq_tsum_sum_range (hf : summable f) (hg : summable g)
- (hfg : summable (λ (x : ℕ × ℕ), f x.1 * g x.2)) :
- (∑' n, f n) * (∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
+  (hfg : summable (λ (x : ℕ × ℕ), f x.1 * g x.2)) :
+  (∑' n, f n) * (∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
 begin
- simp_rw ← nat.sum_antidiagonal_eq_sum_range_succ (λ k l, f k * g l),
- exact tsum_mul_tsum_eq_tsum_sum_antidiagonal hf hg hfg
+  simp_rw ← nat.sum_antidiagonal_eq_sum_range_succ (λ k l, f k * g l),
+  exact tsum_mul_tsum_eq_tsum_sum_antidiagonal hf hg hfg
 end
 
 end cauchy_product
-

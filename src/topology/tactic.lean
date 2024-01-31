@@ -31,12 +31,12 @@ used by `continuity`.
 @[user_attribute]
 meta def continuity : user_attribute :=
 { name := `continuity,
- descr := "lemmas usable to prove continuity" }
+  descr := "lemmas usable to prove continuity" }
 
 -- Mark some continuity lemmas already defined in `topology.basic`
 attribute [continuity]
- continuous_id
- continuous_const
+  continuous_id
+  continuous_const
 
 -- As we will be using `apply_rules` with `md := semireducible`,
 -- we need another version of `continuous_id`.
@@ -52,28 +52,28 @@ Applying `continuous.comp` is not always a good idea, so we have some
 extra logic here to try to avoid bad cases.
 
 * If the function we're trying to prove continuous is actually
- constant, and that constant is a function application `f z`, then
- continuous.comp would produce new goals `continuous f`, `continuous
- (λ _, z)`, which is silly. We avoid this by failing if we could
- apply continuous_const.
+  constant, and that constant is a function application `f z`, then
+  continuous.comp would produce new goals `continuous f`, `continuous
+  (λ _, z)`, which is silly. We avoid this by failing if we could
+  apply continuous_const.
 
 * continuous.comp will always succeed on `continuous (λ x, f x)` and
- produce new goals `continuous (λ x, x)`, `continuous f`. We detect
- this by failing if a new goal can be closed by applying
- continuous_id.
+  produce new goals `continuous (λ x, x)`, `continuous f`. We detect
+  this by failing if a new goal can be closed by applying
+  continuous_id.
 -/
 meta def apply_continuous.comp : tactic unit :=
 `[fail_if_success { exact continuous_const };
- refine continuous.comp _ _;
- fail_if_success { exact continuous_id }]
+  refine continuous.comp _ _;
+  fail_if_success { exact continuous_id }]
 
 /-- List of tactics used by `continuity` internally. -/
 meta def continuity_tactics (md : transparency := reducible) : list (tactic string) :=
 [
- intros1 >>= λ ns, pure ("intros " ++ (" ".intercalate (ns.map (λ e, e.to_string)))),
- apply_rules [] [``continuity] 50 { md := md }
- >> pure "apply_rules with continuity",
- apply_continuous.comp >> pure "refine continuous.comp _ _"
+  intros1               >>= λ ns, pure ("intros " ++ (" ".intercalate (ns.map (λ e, e.to_string)))),
+  apply_rules [] [``continuity] 50 { md := md }
+                        >> pure "apply_rules with continuity",
+  apply_continuous.comp >> pure "refine continuous.comp _ _"
 ]
 
 namespace interactive
@@ -83,11 +83,11 @@ setup_tactic_parser
 Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
 -/
 meta def continuity
- (bang : parse $ optional (tk "!")) (trace : parse $ optional (tk "?")) (cfg : tidy.cfg := {}) :
- tactic unit :=
-let md := if bang.is_some then semireducible else reducible,
- continuity_core := tactic.tidy { tactics := continuity_tactics md, ..cfg },
- trace_fn := if trace.is_some then show_term else id in
+  (bang : parse $ optional (tk "!")) (trace : parse $ optional (tk "?")) (cfg : tidy.cfg := {}) :
+  tactic unit :=
+let md              := if bang.is_some then semireducible else reducible,
+    continuity_core := tactic.tidy { tactics := continuity_tactics md, ..cfg },
+    trace_fn        := if trace.is_some then show_term else id in
 trace_fn continuity_core
 
 /-- Version of `continuity` for use with auto_param. -/
@@ -99,8 +99,8 @@ meta def continuity' : tactic unit := continuity none none {}
 
 ```
 example {X Y : Type*} [topological_space X] [topological_space Y]
- (f₁ f₂ : X → Y) (hf₁ : continuous f₁) (hf₂ : continuous f₂)
- (g : Y → ℝ) (hg : continuous g) : continuous (λ x, (max (g (f₁ x)) (g (f₂ x))) + 1) :=
+  (f₁ f₂ : X → Y) (hf₁ : continuous f₁) (hf₂ : continuous f₂)
+  (g : Y → ℝ) (hg : continuous g) : continuous (λ x, (max (g (f₁ x)) (g (f₂ x))) + 1) :=
 by continuity
 ```
 will discharge the goal, generating a proof term like
@@ -114,11 +114,10 @@ when attempting to match lemmas with the goal.
 -/
 add_tactic_doc
 { name := "continuity / continuity'",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.continuity, `tactic.interactive.continuity'],
- tags := ["lemma application"] }
+  category := doc_category.tactic,
+  decl_names := [`tactic.interactive.continuity, `tactic.interactive.continuity'],
+  tags := ["lemma application"] }
 
 end interactive
 
 end tactic
-

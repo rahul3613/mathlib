@@ -47,16 +47,16 @@ local attribute [tidy] tactic.case_bash
 
 /-- A category with a terminal object and binary products has a natural monoidal structure. -/
 def monoidal_of_has_finite_products [has_terminal C] [has_binary_products C] :
- monoidal_category C :=
-{ tensor_unit := ⊤_ C,
- tensor_obj := λ X Y, X ⨯ Y,
- tensor_hom := λ _ _ _ _ f g, limits.prod.map f g,
- associator := prod.associator,
- left_unitor := λ P, prod.left_unitor P,
- right_unitor := λ P, prod.right_unitor P,
- pentagon' := prod.pentagon,
- triangle' := prod.triangle,
- associator_naturality' := @prod.associator_naturality _ _ _, }
+  monoidal_category C :=
+{ tensor_unit  := ⊤_ C,
+  tensor_obj   := λ X Y, X ⨯ Y,
+  tensor_hom   := λ _ _ _ _ f g, limits.prod.map f g,
+  associator   := prod.associator,
+  left_unitor  := λ P, prod.left_unitor P,
+  right_unitor := λ P, prod.right_unitor P,
+  pentagon'    := prod.pentagon,
+  triangle'    := prod.triangle,
+  associator_naturality' := @prod.associator_naturality _ _ _, }
 end
 
 section
@@ -69,15 +69,15 @@ The monoidal structure coming from finite products is symmetric.
 -/
 @[simps]
 def symmetric_of_has_finite_products [has_terminal C] [has_binary_products C] :
- symmetric_category C :=
+  symmetric_category C :=
 { braiding := λ X Y, limits.prod.braiding X Y,
- braiding_naturality' := λ X X' Y Y' f g,
- by { dsimp [tensor_hom], simp, },
- hexagon_forward' := λ X Y Z,
- by { dsimp [monoidal_of_has_finite_products], simp },
- hexagon_reverse' := λ X Y Z,
- by { dsimp [monoidal_of_has_finite_products], simp },
- symmetry' := λ X Y, by { dsimp, simp, refl, }, }
+  braiding_naturality' := λ X X' Y Y' f g,
+    by { dsimp [tensor_hom], simp, },
+  hexagon_forward' := λ X Y Z,
+    by { dsimp [monoidal_of_has_finite_products], simp },
+  hexagon_reverse' := λ X Y Z,
+    by { dsimp [monoidal_of_has_finite_products], simp },
+  symmetry' := λ X Y, by { dsimp, simp, refl, }, }
 
 end
 
@@ -103,10 +103,10 @@ lemma right_unitor_inv (X : C) : (ρ_ X).inv = prod.lift (𝟙 _) (terminal.from
 -- categories the right hand side will simplify significantly further.
 -- For now, we'll plan to create specialised simp lemmas in each particular category.
 lemma associator_hom (X Y Z : C) :
- (α_ X Y Z).hom =
- prod.lift
- (limits.prod.fst ≫ limits.prod.fst)
- (prod.lift (limits.prod.fst ≫ limits.prod.snd) limits.prod.snd) := rfl
+  (α_ X Y Z).hom =
+  prod.lift
+    (limits.prod.fst ≫ limits.prod.fst)
+    (prod.lift (limits.prod.fst ≫ limits.prod.snd) limits.prod.snd) := rfl
 
 end monoidal_of_has_finite_products
 
@@ -115,16 +115,16 @@ local attribute [tidy] tactic.case_bash
 
 /-- A category with an initial object and binary coproducts has a natural monoidal structure. -/
 def monoidal_of_has_finite_coproducts [has_initial C] [has_binary_coproducts C] :
- monoidal_category C :=
-{ tensor_unit := ⊥_ C,
- tensor_obj := λ X Y, X ⨿ Y,
- tensor_hom := λ _ _ _ _ f g, limits.coprod.map f g,
- associator := coprod.associator,
- left_unitor := coprod.left_unitor,
- right_unitor := coprod.right_unitor,
- pentagon' := coprod.pentagon,
- triangle' := coprod.triangle,
- associator_naturality' := @coprod.associator_naturality _ _ _, }
+  monoidal_category C :=
+{ tensor_unit  := ⊥_ C,
+  tensor_obj   := λ X Y, X ⨿ Y,
+  tensor_hom   := λ _ _ _ _ f g, limits.coprod.map f g,
+  associator   := coprod.associator,
+  left_unitor  := coprod.left_unitor,
+  right_unitor := coprod.right_unitor,
+  pentagon'    := coprod.pentagon,
+  triangle'    := coprod.triangle,
+  associator_naturality' := @coprod.associator_naturality _ _ _, }
 end
 
 
@@ -138,15 +138,15 @@ The monoidal structure coming from finite coproducts is symmetric.
 -/
 @[simps]
 def symmetric_of_has_finite_coproducts [has_initial C] [has_binary_coproducts C] :
- symmetric_category C :=
+  symmetric_category C :=
 { braiding := limits.coprod.braiding,
- braiding_naturality' := λ X X' Y Y' f g,
- by { dsimp [tensor_hom], simp, },
- hexagon_forward' := λ X Y Z,
- by { dsimp [monoidal_of_has_finite_coproducts], simp },
- hexagon_reverse' := λ X Y Z,
- by { dsimp [monoidal_of_has_finite_coproducts], simp },
- symmetry' := λ X Y, by { dsimp, simp, refl, }, }
+  braiding_naturality' := λ X X' Y Y' f g,
+    by { dsimp [tensor_hom], simp, },
+  hexagon_forward' := λ X Y Z,
+    by { dsimp [monoidal_of_has_finite_coproducts], simp },
+  hexagon_reverse' := λ X Y Z,
+    by { dsimp [monoidal_of_has_finite_coproducts], simp },
+  symmetry' := λ X Y, by { dsimp, simp, refl, }, }
 
 end
 
@@ -172,12 +172,11 @@ lemma right_unitor_inv (X : C) : (ρ_ X).inv = limits.coprod.inl := rfl
 -- categories the right hand side will simplify significantly further.
 -- For now, we'll plan to create specialised simp lemmas in each particular category.
 lemma associator_hom (X Y Z : C) :
- (α_ X Y Z).hom =
- coprod.desc
- (coprod.desc coprod.inl (coprod.inl ≫ coprod.inr))
- (coprod.inr ≫ coprod.inr) := rfl
+  (α_ X Y Z).hom =
+  coprod.desc
+    (coprod.desc coprod.inl (coprod.inl ≫ coprod.inr))
+    (coprod.inr ≫ coprod.inr) := rfl
 
 end monoidal_of_has_finite_coproducts
 
 end category_theory
-

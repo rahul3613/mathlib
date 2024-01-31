@@ -26,7 +26,7 @@ namespace quiver
 variables (V : Type*) [quiver.{u+1} V]
 
 /-- Two vertices are related in the zigzag setoid if there is a
- zigzag of arrows from one to the other. -/
+    zigzag of arrows from one to the other. -/
 def zigzag_setoid : setoid V :=
 ⟨λ a b, nonempty (@path (symmetrify V) _ a b),
  λ a, ⟨path.nil⟩,
@@ -34,8 +34,8 @@ def zigzag_setoid : setoid V :=
  λ a b c ⟨p⟩ ⟨q⟩, ⟨p.comp q⟩⟩
 
 /-- The type of weakly connected components of a directed graph. Two vertices are
- in the same weakly connected component if there is a zigzag of arrows from one
- to the other. -/
+    in the same weakly connected component if there is a zigzag of arrows from one
+    to the other. -/
 def weakly_connected_component : Type* := quotient (zigzag_setoid V)
 
 namespace weakly_connected_component
@@ -48,7 +48,7 @@ instance : has_coe_t V (weakly_connected_component V) := ⟨weakly_connected_com
 instance [inhabited V] : inhabited (weakly_connected_component V) := ⟨show V, from default⟩
 
 protected lemma eq (a b : V) :
- (a : weakly_connected_component V) = b ↔ nonempty (@path (symmetrify V) _ a b) :=
+  (a : weakly_connected_component V) = b ↔ nonempty (@path (symmetrify V) _ a b) :=
 quotient.eq'
 
 end weakly_connected_component
@@ -56,11 +56,10 @@ end weakly_connected_component
 variable {V}
 
 /-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
- an arrow `e` if either `e` or its reversal is in `H`. -/
+    an arrow `e` if either `e` or its reversal is in `H`. -/
 -- Without the explicit universe level in `quiver.{v+1}` Lean comes up with
 -- `quiver.{max u_2 u_3 + 1}`. This causes problems elsewhere, so we write `quiver.{v+1}`.
 def wide_subquiver_symmetrify (H : wide_subquiver (symmetrify V)) : wide_subquiver V :=
 λ a b, { e | sum.inl e ∈ H a b ∨ sum.inr e ∈ H b a }
 
 end quiver
-

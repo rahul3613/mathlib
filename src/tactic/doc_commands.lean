@@ -12,9 +12,9 @@ notes, etc. To facilitate this, we declare these documentation entries in the li
 using special commands.
 
 * `library_note` adds a note describing a certain feature or design decision. These can be
- referenced in doc strings with the text `note [name of note]`.
+  referenced in doc strings with the text `note [name of note]`.
 * `add_tactic_doc` adds an entry documenting an interactive tactic, command, hole command, or
- attribute.
+  attribute.
 
 Since these commands are used in files imported by `tactic.core`, this file has no imports.
 
@@ -34,9 +34,9 @@ s.fold 1 (λ h c, (33*h + c.val) % unsigned_sz)
 
 /-- Get the last component of a name, and convert it to a string. -/
 meta def name.last : name → string
-| (name.mk_string s _) := s
+| (name.mk_string s _)  := s
 | (name.mk_numeral n _) := repr n
-| anonymous := "[anonymous]"
+| anonymous             := "[anonymous]"
 
 open tactic
 
@@ -45,7 +45,7 @@ open tactic
 to each declaration named in the list `to`. -/
 meta def tactic.copy_doc_string (fr : name) (to : list name) : tactic unit :=
 do fr_ds ← doc_string fr,
- to.mmap' $ λ tgt, add_doc_string tgt fr_ds
+   to.mmap' $ λ tgt, add_doc_string tgt fr_ds
 
 open lean lean.parser interactive
 
@@ -54,13 +54,13 @@ open lean lean.parser interactive
 declaration named `source` to each of `target_1`, `target_2`, ..., `target_n`.
  -/
 @[user_command] meta def copy_doc_string_cmd
- (_ : parse (tk "copy_doc_string")) : parser unit :=
+  (_ : parse (tk "copy_doc_string")) : parser unit :=
 do fr ← parser.ident,
- tk "->",
- to ← parser.many parser.ident,
- expr.const fr _ ← resolve_name fr,
- to ← parser.of_tactic (to.mmap $ λ n, expr.const_name <$> resolve_name n),
- tactic.copy_doc_string fr to
+   tk "->",
+   to ← parser.many parser.ident,
+   expr.const fr _  ← resolve_name fr,
+   to ← parser.of_tactic (to.mmap $ λ n, expr.const_name <$> resolve_name n),
+   tactic.copy_doc_string fr to
 
 /-! ### The `library_note` command -/
 
@@ -68,8 +68,8 @@ do fr ← parser.ident,
 output. -/
 @[user_attribute] meta def library_note_attr : user_attribute :=
 { name := `library_note,
- descr := "Notes about library features to be included in documentation",
- parser := failed }
+  descr := "Notes about library features to be included in documentation",
+  parser := failed }
 
 /--
 `mk_reflected_definition name val` constructs a definition declaration by reflection.
@@ -78,7 +78,7 @@ Example: ``mk_reflected_definition `foo 17`` constructs the definition
 declaration corresponding to `def foo : ℕ := 17`
 -/
 meta def mk_reflected_definition (decl_name : name) {type} [reflected _ type]
- (body : type) [reflected _ body] : declaration :=
+  (body : type) [reflected _ body] : declaration :=
 mk_definition decl_name (reflect type).collect_univ_params (reflect type) (reflect body)
 
 /--
@@ -88,9 +88,9 @@ attribute.
 -/
 meta def tactic.add_library_note (note_name note : string) : tactic unit :=
 do let decl_name := `library_note <.> note_name,
- add_decl $ mk_reflected_definition decl_name (),
- add_doc_string decl_name note,
- library_note_attr.set decl_name () tt none
+   add_decl $ mk_reflected_definition decl_name (),
+   add_doc_string decl_name note,
+   library_note_attr.set decl_name () tt none
 
 open tactic
 
@@ -104,7 +104,7 @@ library_note "note id"
 ```
 -/
 @[user_command] meta def library_note (mi : interactive.decl_meta_info)
- (_ : parse (tk "library_note")) : parser unit := do
+  (_ : parse (tk "library_note")) : parser unit := do
 note_name ← parser.pexpr,
 note_name ← eval_pexpr string note_name,
 some doc_string ← pure mi.doc_string | fail "library_note requires a doc string",
@@ -114,7 +114,7 @@ add_library_note note_name doc_string
 Returns a list of pairs `(note_id, note_content)` -/
 meta def tactic.get_library_notes : tactic (list (string × string)) :=
 attribute.get_instances `library_note >>=
- list.mmap (λ dcl, prod.mk dcl.last <$> doc_string dcl)
+  list.mmap (λ dcl, prod.mk dcl.last <$> doc_string dcl)
 
 /-! ### The `add_tactic_doc_entry` command -/
 
@@ -144,11 +144,11 @@ structure tactic_doc_entry :=
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
 meta def tactic_doc_entry.to_json (d : tactic_doc_entry) (desc : string) : json :=
 json.object [
- ("name", d.name),
- ("category", d.category.to_string),
- ("decl_names", d.decl_names.map (json.of_string ∘ to_string)),
- ("tags", d.tags.map json.of_string),
- ("description", desc)
+  ("name", d.name),
+  ("category", d.category.to_string),
+  ("decl_names", d.decl_names.map (json.of_string ∘ to_string)),
+  ("tags", d.tags.map json.of_string),
+  ("description", desc)
 ]
 
 meta instance tactic_doc_entry.has_to_string : has_to_string (tactic_doc_entry × string) :=
@@ -158,13 +158,13 @@ meta instance tactic_doc_entry.has_to_string : has_to_string (tactic_doc_entry �
 for use in doc output -/
 @[user_attribute] meta def tactic_doc_entry_attr : user_attribute :=
 { name := `tactic_doc,
- descr := "Information about a tactic to be included in documentation",
- parser := failed }
+  descr := "Information about a tactic to be included in documentation",
+  parser := failed }
 
 /-- Collects everything in the environment tagged with the attribute `tactic_doc`. -/
 meta def tactic.get_tactic_doc_entries : tactic (list (tactic_doc_entry × string)) :=
 attribute.get_instances `tactic_doc >>=
- list.mmap (λ dcl, prod.mk <$> (mk_const dcl >>= eval_expr tactic_doc_entry) <*> doc_string dcl)
+  list.mmap (λ dcl, prod.mk <$> (mk_const dcl >>= eval_expr tactic_doc_entry) <*> doc_string dcl)
 
 /-- `add_tactic_doc tde` adds a declaration to the environment
 with `tde` as its body and tags it with the `tactic_doc`
@@ -173,20 +173,20 @@ if `tde.description` is the empty string, `add_tactic_doc` uses the doc
 string of `decl` as the description. -/
 meta def tactic.add_tactic_doc (tde : tactic_doc_entry) (doc : option string) : tactic unit :=
 do desc ← doc <|> (do
- inh_id ← match tde.inherit_description_from, tde.decl_names with
- | some inh_id, _ := pure inh_id
- | none, [inh_id] := pure inh_id
- | none, _ := fail "A tactic doc entry must either:
+    inh_id ← match tde.inherit_description_from, tde.decl_names with
+    | some inh_id, _ := pure inh_id
+    | none, [inh_id] := pure inh_id
+    | none, _ := fail "A tactic doc entry must either:
  1. have a description written as a doc-string for the `add_tactic_doc` invocation, or
  2. have a single declaration in the `decl_names` field, to inherit a description from, or
  3. explicitly indicate the declaration to inherit the description from using
- `inherit_description_from`."
- end,
- doc_string inh_id <|> fail (to_string inh_id ++ " has no doc string")),
- let decl_name := `tactic_doc <.> tde.category.to_string <.> tde.name,
- add_decl $ mk_definition decl_name [] `(tactic_doc_entry) (reflect tde),
- add_doc_string decl_name desc,
- tactic_doc_entry_attr.set decl_name () tt none
+    `inherit_description_from`."
+    end,
+    doc_string inh_id <|> fail (to_string inh_id ++ " has no doc string")),
+  let decl_name := `tactic_doc <.> tde.category.to_string <.> tde.name,
+  add_decl $ mk_definition decl_name [] `(tactic_doc_entry) (reflect tde),
+  add_doc_string decl_name desc,
+  tactic_doc_entry_attr.set decl_name () tt none
 
 /--
 A command used to add documentation for a tactic, command, hole command, or attribute.
@@ -199,22 +199,22 @@ describe what the command does here
 -/
 add_tactic_doc
 { name := "display name of the tactic",
- category := cat,
- decl_names := [`dcl_1, `dcl_2],
- tags := ["tag_1", "tag_2"] }
+  category := cat,
+  decl_names := [`dcl_1, `dcl_2],
+  tags := ["tag_1", "tag_2"] }
 ```
 
 The argument to `add_tactic_doc` is a structure of type `tactic_doc_entry`.
 * `name` refers to the display name of the tactic; it is used as the header of the doc entry.
 * `cat` refers to the category of doc entry.
- Options: `doc_category.tactic`, `doc_category.cmd`, `doc_category.hole_cmd`, `doc_category.attr`
+  Options: `doc_category.tactic`, `doc_category.cmd`, `doc_category.hole_cmd`, `doc_category.attr`
 * `decl_names` is a list of the declarations associated with this doc. For instance,
- the entry for `linarith` would set ``decl_names := [`tactic.interactive.linarith]``.
- Some entries may cover multiple declarations.
- It is only necessary to list the interactive versions of tactics.
+  the entry for `linarith` would set ``decl_names := [`tactic.interactive.linarith]``.
+  Some entries may cover multiple declarations.
+  It is only necessary to list the interactive versions of tactics.
 * `tags` is an optional list of strings used to categorize entries.
 * The doc string is the body of the entry. It can be formatted with markdown.
- What you are reading now is the description of `add_tactic_doc`.
+  What you are reading now is the description of `add_tactic_doc`.
 
 If only one related declaration is listed in `decl_names` and if this
 invocation of `add_tactic_doc` does not have a doc string, the doc string of
@@ -230,7 +230,7 @@ messages.
 
 -/
 @[user_command] meta def add_tactic_doc_command (mi : interactive.decl_meta_info)
- (_ : parse $ tk "add_tactic_doc") : parser unit := do
+  (_ : parse $ tk "add_tactic_doc") : parser unit := do
 pe ← parser.pexpr,
 e ← eval_pexpr tactic_doc_entry pe,
 tactic.add_tactic_doc e mi.doc_string .
@@ -277,25 +277,25 @@ def f := pi_binders ...
 ```
 -/
 add_tactic_doc
-{ name := "library_note",
- category := doc_category.cmd,
- decl_names := [`library_note, `tactic.add_library_note],
- tags := ["documentation"],
- inherit_description_from := `library_note }
+{ name                     := "library_note",
+  category                 := doc_category.cmd,
+  decl_names               := [`library_note, `tactic.add_library_note],
+  tags                     := ["documentation"],
+  inherit_description_from := `library_note }
 
 add_tactic_doc
-{ name := "add_tactic_doc",
- category := doc_category.cmd,
- decl_names := [`add_tactic_doc_command, `tactic.add_tactic_doc],
- tags := ["documentation"],
- inherit_description_from := `add_tactic_doc_command }
+{ name                     := "add_tactic_doc",
+  category                 := doc_category.cmd,
+  decl_names               := [`add_tactic_doc_command, `tactic.add_tactic_doc],
+  tags                     := ["documentation"],
+  inherit_description_from := `add_tactic_doc_command }
 
 add_tactic_doc
 { name := "copy_doc_string",
- category := doc_category.cmd,
- decl_names := [`copy_doc_string_cmd, `tactic.copy_doc_string],
- tags := ["documentation"],
- inherit_description_from := `copy_doc_string_cmd }
+  category := doc_category.cmd,
+  decl_names := [`copy_doc_string_cmd, `tactic.copy_doc_string],
+  tags := ["documentation"],
+  inherit_description_from := `copy_doc_string_cmd }
 
 -- add docs to core tactics
 
@@ -314,8 +314,8 @@ As an example requiring some thinking to do by hand, consider:
 
 ```lean
 example (f : ℕ → ℕ) (x : ℕ)
- (H1 : f (f (f x)) = x) (H2 : f (f (f (f (f x)))) = x) :
- f x = x :=
+  (H1 : f (f (f x)) = x) (H2 : f (f (f (f (f x)))) = x) :
+  f x = x :=
 by cc
 ```
 
@@ -342,9 +342,9 @@ Journal of the ACM (1980)
 -/
 add_tactic_doc
 { name := "cc (congruence closure)",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.cc],
- tags := ["core", "finishing"] }
+  category := doc_category.tactic,
+  decl_names := [`tactic.interactive.cc],
+  tags := ["core", "finishing"] }
 
 /--
 `conv {...}` allows the user to perform targeted rewriting on a goal or hypothesis,
@@ -372,10 +372,10 @@ everything. For example:
 example (a b c d : ℕ) (h₁ : b = c) (h₂ : a + c = a + d) : a + b = a + d :=
 by conv
 { to_lhs,
- conv
- { congr, skip,
- rw h₁ },
- rw h₂, }
+  conv
+  { congr, skip,
+    rw h₁ },
+  rw h₂, }
 ```
 Without `conv`, the above example would need to be proved using two successive
 `conv` blocks, each beginning with `to_lhs`.
@@ -384,29 +384,29 @@ Also, as a shorthand, `conv_lhs` and `conv_rhs` are provided, so that
 ```lean
 example : 0 + 0 = 0 :=
 begin
- conv_lhs { simp }
+  conv_lhs { simp }
 end
 ```
 just means
 ```lean
 example : 0 + 0 = 0 :=
 begin
- conv { to_lhs, simp }
+  conv { to_lhs, simp }
 end
 ```
 and likewise for `to_rhs`.
 -/
 add_tactic_doc
 { name := "conv",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.conv],
- tags := ["core"] }
+  category := doc_category.tactic,
+  decl_names := [`tactic.interactive.conv],
+  tags := ["core"] }
 
 add_tactic_doc
 { name := "simp",
- category := doc_category.tactic,
- decl_names := [`tactic.interactive.simp],
- tags := ["core", "simplification"] }
+  category := doc_category.tactic,
+  decl_names := [`tactic.interactive.simp],
+  tags := ["core", "simplification"] }
 
 /--
 Accepts terms with the type `component tactic_state string` or `html empty` and
@@ -419,11 +419,11 @@ Requires a compatible version of the vscode extension to view the resulting widg
 /-- A simple counter that can be incremented or decremented with some buttons. -/
 meta def counter_widget {π α : Type} : component π α :=
 component.ignore_props $ component.mk_simple int int 0 (λ _ x y, (x + y, none)) (λ _ s,
- h "div" [] [
- button "+" (1 : int),
- html.of_string $ to_string $ s,
- button "-" (-1)
- ]
+  h "div" [] [
+    button "+" (1 : int),
+    html.of_string $ to_string $ s,
+    button "-" (-1)
+  ]
 )
 
 #html counter_widget
@@ -431,9 +431,9 @@ component.ignore_props $ component.mk_simple int int 0 (λ _ x y, (x + y, none))
 -/
 add_tactic_doc
 { name := "#html",
- category := doc_category.cmd,
- decl_names := [`show_widget_cmd],
- tags := ["core", "widgets"] }
+  category := doc_category.cmd,
+  decl_names := [`show_widget_cmd],
+  tags := ["core", "widgets"] }
 
 /--
 The `add_decl_doc` command is used to add a doc string to an existing declaration.
@@ -448,7 +448,7 @@ add_decl_doc foo
 ```
 -/
 @[user_command] meta def add_decl_doc_command (mi : interactive.decl_meta_info)
- (_ : parse $ tk "add_decl_doc") : parser unit := do
+  (_ : parse $ tk "add_decl_doc") : parser unit := do
 n ← parser.ident,
 n ← resolve_constant n,
 some doc ← pure mi.doc_string | fail "add_decl_doc requires a doc string",
@@ -456,7 +456,6 @@ add_doc_string n doc
 
 add_tactic_doc
 { name := "add_decl_doc",
- category := doc_category.cmd,
- decl_names := [``add_decl_doc_command],
- tags := ["documentation"] }
-
+  category := doc_category.cmd,
+  decl_names := [``add_decl_doc_command],
+  tags := ["documentation"] }

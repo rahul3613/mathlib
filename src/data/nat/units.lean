@@ -21,8 +21,8 @@ add_units.ext $ (nat.eq_zero_of_add_eq_zero u.val_neg).1
 
 @[simp] protected theorem is_unit_iff {n : ℕ} : is_unit n ↔ n = 1 :=
 iff.intro
- (λ ⟨u, hu⟩, match n, u, hu, nat.units_eq_one u with _, _, rfl, rfl := rfl end)
- (λ h, h.symm ▸ ⟨1, rfl⟩)
+  (λ ⟨u, hu⟩, match n, u, hu, nat.units_eq_one u with _, _, rfl, rfl := rfl end)
+  (λ h, h.symm ▸ ⟨1, rfl⟩)
 
 instance unique_units : unique ℕˣ :=
 { default := 1, uniq := nat.units_eq_one }
@@ -31,4 +31,3 @@ instance unique_add_units : unique (add_units ℕ) :=
 { default := 0, uniq := nat.add_units_eq_zero }
 
 end nat
-

@@ -39,13 +39,13 @@ variables {α : Type*} [topological_space α]
 
 @[to_additive, priority 100] -- See note [lower instance priority]
 instance ordered_comm_group.to_has_upper_lower_closure [ordered_comm_group α]
- [has_continuous_const_smul α α] : has_upper_lower_closure α :=
+  [has_continuous_const_smul α α] : has_upper_lower_closure α :=
 { is_upper_set_closure := λ s h x y hxy hx, closure_mono (h.smul_subset $ one_le_div'.2 hxy) $
- by { rw closure_smul, exact ⟨x, hx, div_mul_cancel' _ _⟩ },
- is_lower_set_closure := λ s h x y hxy hx, closure_mono (h.smul_subset $ div_le_one'.2 hxy) $
- by { rw closure_smul, exact ⟨x, hx, div_mul_cancel' _ _⟩ },
- is_open_upper_closure := λ s hs, by { rw [←mul_one s]; rw [ ←mul_upper_closure], exact hs.mul_right },
- is_open_lower_closure := λ s hs, by { rw [←mul_one s]; rw [ ←mul_lower_closure], exact hs.mul_right } }
+    by { rw closure_smul, exact ⟨x, hx, div_mul_cancel' _ _⟩ },
+  is_lower_set_closure := λ s h x y hxy hx, closure_mono (h.smul_subset $ div_le_one'.2 hxy) $
+    by { rw closure_smul, exact ⟨x, hx, div_mul_cancel' _ _⟩ },
+  is_open_upper_closure := λ s hs, by { rw [←mul_one s, ←mul_upper_closure], exact hs.mul_right },
+  is_open_lower_closure := λ s hs, by { rw [←mul_one s, ←mul_lower_closure], exact hs.mul_right } }
 
 variables [preorder α]
 
@@ -53,11 +53,11 @@ section order_closed_topology
 variables [order_closed_topology α] {s : set α}
 
 @[simp] lemma upper_bounds_closure (s : set α) :
- upper_bounds (closure s : set α) = upper_bounds s :=
+  upper_bounds (closure s : set α) = upper_bounds s :=
 ext $ λ a, by simp_rw [mem_upper_bounds_iff_subset_Iic, is_closed_Iic.closure_subset_iff]
 
 @[simp] lemma lower_bounds_closure (s : set α) :
- lower_bounds (closure s : set α) = lower_bounds s :=
+  lower_bounds (closure s : set α) = lower_bounds s :=
 ext $ λ a, by simp_rw [mem_lower_bounds_iff_subset_Ici, is_closed_Ici.closure_subset_iff]
 
 @[simp] lemma bdd_above_closure : bdd_above (closure s) ↔ bdd_above s :=
@@ -89,9 +89,9 @@ has_upper_lower_closure.is_open_lower_closure _
 
 instance : has_upper_lower_closure αᵒᵈ :=
 { is_upper_set_closure := @is_lower_set.closure α _ _ _,
- is_lower_set_closure := @is_upper_set.closure α _ _ _,
- is_open_upper_closure := @is_open.lower_closure α _ _ _,
- is_open_lower_closure := @is_open.upper_closure α _ _ _ }
+  is_lower_set_closure := @is_upper_set.closure α _ _ _,
+  is_open_upper_closure := @is_open.lower_closure α _ _ _,
+  is_open_lower_closure := @is_open.upper_closure α _ _ _ }
 
 /-
 Note: `s.ord_connected` does not imply `(closure s).ord_connected`, as we can see by taking
@@ -109,15 +109,14 @@ oooooxx
 -/
 
 protected lemma is_upper_set.interior (h : is_upper_set s) : is_upper_set (interior s) :=
-by { rw [←is_lower_set_compl]; rw [ ←closure_compl], exact h.compl.closure }
+by { rw [←is_lower_set_compl, ←closure_compl], exact h.compl.closure }
 
 protected lemma is_lower_set.interior (h : is_lower_set s) : is_lower_set (interior s) :=
 h.to_dual.interior
 
 protected lemma set.ord_connected.interior (h : s.ord_connected) : (interior s).ord_connected :=
 begin
- rw [←h.upper_closure_inter_lower_closure]; rw [ interior_inter],
- exact (upper_closure s).upper.interior.ord_connected.inter
- (lower_closure s).lower.interior.ord_connected,
+  rw [←h.upper_closure_inter_lower_closure, interior_inter],
+  exact (upper_closure s).upper.interior.ord_connected.inter
+    (lower_closure s).lower.interior.ord_connected,
 end
-

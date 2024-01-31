@@ -39,17 +39,17 @@ and `witt_vector.verschiebung` is equal to multiplication by `p`.
 ## Main declarations
 
 * `witt_vector.is_poly`, `witt_vector.is_poly₂`:
- two predicates that assert that a unary/binary function on Witt vectors
- is polynomial in the coefficients of the input values.
+  two predicates that assert that a unary/binary function on Witt vectors
+  is polynomial in the coefficients of the input values.
 * `witt_vector.is_poly.ext`, `witt_vector.is_poly₂.ext`:
- two polynomial functions are equal if their families of polynomials are equal
- after evaluating the Witt polynomials on them.
+  two polynomial functions are equal if their families of polynomials are equal
+  after evaluating the Witt polynomials on them.
 * `witt_vector.is_poly.comp` (+ many variants) show that unary/binary compositions
- of polynomial functions are polynomial.
+  of polynomial functions are polynomial.
 * `witt_vector.id_is_poly`, `witt_vector.neg_is_poly`,
- `witt_vector.add_is_poly₂`, `witt_vector.mul_is_poly₂`:
- several well-known operations are polynomial functions
- (for Verschiebung, Frobenius, and multiplication by `p`, see their respective files).
+  `witt_vector.add_is_poly₂`, `witt_vector.mul_is_poly₂`:
+  several well-known operations are polynomial functions
+  (for Verschiebung, Frobenius, and multiplication by `p`, see their respective files).
 
 ## On higher arity analogues
 
@@ -74,15 +74,15 @@ Any lemma doing "ring equation rewriting" with polynomial functions should be ta
 ```lean
 @[ghost_simps]
 lemma bind₁_frobenius_poly_witt_polynomial (n : ℕ) :
- bind₁ (frobenius_poly p) (witt_polynomial p ℤ n) = (witt_polynomial p ℤ (n+1))
+  bind₁ (frobenius_poly p) (witt_polynomial p ℤ n) = (witt_polynomial p ℤ (n+1))
 ```
 
 Proofs of identities between polynomial functions will often follow the pattern
 ```lean
 begin
- ghost_calc _,
- <minor preprocessing>,
- ghost_simp
+  ghost_calc _,
+  <minor preprocessing>,
+  ghost_simp
 end
 ```
 
@@ -107,9 +107,9 @@ setup_tactic_parser
 /-- A macro for a common simplification when rewriting with ghost component equations. -/
 meta def ghost_simp (lems : parse simp_arg_list) : tactic unit :=
 do tactic.try tactic.intro1,
- simp none none tt
- (lems ++ [simp_arg_type.symm_expr ``(sub_eq_add_neg)])
- [`ghost_simps] (loc.ns [none])
+   simp none none tt
+     (lems ++ [simp_arg_type.symm_expr ``(sub_eq_add_neg)])
+     [`ghost_simps] (loc.ns [none])
 
 /--
 `ghost_calc` is a tactic for proving identities between polynomial functions.
@@ -138,20 +138,20 @@ so it is easier (and prettier) to put it in a tactic script.
 -/
 meta def ghost_calc (ids' : parse ident_*) : tactic unit :=
 do ids ← ids'.mmap $ λ n, get_local n <|> tactic.intro n,
- `(@eq (witt_vector _ %%R) _ _) ← target,
- match ids with
- | [x] := refine ```(is_poly.ext _ _ _ _ %%x)
- | [x, y] := refine ```(is_poly₂.ext _ _ _ _ %%x %%y)
- | _ := fail "ghost_calc takes one or two arguments"
- end,
- nm ← match R with
- | expr.local_const _ nm _ _ := return nm
- | _ := get_unused_name `R
- end,
- iterate_exactly 2 apply_instance,
- unfreezingI (tactic.clear' tt [R]),
- introsI $ [nm, nm<.>"_inst"] ++ ids',
- skip
+   `(@eq (witt_vector _ %%R) _ _) ← target,
+   match ids with
+   | [x] := refine ```(is_poly.ext _ _ _ _ %%x)
+   | [x, y] := refine ```(is_poly₂.ext _ _ _ _ %%x %%y)
+   | _ := fail "ghost_calc takes one or two arguments"
+   end,
+   nm ← match R with
+   | expr.local_const _ nm _ _ := return nm
+   | _ := get_unused_name `R
+   end,
+   iterate_exactly 2 apply_instance,
+   unfreezingI (tactic.clear' tt [R]),
+   introsI $ [nm, nm<.>"_inst"] ++ ids',
+   skip
 
 end interactive
 
@@ -177,31 +177,31 @@ noncomputable theory
 -/
 
 lemma poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → mv_polynomial (idx × ℕ) ℤ)
- (h : ∀ n, bind₁ f (witt_polynomial p _ n) = bind₁ g (witt_polynomial p _ n)) :
- f = g :=
+  (h : ∀ n, bind₁ f (witt_polynomial p _ n) = bind₁ g (witt_polynomial p _ n)) :
+  f = g :=
 begin
- ext1 n,
- apply mv_polynomial.map_injective (int.cast_ring_hom ℚ) int.cast_injective,
- rw ← function.funext_iff at h,
- replace h := congr_arg
- (λ fam, bind₁ (mv_polynomial.map (int.cast_ring_hom ℚ) ∘ fam)
- (X_in_terms_of_W p ℚ n)) h,
- simpa only [function.comp, map_bind₁, map_witt_polynomial,
- ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
+  ext1 n,
+  apply mv_polynomial.map_injective (int.cast_ring_hom ℚ) int.cast_injective,
+  rw ← function.funext_iff at h,
+  replace h := congr_arg
+    (λ fam, bind₁ (mv_polynomial.map (int.cast_ring_hom ℚ) ∘ fam)
+    (X_in_terms_of_W p ℚ n)) h,
+  simpa only [function.comp, map_bind₁, map_witt_polynomial,
+    ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
 end
 
 lemma poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → mv_polynomial ℕ ℤ)
- (h : ∀ n, bind₁ f (witt_polynomial p _ n) = bind₁ g (witt_polynomial p _ n)) :
- f = g :=
+  (h : ∀ n, bind₁ f (witt_polynomial p _ n) = bind₁ g (witt_polynomial p _ n)) :
+  f = g :=
 begin
- ext1 n,
- apply mv_polynomial.map_injective (int.cast_ring_hom ℚ) int.cast_injective,
- rw ← function.funext_iff at h,
- replace h := congr_arg
- (λ fam, bind₁ (mv_polynomial.map (int.cast_ring_hom ℚ) ∘ fam)
- (X_in_terms_of_W p ℚ n)) h,
- simpa only [function.comp, map_bind₁, map_witt_polynomial,
- ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
+  ext1 n,
+  apply mv_polynomial.map_injective (int.cast_ring_hom ℚ) int.cast_injective,
+  rw ← function.funext_iff at h,
+  replace h := congr_arg
+    (λ fam, bind₁ (mv_polynomial.map (int.cast_ring_hom ℚ) ∘ fam)
+    (X_in_terms_of_W p ℚ n)) h,
+  simpa only [function.comp, map_bind₁, map_witt_polynomial,
+    ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W, bind₁_X_right] using h
 end
 
 omit hp
@@ -223,7 +223,7 @@ For the most part, users are not expected to treat `is_poly` as a class.
 -/
 class is_poly (f : Π ⦃R⦄ [comm_ring R], witt_vector p R → 𝕎 R) : Prop :=
 mk' :: (poly : ∃ φ : ℕ → mv_polynomial ℕ ℤ, ∀ ⦃R⦄ [comm_ring R] (x : 𝕎 R),
- by exactI (f x).coeff = λ n, aeval x.coeff (φ n))
+  by exactI (f x).coeff = λ n, aeval x.coeff (φ n))
 
 /-- The identity function on Witt vectors is a polynomial function. -/
 instance id_is_poly : is_poly p (λ _ _, id) :=
@@ -240,46 +240,46 @@ instance : inhabited (is_poly p (λ _ _, id)) :=
 variables {p}
 include hp
 lemma ext {f g} (hf : is_poly p f) (hg : is_poly p g)
- (h : ∀ (R : Type u) [_Rcr : comm_ring R] (x : 𝕎 R) (n : ℕ),
- by exactI ghost_component n (f x) = ghost_component n (g x)) :
- ∀ (R : Type u) [_Rcr : comm_ring R] (x : 𝕎 R), by exactI f x = g x :=
+  (h : ∀ (R : Type u) [_Rcr : comm_ring R] (x : 𝕎 R) (n : ℕ),
+    by exactI ghost_component n (f x) = ghost_component n (g x)) :
+  ∀ (R : Type u) [_Rcr : comm_ring R] (x : 𝕎 R), by exactI f x = g x :=
 begin
- unfreezingI
- { obtain ⟨φ, hf⟩ := hf,
- obtain ⟨ψ, hg⟩ := hg },
- intros,
- ext n,
- rw [hf]; rw [ hg]; rw [ poly_eq_of_witt_polynomial_bind_eq p φ ψ],
- intro k,
- apply mv_polynomial.funext,
- intro x,
- simp only [hom_bind₁],
- specialize h (ulift ℤ) (mk p $ λ i, ⟨x i⟩) k,
- simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h,
- apply (ulift.ring_equiv.symm : ℤ ≃+* _).injective,
- simp only [←ring_equiv.coe_to_ring_hom, map_eval₂_hom],
- convert h using 1,
- all_goals
- { funext i,
- simp only [hf, hg, mv_polynomial.eval, map_eval₂_hom],
- apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
- ext1,
- apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
- simp only [coeff_mk], refl }
+  unfreezingI
+  { obtain ⟨φ, hf⟩ := hf,
+    obtain ⟨ψ, hg⟩ := hg },
+  intros,
+  ext n,
+  rw [hf, hg, poly_eq_of_witt_polynomial_bind_eq p φ ψ],
+  intro k,
+  apply mv_polynomial.funext,
+  intro x,
+  simp only [hom_bind₁],
+  specialize h (ulift ℤ) (mk p $ λ i, ⟨x i⟩) k,
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h,
+  apply (ulift.ring_equiv.symm : ℤ ≃+* _).injective,
+  simp only [←ring_equiv.coe_to_ring_hom, map_eval₂_hom],
+  convert h using 1,
+  all_goals
+  { funext i,
+    simp only [hf, hg, mv_polynomial.eval, map_eval₂_hom],
+    apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
+    ext1,
+    apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
+    simp only [coeff_mk], refl }
 end
 
 omit hp
 
 /-- The composition of polynomial functions is polynomial. -/
 lemma comp {g f} (hg : is_poly p g) (hf : is_poly p f) :
- is_poly p (λ R _Rcr, @g R _Rcr ∘ @f R _Rcr) :=
+  is_poly p (λ R _Rcr, @g R _Rcr ∘ @f R _Rcr) :=
 begin
- unfreezingI
- { obtain ⟨φ, hf⟩ := hf,
- obtain ⟨ψ, hg⟩ := hg },
- use (λ n, bind₁ φ (ψ n)),
- intros,
- simp only [aeval_bind₁, function.comp, hg, hf]
+  unfreezingI
+  { obtain ⟨φ, hf⟩ := hf,
+    obtain ⟨ψ, hg⟩ := hg },
+  use (λ n, bind₁ φ (ψ n)),
+  intros,
+  simp only [aeval_bind₁, function.comp, hg, hf]
 end
 
 end is_poly
@@ -298,55 +298,55 @@ For the most part, users are not expected to treat `is_poly₂` as a class.
 -/
 class is_poly₂ (f : Π ⦃R⦄ [comm_ring R], witt_vector p R → 𝕎 R → 𝕎 R) : Prop :=
 mk' :: (poly : ∃ φ : ℕ → mv_polynomial (fin 2 × ℕ) ℤ, ∀ ⦃R⦄ [comm_ring R] (x y : 𝕎 R),
- by exactI (f x y).coeff = λ n, peval (φ n) ![x.coeff, y.coeff])
+  by exactI (f x y).coeff = λ n, peval (φ n) ![x.coeff, y.coeff])
 
 
 variable {p}
 
 /-- The composition of polynomial functions is polynomial. -/
 lemma is_poly₂.comp {h f g} (hh : is_poly₂ p h) (hf : is_poly p f) (hg : is_poly p g) :
- is_poly₂ p (λ R _Rcr x y, by exactI h (f x) (g y)) :=
+  is_poly₂ p (λ R _Rcr x y, by exactI h (f x) (g y)) :=
 begin
- unfreezingI
- { obtain ⟨φ, hf⟩ := hf,
- obtain ⟨ψ, hg⟩ := hg,
- obtain ⟨χ, hh⟩ := hh },
- refine ⟨⟨(λ n, bind₁ (uncurry $
- ![λ k, rename (prod.mk (0 : fin 2)) (φ k),
- λ k, rename (prod.mk (1 : fin 2)) (ψ k)]) (χ n)), _⟩⟩,
- intros,
- funext n,
- simp only [peval, aeval_bind₁, function.comp, hh, hf, hg, uncurry],
- apply eval₂_hom_congr rfl _ rfl,
- ext ⟨i, n⟩,
- fin_cases i;
- simp only [aeval_eq_eval₂_hom, eval₂_hom_rename, function.comp, matrix.cons_val_zero,
- matrix.head_cons, matrix.cons_val_one],
+  unfreezingI
+  { obtain ⟨φ, hf⟩ := hf,
+    obtain ⟨ψ, hg⟩ := hg,
+    obtain ⟨χ, hh⟩ := hh },
+  refine ⟨⟨(λ n, bind₁ (uncurry $
+          ![λ k, rename (prod.mk (0 : fin 2)) (φ k),
+            λ k, rename (prod.mk (1 : fin 2)) (ψ k)]) (χ n)), _⟩⟩,
+  intros,
+  funext n,
+  simp only [peval, aeval_bind₁, function.comp, hh, hf, hg, uncurry],
+  apply eval₂_hom_congr rfl _ rfl,
+  ext ⟨i, n⟩,
+  fin_cases i;
+  simp only [aeval_eq_eval₂_hom, eval₂_hom_rename, function.comp, matrix.cons_val_zero,
+    matrix.head_cons, matrix.cons_val_one],
 end
 
 /-- The composition of a polynomial function with a binary polynomial function is polynomial. -/
 lemma is_poly.comp₂ {g f} (hg : is_poly p g) (hf : is_poly₂ p f) :
- is_poly₂ p (λ R _Rcr x y, by exactI g (f x y)) :=
+  is_poly₂ p (λ R _Rcr x y, by exactI g (f x y)) :=
 begin
- unfreezingI
- { obtain ⟨φ, hf⟩ := hf,
- obtain ⟨ψ, hg⟩ := hg },
- use (λ n, bind₁ φ (ψ n)),
- intros,
- simp only [peval, aeval_bind₁, function.comp, hg, hf]
+  unfreezingI
+  { obtain ⟨φ, hf⟩ := hf,
+    obtain ⟨ψ, hg⟩ := hg },
+  use (λ n, bind₁ φ (ψ n)),
+  intros,
+  simp only [peval, aeval_bind₁, function.comp, hg, hf]
 end
 
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
 lemma is_poly₂.diag {f} (hf : is_poly₂ p f) :
- is_poly p (λ R _Rcr x, by exactI f x x) :=
+  is_poly p (λ R _Rcr x, by exactI f x x) :=
 begin
- unfreezingI {obtain ⟨φ, hf⟩ := hf},
- refine ⟨⟨λ n, bind₁ (uncurry ![X, X]) (φ n), _⟩⟩,
- intros, funext n,
- simp only [hf, peval, uncurry, aeval_bind₁],
- apply eval₂_hom_congr rfl _ rfl,
- ext ⟨i, k⟩, fin_cases i;
- simp only [matrix.head_cons, aeval_X, matrix.cons_val_zero, matrix.cons_val_one],
+  unfreezingI {obtain ⟨φ, hf⟩ := hf},
+  refine ⟨⟨λ n, bind₁ (uncurry ![X, X]) (φ n), _⟩⟩,
+  intros, funext n,
+  simp only [hf, peval, uncurry, aeval_bind₁],
+  apply eval₂_hom_congr rfl _ rfl,
+  ext ⟨i, k⟩, fin_cases i;
+  simp only [matrix.head_cons, aeval_X, matrix.cons_val_zero, matrix.cons_val_one],
 end
 
 open tactic
@@ -367,23 +367,23 @@ If `n` is the name of a lemma with opened type `∀ vars, is_poly p _`,
 -/
 meta def mk_poly_comp_lemmas (n : name) (vars : list expr) (p : expr) : tactic unit :=
 do c ← mk_const n,
- let appd := vars.foldl expr.app c,
+   let appd := vars.foldl expr.app c,
 
- tgt_bod ← to_expr ``(λ f [hf : is_poly %%p f], is_poly.comp %%appd hf) >>=
- replace_univ_metas_with_univ_params,
- tgt_bod ← lambdas vars tgt_bod,
- tgt_tp ← infer_type tgt_bod,
- let nm := n <.> "comp_i",
- add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
- set_attribute `instance nm,
+   tgt_bod ← to_expr ``(λ f [hf : is_poly %%p f], is_poly.comp %%appd hf) >>=
+     replace_univ_metas_with_univ_params,
+   tgt_bod ← lambdas vars tgt_bod,
+   tgt_tp ← infer_type tgt_bod,
+   let nm := n <.> "comp_i",
+   add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
+   set_attribute `instance nm,
 
- tgt_bod ← to_expr ``(λ f [hf : is_poly₂ %%p f], is_poly.comp₂ %%appd hf) >>=
- replace_univ_metas_with_univ_params,
- tgt_bod ← lambdas vars tgt_bod,
- tgt_tp ← infer_type tgt_bod,
- let nm := n <.> "comp₂_i",
- add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
- set_attribute `instance nm
+   tgt_bod ← to_expr ``(λ f [hf : is_poly₂ %%p f], is_poly.comp₂ %%appd hf) >>=
+     replace_univ_metas_with_univ_params,
+   tgt_bod ← lambdas vars tgt_bod,
+   tgt_tp ← infer_type tgt_bod,
+   let nm := n <.> "comp₂_i",
+   add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
+   set_attribute `instance nm
 
 /--
 If `n` is the name of a lemma with opened type `∀ vars, is_poly₂ p _`,
@@ -392,35 +392,35 @@ If `n` is the name of a lemma with opened type `∀ vars, is_poly₂ p _`,
 -/
 meta def mk_poly₂_comp_lemmas (n : name) (vars : list expr) (p : expr) : tactic unit :=
 do c ← mk_const n,
- let appd := vars.foldl expr.app c,
+   let appd := vars.foldl expr.app c,
 
- tgt_bod ← to_expr ``(λ {f g} [hf : is_poly %%p f] [hg : is_poly %%p g],
- is_poly₂.comp %%appd hf hg) >>= replace_univ_metas_with_univ_params,
- tgt_bod ← lambdas vars tgt_bod,
- tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify,
- let nm := n <.> "comp₂_i",
- add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
- set_attribute `instance nm,
+   tgt_bod ← to_expr ``(λ {f g} [hf : is_poly %%p f] [hg : is_poly %%p g],
+     is_poly₂.comp %%appd hf hg) >>= replace_univ_metas_with_univ_params,
+   tgt_bod ← lambdas vars tgt_bod,
+   tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify,
+   let nm := n <.> "comp₂_i",
+   add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
+   set_attribute `instance nm,
 
- tgt_bod ← to_expr ``(λ {f g} [hf : is_poly %%p f] [hg : is_poly %%p g],
- (is_poly₂.comp %%appd hf hg).diag) >>= replace_univ_metas_with_univ_params,
- tgt_bod ← lambdas vars tgt_bod,
- tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify,
- let nm := n <.> "comp_diag",
- add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
- set_attribute `instance nm
+   tgt_bod ← to_expr ``(λ {f g} [hf : is_poly %%p f] [hg : is_poly %%p g],
+     (is_poly₂.comp %%appd hf hg).diag) >>= replace_univ_metas_with_univ_params,
+   tgt_bod ← lambdas vars tgt_bod,
+   tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify,
+   let nm := n <.> "comp_diag",
+   add_decl $ mk_definition nm tgt_tp.collect_univ_params tgt_tp tgt_bod,
+   set_attribute `instance nm
 
 /--
 The `after_set` function for `@[is_poly]`. Calls `mk_poly(₂)_comp_lemmas`.
 -/
 meta def mk_comp_lemmas (n : name) : tactic unit :=
 do d ← get_decl n,
- (vars, tp) ← open_pis d.type,
- match tp with
- | `(is_poly %%p _) := mk_poly_comp_lemmas n vars p
- | `(is_poly₂ %%p _) := mk_poly₂_comp_lemmas n vars p
- | _ := fail "@[is_poly] should only be applied to terms of type `is_poly _ _` or `is_poly₂ _ _`"
- end
+   (vars, tp) ← open_pis d.type,
+   match tp with
+   | `(is_poly %%p _) := mk_poly_comp_lemmas n vars p
+   | `(is_poly₂ %%p _) := mk_poly₂_comp_lemmas n vars p
+   | _ := fail "@[is_poly] should only be applied to terms of type `is_poly _ _` or `is_poly₂ _ _`"
+   end
 
 /--
 `@[is_poly]` is applied to lemmas of the form `is_poly f φ` or `is_poly₂ f φ`.
@@ -447,8 +447,8 @@ The user-written lemmas are not instances. Users should be able to assemble `is_
 -/
 @[user_attribute] meta def is_poly_attr : user_attribute :=
 { name := `is_poly,
- descr := "Lemmas with this attribute describe the polynomial structure of functions",
- after_set := some $ λ n _ _, mk_comp_lemmas n }
+  descr := "Lemmas with this attribute describe the polynomial structure of functions",
+  after_set := some $ λ n _ _, mk_comp_lemmas n }
 
 end tactic
 
@@ -467,10 +467,10 @@ Users are expected to use the non-instance versions manually.
 lemma neg_is_poly : is_poly p (λ R _, by exactI @has_neg.neg (𝕎 R) _) :=
 ⟨⟨λ n, rename prod.snd (witt_neg p n),
 begin
- introsI, funext n,
- rw [neg_coeff]; rw [ aeval_eq_eval₂_hom]; rw [ eval₂_hom_rename],
- apply eval₂_hom_congr rfl _ rfl,
- ext ⟨i, k⟩, fin_cases i, refl,
+  introsI, funext n,
+  rw [neg_coeff, aeval_eq_eval₂_hom, eval₂_hom_rename],
+  apply eval₂_hom_congr rfl _ rfl,
+  ext ⟨i, k⟩, fin_cases i, refl,
 end⟩⟩
 
 section zero_one
@@ -482,8 +482,8 @@ instance zero_is_poly : is_poly p (λ _ _ _, by exactI 0) :=
 ⟨⟨0, by { introsI, funext n, simp only [pi.zero_apply, alg_hom.map_zero, zero_coeff] }⟩⟩
 
 @[simp] lemma bind₁_zero_witt_polynomial (n : ℕ) :
- bind₁ (0 : ℕ → mv_polynomial ℕ R) (witt_polynomial p R n) = 0 :=
-by rw [← aeval_eq_bind₁]; rw [ aeval_zero]; rw [ constant_coeff_witt_polynomial]; rw [ ring_hom.map_zero]
+  bind₁ (0 : ℕ → mv_polynomial ℕ R) (witt_polynomial p R n) = 0 :=
+by rw [← aeval_eq_bind₁, aeval_zero, constant_coeff_witt_polynomial, ring_hom.map_zero]
 
 omit hp
 
@@ -493,25 +493,25 @@ def one_poly (n : ℕ) : mv_polynomial ℕ ℤ := if n = 0 then 1 else 0
 include hp
 
 @[simp] lemma bind₁_one_poly_witt_polynomial (n : ℕ) :
- bind₁ one_poly (witt_polynomial p ℤ n) = 1 :=
+  bind₁ one_poly (witt_polynomial p ℤ n) = 1 :=
 begin
- rw [witt_polynomial_eq_sum_C_mul_X_pow]; rw [ alg_hom.map_sum]; rw [ finset.sum_eq_single 0],
- { simp only [one_poly, one_pow, one_mul, alg_hom.map_pow, C_1, pow_zero, bind₁_X_right,
- if_true, eq_self_iff_true], },
- { intros i hi hi0,
- simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.pos _), mul_zero,
- alg_hom.map_pow, bind₁_X_right, alg_hom.map_mul], },
- { rw finset.mem_range, dec_trivial }
+  rw [witt_polynomial_eq_sum_C_mul_X_pow, alg_hom.map_sum, finset.sum_eq_single 0],
+  { simp only [one_poly, one_pow, one_mul, alg_hom.map_pow, C_1, pow_zero, bind₁_X_right,
+      if_true, eq_self_iff_true], },
+  { intros i hi hi0,
+    simp only [one_poly, if_neg hi0, zero_pow (pow_pos hp.1.pos _), mul_zero,
+      alg_hom.map_pow, bind₁_X_right, alg_hom.map_mul], },
+  { rw finset.mem_range, dec_trivial }
 end
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
 instance one_is_poly : is_poly p (λ _ _ _, by exactI 1) :=
 ⟨⟨one_poly,
 begin
- introsI, funext n, cases n,
- { simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, alg_hom.map_one], },
- { simp only [one_poly, nat.succ_pos', one_coeff_eq_of_pos,
- if_neg n.succ_ne_zero, alg_hom.map_zero] }
+  introsI, funext n, cases n,
+  { simp only [one_poly, if_true, eq_self_iff_true, one_coeff_zero, alg_hom.map_one], },
+  { simp only [one_poly, nat.succ_pos', one_coeff_eq_of_pos,
+      if_neg n.succ_ne_zero, alg_hom.map_zero] }
 end⟩⟩
 
 end zero_one
@@ -531,16 +531,16 @@ include hp
 
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 lemma is_poly.map {f} (hf : is_poly p f) (g : R →+* S) (x : 𝕎 R) :
- map g (f x) = f (map g x) :=
+  map g (f x) = f (map g x) :=
 begin
- -- this could be turned into a tactic “macro” (taking `hf` as parameter)
- -- so that applications do not have to worry about the universe issue
- -- see `is_poly₂.map` for a slightly more general proof strategy
- unfreezingI {obtain ⟨φ, hf⟩ := hf},
- ext n,
- simp only [map_coeff, hf, map_aeval],
- apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
- simp only [map_coeff]
+  -- this could be turned into a tactic “macro” (taking `hf` as parameter)
+  -- so that applications do not have to worry about the universe issue
+  -- see `is_poly₂.map` for a slightly more general proof strategy
+  unfreezingI {obtain ⟨φ, hf⟩ := hf},
+  ext n,
+  simp only [map_coeff, hf, map_aeval],
+  apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
+  simp only [map_coeff]
 end
 
 namespace is_poly₂
@@ -552,73 +552,72 @@ variables {p}
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the first argument is polynomial. -/
 lemma comp_left {g f} (hg : is_poly₂ p g) (hf : is_poly p f) :
- is_poly₂ p (λ R _Rcr x y, by exactI g (f x) y) :=
+  is_poly₂ p (λ R _Rcr x y, by exactI g (f x) y) :=
 hg.comp hf (witt_vector.id_is_poly _)
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the second argument is polynomial. -/
 lemma comp_right {g f} (hg : is_poly₂ p g) (hf : is_poly p f) :
- is_poly₂ p (λ R _Rcr x y, by exactI g x (f y)) :=
+  is_poly₂ p (λ R _Rcr x y, by exactI g x (f y)) :=
 hg.comp (witt_vector.id_is_poly p) hf
 
 include hp
 
 lemma ext {f g} (hf : is_poly₂ p f) (hg : is_poly₂ p g)
- (h : ∀ (R : Type u) [_Rcr : comm_ring R] (x y : 𝕎 R) (n : ℕ),
- by exactI ghost_component n (f x y) = ghost_component n (g x y)) :
- ∀ (R) [_Rcr : comm_ring R] (x y : 𝕎 R), by exactI f x y = g x y :=
+  (h : ∀ (R : Type u) [_Rcr : comm_ring R] (x y : 𝕎 R) (n : ℕ),
+    by exactI ghost_component n (f x y) = ghost_component n (g x y)) :
+  ∀ (R) [_Rcr : comm_ring R] (x y : 𝕎 R), by exactI f x y = g x y :=
 begin
- unfreezingI
- { obtain ⟨φ, hf⟩ := hf,
- obtain ⟨ψ, hg⟩ := hg },
- intros,
- ext n,
- rw [hf]; rw [ hg]; rw [ poly_eq_of_witt_polynomial_bind_eq' p φ ψ],
- clear x y,
- intro k,
- apply mv_polynomial.funext,
- intro x,
- simp only [hom_bind₁],
- specialize h (ulift ℤ) (mk p $ λ i, ⟨x (0, i)⟩) (mk p $ λ i, ⟨x (1, i)⟩) k,
- simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h,
- apply (ulift.ring_equiv.symm : ℤ ≃+* _).injective,
- simp only [←ring_equiv.coe_to_ring_hom, map_eval₂_hom],
- convert h using 1,
- all_goals
- { funext i,
- simp only [hf, hg, mv_polynomial.eval, map_eval₂_hom],
- apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
- ext1,
- apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
- ext ⟨b, _⟩,
- fin_cases b; simp only [coeff_mk, uncurry]; refl }
+  unfreezingI
+  { obtain ⟨φ, hf⟩ := hf,
+    obtain ⟨ψ, hg⟩ := hg },
+  intros,
+  ext n,
+  rw [hf, hg, poly_eq_of_witt_polynomial_bind_eq' p φ ψ],
+  clear x y,
+  intro k,
+  apply mv_polynomial.funext,
+  intro x,
+  simp only [hom_bind₁],
+  specialize h (ulift ℤ) (mk p $ λ i, ⟨x (0, i)⟩) (mk p $ λ i, ⟨x (1, i)⟩) k,
+  simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h,
+  apply (ulift.ring_equiv.symm : ℤ ≃+* _).injective,
+  simp only [←ring_equiv.coe_to_ring_hom, map_eval₂_hom],
+  convert h using 1,
+  all_goals
+  { funext i,
+    simp only [hf, hg, mv_polynomial.eval, map_eval₂_hom],
+    apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
+    ext1,
+    apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
+    ext ⟨b, _⟩,
+    fin_cases b; simp only [coeff_mk, uncurry]; refl }
 end
 
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 lemma map {f} (hf : is_poly₂ p f) (g : R →+* S) (x y : 𝕎 R) :
- map g (f x y) = f (map g x) (map g y) :=
+  map g (f x y) = f (map g x) (map g y) :=
 begin
- -- this could be turned into a tactic “macro” (taking `hf` as parameter)
- -- so that applications do not have to worry about the universe issue
- unfreezingI {obtain ⟨φ, hf⟩ := hf},
- ext n,
- simp only [map_coeff, hf, map_aeval, peval, uncurry],
- apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
- try { ext ⟨i, k⟩, fin_cases i },
- all_goals
- { simp only [map_coeff, matrix.cons_val_zero, matrix.head_cons, matrix.cons_val_one] },
+  -- this could be turned into a tactic “macro” (taking `hf` as parameter)
+  -- so that applications do not have to worry about the universe issue
+  unfreezingI {obtain ⟨φ, hf⟩ := hf},
+  ext n,
+  simp only [map_coeff, hf, map_aeval, peval, uncurry],
+  apply eval₂_hom_congr (ring_hom.ext_int _ _) _ rfl,
+  try { ext ⟨i, k⟩, fin_cases i },
+  all_goals
+  { simp only [map_coeff, matrix.cons_val_zero, matrix.head_cons, matrix.cons_val_one] },
 end
 
 end is_poly₂
 
 attribute [ghost_simps]
- alg_hom.map_zero alg_hom.map_one alg_hom.map_add alg_hom.map_mul
- alg_hom.map_sub alg_hom.map_neg alg_hom.id_apply map_nat_cast
- ring_hom.map_zero ring_hom.map_one ring_hom.map_mul ring_hom.map_add
- ring_hom.map_sub ring_hom.map_neg ring_hom.id_apply
- mul_add add_mul add_zero zero_add mul_one one_mul mul_zero zero_mul
- nat.succ_ne_zero add_tsub_cancel_right nat.succ_eq_add_one
- if_true eq_self_iff_true if_false forall_true_iff forall_2_true_iff forall_3_true_iff
+      alg_hom.map_zero alg_hom.map_one alg_hom.map_add alg_hom.map_mul
+      alg_hom.map_sub alg_hom.map_neg alg_hom.id_apply map_nat_cast
+      ring_hom.map_zero ring_hom.map_one ring_hom.map_mul ring_hom.map_add
+      ring_hom.map_sub ring_hom.map_neg ring_hom.id_apply
+      mul_add add_mul add_zero zero_add mul_one one_mul mul_zero zero_mul
+      nat.succ_ne_zero add_tsub_cancel_right nat.succ_eq_add_one
+      if_true eq_self_iff_true if_false forall_true_iff forall_2_true_iff forall_3_true_iff
 
 end witt_vector
-

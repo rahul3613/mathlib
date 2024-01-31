@@ -83,14 +83,14 @@ Variables are also indexed by natural numbers. The sets `PComp.effective`, `PCom
 and `PComp.vars` contain variable indices.
 * `pcomp.vars` contains the variables that appear in any inequality in the historical set.
 * `pcomp.effective` contains the variables that have been effectively eliminated from `pcomp`.
- A variable `n` is said to be *effectively eliminated* in `p : pcomp` if the elimination of `n`
- produced at least one of the ancestors of `p` (or `p` itself).
+  A variable `n` is said to be *effectively eliminated* in `p : pcomp` if the elimination of `n`
+  produced at least one of the ancestors of `p` (or `p` itself).
 * `pcomp.implicit` contains the variables that have been implicitly eliminated from `pcomp`.
- A variable `n` is said to be *implicitly eliminated* in `p` if it satisfies the following
- properties:
- - `n` appears in some inequality in the historical set (i.e. in `p.vars`).
- - `n` does not appear in `p.c.vars` (i.e. it has been eliminated).
- - `n` was not effectively eliminated.
+  A variable `n` is said to be *implicitly eliminated* in `p` if it satisfies the following
+  properties:
+  - `n` appears in some inequality in the historical set (i.e. in `p.vars`).
+  - `n` does not appear in `p.c.vars` (i.e. it has been eliminated).
+  - `n` was not effectively eliminated.
 
 We track these sets in order to compute whether the history of a `pcomp` is *minimal*.
 Checking this directly is expensive, but effective approximations can be defined in terms of these
@@ -149,9 +149,9 @@ additional fields of `pcomp`.
 * The historical set `pcomp.history` of `c1 + c2` is the union of the two historical sets.
 * `vars` is the union of `c1.vars` and `c2.vars`.
 * The effectively eliminated variables of `c1 + c2` are the union of the two effective sets,
- with `elim_var` inserted.
+  with `elim_var` inserted.
 * The implicitly eliminated variables of `c1 + c2` are those that appear in
- `vars` but not `c.vars` or `effective`.
+  `vars` but not `c.vars` or `effective`.
 (Note that the description of the implicitly eliminated variables of `c1 + c2` in the algorithm
 described in Section 6 of https://doi.org/10.1016/B978-0-444-88771-9.50019-2 seems to be wrong:
 that says it should be `(c1.implicit.union c2.implicit).sdiff explicit`.
@@ -160,11 +160,11 @@ this formula would leave them always empty.)
 -/
 meta def pcomp.add (c1 c2 : pcomp) (elim_var : ℕ) : pcomp :=
 let c := c1.c.add c2.c,
- src := c1.src.add c2.src,
- history := c1.history.union c2.history,
- vars := c1.vars.union c2.vars,
- effective := (c1.effective.union c2.effective).insert elim_var,
- implicit := (vars.sdiff (rb_set.of_list c.vars)).sdiff effective in
+    src := c1.src.add c2.src,
+    history := c1.history.union c2.history,
+    vars := c1.vars.union c2.vars,
+    effective := (c1.effective.union c2.effective).insert elim_var,
+    implicit := (vars.sdiff (rb_set.of_list c.vars)).sdiff effective in
 ⟨c, src, history, effective, implicit, vars⟩
 
 /--
@@ -175,11 +175,11 @@ No variables have been eliminated (effectively or implicitly).
 -/
 meta def pcomp.assump (c : comp) (n : ℕ) : pcomp :=
 { c := c,
- src := comp_source.assump n,
- history := mk_rb_set.insert n,
- effective := mk_rb_set,
- implicit := mk_rb_set,
- vars := rb_set.of_list c.vars }
+  src := comp_source.assump n,
+  history := mk_rb_set.insert n,
+  effective := mk_rb_set,
+  implicit := mk_rb_set,
+  vars := rb_set.of_list c.vars }
 
 meta instance pcomp.to_format : has_to_format pcomp :=
 ⟨λ p, to_fmt p.c.coeffs ++ to_string p.c.str ++ "0"⟩
@@ -196,12 +196,12 @@ rb_map.mk_core unit pcomp.cmp
 produces `v1` and `v2` such that `a` has been cancelled in `v1*c1 + v2*c2`. -/
 meta def elim_var (c1 c2 : comp) (a : ℕ) : option (ℕ × ℕ) :=
 let v1 := c1.coeff_of a,
- v2 := c2.coeff_of a in
+    v2 := c2.coeff_of a in
 if v1 * v2 < 0 then
- let vlcm := nat.lcm v1.nat_abs v2.nat_abs,
- v1' := vlcm / v1.nat_abs,
- v2' := vlcm / v2.nat_abs in
- some ⟨v1', v2'⟩
+  let vlcm :=  nat.lcm v1.nat_abs v2.nat_abs,
+      v1' := vlcm / v1.nat_abs,
+      v2' := vlcm / v2.nat_abs in
+  some ⟨v1', v2'⟩
 else none
 
 /--
@@ -211,7 +211,7 @@ and tracks this in the `comp_source`.
 -/
 meta def pelim_var (p1 p2 : pcomp) (a : ℕ) : option pcomp :=
 do (n1, n2) ← elim_var p1.c p2.c a,
- return $ (p1.scale n1).add (p2.scale n2) a
+   return $ (p1.scale n1).add (p2.scale n2) a
 
 /--
 A `pcomp` represents a contradiction if its `comp` field represents a contradiction.
@@ -280,12 +280,12 @@ state_t.put ⟨max_var, comps⟩ >> validate
 Returns `(pos, neg, not_present)`.
 -/
 meta def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) :
- rb_set pcomp × rb_set pcomp × rb_set pcomp :=
+  rb_set pcomp × rb_set pcomp × rb_set pcomp :=
 comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩ $ λ pc ⟨pos, neg, not_present⟩,
- let n := pc.c.coeff_of a in
- if n > 0 then ⟨pos.insert pc, neg, not_present⟩
- else if n < 0 then ⟨pos, neg.insert pc, not_present⟩
- else ⟨pos, neg, not_present.insert pc⟩
+  let n := pc.c.coeff_of a in
+  if n > 0 then ⟨pos.insert pc, neg, not_present⟩
+  else if n < 0 then ⟨pos, neg.insert pc, not_present⟩
+  else ⟨pos, neg, not_present.insert pc⟩
 
 /--
 `monad.elim_var a` performs one round of Fourier-Motzkin elimination, eliminating the variable `a`
@@ -293,10 +293,10 @@ from the `linarith` state.
 -/
 meta def monad.elim_var (a : ℕ) : linarith_monad unit :=
 do vs ← get_max_var,
- when (a ≤ vs) $
+   when (a ≤ vs) $
 do ⟨pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps,
- let cs' := pos.fold not_present (λ p s, s.union (elim_with_set a p neg)),
- update (vs - 1) cs'
+   let cs' := pos.fold not_present (λ p s, s.union (elim_with_set a p neg)),
+   update (vs - 1) cs'
 
 /--
 `elim_all_vars` eliminates all variables from the linarith state, leaving it with a set of
@@ -304,7 +304,7 @@ ground comparisons. If this succeeds without exception, the original `linarith` 
 -/
 meta def elim_all_vars : linarith_monad unit :=
 do mv ← get_max_var,
- (list.range $ mv + 1).reverse.mmap' monad.elim_var
+   (list.range $ mv + 1).reverse.mmap' monad.elim_var
 
 /--
 `mk_linarith_structure hyps vars` takes a list of hypotheses and the largest variable present in
@@ -312,14 +312,14 @@ those hypotheses. It produces an initial state for the elimination monad.
 -/
 meta def mk_linarith_structure (hyps : list comp) (max_var : ℕ) : linarith_structure :=
 let pcomp_list : list pcomp := hyps.enum.map $ λ ⟨n, cmp⟩, pcomp.assump cmp n,
- pcomp_set := rb_set.of_list_core mk_pcomp_set pcomp_list in
+    pcomp_set := rb_set.of_list_core mk_pcomp_set pcomp_list in
 ⟨max_var, pcomp_set⟩
 
 /--
 `produce_certificate hyps vars` tries to derive a contradiction from the comparisons in `hyps`
 by eliminating all variables ≤ `max_var`.
 If successful, it returns a map `coeff : ℕ → ℕ` as a certificate.
-This map represents that we can find a contradiction by taking the sum `∑ (coeff i) * hyps[i]`.
+This map represents that we can find a contradiction by taking the sum  `∑ (coeff i) * hyps[i]`.
 -/
 meta def fourier_motzkin.produce_certificate : certificate_oracle :=
 λ hyps max_var,
@@ -330,4 +330,3 @@ match except_t.run (state_t.run (validate >> elim_all_vars) state) with
 end
 
 end linarith
-

@@ -24,13 +24,12 @@ variables [monoid M] [group G] [semiring R]
 
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance submonoid.mul_semiring_action [mul_semiring_action M R] (H : submonoid M) :
- mul_semiring_action H R :=
+  mul_semiring_action H R :=
 { smul := (•),
- .. H.mul_distrib_mul_action,
- .. H.distrib_mul_action }
+  .. H.mul_distrib_mul_action,
+  .. H.distrib_mul_action }
 
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
 instance subgroup.mul_semiring_action [mul_semiring_action G R] (H : subgroup G) :
- mul_semiring_action H R :=
+  mul_semiring_action H R :=
 H.to_submonoid.mul_semiring_action
-

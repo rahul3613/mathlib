@@ -31,7 +31,7 @@ lemma via_embedding_apply (x : α) : e.via_embedding ι (ι x) = ι (e x) :=
 extend_domain_apply_image e (of_injective ι.1 ι.2) x
 
 lemma via_embedding_apply_of_not_mem (x : β) (hx : x ∉ _root_.set.range ι) :
- e.via_embedding ι x = x :=
+  e.via_embedding ι x = x :=
 extend_domain_apply_not_subtype e (of_injective ι.1 ι.2) hx
 
 /-- `via_embedding` as a group homomorphism -/
@@ -46,4 +46,3 @@ extend_domain_hom_injective (of_injective ι.1 ι.2)
 end perm
 
 end equiv
-

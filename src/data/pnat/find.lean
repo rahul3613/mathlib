@@ -20,9 +20,9 @@ namespace pnat
 variables {p q : ℕ+ → Prop} [decidable_pred p] [decidable_pred q] (h : ∃ n, p n)
 
 instance decidable_pred_exists_nat :
- decidable_pred (λ n' : ℕ, ∃ (n : ℕ+) (hn : n' = n), p n) := λ n',
+  decidable_pred (λ n' : ℕ, ∃ (n : ℕ+) (hn : n' = n), p n) := λ n',
 decidable_of_iff' (∃ (h : 0 < n'), p ⟨n', h⟩) $ subtype.exists.trans $
- by simp_rw [subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_prop, exists_eq_left']
+  by simp_rw [subtype.coe_mk, @exists_comm (_ < _) (_ = _), exists_prop, exists_eq_left']
 
 
 include h
@@ -30,15 +30,15 @@ include h
 /-- The `pnat` version of `nat.find_x` -/
 protected def find_x : {n // p n ∧ ∀ m : ℕ+, m < n → ¬p m} :=
 begin
- have : ∃ (n' : ℕ) (n : ℕ+) (hn' : n' = n), p n, from exists.elim h (λ n hn, ⟨n, n, rfl, hn⟩),
- have n := nat.find_x this,
- refine ⟨⟨n, _⟩, _, λ m hm pm, _⟩,
- { obtain ⟨n', hn', -⟩ := n.prop.1,
- rw hn',
- exact n'.prop },
- { obtain ⟨n', hn', pn'⟩ := n.prop.1,
- simpa [hn', subtype.coe_eta] using pn' },
- { exact n.prop.2 m hm ⟨m, rfl, pm⟩ }
+  have : ∃ (n' : ℕ) (n : ℕ+) (hn' : n' = n), p n, from exists.elim h (λ n hn, ⟨n, n, rfl, hn⟩),
+  have n := nat.find_x this,
+  refine ⟨⟨n, _⟩, _, λ m hm pm, _⟩,
+  { obtain ⟨n', hn', -⟩ := n.prop.1,
+    rw hn',
+    exact n'.prop },
+  { obtain ⟨n', hn', pn'⟩ := n.prop.1,
+    simpa [hn', subtype.coe_eta] using pn' },
+  { exact n.prop.2 m hm ⟨m, rfl, pm⟩ }
 end
 
 /--
@@ -69,10 +69,10 @@ variables {n m : ℕ+}
 
 lemma find_eq_iff : pnat.find h = m ↔ p m ∧ ∀ n < m, ¬ p n :=
 begin
- split,
- { rintro rfl, exact ⟨pnat.find_spec h, λ _, pnat.find_min h⟩ },
- { rintro ⟨hm, hlt⟩,
- exact le_antisymm (pnat.find_min' h hm) (not_lt.1 $ imp_not_comm.1 (hlt _) $ pnat.find_spec h) }
+  split,
+  { rintro rfl, exact ⟨pnat.find_spec h, λ _, pnat.find_min h⟩ },
+  { rintro ⟨hm, hlt⟩,
+    exact le_antisymm (pnat.find_min' h hm) (not_lt.1 $ imp_not_comm.1 (hlt _) $ pnat.find_spec h) }
 end
 
 @[simp] lemma find_lt_iff (n : ℕ+) : pnat.find h < n ↔ ∃ m < n, p m :=
@@ -94,22 +94,21 @@ by simp [find_eq_iff]
 not_iff_not.mp $ by simp
 
 theorem find_mono (h : ∀ n, q n → p n)
- {hp : ∃ n, p n} {hq : ∃ n, q n} :
- pnat.find hp ≤ pnat.find hq :=
+  {hp : ∃ n, p n} {hq : ∃ n, q n} :
+  pnat.find hp ≤ pnat.find hq :=
 pnat.find_min' _ (h _ (pnat.find_spec hq))
 
 lemma find_le {h : ∃ n, p n} (hn : p n) : pnat.find h ≤ n :=
 (pnat.find_le_iff _ _).2 ⟨n, le_rfl, hn⟩
 
 lemma find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬ p 1) :
- pnat.find h = pnat.find h₂ + 1 :=
+  pnat.find h = pnat.find h₂ + 1 :=
 begin
- refine (find_eq_iff _).2 ⟨pnat.find_spec h₂, λ n, pnat.rec_on n _ _⟩,
- { simp [h1] },
- intros m IH hm,
- simp only [add_lt_add_iff_right, lt_find_iff] at hm,
- exact hm _ le_rfl
+  refine (find_eq_iff _).2 ⟨pnat.find_spec h₂, λ n, pnat.rec_on n _ _⟩,
+  { simp [h1] },
+  intros m IH hm,
+  simp only [add_lt_add_iff_right, lt_find_iff] at hm,
+  exact hm _ le_rfl
 end
 
 end pnat
-

@@ -36,7 +36,7 @@ universes u v
 
 This combines `distrib_mul_action` with `mul_distrib_mul_action`. -/
 class mul_semiring_action (M : Type u) (R : Type v) [monoid M] [semiring R]
- extends distrib_mul_action M R :=
+  extends distrib_mul_action M R :=
 (smul_one : ∀ (g : M), (g • 1 : R) = 1)
 (smul_mul : ∀ (g : M) (x y : R), g • (x * y) = (g • x) * (g • y))
 
@@ -48,24 +48,24 @@ variables (A R S F : Type v) [add_monoid A] [semiring R] [comm_semiring S] [divi
 -- note we could not use `extends` since these typeclasses are made with `old_structure_cmd`
 @[priority 100]
 instance mul_semiring_action.to_mul_distrib_mul_action [h : mul_semiring_action M R] :
- mul_distrib_mul_action M R :=
+  mul_distrib_mul_action M R :=
 { ..h }
 
 /-- Each element of the monoid defines a semiring homomorphism. -/
 @[simps]
 def mul_semiring_action.to_ring_hom [mul_semiring_action M R] (x : M) : R →+* R :=
 { .. mul_distrib_mul_action.to_monoid_hom R x,
- .. distrib_mul_action.to_add_monoid_hom R x }
+  .. distrib_mul_action.to_add_monoid_hom R x }
 
 theorem to_ring_hom_injective [mul_semiring_action M R] [has_faithful_smul M R] :
- function.injective (mul_semiring_action.to_ring_hom M R) :=
+  function.injective (mul_semiring_action.to_ring_hom M R) :=
 λ m₁ m₂ h, eq_of_smul_eq_smul $ λ r, ring_hom.ext_iff.1 h r
 
 /-- Each element of the group defines a semiring isomorphism. -/
 @[simps]
 def mul_semiring_action.to_ring_equiv [mul_semiring_action G R] (x : G) : R ≃+* R :=
 { .. distrib_mul_action.to_add_equiv R x,
- .. mul_semiring_action.to_ring_hom G R x }
+  .. mul_semiring_action.to_ring_hom G R x }
 
 section
 variables {M N}
@@ -73,10 +73,10 @@ variables {M N}
 /-- Compose a `mul_semiring_action` with a `monoid_hom`, with action `f r' • m`.
 See note [reducible non-instances]. -/
 @[reducible] def mul_semiring_action.comp_hom (f : N →* M) [mul_semiring_action M R] :
- mul_semiring_action N R :=
+  mul_semiring_action N R :=
 { smul := has_smul.comp.smul f,
- ..distrib_mul_action.comp_hom R f,
- ..mul_distrib_mul_action.comp_hom R f }
+  ..distrib_mul_action.comp_hom R f,
+  ..mul_distrib_mul_action.comp_hom R f }
 
 end
 
@@ -94,4 +94,3 @@ map_inv₀ (mul_semiring_action.to_ring_hom M F x) _
 end simp_lemmas
 
 end semiring
-

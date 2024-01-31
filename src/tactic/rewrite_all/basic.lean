@@ -25,7 +25,7 @@ instance : has_to_string side := ⟨side.to_string⟩
 namespace tactic.rewrite_all
 
 meta structure cfg extends rewrite_cfg :=
-(try_simp : bool := ff)
+(try_simp   : bool := ff)
 (discharger : tactic unit := skip)
  -- Warning: rewrite_search can't produce tactic scripts when the simplifier is used.
 (simplifier : expr → tactic (expr × expr) := λ e, failed)
@@ -41,28 +41,27 @@ namespace tracked_rewrite
 
 meta def eval (rw : tracked_rewrite) : tactic (expr × expr) :=
 do prf ← rw.proof,
- return (rw.exp, prf)
+   return (rw.exp, prf)
 
 meta def replace_target (rw : tracked_rewrite) : tactic unit :=
 do (exp, prf) ← rw.eval,
- tactic.replace_target exp prf
+   tactic.replace_target exp prf
 
 private meta def replace_target_side (new_target lam : pexpr) (prf : expr) : tactic unit :=
 do new_target ← to_expr new_target tt ff,
- prf' ← to_expr ``(congr_arg %%lam %%prf) tt ff,
- tactic.replace_target new_target prf'
+   prf' ← to_expr ``(congr_arg %%lam %%prf) tt ff,
+   tactic.replace_target new_target prf'
 
 meta def replace_target_lhs (rw : tracked_rewrite) : tactic unit :=
 do (new_lhs, prf) ← rw.eval,
- `(%%_ = %%rhs) ← target,
- replace_target_side ``(%%new_lhs = %%rhs) ``(λ L, L = %%rhs) prf
+   `(%%_ = %%rhs) ← target,
+   replace_target_side ``(%%new_lhs = %%rhs) ``(λ L, L = %%rhs) prf
 
 meta def replace_target_rhs (rw : tracked_rewrite) : tactic unit :=
 do (new_rhs, prf) ← rw.eval,
- `(%%lhs = %%_) ← target,
- replace_target_side ``(%%lhs = %%new_rhs) ``(λ R, %%lhs = R) prf
+   `(%%lhs = %%_) ← target,
+   replace_target_side ``(%%lhs = %%new_rhs) ``(λ R, %%lhs = R) prf
 
 end tracked_rewrite
 
 end tactic.rewrite_all
-

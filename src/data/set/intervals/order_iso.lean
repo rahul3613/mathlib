@@ -46,40 +46,39 @@ by simp [← Ioi_inter_Iic]
 by simp [← Ioi_inter_Iio]
 
 @[simp] lemma image_Iic (e : α ≃o β) (a : α) : e '' (Iic a) = Iic (e a) :=
-by rw [e.image_eq_preimage]; rw [ e.symm.preimage_Iic]; rw [ e.symm_symm]
+by rw [e.image_eq_preimage, e.symm.preimage_Iic, e.symm_symm]
 
 @[simp] lemma image_Ici (e : α ≃o β) (a : α) : e '' (Ici a) = Ici (e a) :=
 e.dual.image_Iic a
 
 @[simp] lemma image_Iio (e : α ≃o β) (a : α) : e '' (Iio a) = Iio (e a) :=
-by rw [e.image_eq_preimage]; rw [ e.symm.preimage_Iio]; rw [ e.symm_symm]
+by rw [e.image_eq_preimage, e.symm.preimage_Iio, e.symm_symm]
 
 @[simp] lemma image_Ioi (e : α ≃o β) (a : α) : e '' (Ioi a) = Ioi (e a) :=
 e.dual.image_Iio a
 
 @[simp] lemma image_Ioo (e : α ≃o β) (a b : α) : e '' (Ioo a b) = Ioo (e a) (e b) :=
-by rw [e.image_eq_preimage]; rw [ e.symm.preimage_Ioo]; rw [ e.symm_symm]
+by rw [e.image_eq_preimage, e.symm.preimage_Ioo, e.symm_symm]
 
 @[simp] lemma image_Ioc (e : α ≃o β) (a b : α) : e '' (Ioc a b) = Ioc (e a) (e b) :=
-by rw [e.image_eq_preimage]; rw [ e.symm.preimage_Ioc]; rw [ e.symm_symm]
+by rw [e.image_eq_preimage, e.symm.preimage_Ioc, e.symm_symm]
 
 @[simp] lemma image_Ico (e : α ≃o β) (a b : α) : e '' (Ico a b) = Ico (e a) (e b) :=
-by rw [e.image_eq_preimage]; rw [ e.symm.preimage_Ico]; rw [ e.symm_symm]
+by rw [e.image_eq_preimage, e.symm.preimage_Ico, e.symm_symm]
 
 @[simp] lemma image_Icc (e : α ≃o β) (a b : α) : e '' (Icc a b) = Icc (e a) (e b) :=
-by rw [e.image_eq_preimage]; rw [ e.symm.preimage_Icc]; rw [ e.symm_symm]
+by rw [e.image_eq_preimage, e.symm.preimage_Icc, e.symm_symm]
 
 end preorder
 
 /-- Order isomorphism between `Iic (⊤ : α)` and `α` when `α` has a top element -/
 def Iic_top [preorder α] [order_top α] : set.Iic (⊤ : α) ≃o α :=
 { map_rel_iff' := λ x y, by refl,
- .. (@equiv.subtype_univ_equiv α (set.Iic (⊤ : α)) (λ x, le_top)), }
+  .. (@equiv.subtype_univ_equiv α (set.Iic (⊤ : α)) (λ x, le_top)), }
 
 /-- Order isomorphism between `Ici (⊥ : α)` and `α` when `α` has a bottom element -/
 def Ici_bot [preorder α] [order_bot α] : set.Ici (⊥ : α) ≃o α :=
 { map_rel_iff' := λ x y, by refl,
- .. (@equiv.subtype_univ_equiv α (set.Ici (⊥ : α)) (λ x, bot_le)) }
+  .. (@equiv.subtype_univ_equiv α (set.Ici (⊥ : α)) (λ x, bot_le)) }
 
 end order_iso
-

@@ -20,9 +20,9 @@ about this type.
 
 /-- Extended natural numbers `ℕ∞ = with_top ℕ`. -/
 @[derive [has_zero, add_comm_monoid_with_one, canonically_ordered_comm_semiring, nontrivial,
- linear_order, order_bot, order_top, has_bot, has_top, canonically_linear_ordered_add_monoid,
- has_sub, has_ordered_sub, linear_ordered_add_comm_monoid_with_top, succ_order, well_founded_lt,
- has_well_founded, char_zero, has_coe_t ℕ]]
+  linear_order, order_bot, order_top, has_bot, has_top, canonically_linear_ordered_add_monoid,
+  has_sub, has_ordered_sub, linear_ordered_add_comm_monoid_with_top, succ_order, well_founded_lt,
+  has_well_founded, char_zero, has_coe_t ℕ]]
 def enat : Type := with_top ℕ
 
 notation `ℕ∞` := enat
@@ -46,9 +46,9 @@ instance can_lift : can_lift ℕ∞ ℕ coe (λ n, n ≠ ⊤) := with_top.can_li
 /-- Conversion of `ℕ∞` to `ℕ` sending `∞` to `0`. -/
 def to_nat : monoid_with_zero_hom ℕ∞ ℕ :=
 { to_fun := with_top.untop' 0,
- map_one' := rfl,
- map_zero' := rfl,
- map_mul' := with_top.untop'_zero_mul }
+  map_one' := rfl,
+  map_zero' := rfl,
+  map_mul' := with_top.untop'_zero_mul }
 
 @[simp] lemma to_nat_coe (n : ℕ) : to_nat n = n := rfl
 @[simp] lemma to_nat_top : to_nat ⊤ = 0 := rfl
@@ -65,10 +65,10 @@ by { lift m to ℕ using hm, lift n to ℕ using hn, refl }
 
 lemma to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : to_nat (m - n) = to_nat m - to_nat n :=
 begin
- lift n to ℕ using hn,
- induction m using with_top.rec_top_coe,
- { rw [with_top.top_sub_coe]; rw [ to_nat_top]; rw [ zero_tsub] },
- { rw [← coe_sub]; rw [ to_nat_coe]; rw [ to_nat_coe]; rw [ to_nat_coe] }
+  lift n to ℕ using hn,
+  induction m using with_top.rec_top_coe,
+  { rw [with_top.top_sub_coe, to_nat_top, zero_tsub] },
+  { rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe] }
 end
 
 lemma to_nat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : m.to_nat = n ↔ m = n :=
@@ -90,12 +90,11 @@ lemma le_of_lt_add_one (h : m < n + 1) : m ≤ n := order.le_of_lt_succ $ n.succ
 
 @[elab_as_eliminator]
 lemma nat_induction {P : ℕ∞ → Prop} (a : ℕ∞) (h0 : P 0) (hsuc : ∀ n : ℕ, P n → P n.succ)
- (htop : (∀ n : ℕ, P n) → P ⊤) : P a :=
+  (htop : (∀ n : ℕ, P n) → P ⊤) : P a :=
 begin
- have A : ∀ n : ℕ, P n := λ n, nat.rec_on n h0 hsuc,
- cases a,
- exacts [htop A, A a]
+  have A : ∀ n : ℕ, P n := λ n, nat.rec_on n h0 hsuc,
+  cases a,
+  exacts [htop A, A a]
 end
 
 end enat
-

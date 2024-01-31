@@ -43,7 +43,7 @@ class fin_category (J : Type v) [small_category J] :=
 attribute [instance] fin_category.fintype_obj fin_category.fintype_hom
 
 instance fin_category_discrete_of_fintype (J : Type v) [fintype J] :
- fin_category (discrete J) :=
+  fin_category (discrete J) :=
 { }
 
 namespace fin_category
@@ -63,9 +63,9 @@ noncomputable def obj_as_type_equiv : obj_as_type α ≌ α :=
 @[simps id comp (lemmas_only)] noncomputable
 instance category_as_type : small_category (as_type α) :=
 { hom := λ i j, fin (fintype.card (@quiver.hom (obj_as_type α) _ i j)),
- id := λ i, fintype.equiv_fin _ (𝟙 i),
- comp := λ i j k f g, fintype.equiv_fin _
- ((fintype.equiv_fin _).symm f ≫ (fintype.equiv_fin _).symm g) }
+  id := λ i, fintype.equiv_fin _ (𝟙 i),
+  comp := λ i j k f g, fintype.equiv_fin _
+    ((fintype.equiv_fin _).symm f ≫ (fintype.equiv_fin _).symm g) }
 
 local attribute [simp] category_as_type_id category_as_type_comp
 
@@ -80,8 +80,8 @@ local attribute [simp] category_as_type_id category_as_type_comp
 /-- The constructed category (`as_type α`) is equivalent to `obj_as_type α`. -/
 noncomputable def as_type_equiv_obj_as_type : as_type α ≌ obj_as_type α :=
 equivalence.mk (as_type_to_obj_as_type α) (obj_as_type_to_as_type α)
- (nat_iso.of_components iso.refl $ λ _ _ _, by { dsimp, simp })
- (nat_iso.of_components iso.refl $ λ _ _ _, by { dsimp, simp })
+  (nat_iso.of_components iso.refl $ λ _ _ _, by { dsimp, simp })
+  (nat_iso.of_components iso.refl $ λ _ _ _, by { dsimp, simp })
 
 noncomputable
 instance as_type_fin_category : fin_category (as_type α) := {}
@@ -98,14 +98,13 @@ open opposite
 The opposite of a finite category is finite.
 -/
 instance fin_category_opposite {J : Type v} [small_category J] [fin_category J] :
- fin_category Jᵒᵖ :=
+  fin_category Jᵒᵖ :=
 { fintype_obj := fintype.of_equiv _ equiv_to_opposite,
- fintype_hom := λ j j', fintype.of_equiv _ (op_equiv j j').symm, }
+  fintype_hom := λ j j', fintype.of_equiv _ (op_equiv j j').symm, }
 
 /-- Applying `ulift` to morphisms and objects of a category preserves finiteness. -/
 instance fin_category_ulift {J : Type v} [small_category J] [fin_category J] :
- fin_category.{(max w v)} (ulift_hom.{w (max w v)} (ulift.{w v} J)) :=
+  fin_category.{(max w v)} (ulift_hom.{w (max w v)} (ulift.{w v} J)) :=
 { fintype_obj := ulift.fintype J }
 
 end category_theory
-

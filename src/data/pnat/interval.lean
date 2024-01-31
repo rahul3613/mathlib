@@ -45,34 +45,33 @@ lemma map_subtype_embedding_uIcc : (uIcc a b).map (embedding.subtype _) = uIcc a
 map_subtype_embedding_Icc _ _
 
 @[simp] lemma card_Icc : (Icc a b).card = b + 1 - a :=
-by rw [←nat.card_Icc]; rw [ ←map_subtype_embedding_Icc]; rw [ card_map]
+by rw [←nat.card_Icc, ←map_subtype_embedding_Icc, card_map]
 
 @[simp] lemma card_Ico : (Ico a b).card = b - a :=
-by rw [←nat.card_Ico]; rw [ ←map_subtype_embedding_Ico]; rw [ card_map]
+by rw [←nat.card_Ico, ←map_subtype_embedding_Ico, card_map]
 
 @[simp] lemma card_Ioc : (Ioc a b).card = b - a :=
-by rw [←nat.card_Ioc]; rw [ ←map_subtype_embedding_Ioc]; rw [ card_map]
+by rw [←nat.card_Ioc, ←map_subtype_embedding_Ioc, card_map]
 
 @[simp] lemma card_Ioo : (Ioo a b).card = b - a - 1 :=
-by rw [←nat.card_Ioo]; rw [ ←map_subtype_embedding_Ioo]; rw [ card_map]
+by rw [←nat.card_Ioo, ←map_subtype_embedding_Ioo, card_map]
 
 @[simp] lemma card_uIcc : (uIcc a b).card = (b - a : ℤ).nat_abs + 1 :=
-by rw [coe_coe]; rw [ coe_coe]; rw [ ←nat.card_uIcc]; rw [ ←map_subtype_embedding_uIcc]; rw [ card_map]
+by rw [coe_coe, coe_coe, ←nat.card_uIcc, ←map_subtype_embedding_uIcc, card_map]
 
 @[simp] lemma card_fintype_Icc : fintype.card (set.Icc a b) = b + 1 - a :=
-by rw [←card_Icc]; rw [ fintype.card_of_finset]
+by rw [←card_Icc, fintype.card_of_finset]
 
 @[simp] lemma card_fintype_Ico : fintype.card (set.Ico a b) = b - a :=
-by rw [←card_Ico]; rw [ fintype.card_of_finset]
+by rw [←card_Ico, fintype.card_of_finset]
 
 @[simp] lemma card_fintype_Ioc : fintype.card (set.Ioc a b) = b - a :=
-by rw [←card_Ioc]; rw [ fintype.card_of_finset]
+by rw [←card_Ioc, fintype.card_of_finset]
 
 @[simp] lemma card_fintype_Ioo : fintype.card (set.Ioo a b) = b - a - 1 :=
-by rw [←card_Ioo]; rw [ fintype.card_of_finset]
+by rw [←card_Ioo, fintype.card_of_finset]
 
 @[simp] lemma card_fintype_uIcc : fintype.card (set.uIcc a b) = (b - a : ℤ).nat_abs + 1 :=
-by rw [←card_uIcc]; rw [ fintype.card_of_finset]
+by rw [←card_uIcc, fintype.card_of_finset]
 
 end pnat
-

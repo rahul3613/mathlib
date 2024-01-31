@@ -74,27 +74,27 @@ lemma pos_of_bit0_pos {n : ℕ} (h : 0 < bit0 n) : 0 < n :=
 by { cases n, cases h, apply succ_pos, }
 
 @[simp] lemma bit_cases_on_bit {C : ℕ → Sort u} (H : Π b n, C (bit b n)) (b : bool) (n : ℕ) :
- bit_cases_on (bit b n) H = H b n :=
-eq_of_heq $ (eq_rec_heq _ _).trans $ by rw [bodd_bit]; rw [ div2_bit]
+  bit_cases_on (bit b n) H = H b n :=
+eq_of_heq $ (eq_rec_heq _ _).trans $ by rw [bodd_bit, div2_bit]
 
 @[simp] lemma bit_cases_on_bit0 {C : ℕ → Sort u} (H : Π b n, C (bit b n)) (n : ℕ) :
- bit_cases_on (bit0 n) H = H ff n :=
+  bit_cases_on (bit0 n) H = H ff n :=
 bit_cases_on_bit H ff n
 
 @[simp] lemma bit_cases_on_bit1 {C : ℕ → Sort u} (H : Π b n, C (bit b n)) (n : ℕ) :
- bit_cases_on (bit1 n) H = H tt n :=
+  bit_cases_on (bit1 n) H = H tt n :=
 bit_cases_on_bit H tt n
 
 lemma bit_cases_on_injective {C : ℕ → Sort u} :
- function.injective (λ H : Π b n, C (bit b n), λ n, bit_cases_on n H) :=
+  function.injective (λ H : Π b n, C (bit b n), λ n, bit_cases_on n H) :=
 begin
- intros H₁ H₂ h,
- ext b n,
- simpa only [bit_cases_on_bit] using congr_fun h (bit b n)
+  intros H₁ H₂ h,
+  ext b n,
+  simpa only [bit_cases_on_bit] using congr_fun h (bit b n)
 end
 
 @[simp] lemma bit_cases_on_inj {C : ℕ → Sort u} (H₁ H₂ : Π b n, C (bit b n)) :
- (λ n, bit_cases_on n H₁) = (λ n, bit_cases_on n H₂) ↔ H₁ = H₂ :=
+  (λ n, bit_cases_on n H₁) = (λ n, bit_cases_on n H₂) ↔ H₁ = H₂ :=
 bit_cases_on_injective.eq_iff
 
 protected lemma bit0_eq_zero {n : ℕ} : bit0 n = 0 ↔ n = 0 :=
@@ -104,42 +104,42 @@ lemma bit_eq_zero_iff {n : ℕ} {b : bool} : bit b n = 0 ↔ n = 0 ∧ b = ff :=
 by { split, { cases b; simp [nat.bit, nat.bit0_eq_zero], }, rintro ⟨rfl, rfl⟩, refl, }
 
 /-- The same as binary_rec_eq, but that one unfortunately requires `f` to be the identity when
- appending `ff` to `0`. Here, we allow you to explicitly say that that case is not happening, i.e.
- supplying `n = 0 → b = tt`. -/
+  appending `ff` to `0`. Here, we allow you to explicitly say that that case is not happening, i.e.
+  supplying `n = 0 → b = tt`. -/
 lemma binary_rec_eq' {C : ℕ → Sort*} {z : C 0} {f : ∀ b n, C n → C (bit b n)}
- (b n) (h : f ff 0 z = z ∨ (n = 0 → b = tt)) :
- binary_rec z f (bit b n) = f b n (binary_rec z f n) :=
+  (b n) (h : f ff 0 z = z ∨ (n = 0 → b = tt)) :
+  binary_rec z f (bit b n) = f b n (binary_rec z f n) :=
 begin
- rw [binary_rec],
- split_ifs with h',
- { rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩,
- rw binary_rec_zero,
- simp only [imp_false, or_false, eq_self_iff_true, not_true] at h,
- exact h.symm },
- { generalize_proofs e, revert e,
- rw [bodd_bit]; rw [ div2_bit],
- intros, refl, }
+  rw [binary_rec],
+  split_ifs with h',
+  { rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩,
+    rw binary_rec_zero,
+    simp only [imp_false, or_false, eq_self_iff_true, not_true] at h,
+    exact h.symm },
+  { generalize_proofs e, revert e,
+    rw [bodd_bit, div2_bit],
+    intros, refl, }
 end
 
 /-- The same as `binary_rec`, but the induction step can assume that if `n=0`,
- the bit being appended is `tt`-/
+  the bit being appended is `tt`-/
 @[elab_as_eliminator]
 def binary_rec' {C : ℕ → Sort*} (z : C 0) (f : ∀ b n, (n = 0 → b = tt) → C n → C (bit b n)) :
- ∀ n, C n :=
+  ∀ n, C n :=
 binary_rec z (λ b n ih, if h : n = 0 → b = tt then f b n h ih else
- by { convert z, rw bit_eq_zero_iff, simpa using h, })
+  by { convert z, rw bit_eq_zero_iff, simpa using h, })
 
 /-- The same as `binary_rec`, but special casing both 0 and 1 as base cases -/
 @[elab_as_eliminator]
 def binary_rec_from_one {C : ℕ → Sort*} (z₀ : C 0) (z₁ : C 1)
- (f : ∀ b n, n ≠ 0 → C n → C (bit b n)) : ∀ n, C n :=
-binary_rec' z₀ (λ b n h ih, if h' : n = 0 then by { rw [h']; rw [ h h'], exact z₁ } else f b n h' ih)
+  (f : ∀ b n, n ≠ 0 → C n → C (bit b n)) : ∀ n, C n :=
+binary_rec' z₀ (λ b n h ih, if h' : n = 0 then by { rw [h', h h'], exact z₁ } else f b n h' ih)
 
 @[simp] lemma zero_bits : bits 0 = [] := by simp [nat.bits]
 
 @[simp] lemma bits_append_bit (n : ℕ) (b : bool) (hn : n = 0 → b = tt) :
- (bit b n).bits = b :: n.bits :=
-by { rw [nat.bits]; rw [ binary_rec_eq'], simpa, }
+  (bit b n).bits = b :: n.bits :=
+by { rw [nat.bits, binary_rec_eq'], simpa, }
 
 @[simp] lemma bit0_bits (n : ℕ) (hn : n ≠ 0) : (bit0 n).bits = ff :: n.bits :=
 bits_append_bit n ff (λ hn', absurd hn' hn)
@@ -154,15 +154,14 @@ bits_append_bit n tt (λ _, rfl)
 
 lemma bodd_eq_bits_head (n : ℕ) : n.bodd = n.bits.head :=
 begin
- induction n using nat.binary_rec' with b n h ih, { simp, },
- simp [bodd_bit, bits_append_bit _ _ h],
+  induction n using nat.binary_rec' with b n h ih, { simp, },
+  simp [bodd_bit, bits_append_bit _ _ h],
 end
 
 lemma div2_bits_eq_tail (n : ℕ) : n.div2.bits = n.bits.tail :=
 begin
- induction n using nat.binary_rec' with b n h ih, { simp, },
- simp [div2_bit, bits_append_bit _ _ h],
+  induction n using nat.binary_rec' with b n h ih, { simp, },
+  simp [div2_bit, bits_append_bit _ _ h],
 end
 
 end nat
-

@@ -56,4 +56,3 @@ instance [h : ring α] : ring (lex α) := h
 instance [h : non_unital_comm_ring α] : non_unital_comm_ring (lex α) := h
 instance [h : comm_ring α] : comm_ring (lex α) := h
 instance [ring α] [h : is_domain α] : is_domain (lex α) := h
-

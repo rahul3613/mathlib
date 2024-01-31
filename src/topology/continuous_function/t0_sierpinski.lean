@@ -26,16 +26,16 @@ noncomputable theory
 namespace topological_space
 
 lemma eq_induced_by_maps_to_sierpinski (X : Type*) [t : topological_space X] :
- t = ⨅ (u : opens X), sierpinski_space.induced (∈ u) :=
+  t = ⨅ (u : opens X), sierpinski_space.induced (∈ u) :=
 begin
- apply le_antisymm,
- { rw [le_infi_iff],
- exact λ u, continuous.le_induced (is_open_iff_continuous_mem.mp u.2) },
- { intros u h,
- rw ← generate_from_Union_is_open,
- apply is_open_generate_from_of_mem,
- simp only [set.mem_Union, set.mem_set_of_eq, is_open_induced_iff],
- exact ⟨⟨u, h⟩, {true}, is_open_singleton_true, by simp [set.preimage]⟩ },
+  apply le_antisymm,
+  { rw [le_infi_iff],
+    exact λ u, continuous.le_induced (is_open_iff_continuous_mem.mp u.2) },
+  { intros u h,
+    rw ← generate_from_Union_is_open,
+    apply is_open_generate_from_of_mem,
+    simp only [set.mem_Union, set.mem_set_of_eq, is_open_induced_iff],
+    exact ⟨⟨u, h⟩, {true}, is_open_singleton_true, by simp [set.preimage]⟩ },
 end
 
 variables (X : Type*) [topological_space X]
@@ -46,23 +46,22 @@ open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given
 -/
 def product_of_mem_opens : C(X, opens X → Prop) :=
 { to_fun := λ x u, x ∈ u,
- continuous_to_fun := continuous_pi_iff.2 (λ u, continuous_Prop.2 u.is_open) }
+  continuous_to_fun := continuous_pi_iff.2 (λ u, continuous_Prop.2 u.is_open) }
 
 lemma product_of_mem_opens_inducing : inducing (product_of_mem_opens X) :=
 begin
- convert inducing_infi_to_pi (λ (u : opens X) (x : X), x ∈ u),
- apply eq_induced_by_maps_to_sierpinski,
+  convert inducing_infi_to_pi (λ (u : opens X) (x : X), x ∈ u),
+  apply eq_induced_by_maps_to_sierpinski,
 end
 
 lemma product_of_mem_opens_injective [t0_space X] : function.injective (product_of_mem_opens X) :=
 begin
- intros x1 x2 h,
- apply inseparable.eq,
- rw [←inducing.inseparable_iff (product_of_mem_opens_inducing X)]; rw [ h],
+  intros x1 x2 h,
+  apply inseparable.eq,
+  rw [←inducing.inseparable_iff (product_of_mem_opens_inducing X), h],
  end
 
 theorem product_of_mem_opens_embedding [t0_space X] : embedding (product_of_mem_opens X) :=
 embedding.mk (product_of_mem_opens_inducing X) (product_of_mem_opens_injective X)
 
 end topological_space
-

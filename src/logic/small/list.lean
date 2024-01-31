@@ -19,13 +19,12 @@ and is used by category theory files which do not need everything imported by `d
 universes u v
 
 instance small_vector {α : Type v} {n : ℕ} [small.{u} α] :
- small.{u} (vector α n) :=
+  small.{u} (vector α n) :=
 small_of_injective (equiv.vector_equiv_fin α n).injective
 
 instance small_list {α : Type v} [small.{u} α] :
- small.{u} (list α) :=
+  small.{u} (list α) :=
 begin
- let e : (Σ n, vector α n) ≃ list α := equiv.sigma_fiber_equiv list.length,
- exact small_of_surjective e.surjective,
+  let e : (Σ n, vector α n) ≃ list α := equiv.sigma_fiber_equiv list.length,
+  exact small_of_surjective e.surjective,
 end
-

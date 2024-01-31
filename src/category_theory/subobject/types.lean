@@ -42,30 +42,29 @@ The category of `mono_over α`, for `α : Type u`, is equivalent to the partial 
 noncomputable
 def types.mono_over_equivalence_set (α : Type u) : mono_over α ≌ set α :=
 { functor :=
- { obj := λ f, set.range f.1.hom,
- map := λ f g t, hom_of_le begin
- rintro a ⟨x, rfl⟩,
- exact ⟨t.1 x, congr_fun t.w x⟩,
- end, },
- inverse :=
- { obj := λ s, mono_over.mk' (subtype.val : s → α),
- map := λ s t b, mono_over.hom_mk (λ w, ⟨w.1, set.mem_of_mem_of_subset w.2 b.le⟩)
- (by { ext, simp, }), },
- unit_iso := nat_iso.of_components
- (λ f, mono_over.iso_mk
- (equiv.of_injective f.1.hom ((mono_iff_injective _).mp f.2)).to_iso (by tidy))
- (by tidy),
- counit_iso := nat_iso.of_components
- (λ s, eq_to_iso subtype.range_val)
- (by tidy), }
+  { obj := λ f, set.range f.1.hom,
+    map := λ f g t, hom_of_le begin
+      rintro a ⟨x, rfl⟩,
+      exact ⟨t.1 x, congr_fun t.w x⟩,
+    end, },
+  inverse :=
+  { obj := λ s, mono_over.mk' (subtype.val : s → α),
+    map := λ s t b, mono_over.hom_mk (λ w, ⟨w.1, set.mem_of_mem_of_subset w.2 b.le⟩)
+      (by { ext, simp, }), },
+  unit_iso := nat_iso.of_components
+    (λ f, mono_over.iso_mk
+      (equiv.of_injective f.1.hom ((mono_iff_injective _).mp f.2)).to_iso (by tidy))
+    (by tidy),
+  counit_iso := nat_iso.of_components
+    (λ s, eq_to_iso subtype.range_val)
+    (by tidy), }
 
 instance : well_powered (Type u) :=
 well_powered_of_essentially_small_mono_over
- (λ α, essentially_small.mk' (types.mono_over_equivalence_set α))
+  (λ α, essentially_small.mk' (types.mono_over_equivalence_set α))
 
 /--
 For `α : Type u`, `subobject α` is order isomorphic to `set α`.
 -/
 noncomputable def types.subobject_equiv_set (α : Type u) : subobject α ≃o set α :=
 (types.mono_over_equivalence_set α).thin_skeleton_order_iso
-

@@ -82,8 +82,8 @@ local attribute [tidy] tactic.case_bash
 
 instance : category (pairwise ι) :=
 { hom := hom,
- id := id,
- comp := λ X Y Z f g, comp f g, }
+  id := id,
+  comp := λ X Y Z f g, comp f g, }
 
 end
 
@@ -114,7 +114,7 @@ and the morphisms to the obvious inequalities.
 @[simps]
 def diagram : pairwise ι ⥤ α :=
 { obj := diagram_obj U,
- map := λ X Y f, diagram_map U f, }
+  map := λ X Y f, diagram_map U f, }
 
 end
 
@@ -135,7 +135,7 @@ Given a function `U : ι → α` for `[complete_lattice α]`,
 @[simps]
 def cocone : cocone (diagram U) :=
 { X := supr U,
- ι := { app := cocone_ι_app U, } }
+  ι := { app := cocone_ι_app U, } }
 
 /--
 Given a function `U : ι → α` for `[complete_lattice α]`,
@@ -143,15 +143,14 @@ Given a function `U : ι → α` for `[complete_lattice α]`,
 -/
 def cocone_is_colimit : is_colimit (cocone U) :=
 { desc := λ s, hom_of_le
- begin
- apply complete_lattice.Sup_le,
- rintros _ ⟨j, rfl⟩,
- exact (s.ι.app (single j)).le
- end }
+  begin
+    apply complete_lattice.Sup_le,
+    rintros _ ⟨j, rfl⟩,
+    exact (s.ι.app (single j)).le
+  end }
 
 end
 
 end pairwise
 
 end category_theory
-

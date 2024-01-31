@@ -42,10 +42,10 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom
 -/
 
 /-- `rat`, or `ℚ`, is the type of rational numbers. It is defined
- as the set of pairs ⟨n, d⟩ of integers such that `d` is positive and `n` and
- `d` are coprime. This representation is preferred to the quotient
- because without periodic reduction, the numerator and denominator can grow
- exponentially (for example, adding 1/2 to itself repeatedly). -/
+  as the set of pairs ⟨n, d⟩ of integers such that `d` is positive and `n` and
+  `d` are coprime. This representation is preferred to the quotient
+  because without periodic reduction, the numerator and denominator can grow
+  exponentially (for example, adding 1/2 to itself repeatedly). -/
 structure rat := mk' ::
 (num : ℤ)
 (denom : ℕ)
@@ -59,7 +59,7 @@ namespace rat
 `has_to_format` instances. -/
 protected def repr : ℚ → string
 | ⟨n, d, _, _⟩ := if d = 1 then _root_.repr n else
- _root_.repr n ++ "/" ++ _root_.repr d
+  _root_.repr n ++ "/" ++ _root_.repr d
 
 instance : has_repr ℚ := ⟨rat.repr⟩
 instance : has_to_string ℚ := ⟨rat.repr⟩
@@ -72,4 +72,3 @@ by { cases p, cases q, simp }
 rat.ext_iff.mpr ⟨hn, hd⟩
 
 end rat
-

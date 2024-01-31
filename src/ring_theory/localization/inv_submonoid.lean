@@ -17,7 +17,7 @@ import tactic.ring_exp
 ## Main definitions
 
  * `is_localization.inv_submonoid M S` is the submonoid of `S = M⁻¹R` consisting of inverses of
- each element `x ∈ M`
+   each element `x ∈ M`
 
 ## Implementation notes
 
@@ -77,48 +77,47 @@ variables {S}
 
 lemma surj' (z : S) : ∃ (r : R) (m : M), z = r • to_inv_submonoid M S m :=
 begin
- rcases is_localization.surj M z with ⟨⟨r, m⟩, e : z * _ = algebra_map R S r⟩,
- refine ⟨r, m, _⟩,
- rw [algebra.smul_def]; rw [ ← e]; rw [ mul_assoc],
- simp,
+  rcases is_localization.surj M z with ⟨⟨r, m⟩, e : z * _ = algebra_map R S r⟩,
+  refine ⟨r, m, _⟩,
+  rw [algebra.smul_def, ← e, mul_assoc],
+  simp,
 end
 
 lemma to_inv_submonoid_eq_mk' (x : M) :
- (to_inv_submonoid M S x : S) = mk' S 1 x :=
+  (to_inv_submonoid M S x : S) = mk' S 1 x :=
 by { rw ← (is_localization.map_units S x).mul_left_inj, simp }
 
 lemma mem_inv_submonoid_iff_exists_mk' (x : S) :
- x ∈ inv_submonoid M S ↔ ∃ m : M, mk' S 1 m = x :=
+  x ∈ inv_submonoid M S ↔ ∃ m : M, mk' S 1 m = x :=
 begin
- simp_rw ← to_inv_submonoid_eq_mk',
- exact ⟨λ h, ⟨_, congr_arg subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).some_spec⟩,
- λ h, h.some_spec ▸ (to_inv_submonoid M S h.some).prop⟩
+  simp_rw ← to_inv_submonoid_eq_mk',
+  exact ⟨λ h, ⟨_, congr_arg subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).some_spec⟩,
+    λ h, h.some_spec ▸ (to_inv_submonoid M S h.some).prop⟩
 end
 
 variables (S)
 
 lemma span_inv_submonoid : submodule.span R (inv_submonoid M S : set S) = ⊤ :=
 begin
- rw eq_top_iff,
- rintros x -,
- rcases is_localization.surj' M x with ⟨r, m, rfl⟩,
- exact submodule.smul_mem _ _ (submodule.subset_span (to_inv_submonoid M S m).prop),
+  rw eq_top_iff,
+  rintros x -,
+  rcases is_localization.surj' M x with ⟨r, m, rfl⟩,
+  exact submodule.smul_mem _ _ (submodule.subset_span (to_inv_submonoid M S m).prop),
 end
 
 lemma finite_type_of_monoid_fg [monoid.fg M] : algebra.finite_type R S :=
 begin
- have := monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S),
- rw monoid.fg_iff_submonoid_fg at this,
- rcases this with ⟨s, hs⟩,
- refine ⟨⟨s, _⟩⟩,
- rw eq_top_iff,
- rintro x -,
- change x ∈ ((algebra.adjoin R _ : subalgebra R S).to_submodule : set S),
- rw [algebra.adjoin_eq_span]; rw [ hs]; rw [ span_inv_submonoid],
- trivial
+  have := monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S),
+  rw monoid.fg_iff_submonoid_fg at this,
+  rcases this with ⟨s, hs⟩,
+  refine ⟨⟨s, _⟩⟩,
+  rw eq_top_iff,
+  rintro x -,
+  change x ∈ ((algebra.adjoin R _ : subalgebra R S).to_submodule : set S),
+  rw [algebra.adjoin_eq_span, hs, span_inv_submonoid],
+  trivial
 end
 
 end inv_submonoid
 
 end is_localization
-

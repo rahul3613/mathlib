@@ -22,15 +22,14 @@ open topological_space
 /-- A σ-compact Hausdorff topological manifold over a finite dimensional real vector space is
 metrizable. -/
 lemma manifold_with_corners.metrizable_space
- {E : Type*} [normed_add_comm_group E] [normed_space ℝ E] [finite_dimensional ℝ E]
- {H : Type*} [topological_space H] (I : model_with_corners ℝ E H)
- (M : Type*) [topological_space M] [charted_space H M]
- [sigma_compact_space M] [t2_space M] : metrizable_space M :=
+  {E : Type*} [normed_add_comm_group E] [normed_space ℝ E] [finite_dimensional ℝ E]
+  {H : Type*} [topological_space H] (I : model_with_corners ℝ E H)
+  (M : Type*) [topological_space M] [charted_space H M]
+  [sigma_compact_space M] [t2_space M] : metrizable_space M :=
 begin
- haveI := I.locally_compact, haveI := charted_space.locally_compact H M,
- haveI : normal_space M := normal_of_paracompact_t2,
- haveI := I.second_countable_topology,
- haveI := charted_space.second_countable_of_sigma_compact H M,
- exact metrizable_space_of_t3_second_countable M
+  haveI := I.locally_compact, haveI := charted_space.locally_compact H M,
+  haveI : normal_space M := normal_of_paracompact_t2,
+  haveI := I.second_countable_topology,
+  haveI := charted_space.second_countable_of_sigma_compact H M,
+  exact metrizable_space_of_t3_second_countable M
 end
-

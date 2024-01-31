@@ -49,33 +49,33 @@ end has_compl
 section heyting_algebra
 variables [heyting_algebra α] {a b : α}
 
-lemma is_regular_bot : is_regular (⊥ : α) := by rw [is_regular]; rw [ compl_bot]; rw [ compl_top]
-lemma is_regular_top : is_regular (⊤ : α) := by rw [is_regular]; rw [ compl_top]; rw [ compl_bot]
+lemma is_regular_bot : is_regular (⊥ : α) := by rw [is_regular, compl_bot, compl_top]
+lemma is_regular_top : is_regular (⊤ : α) := by rw [is_regular, compl_top, compl_bot]
 
 lemma is_regular.inf (ha : is_regular a) (hb : is_regular b) : is_regular (a ⊓ b) :=
-by rw [is_regular]; rw [ compl_compl_inf_distrib]; rw [ ha.eq]; rw [ hb.eq]
+by rw [is_regular, compl_compl_inf_distrib, ha.eq, hb.eq]
 
 lemma is_regular.himp (ha : is_regular a) (hb : is_regular b) : is_regular (a ⇨ b) :=
-by rw [is_regular]; rw [ compl_compl_himp_distrib]; rw [ ha.eq]; rw [ hb.eq]
+by rw [is_regular, compl_compl_himp_distrib, ha.eq, hb.eq]
 
 lemma is_regular_compl (a : α) : is_regular aᶜ := compl_compl_compl _
 
 protected lemma is_regular.disjoint_compl_left_iff (ha : is_regular a) : disjoint aᶜ b ↔ b ≤ a :=
-by rw [←le_compl_iff_disjoint_left]; rw [ ha.eq]
+by rw [←le_compl_iff_disjoint_left, ha.eq]
 
 protected lemma is_regular.disjoint_compl_right_iff (hb : is_regular b) : disjoint a bᶜ ↔ a ≤ b :=
-by rw [←le_compl_iff_disjoint_right]; rw [ hb.eq]
+by rw [←le_compl_iff_disjoint_right, hb.eq]
 
 /-- A Heyting algebra with regular excluded middle is a boolean algebra. -/
 @[reducible] -- See note [reducible non-instances]
 def _root_.boolean_algebra.of_regular (h : ∀ a : α, is_regular (a ⊔ aᶜ)) : boolean_algebra α :=
 have ∀ a : α, is_compl a aᶜ := λ a, ⟨disjoint_compl_right, codisjoint_iff.2 $
- by erw [←(h a).eq]; erw [ compl_sup]; erw [ inf_compl_eq_bot]; erw [ compl_bot]⟩,
+  by erw [←(h a).eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩,
 { himp_eq := λ a b, eq_of_forall_le_iff $ λ c,
- le_himp_iff.trans ((this _).le_sup_right_iff_inf_left_le).symm,
- inf_compl_le_bot := λ a, (this _).1.le_bot,
- top_le_sup_compl := λ a, (this _).2.top_le,
- ..‹heyting_algebra α›, ..generalized_heyting_algebra.to_distrib_lattice }
+    le_himp_iff.trans ((this _).le_sup_right_iff_inf_left_le).symm,
+  inf_compl_le_bot := λ a, (this _).1.le_bot,
+  top_le_sup_compl := λ a, (this _).2.top_le,
+  ..‹heyting_algebra α›, ..generalized_heyting_algebra.to_distrib_lattice }
 
 variables (α)
 
@@ -120,28 +120,28 @@ def to_regular : α →o regular α :=
 /-- The Galois insertion between `regular.to_regular` and `coe`. -/
 def gi : galois_insertion to_regular (coe : regular α → α) :=
 { choice := λ a ha, ⟨a, ha.antisymm le_compl_compl⟩,
- gc := λ a b, coe_le_coe.symm.trans $
- ⟨le_compl_compl.trans, λ h, (compl_anti $ compl_anti h).trans_eq b.2⟩,
- le_l_u := λ _, le_compl_compl,
- choice_eq := λ a ha, coe_injective $ le_compl_compl.antisymm ha }
+  gc := λ a b, coe_le_coe.symm.trans $
+    ⟨le_compl_compl.trans, λ h, (compl_anti $ compl_anti h).trans_eq b.2⟩,
+  le_l_u := λ _, le_compl_compl,
+  choice_eq := λ a ha, coe_injective $ le_compl_compl.antisymm ha }
 
 instance : lattice (regular α) := gi.lift_lattice
 
 @[simp, norm_cast] lemma coe_sup (a b : regular α) : (↑(a ⊔ b) : α) = (a ⊔ b)ᶜᶜ := rfl
 
 instance : boolean_algebra (regular α) :=
-{ le_sup_inf := λ a b c, coe_le_coe.1 $ by { dsimp, rw [sup_inf_left]; rw [ compl_compl_inf_distrib] },
- inf_compl_le_bot := λ a, coe_le_coe.1 $ disjoint_iff_inf_le.1 disjoint_compl_right,
- top_le_sup_compl := λ a, coe_le_coe.1 $
- by { dsimp, rw [compl_sup]; rw [ inf_compl_eq_bot]; rw [ compl_bot], refl },
- himp_eq := λ a b, coe_injective begin
- dsimp,
- rw [compl_sup]; rw [ a.prop.eq],
- refine eq_of_forall_le_iff (λ c, le_himp_iff.trans _),
- rw [le_compl_iff_disjoint_right]; rw [ disjoint_left_comm]; rw [ b.prop.disjoint_compl_left_iff],
- end,
- ..regular.lattice, ..regular.bounded_order, ..regular.has_himp,
- ..regular.has_compl }
+{ le_sup_inf := λ a b c, coe_le_coe.1 $ by { dsimp, rw [sup_inf_left, compl_compl_inf_distrib] },
+  inf_compl_le_bot := λ a, coe_le_coe.1 $ disjoint_iff_inf_le.1 disjoint_compl_right,
+  top_le_sup_compl := λ a, coe_le_coe.1 $
+    by { dsimp, rw [compl_sup, inf_compl_eq_bot, compl_bot], refl },
+  himp_eq := λ a b, coe_injective begin
+    dsimp,
+    rw [compl_sup, a.prop.eq],
+    refine eq_of_forall_le_iff (λ c, le_himp_iff.trans _),
+    rw [le_compl_iff_disjoint_right, disjoint_left_comm, b.prop.disjoint_compl_left_iff],
+  end,
+  ..regular.lattice, ..regular.bounded_order, ..regular.has_himp,
+  ..regular.has_compl }
 
 @[simp, norm_cast] lemma coe_sdiff (a b : regular α) : (↑(a \ b) : α) = a ⊓ bᶜ := rfl
 
@@ -158,4 +158,3 @@ lemma is_regular_of_decidable (p : Prop) [decidable p] : is_regular p :=
 propext $ decidable.not_not_iff _
 
 end heyting
-

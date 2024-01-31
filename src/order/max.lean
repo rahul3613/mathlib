@@ -88,16 +88,16 @@ instance no_min_order_of_right [preorder α] [preorder β] [no_min_order β] : n
 
 instance [nonempty ι] [Π i, preorder (π i)] [Π i, no_max_order (π i)] : no_max_order (Π i, π i) :=
 ⟨λ a, begin
- classical,
- obtain ⟨b, hb⟩ := exists_gt (a $ classical.arbitrary _),
- exact ⟨_, lt_update_self_iff.2 hb⟩,
+  classical,
+  obtain ⟨b, hb⟩ := exists_gt (a $ classical.arbitrary _),
+  exact ⟨_, lt_update_self_iff.2 hb⟩,
 end⟩
 
 instance [nonempty ι] [Π i, preorder (π i)] [Π i, no_min_order (π i)] : no_min_order (Π i, π i) :=
 ⟨λ a, begin
- classical,
- obtain ⟨b, hb⟩ := exists_lt (a $ classical.arbitrary _),
- exact ⟨_, update_lt_self_iff.2 hb⟩,
+  classical,
+  obtain ⟨b, hb⟩ := exists_lt (a $ classical.arbitrary _),
+  exact ⟨_, update_lt_self_iff.2 hb⟩,
 end⟩
 
 @[priority 100] -- See note [lower instance priority]
@@ -115,14 +115,14 @@ lemma no_top_order.to_no_max_order (α : Type*) [linear_order α] [no_top_order 
 { exists_gt := by { convert λ a : α, exists_not_le a, simp_rw not_le, } }
 
 lemma no_bot_order_iff_no_min_order (α : Type*) [linear_order α] :
- no_bot_order α ↔ no_min_order α :=
+  no_bot_order α ↔ no_min_order α :=
 ⟨λ h, by { haveI := h, exact no_bot_order.to_no_min_order α },
- λ h, by { haveI := h, exact no_min_order.to_no_bot_order α }⟩
+  λ h, by { haveI := h, exact no_min_order.to_no_bot_order α }⟩
 
 lemma no_top_order_iff_no_max_order (α : Type*) [linear_order α] :
- no_top_order α ↔ no_max_order α :=
+  no_top_order α ↔ no_max_order α :=
 ⟨λ h, by { haveI := h, exact no_top_order.to_no_max_order α },
- λ h, by { haveI := h, exact no_max_order.to_no_top_order α }⟩
+  λ h, by { haveI := h, exact no_max_order.to_no_top_order α }⟩
 
 theorem no_min_order.not_acc [has_lt α] [no_min_order α] (a : α) : ¬ acc (<) a :=
 λ h, acc.rec_on h $ λ x _, (exists_lt x).rec_on
@@ -274,4 +274,3 @@ lemma prod.is_max_iff : is_max x ↔ is_max x.1 ∧ is_max x.2 :=
 ⟨λ hx, ⟨hx.fst, hx.snd⟩, λ h, h.1.prod_mk h.2⟩
 
 end prod
-

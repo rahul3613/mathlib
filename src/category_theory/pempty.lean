@@ -53,4 +53,3 @@ functor.ext (λ x, x.as.elim) (λ x _ _, x.as.elim)
 end functor
 
 end category_theory
-

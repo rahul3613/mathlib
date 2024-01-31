@@ -20,10 +20,10 @@ Let `X` be a topological space, `ℱ` and `𝒢` presheaves on `X`, `T : ℱ ⟶
 In this file we formulate two notions for what it means for
 `T` to be locally surjective:
 
- 1. For each open set `U`, each section `t : 𝒢(U)` is in the image of `T`
- after passing to some open cover of `U`.
+  1. For each open set `U`, each section `t : 𝒢(U)` is in the image of `T`
+     after passing to some open cover of `U`.
 
- 2. For each `x : X`, the map of *stalks* `Tₓ : ℱₓ ⟶ 𝒢ₓ` is surjective.
+  2. For each `x : X`, the map of *stalks* `Tₓ : ℱₓ ⟶ 𝒢ₓ` is surjective.
 
 We prove that these are equivalent.
 
@@ -60,11 +60,11 @@ such that `$T_*(s_V) = t|_V$`.
 See `is_locally_surjective_iff` below.
 -/
 def is_locally_surjective (T : ℱ ⟶ 𝒢) :=
- category_theory.is_locally_surjective (opens.grothendieck_topology X) T
+  category_theory.is_locally_surjective (opens.grothendieck_topology X) T
 
 lemma is_locally_surjective_iff (T : ℱ ⟶ 𝒢) :
- is_locally_surjective T ↔
- ∀ U t (x ∈ U), ∃ V (ι : V ⟶ U), (∃ s, T.app _ s = t |_ₕ ι) ∧ x ∈ V :=
+  is_locally_surjective T ↔
+    ∀ U t (x ∈ U), ∃ V (ι : V ⟶ U), (∃ s, T.app _ s = t |_ₕ ι) ∧ x ∈ V :=
 iff.rfl
 
 section surjective_on_stalks
@@ -74,50 +74,50 @@ variables [limits.has_colimits C] [limits.preserves_filtered_colimits (forget C)
 /-- An equivalent condition for a map of presheaves to be locally surjective
 is for all the induced maps on stalks to be surjective. -/
 lemma locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
- is_locally_surjective T ↔
- ∀ (x : X), function.surjective ((stalk_functor C x).map T) :=
+  is_locally_surjective T ↔
+  ∀ (x : X), function.surjective ((stalk_functor C x).map T) :=
 begin
- split; intro hT,
- { /- human proof:
- Let g ∈ Γₛₜ 𝒢 x be a germ. Represent it on an open set U ⊆ X
- as ⟨t, U⟩. By local surjectivity, pass to a smaller open set V
- on which there exists s ∈ Γ_ ℱ V mapping to t |_ V.
- Then the germ of s maps to g -/
+  split; intro hT,
+  { /- human proof:
+    Let g ∈ Γₛₜ 𝒢 x be a germ. Represent it on an open set U ⊆ X
+    as ⟨t, U⟩. By local surjectivity, pass to a smaller open set V
+    on which there exists s ∈ Γ_ ℱ V mapping to t |_ V.
+    Then the germ of s maps to g -/
 
- -- Let g ∈ Γₛₜ 𝒢 x be a germ.
- intros x g,
- -- Represent it on an open set U ⊆ X as ⟨t, U⟩.
- obtain ⟨U, hxU, t, rfl⟩ := 𝒢.germ_exist x g,
- -- By local surjectivity, pass to a smaller open set V
- -- on which there exists s ∈ Γ_ ℱ V mapping to t |_ V.
- rcases hT U t x hxU with ⟨V, ι, ⟨s, h_eq⟩, hxV⟩,
+    -- Let g ∈ Γₛₜ 𝒢 x be a germ.
+    intros x g,
+    -- Represent it on an open set U ⊆ X as ⟨t, U⟩.
+    obtain ⟨U, hxU, t, rfl⟩ :=  𝒢.germ_exist x g,
+    -- By local surjectivity, pass to a smaller open set V
+    -- on which there exists s ∈ Γ_ ℱ V mapping to t |_ V.
+    rcases hT U t x hxU with ⟨V, ι, ⟨s, h_eq⟩, hxV⟩,
 
- -- Then the germ of s maps to g.
- use ℱ.germ ⟨x, hxV⟩ s,
- convert stalk_functor_map_germ_apply V ⟨x, hxV⟩ T s,
+    -- Then the germ of s maps to g.
+    use ℱ.germ ⟨x, hxV⟩ s,
+    convert stalk_functor_map_germ_apply V ⟨x, hxV⟩ T s,
 
- simpa [h_eq] using germ_res_apply 𝒢 ι ⟨x,hxV⟩ t, },
+    simpa [h_eq] using germ_res_apply 𝒢 ι ⟨x,hxV⟩ t, },
 
- { /- human proof:
- Let U be an open set, t ∈ Γ ℱ U a section, x ∈ U a point.
- By surjectivity on stalks, the germ of t is the image of
- some germ f ∈ Γₛₜ ℱ x. Represent f on some open set V ⊆ X as ⟨s, V⟩.
- Then there is some possibly smaller open set x ∈ W ⊆ V ∩ U on which
- we have T(s) |_ W = t |_ W. -/
- intros U t x hxU,
- set t_x := 𝒢.germ ⟨x, hxU⟩ t with ht_x,
- obtain ⟨s_x, hs_x : ((stalk_functor C x).map T) s_x = t_x⟩ := hT x t_x,
- obtain ⟨V, hxV, s, rfl⟩ := ℱ.germ_exist x s_x,
- -- rfl : ℱ.germ x s = s_x
- have key_W := 𝒢.germ_eq x hxV hxU (T.app _ s) t
- (by { convert hs_x,
- symmetry,
- convert stalk_functor_map_germ_apply _ _ _ s, }),
- obtain ⟨W, hxW, hWV, hWU, h_eq⟩ := key_W,
+  { /- human proof:
+    Let U be an open set, t ∈ Γ ℱ U a section, x ∈ U a point.
+    By surjectivity on stalks, the germ of t is the image of
+    some germ f ∈ Γₛₜ ℱ x. Represent f on some open set V ⊆ X as ⟨s, V⟩.
+    Then there is some possibly smaller open set x ∈ W ⊆ V ∩ U on which
+    we have T(s) |_ W = t |_ W. -/
+    intros U t x hxU,
+    set t_x := 𝒢.germ ⟨x, hxU⟩ t with ht_x,
+    obtain ⟨s_x, hs_x : ((stalk_functor C x).map T) s_x = t_x⟩ := hT x t_x,
+    obtain ⟨V, hxV, s, rfl⟩ := ℱ.germ_exist x s_x,
+    -- rfl : ℱ.germ x s = s_x
+    have key_W := 𝒢.germ_eq x hxV hxU (T.app _ s) t
+      (by { convert hs_x,
+            symmetry,
+            convert stalk_functor_map_germ_apply _ _ _ s, }),
+    obtain ⟨W, hxW, hWV, hWU, h_eq⟩ := key_W,
 
- refine ⟨W, hWU, ⟨ℱ.map hWV.op s, _⟩, hxW⟩,
- convert h_eq,
- simp only [← comp_apply, T.naturality], },
+    refine ⟨W, hWU, ⟨ℱ.map hWV.op s, _⟩, hxW⟩,
+    convert h_eq,
+    simp only [← comp_apply, T.naturality], },
 end
 
 end surjective_on_stalks
@@ -125,4 +125,3 @@ end surjective_on_stalks
 end locally_surjective
 
 end Top.presheaf
-

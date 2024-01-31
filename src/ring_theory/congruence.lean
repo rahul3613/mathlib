@@ -24,15 +24,15 @@ Most of the time you likely want to use the `ideal.quotient` API that is built o
 
 * `ring_con R`: the type of congruence relations respecting `+` and `*`.
 * `ring_con_gen r`: the inductively defined smallest ring congruence relation containing a given
- binary relation.
+  binary relation.
 
 ## TODO
 
 * Use this for `ring_quot` too.
 * Copy across more API from `con` and `add_con` in `group_theory/congruence.lean`, such as:
- * The `complete_lattice` structure.
- * The `con_gen_eq` lemma, stating that
- `ring_con_gen r = Inf {s : ring_con M | ∀ x y, r x y → s x y}`.
+  * The `complete_lattice` structure.
+  * The `con_gen_eq` lemma, stating that
+    `ring_con_gen r = Inf {s : ring_con M | ∀ x y, r x y → s x y}`.
 -/
 
 /-- A congruence relation on a type with an addition and multiplication is an equivalence relation
@@ -46,7 +46,7 @@ structure ring_con (R : Type*) [has_add R] [has_mul R] extends setoid R :=
 variables {α R : Type*}
 
 /-- The inductively defined smallest ring congruence relation containing a given binary
- relation. -/
+    relation. -/
 inductive ring_con_gen.rel [has_add R] [has_mul R] (r : R → R → Prop) : R → R → Prop
 | of : Π x y, r x y → ring_con_gen.rel x y
 | refl : Π x, ring_con_gen.rel x x
@@ -56,12 +56,12 @@ inductive ring_con_gen.rel [has_add R] [has_mul R] (r : R → R → Prop) : R �
 | mul : Π {w x y z}, ring_con_gen.rel w x → ring_con_gen.rel y z → ring_con_gen.rel (w * y) (x * z)
 
 /-- The inductively defined smallest ring congruence relation containing a given binary
- relation. -/
+    relation. -/
 def ring_con_gen [has_add R] [has_mul R] (r : R → R → Prop) : ring_con R :=
 { r := ring_con_gen.rel r,
- iseqv := ⟨ring_con_gen.rel.refl, @ring_con_gen.rel.symm _ _ _ _, @ring_con_gen.rel.trans _ _ _ _⟩,
- add' := λ _ _ _ _, ring_con_gen.rel.add,
- mul' := λ _ _ _ _, ring_con_gen.rel.mul }
+  iseqv := ⟨ring_con_gen.rel.refl, @ring_con_gen.rel.symm _ _ _ _, @ring_con_gen.rel.trans _ _ _ _⟩,
+  add' := λ _ _ _ _, ring_con_gen.rel.add,
+  mul' := λ _ _ _ _, ring_con_gen.rel.mul }
 
 namespace ring_con
 
@@ -195,98 +195,97 @@ The operations above on the quotient by `c : ring_con R` preseverse the algebrai
 section algebraic
 
 instance [non_unital_non_assoc_semiring R] (c : ring_con R) :
- non_unital_non_assoc_semiring c.quotient :=
+  non_unital_non_assoc_semiring c.quotient :=
 function.surjective.non_unital_non_assoc_semiring _ quotient.surjective_quotient_mk'
- rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+  rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 instance [non_assoc_semiring R] (c : ring_con R) :
- non_assoc_semiring c.quotient :=
+  non_assoc_semiring c.quotient :=
 function.surjective.non_assoc_semiring _ quotient.surjective_quotient_mk'
- rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
+  rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
 
 instance [non_unital_semiring R] (c : ring_con R) :
- non_unital_semiring c.quotient :=
+  non_unital_semiring c.quotient :=
 function.surjective.non_unital_semiring _ quotient.surjective_quotient_mk'
- rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+  rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 instance [semiring R] (c : ring_con R) :
- semiring c.quotient :=
+  semiring c.quotient :=
 function.surjective.semiring _ quotient.surjective_quotient_mk'
- rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
+  rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
 
 instance [comm_semiring R] (c : ring_con R) :
- comm_semiring c.quotient :=
+  comm_semiring c.quotient :=
 function.surjective.comm_semiring _ quotient.surjective_quotient_mk'
- rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
+  rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
 
 instance [non_unital_non_assoc_ring R] (c : ring_con R) :
- non_unital_non_assoc_ring c.quotient :=
+  non_unital_non_assoc_ring c.quotient :=
 function.surjective.non_unital_non_assoc_ring _ quotient.surjective_quotient_mk'
- rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+  rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 instance [non_assoc_ring R] (c : ring_con R) :
- non_assoc_ring c.quotient :=
+  non_assoc_ring c.quotient :=
 function.surjective.non_assoc_ring _ quotient.surjective_quotient_mk'
- rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
- (λ _, rfl)
+  rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl)
+  (λ _, rfl)
 
 instance [non_unital_ring R] (c : ring_con R) :
- non_unital_ring c.quotient :=
+  non_unital_ring c.quotient :=
 function.surjective.non_unital_ring _ quotient.surjective_quotient_mk'
- rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+  rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 instance [ring R] (c : ring_con R) :
- ring c.quotient :=
+  ring c.quotient :=
 function.surjective.ring _ quotient.surjective_quotient_mk'
- rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
- (λ _, rfl) (λ _, rfl)
+  rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+  (λ _, rfl) (λ _, rfl)
 
 instance [comm_ring R] (c : ring_con R) :
- comm_ring c.quotient :=
+  comm_ring c.quotient :=
 function.surjective.comm_ring _ quotient.surjective_quotient_mk'
- rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
- (λ _, rfl) (λ _, rfl)
+  rfl rfl (λ _ _, rfl) (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+  (λ _, rfl) (λ _, rfl)
 
 instance is_scalar_tower_right [has_add R] [mul_one_class R] [has_smul α R] [is_scalar_tower α R R]
- (c : ring_con R) :
- is_scalar_tower α c.quotient c.quotient :=
+  (c : ring_con R) :
+  is_scalar_tower α c.quotient c.quotient :=
 { smul_assoc := λ a, quotient.ind₂' $ by exact λ m₁ m₂,
- congr_arg quotient.mk' $ smul_mul_assoc _ _ _ }
+    congr_arg quotient.mk' $ smul_mul_assoc _ _ _ }
 
 instance smul_comm_class [has_add R] [mul_one_class R] [has_smul α R]
- [is_scalar_tower α R R] [smul_comm_class α R R] (c : ring_con R) :
- smul_comm_class α c.quotient c.quotient :=
+  [is_scalar_tower α R R] [smul_comm_class α R R] (c : ring_con R) :
+  smul_comm_class α c.quotient c.quotient :=
 { smul_comm := λ a, quotient.ind₂' $ by exact λ m₁ m₂,
- congr_arg quotient.mk' $ (mul_smul_comm _ _ _).symm }
+    congr_arg quotient.mk' $ (mul_smul_comm _ _ _).symm }
 
 instance smul_comm_class' [has_add R] [mul_one_class R] [has_smul α R]
- [is_scalar_tower α R R] [smul_comm_class R α R] (c : ring_con R) :
- smul_comm_class c.quotient α c.quotient :=
+  [is_scalar_tower α R R] [smul_comm_class R α R] (c : ring_con R) :
+  smul_comm_class c.quotient α c.quotient :=
 by haveI := smul_comm_class.symm R α R; exact smul_comm_class.symm _ _ _
 
 instance [monoid α] [non_assoc_semiring R] [distrib_mul_action α R] [is_scalar_tower α R R]
- (c : ring_con R) :
- distrib_mul_action α c.quotient :=
+  (c : ring_con R) :
+  distrib_mul_action α c.quotient :=
 { smul := (•),
- smul_zero := λ r, congr_arg quotient.mk' $ smul_zero _,
- smul_add := λ r, quotient.ind₂' $ by exact λ m₁ m₂, congr_arg quotient.mk' $ smul_add _ _ _,
- .. c.to_con.mul_action }
+  smul_zero := λ r, congr_arg quotient.mk' $ smul_zero _,
+  smul_add := λ r, quotient.ind₂' $ by exact λ m₁ m₂, congr_arg quotient.mk' $ smul_add _ _ _,
+  .. c.to_con.mul_action }
 
 instance [monoid α] [semiring R] [mul_semiring_action α R] [is_scalar_tower α R R]
- (c : ring_con R) :
- mul_semiring_action α c.quotient :=
+  (c : ring_con R) :
+  mul_semiring_action α c.quotient :=
 { smul := (•),
- .. c^.quotient.distrib_mul_action,
- .. c.to_con.mul_distrib_mul_action }
+  .. c^.quotient.distrib_mul_action,
+  .. c.to_con.mul_distrib_mul_action }
 
 end algebraic
 
 /-- The natural homomorphism from a ring to its quotient by a congruence relation. -/
 def mk' [non_assoc_semiring R] (c : ring_con R) : R →+* c.quotient :=
 { to_fun := quotient.mk', map_zero' := rfl, map_one' := rfl,
- map_add' := λ _ _, rfl, map_mul' := λ _ _, rfl }
+  map_add' :=  λ _ _, rfl, map_mul' := λ _ _, rfl }
 
 end quotient
 
 end ring_con
-

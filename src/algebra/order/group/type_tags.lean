@@ -15,17 +15,16 @@ variables {α : Type*}
 
 instance [ordered_add_comm_group α] : ordered_comm_group (multiplicative α) :=
 { ..multiplicative.comm_group,
- ..multiplicative.ordered_comm_monoid }
+  ..multiplicative.ordered_comm_monoid }
 
 instance [ordered_comm_group α] : ordered_add_comm_group (additive α) :=
 { ..additive.add_comm_group,
- ..additive.ordered_add_comm_monoid }
+  ..additive.ordered_add_comm_monoid }
 
 instance [linear_ordered_add_comm_group α] : linear_ordered_comm_group (multiplicative α) :=
 { ..multiplicative.linear_order,
- ..multiplicative.ordered_comm_group }
+  ..multiplicative.ordered_comm_group }
 
 instance [linear_ordered_comm_group α] : linear_ordered_add_comm_group (additive α) :=
 { ..additive.linear_order,
- ..additive.ordered_add_comm_group }
-
+  ..additive.ordered_add_comm_group }

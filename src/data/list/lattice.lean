@@ -69,7 +69,7 @@ by { rw disjoint_comm, exact disjoint_nil_left _ }
 by { simp only [disjoint, mem_singleton, forall_eq], refl }
 
 @[simp, priority 1100] lemma disjoint_singleton : disjoint l [a] ↔ a ∉ l :=
-by rw [disjoint_comm]; rw [ singleton_disjoint]
+by rw [disjoint_comm, singleton_disjoint]
 
 @[simp] lemma disjoint_append_left : disjoint (l₁ ++ l₂) l ↔ disjoint l₁ l ∧ disjoint l₂ l :=
 by simp only [disjoint, mem_append, or_imp_distrib, forall_and_distrib]
@@ -97,17 +97,17 @@ lemma disjoint_of_disjoint_append_right_right (d : disjoint l (l₁ ++ l₂)) : 
 
 lemma disjoint_take_drop {m n : ℕ} (hl : l.nodup) (h : m ≤ n) : disjoint (l.take m) (l.drop n) :=
 begin
- induction l generalizing m n,
- case list.nil : m n
- { simp },
- case list.cons : x xs xs_ih m n
- { cases m; cases n; simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop,
- true_or, eq_self_iff_true, not_true, false_and,
- disjoint_nil_left, take],
- { cases h },
- cases hl with _ _ h₀ h₁, split,
- { intro h, exact h₀ _ (mem_of_mem_drop h) rfl, },
- solve_by_elim [le_of_succ_le_succ] { max_depth := 4 } },
+  induction l generalizing m n,
+  case list.nil : m n
+  { simp },
+  case list.cons : x xs xs_ih m n
+  { cases m; cases n; simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop,
+                                 true_or, eq_self_iff_true, not_true, false_and,
+                                 disjoint_nil_left, take],
+    { cases h },
+    cases hl with _ _ h₀ h₁, split,
+    { intro h, exact h₀ _ (mem_of_mem_drop h) rfl, },
+    solve_by_elim [le_of_succ_le_succ] { max_depth := 4 } },
 end
 
 end disjoint
@@ -124,7 +124,7 @@ section union
 
 @[simp] lemma mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ :=
 by induction l₁; simp only [nil_union, not_mem_nil, false_or, cons_union, mem_insert_iff,
- mem_cons_iff, or_assoc, *]
+  mem_cons_iff, or_assoc, *]
 
 lemma mem_union_left (h : a ∈ l₁) (l₂ : list α) : a ∈ l₁ ∪ l₂ := mem_union.2 (or.inl h)
 
@@ -133,10 +133,10 @@ lemma mem_union_right (l₁ : list α) (h : a ∈ l₂) : a ∈ l₁ ∪ l₂ :=
 lemma sublist_suffix_of_union : ∀ l₁ l₂ : list α, ∃ t, t <+ l₁ ∧ t ++ l₂ = l₁ ∪ l₂
 | [] l₂ := ⟨[], by refl, rfl⟩
 | (a :: l₁) l₂ := let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂ in
- if h : a ∈ l₁ ∪ l₂
- then ⟨t, sublist_cons_of_sublist _ s, by simp only [e, cons_union, insert_of_mem h]⟩
- else ⟨a::t, s.cons_cons _, by simp only [cons_append, cons_union, e, insert_of_not_mem h];
- split; refl⟩
+  if h : a ∈ l₁ ∪ l₂
+  then ⟨t, sublist_cons_of_sublist _ s, by simp only [e, cons_union, insert_of_mem h]⟩
+  else ⟨a::t, s.cons_cons _, by simp only [cons_append, cons_union, e, insert_of_not_mem h];
+    split; refl⟩
 
 lemma suffix_union_right (l₁ l₂ : list α) : l₂ <:+ l₁ ∪ l₂ :=
 (sublist_suffix_of_union l₁ l₂).imp (λ a, and.right)
@@ -152,7 +152,7 @@ lemma forall_mem_of_forall_mem_union_left (h : ∀ x ∈ l₁ ∪ l₂, p x) : �
 (forall_mem_union.1 h).1
 
 lemma forall_mem_of_forall_mem_union_right
- (h : ∀ x ∈ l₁ ∪ l₂, p x) : ∀ x ∈ l₂, p x :=
+   (h : ∀ x ∈ l₁ ∪ l₂, p x) : ∀ x ∈ l₂, p x :=
 (forall_mem_union.1 h).2
 
 end union
@@ -164,11 +164,11 @@ section inter
 @[simp] lemma inter_nil (l : list α) : [] ∩ l = [] := rfl
 
 @[simp] lemma inter_cons_of_mem (l₁ : list α) (h : a ∈ l₂) :
- (a :: l₁) ∩ l₂ = a :: (l₁ ∩ l₂) :=
+  (a :: l₁) ∩ l₂ = a :: (l₁ ∩ l₂) :=
 if_pos h
 
 @[simp] lemma inter_cons_of_not_mem (l₁ : list α) (h : a ∉ l₂) :
- (a :: l₁) ∩ l₂ = l₁ ∩ l₂ :=
+  (a :: l₁) ∩ l₂ = l₁ ∩ l₂ :=
 if_neg h
 
 lemma mem_of_mem_inter_left : a ∈ l₁ ∩ l₂ → a ∈ l₁ := mem_of_mem_filter
@@ -191,13 +191,13 @@ lemma inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ disjoint l₁ l₂ :=
 by { simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and], refl }
 
 lemma forall_mem_inter_of_forall_left (h : ∀ x ∈ l₁, p x)
- (l₂ : list α) :
- ∀ x, x ∈ l₁ ∩ l₂ → p x :=
+  (l₂ : list α) :
+  ∀ x, x ∈ l₁ ∩ l₂ → p x :=
 ball.imp_left (λ x, mem_of_mem_inter_left) h
 
 lemma forall_mem_inter_of_forall_right (l₁ : list α)
- (h : ∀ x ∈ l₂, p x) :
- ∀ x, x ∈ l₁ ∩ l₂ → p x :=
+  (h : ∀ x ∈ l₂, p x) :
+  ∀ x, x ∈ l₁ ∩ l₂ → p x :=
 ball.imp_left (λ x, mem_of_mem_inter_right) h
 
 @[simp] lemma inter_reverse {xs ys : list α} : xs.inter ys.reverse = xs.inter ys :=
@@ -216,63 +216,63 @@ by cases l; refl
 by cases l; refl
 
 @[simp] lemma cons_bag_inter_of_pos (l₁ : list α) (h : a ∈ l₂) :
- (a :: l₁).bag_inter l₂ = a :: l₁.bag_inter (l₂.erase a) :=
+  (a :: l₁).bag_inter l₂ = a :: l₁.bag_inter (l₂.erase a) :=
 by cases l₂; exact if_pos h
 
 @[simp] lemma cons_bag_inter_of_neg (l₁ : list α) (h : a ∉ l₂) :
- (a :: l₁).bag_inter l₂ = l₁.bag_inter l₂ :=
+  (a :: l₁).bag_inter l₂ = l₁.bag_inter l₂ :=
 begin
- cases l₂, {simp only [bag_inter_nil]},
- simp only [erase_of_not_mem h, list.bag_inter, if_neg h]
+  cases l₂, {simp only [bag_inter_nil]},
+  simp only [erase_of_not_mem h, list.bag_inter, if_neg h]
 end
 
 @[simp] lemma mem_bag_inter {a : α} : ∀ {l₁ l₂ : list α}, a ∈ l₁.bag_inter l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
-| [] l₂ := by simp only [nil_bag_inter, not_mem_nil, false_and]
+| []        l₂ := by simp only [nil_bag_inter, not_mem_nil, false_and]
 | (b :: l₁) l₂ := begin
- by_cases b ∈ l₂,
- { rw [cons_bag_inter_of_pos _ h]; rw [ mem_cons_iff]; rw [ mem_cons_iff]; rw [ mem_bag_inter],
- by_cases ba : a = b,
- { simp only [ba, h, eq_self_iff_true, true_or, true_and] },
- { simp only [mem_erase_of_ne ba, ba, false_or] } },
- { rw [cons_bag_inter_of_neg _ h]; rw [ mem_bag_inter]; rw [ mem_cons_iff]; rw [ or_and_distrib_right],
- symmetry, apply or_iff_right_of_imp,
- rintro ⟨rfl, h'⟩, exact h.elim h' }
- end
+    by_cases b ∈ l₂,
+    { rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter],
+      by_cases ba : a = b,
+      { simp only [ba, h, eq_self_iff_true, true_or, true_and] },
+      { simp only [mem_erase_of_ne ba, ba, false_or] } },
+    { rw [cons_bag_inter_of_neg _ h, mem_bag_inter, mem_cons_iff, or_and_distrib_right],
+      symmetry, apply or_iff_right_of_imp,
+      rintro ⟨rfl, h'⟩, exact h.elim h' }
+  end
 
 @[simp] lemma count_bag_inter {a : α} :
- ∀ {l₁ l₂ : list α}, count a (l₁.bag_inter l₂) = min (count a l₁) (count a l₂)
-| [] l₂ := by simp
-| l₁ [] := by simp
-| (b :: l₁) l₂ :=
+  ∀ {l₁ l₂ : list α}, count a (l₁.bag_inter l₂) = min (count a l₁) (count a l₂)
+| []         l₂         := by simp
+| l₁         []         := by simp
+| (b :: l₁)  l₂         :=
 begin
- by_cases hb : b ∈ l₂,
- { rw [cons_bag_inter_of_pos _ hb]; rw [ count_cons']; rw [ count_cons']; rw [ count_bag_inter]; rw [ count_erase]; rw [ ← min_add_add_right],
- by_cases ab : a = b,
- { rw [if_pos ab]; rw [ tsub_add_cancel_of_le],
- rwa [succ_le_iff]; rwa [ count_pos]; rwa [ ab] },
- { rw [if_neg ab]; rw [ tsub_zero]; rw [ add_zero]; rw [ add_zero] } },
- { rw [cons_bag_inter_of_neg _ hb]; rw [ count_bag_inter],
- by_cases ab : a = b,
- { rw [← ab] at hb, rw [count_eq_zero.2 hb, min_zero, min_zero] },
- { rw [count_cons_of_ne ab] } },
+  by_cases hb : b ∈ l₂,
+  { rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase,
+      ← min_add_add_right],
+    by_cases ab : a = b,
+    { rw [if_pos ab, tsub_add_cancel_of_le],
+      rwa [succ_le_iff, count_pos, ab] },
+    { rw [if_neg ab, tsub_zero, add_zero, add_zero] } },
+  { rw [cons_bag_inter_of_neg _ hb, count_bag_inter],
+    by_cases ab : a = b,
+    { rw [← ab] at hb, rw [count_eq_zero.2 hb, min_zero, min_zero] },
+    { rw [count_cons_of_ne ab] } },
 end
 
 lemma bag_inter_sublist_left : ∀ l₁ l₂ : list α, l₁.bag_inter l₂ <+ l₁
-| [] l₂ := by simp
+| []        l₂ := by simp
 | (b :: l₁) l₂ := begin
- by_cases b ∈ l₂; simp only [h, cons_bag_inter_of_pos, cons_bag_inter_of_neg, not_false_iff],
- { exact (bag_inter_sublist_left _ _).cons_cons _ },
- { apply sublist_cons_of_sublist, apply bag_inter_sublist_left }
+  by_cases b ∈ l₂; simp only [h, cons_bag_inter_of_pos, cons_bag_inter_of_neg, not_false_iff],
+  { exact (bag_inter_sublist_left _ _).cons_cons _ },
+  { apply sublist_cons_of_sublist, apply bag_inter_sublist_left }
 end
 
 lemma bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : list α, l₁.bag_inter l₂ = [] ↔ l₁ ∩ l₂ = []
-| [] l₂ := by simp
+| []        l₂ := by simp
 | (b :: l₁) l₂ :=
 begin
- by_cases h : b ∈ l₂; simp [h],
- exact bag_inter_nil_iff_inter_nil l₁ l₂
+  by_cases h : b ∈ l₂; simp [h],
+  exact bag_inter_nil_iff_inter_nil l₁ l₂
 end
 
 end bag_inter
 end list
-

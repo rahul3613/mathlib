@@ -20,15 +20,15 @@ This module provides tools for formulating computations guided by randomness and
 defining objects that can be created randomly.
 
 ## Main definitions
- * `rand` monad for computations guided by randomness;
- * `random` class for objects that can be generated randomly;
- * `random` to generate one object;
- * `random_r` to generate one object inside a range;
- * `random_series` to generate an infinite series of objects;
- * `random_series_r` to generate an infinite series of objects inside a range;
- * `io.mk_generator` to create a new random number generator;
- * `io.run_rand` to run a randomized computation inside the `io` monad;
- * `tactic.run_rand` to run a randomized computation inside the `tactic` monad
+  * `rand` monad for computations guided by randomness;
+  * `random` class for objects that can be generated randomly;
+    * `random` to generate one object;
+    * `random_r` to generate one object inside a range;
+    * `random_series` to generate an infinite series of objects;
+    * `random_series_r` to generate an infinite series of objects inside a range;
+  * `io.mk_generator` to create a new random number generator;
+  * `io.run_rand` to run a randomized computation inside the `io` monad;
+  * `tactic.run_rand` to run a randomized computation inside the `tactic` monad
 
 ## Local notation
 
@@ -40,7 +40,7 @@ random monad io
 
 ## References
 
- * Similar library in Haskell: https://hackage.haskell.org/package/MonadRandom
+  * Similar library in Haskell: https://hackage.haskell.org/package/MonadRandom
 
 -/
 
@@ -72,7 +72,7 @@ open stream
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
 class bounded_random (α : Type u) [preorder α] :=
 (random_r : Π g [random_gen g] (x y : α),
- (x ≤ y) → rand_g g (x .. y))
+              (x ≤ y) → rand_g g (x .. y))
 
 /-- `random α` gives us machinery to generate values of type `α` -/
 class random (α : Type u) :=
@@ -108,7 +108,7 @@ random.random α g
 /-- generate an infinite series of random values of type `α` -/
 def random_series : rand_g g (stream α) :=
 do gen ← uliftable.up (split g),
- pure $ stream.corec_state (random.random α g) gen
+   pure $ stream.corec_state (random.random α g) gen
 
 end random
 
@@ -120,9 +120,9 @@ bounded_random.random_r g x y h
 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
 def random_series_r [preorder α] [bounded_random α] (x y : α) (h : x ≤ y) :
- rand_g g (stream (x .. y)) :=
+  rand_g g (stream (x .. y)) :=
 do gen ← uliftable.up (split g),
- pure $ corec_state (bounded_random.random_r g x y h) gen
+   pure $ corec_state (bounded_random.random_r g x y h) gen
 
 end rand
 
@@ -141,7 +141,7 @@ variables {α : Type}
 /-- Run `cmd` using a randomly seeded random number generator -/
 def run_rand (cmd : _root_.rand α) : io α :=
 do g ← io.mk_generator,
- return $ (cmd.run ⟨g⟩).1
+   return $ (cmd.run ⟨g⟩).1
 
 /-- Run `cmd` using the provided seed. -/
 def run_rand_with (seed : ℕ) (cmd : _root_.rand α) : io α :=
@@ -237,53 +237,53 @@ open nat
 
 instance nat_bounded_random : bounded_random ℕ :=
 { random_r := λ g inst x y hxy,
- do z ← @fin.random g inst (succ $ y - x) _,
- pure ⟨z.val + x, nat.le_add_left _ _,
- by rw ← le_tsub_iff_right hxy; apply le_of_succ_le_succ z.is_lt⟩ }
+  do z ← @fin.random g inst (succ $ y - x) _,
+     pure ⟨z.val + x, nat.le_add_left _ _,
+       by rw ← le_tsub_iff_right hxy; apply le_of_succ_le_succ z.is_lt⟩ }
 
 /-- This `bounded_random` interval generates integers between `x` and
 `y` by first generating a natural number between `0` and `y - x` and
 shifting the result appropriately. -/
 instance int_bounded_random : bounded_random ℤ :=
 { random_r := λ g inst x y hxy,
- do ⟨z,h₀,h₁⟩ ← @bounded_random.random_r ℕ _ _ g inst 0 (int.nat_abs $ y - x) dec_trivial,
- pure ⟨z + x,
- int.le_add_of_nonneg_left (int.coe_nat_nonneg _),
- int.add_le_of_le_sub_right $ le_trans
- (int.coe_nat_le_coe_nat_of_le h₁)
- (le_of_eq $ int.of_nat_nat_abs_eq_of_nonneg (int.sub_nonneg_of_le hxy)) ⟩ }
+  do ⟨z,h₀,h₁⟩ ← @bounded_random.random_r ℕ _ _ g inst 0 (int.nat_abs $ y - x) dec_trivial,
+     pure ⟨z + x,
+       int.le_add_of_nonneg_left (int.coe_nat_nonneg _),
+       int.add_le_of_le_sub_right $ le_trans
+         (int.coe_nat_le_coe_nat_of_le h₁)
+         (le_of_eq $ int.of_nat_nat_abs_eq_of_nonneg (int.sub_nonneg_of_le hxy)) ⟩ }
 
 instance fin_random (n : ℕ) [ne_zero n] : random (fin n) :=
 { random := λ g inst, @fin.random g inst _ _ }
 
 instance fin_bounded_random (n : ℕ) : bounded_random (fin n) :=
 { random_r := λ g inst (x y : fin n) p,
- do ⟨r, h, h'⟩ ← @rand.random_r ℕ g inst _ _ x.val y.val p,
- pure ⟨⟨r,lt_of_le_of_lt h' y.is_lt⟩, h, h'⟩ }
+    do ⟨r, h, h'⟩ ← @rand.random_r ℕ g inst _ _ x.val y.val p,
+       pure ⟨⟨r,lt_of_le_of_lt h' y.is_lt⟩, h, h'⟩ }
 
 /-- A shortcut for creating a `random (fin n)` instance from
-a proof that `0 < n` rather than on matching on `fin (succ n)` -/
+a proof that `0 < n` rather than on matching on `fin (succ n)`  -/
 def random_fin_of_pos : ∀ {n : ℕ} (h : 0 < n), random (fin n)
 | (succ n) _ := fin_random _
 | 0 h := false.elim (nat.not_lt_zero _ h)
 
 lemma bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : bool) (n : ℕ) :
- n ∈ (x.to_nat .. y.to_nat) → bool.of_nat n ∈ (x .. y) :=
+  n ∈ (x.to_nat .. y.to_nat) → bool.of_nat n ∈ (x .. y) :=
 begin
- simp only [and_imp, set.mem_Icc], intros h₀ h₁,
- split;
- [ have h₂ := bool.of_nat_le_of_nat h₀, have h₂ := bool.of_nat_le_of_nat h₁ ];
- rw bool.of_nat_to_nat at h₂; exact h₂,
+  simp only [and_imp, set.mem_Icc], intros h₀ h₁,
+  split;
+    [ have h₂ := bool.of_nat_le_of_nat h₀, have h₂ := bool.of_nat_le_of_nat h₁ ];
+    rw bool.of_nat_to_nat at h₂; exact h₂,
 end
 
 instance : random bool :=
-{ random := λ g inst,
- (bool.of_nat ∘ subtype.val) <$> @bounded_random.random_r ℕ _ _ g inst 0 1 (nat.zero_le _) }
+{ random   := λ g inst,
+  (bool.of_nat ∘ subtype.val) <$> @bounded_random.random_r ℕ _ _ g inst 0 1 (nat.zero_le _) }
 
 instance : bounded_random bool :=
 { random_r := λ g _inst x y p,
- subtype.map bool.of_nat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
- @bounded_random.random_r ℕ _ _ g _inst x.to_nat y.to_nat (bool.to_nat_le_to_nat p) }
+  subtype.map bool.of_nat (bool_of_nat_mem_Icc_of_mem_Icc_to_nat x y) <$>
+    @bounded_random.random_r ℕ _ _ g _inst x.to_nat y.to_nat (bool.to_nat_le_to_nat p) }
 
 /-- generate a random bit vector of length `n` -/
 def bitvec.random (n : ℕ) : rand_g g (bitvec n) :=
@@ -293,10 +293,10 @@ bitvec.of_fin <$> rand.random (fin $ 2^n)
 def bitvec.random_r {n : ℕ} (x y : bitvec n) (h : x ≤ y) : rand_g g (x .. y) :=
 have h' : ∀ (a : fin (2 ^ n)), a ∈ (x.to_fin .. y.to_fin) → bitvec.of_fin a ∈ (x .. y),
 begin
- simp only [and_imp, set.mem_Icc], intros z h₀ h₁,
- replace h₀ := bitvec.of_fin_le_of_fin_of_le h₀,
- replace h₁ := bitvec.of_fin_le_of_fin_of_le h₁,
- rw bitvec.of_fin_to_fin at h₀ h₁, split; assumption,
+  simp only [and_imp, set.mem_Icc], intros z h₀ h₁,
+  replace h₀ := bitvec.of_fin_le_of_fin_of_le h₀,
+  replace h₁ := bitvec.of_fin_le_of_fin_of_le h₁,
+  rw bitvec.of_fin_to_fin at h₀ h₁, split; assumption,
 end,
 subtype.map bitvec.of_fin h' <$> rand.random_r x.to_fin y.to_fin (bitvec.to_fin_le_to_fin_of_le h)
 
@@ -307,4 +307,3 @@ instance random_bitvec (n : ℕ) : random (bitvec n) :=
 
 instance bounded_random_bitvec (n : ℕ) : bounded_random (bitvec n) :=
 { random_r := λ _ inst x y p, @bitvec.random_r _ inst _ _ _ p }
-
