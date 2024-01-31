@@ -54,7 +54,7 @@ natural number' into the nonrecursive constructor `zero` of the inductive type `
 ## References
 
 * [Jeremy Avigad, Leonardo de Moura and Soonho Kong, _Theorem Proving in Lean_]
-  [avigad_moura_kong-2017]
+ [avigad_moura_kong-2017]
 * [Douglas R Hofstadter, _Gödel, Escher, Bach_][Hofstadter-1979]
 
 ## Tags
@@ -129,13 +129,13 @@ In the other direction, we set up a coercion from `string` to `miustr`.
 def lchar_to_miustr : (list char) → miustr
 | [] := []
 | (c::cs) :=
-  let ms := lchar_to_miustr cs in
-  match c with
-  | 'M' := M::ms
-  | 'I' := I::ms
-  | 'U' := U::ms
-  |  _  := []
-  end
+ let ms := lchar_to_miustr cs in
+ match c with
+ | 'M' := M::ms
+ | 'I' := I::ms
+ | 'U' := U::ms
+ | _ := []
+ end
 
 instance string_coe_miustr : has_coe string miustr :=
 ⟨λ st, lchar_to_miustr st.data ⟩
@@ -162,26 +162,26 @@ inductive derivable : miustr → Prop
 
 example (h : derivable "UMI") : derivable "UMIU" :=
 begin
-  change ("UMIU" : miustr) with [U,M] ++ [I,U],
-  exact derivable.r1 h, -- Rule 1
+ change ("UMIU" : miustr) with [U,M] ++ [I,U],
+ exact derivable.r1 h, -- Rule 1
 end
 
 example (h : derivable "MIIU") : derivable "MIIUIIU" :=
 begin
-  change ("MIIUIIU" : miustr) with M :: [I,I,U] ++ [I,I,U],
-  exact derivable.r2 h, -- Rule 2
+ change ("MIIUIIU" : miustr) with M :: [I,I,U] ++ [I,I,U],
+ exact derivable.r2 h, -- Rule 2
 end
 
 example (h : derivable "UIUMIIIMMM") : derivable "UIUMUMMM" :=
 begin
-  change ("UIUMUMMM" : miustr) with [U,I,U,M] ++ U :: [M,M,M],
-  exact derivable.r3 h, -- Rule 3
+ change ("UIUMUMMM" : miustr) with [U,I,U,M] ++ U :: [M,M,M],
+ exact derivable.r3 h, -- Rule 3
 end
 
 example (h : derivable "MIMIMUUIIM") : derivable "MIMIMIIM" :=
 begin
-  change ("MIMIMIIM" : miustr) with [M,I,M,I,M] ++ [I,I,M],
-  exact derivable.r4 h, -- Rule 4
+ change ("MIMIMIIM" : miustr) with [M,I,M,I,M] ++ [I,I,M],
+ exact derivable.r4 h, -- Rule 4
 end
 
 /-!
@@ -190,27 +190,28 @@ end
 
 private lemma MIU_der : derivable "MIU":=
 begin
-  change ("MIU" :miustr) with [M] ++ [I,U],
-  apply derivable.r1, -- reduce to deriving "MI",
-  constructor, -- which is the base of the inductive construction.
+ change ("MIU" :miustr) with [M] ++ [I,U],
+ apply derivable.r1, -- reduce to deriving "MI",
+ constructor, -- which is the base of the inductive construction.
 end
 
 example : derivable "MIUIU" :=
 begin
-  change ("MIUIU" : miustr) with M :: [I,U] ++ [I,U],
-  exact derivable.r2 MIU_der, -- `"MIUIU"` can be derived as `"MIU"` can.
+ change ("MIUIU" : miustr) with M :: [I,U] ++ [I,U],
+ exact derivable.r2 MIU_der, -- `"MIUIU"` can be derived as `"MIU"` can.
 end
 
 example : derivable "MUI" :=
 begin
-  have h₂ : derivable "MII",
-  { change ("MII" : miustr) with M :: [I] ++ [I],
-    exact derivable.r2 derivable.mk, },
-  have h₃ : derivable "MIIII",
-  { change ("MIIII" : miustr) with M :: [I,I] ++ [I,I],
-    exact derivable.r2 h₂, },
-  change ("MUI" : miustr) with [M] ++ U :: [I],
-  exact derivable.r3 h₃, -- We prove our main goal using rule 3
+ have h₂ : derivable "MII",
+ { change ("MII" : miustr) with M :: [I] ++ [I],
+ exact derivable.r2 derivable.mk, },
+ have h₃ : derivable "MIIII",
+ { change ("MIIII" : miustr) with M :: [I,I] ++ [I,I],
+ exact derivable.r2 h₂, },
+ change ("MUI" : miustr) with [M] ++ U :: [I],
+ exact derivable.r3 h₃, -- We prove our main goal using rule 3
 end
 
 end miu
+

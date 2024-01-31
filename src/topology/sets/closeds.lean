@@ -38,7 +38,7 @@ variables {α}
 
 instance : set_like (closeds α) α :=
 { coe := closeds.carrier,
-  coe_injective' := λ s t h, by { cases s, cases t, congr' } }
+ coe_injective' := λ s t h, by { cases s, cases t, congr' } }
 
 lemma closed (s : closeds α) : is_closed (s : set α) := s.closed'
 
@@ -55,21 +55,21 @@ lemma gc : galois_connection closeds.closure (coe : closeds α → set α) :=
 /-- The galois coinsertion between sets and opens. -/
 def gi : galois_insertion (@closeds.closure α _) coe :=
 { choice := λ s hs, ⟨s, closure_eq_iff_is_closed.1 $ hs.antisymm subset_closure⟩,
-  gc := gc,
-  le_l_u := λ _, subset_closure,
-  choice_eq := λ s hs, set_like.coe_injective $ subset_closure.antisymm hs }
+ gc := gc,
+ le_l_u := λ _, subset_closure,
+ choice_eq := λ s hs, set_like.coe_injective $ subset_closure.antisymm hs }
 
 instance : complete_lattice (closeds α) :=
 complete_lattice.copy (galois_insertion.lift_complete_lattice gi)
-/- le  -/ _ rfl
+/- le -/ _ rfl
 /- top -/ ⟨univ, is_closed_univ⟩ rfl
 /- bot -/ ⟨∅, is_closed_empty⟩ (set_like.coe_injective closure_empty.symm)
 /- sup -/ (λ s t, ⟨s ∪ t, s.2.union t.2⟩)
-  (funext $ λ s, funext $ λ t, set_like.coe_injective (s.2.union t.2).closure_eq.symm)
+ (funext $ λ s, funext $ λ t, set_like.coe_injective (s.2.union t.2).closure_eq.symm)
 /- inf -/ (λ s t, ⟨s ∩ t, s.2.inter t.2⟩) rfl
 /- Sup -/ _ rfl
 /- Inf -/ (λ S, ⟨⋂ s ∈ S, ↑s, is_closed_bInter $ λ s _, s.2⟩)
-  (funext $ λ S, set_like.coe_injective Inf_image.symm)
+ (funext $ λ S, set_like.coe_injective Inf_image.symm)
 
 /-- The type of closed sets is inhabited, with default element the empty set. -/
 instance : inhabited (closeds α) := ⟨⊥⟩
@@ -81,22 +81,22 @@ instance : inhabited (closeds α) := ⟨⊥⟩
 @[simp, norm_cast] lemma coe_Inf {S : set (closeds α)} : (↑(Inf S) : set α) = ⋂ i ∈ S, ↑i := rfl
 
 @[simp, norm_cast] lemma coe_finset_sup (f : ι → closeds α) (s : finset ι) :
-  (↑(s.sup f) : set α) = s.sup (coe ∘ f) :=
+ (↑(s.sup f) : set α) = s.sup (coe ∘ f) :=
 map_finset_sup (⟨⟨coe, coe_sup⟩, coe_bot⟩ : sup_bot_hom (closeds α) (set α)) _ _
 
 @[simp, norm_cast] lemma coe_finset_inf (f : ι → closeds α) (s : finset ι) :
-  (↑(s.inf f) : set α) = s.inf (coe ∘ f) :=
+ (↑(s.inf f) : set α) = s.inf (coe ∘ f) :=
 map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : inf_top_hom (closeds α) (set α)) _ _
 
 lemma infi_def {ι} (s : ι → closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, is_closed_Inter $ λ i, (s i).2⟩ :=
 by { ext, simp only [infi, coe_Inf, bInter_range], refl }
 
 @[simp] lemma infi_mk {ι} (s : ι → set α) (h : ∀ i, is_closed (s i)) :
-  (⨅ i, ⟨s i, h i⟩ : closeds α) = ⟨⋂ i, s i, is_closed_Inter h⟩ :=
+ (⨅ i, ⟨s i, h i⟩ : closeds α) = ⟨⋂ i, s i, is_closed_Inter h⟩ :=
 by simp [infi_def]
 
 @[simp, norm_cast] lemma coe_infi {ι} (s : ι → closeds α) :
-  ((⨅ i, s i : closeds α) : set α) = ⋂ i, s i :=
+ ((⨅ i, s i : closeds α) : set α) = ⋂ i, s i :=
 by simp [infi_def]
 
 @[simp] lemma mem_infi {ι} {x : α} {s : ι → closeds α} : x ∈ infi s ↔ ∀ i, x ∈ s i :=
@@ -107,9 +107,9 @@ by simp_rw [Inf_eq_infi, mem_infi]
 
 instance : coframe (closeds α) :=
 { Inf := Inf,
-  infi_sup_le_sup_Inf := λ a s,
-    (set_like.coe_injective $ by simp only [coe_sup, coe_infi, coe_Inf, set.union_Inter₂]).le,
-  ..closeds.complete_lattice }
+ infi_sup_le_sup_Inf := λ a s,
+ (set_like.coe_injective $ by simp only [coe_sup, coe_infi, coe_Inf, set.union_Inter₂]).le,
+ ..closeds.complete_lattice }
 
 /-- The term of `closeds α` corresponding to a singleton. -/
 @[simps] def singleton [t1_space α] (x : α) : closeds α :=
@@ -136,43 +136,43 @@ variables (α)
 /-- `closeds.compl` as an `order_iso` to the order dual of `opens α`. -/
 @[simps] def closeds.compl_order_iso : closeds α ≃o (opens α)ᵒᵈ :=
 { to_fun := order_dual.to_dual ∘ closeds.compl,
-  inv_fun := opens.compl ∘ order_dual.of_dual,
-  left_inv := λ s, by simp [closeds.compl_compl],
-  right_inv := λ s, by simp [opens.compl_compl],
-  map_rel_iff' := λ s t, by simpa only [equiv.coe_fn_mk, function.comp_app,
-    order_dual.to_dual_le_to_dual] using compl_subset_compl }
+ inv_fun := opens.compl ∘ order_dual.of_dual,
+ left_inv := λ s, by simp [closeds.compl_compl],
+ right_inv := λ s, by simp [opens.compl_compl],
+ map_rel_iff' := λ s t, by simpa only [equiv.coe_fn_mk, function.comp_app,
+ order_dual.to_dual_le_to_dual] using compl_subset_compl }
 
 /-- `opens.compl` as an `order_iso` to the order dual of `closeds α`. -/
 @[simps] def opens.compl_order_iso : opens α ≃o (closeds α)ᵒᵈ :=
 { to_fun := order_dual.to_dual ∘ opens.compl,
-  inv_fun := closeds.compl ∘ order_dual.of_dual,
-  left_inv := λ s, by simp [opens.compl_compl],
-  right_inv := λ s, by simp [closeds.compl_compl],
-  map_rel_iff' := λ s t, by simpa only [equiv.coe_fn_mk, function.comp_app,
-    order_dual.to_dual_le_to_dual] using compl_subset_compl }
+ inv_fun := closeds.compl ∘ order_dual.of_dual,
+ left_inv := λ s, by simp [opens.compl_compl],
+ right_inv := λ s, by simp [closeds.compl_compl],
+ map_rel_iff' := λ s t, by simpa only [equiv.coe_fn_mk, function.comp_app,
+ order_dual.to_dual_le_to_dual] using compl_subset_compl }
 
 variables {α}
 
 /-- in a `t1_space`, atoms of `closeds α` are precisely the `closeds.singleton`s. -/
 lemma closeds.is_atom_iff [t1_space α] {s : closeds α} : is_atom s ↔ ∃ x, s = closeds.singleton x :=
 begin
-  have : is_atom (s : set α) ↔ is_atom s,
-  { refine closeds.gi.is_atom_iff' rfl (λ t ht, _) s,
-    obtain ⟨x, rfl⟩ := t.is_atom_iff.mp ht,
-    exact closure_singleton },
-  simpa only [← this, (s : set α).is_atom_iff, set_like.ext_iff, set.ext_iff]
+ have : is_atom (s : set α) ↔ is_atom s,
+ { refine closeds.gi.is_atom_iff' rfl (λ t ht, _) s,
+ obtain ⟨x, rfl⟩ := t.is_atom_iff.mp ht,
+ exact closure_singleton },
+ simpa only [← this, (s : set α).is_atom_iff, set_like.ext_iff, set.ext_iff]
 end
 
 /-- in a `t1_space`, coatoms of `opens α` are precisely complements of singletons:
 `(closeds.singleton x).compl`. -/
 lemma opens.is_coatom_iff [t1_space α] {s : opens α} :
-  is_coatom s ↔ ∃ x, s = (closeds.singleton x).compl :=
+ is_coatom s ↔ ∃ x, s = (closeds.singleton x).compl :=
 begin
-  rw [←s.compl_compl, ←is_atom_dual_iff_is_coatom],
-  change is_atom (closeds.compl_order_iso α s.compl) ↔ _,
-  rw [(closeds.compl_order_iso α).is_atom_iff, closeds.is_atom_iff],
-  congrm ∃ x, _,
-  exact closeds.compl_bijective.injective.eq_iff.symm,
+ rw [←s.compl_compl]; rw [ ←is_atom_dual_iff_is_coatom],
+ change is_atom (closeds.compl_order_iso α s.compl) ↔ _,
+ rw [(closeds.compl_order_iso α).is_atom_iff]; rw [ closeds.is_atom_iff],
+ congrm ∃ x, _,
+ exact closeds.compl_bijective.injective.eq_iff.symm,
 end
 
 /-! ### Clopen sets -/
@@ -186,7 +186,7 @@ namespace clopens
 
 instance : set_like (clopens α) α :=
 { coe := λ s, s.carrier,
-  coe_injective' := λ s t h, by { cases s, cases t, congr' } }
+ coe_injective' := λ s t h, by { cases s, cases t, congr' } }
 
 lemma clopen (s : clopens α) : is_clopen (s : set α) := s.clopen'
 
@@ -218,3 +218,4 @@ instance : inhabited (clopens α) := ⟨⊥⟩
 
 end clopens
 end topological_space
+

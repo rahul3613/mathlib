@@ -18,9 +18,9 @@ absolute value is compatible with the Euclidean domain structure on its domain.
 ## Main definitions
 
  * `absolute_value.is_euclidean abv` is a predicate on absolute values on `R` mapping to `S`
-    that preserve the order on `R` arising from the Euclidean domain structure.
+ that preserve the order on `R` arising from the Euclidean domain structure.
  * `absolute_value.abs_is_euclidean` shows the "standard" absolute value on `ℤ`,
-   mapping negative `x` to `-x`, is euclidean.
+ mapping negative `x` to `-x`, is euclidean.
 -/
 local infix ` ≺ `:50 := euclidean_domain.r
 
@@ -48,7 +48,7 @@ map_lt_map_iff' h
 attribute [simp] map_lt_map_iff
 
 lemma sub_mod_lt (h : abv.is_euclidean) (a : R) {b : R} (hb : b ≠ 0) :
-  abv (a % b) < abv b :=
+ abv (a % b) < abv b :=
 h.map_lt_map_iff.mpr (euclidean_domain.mod_lt a hb)
 
 end is_euclidean
@@ -63,8 +63,9 @@ open int
 /-- `abs : ℤ → ℤ` is a Euclidean absolute value -/
 protected lemma abs_is_euclidean : is_euclidean (absolute_value.abs : absolute_value ℤ ℤ) :=
 { map_lt_map_iff' := λ x y, show abs x < abs y ↔ nat_abs x < nat_abs y,
-    by rw [abs_eq_nat_abs, abs_eq_nat_abs, coe_nat_lt] }
+ by rw [abs_eq_nat_abs]; rw [ abs_eq_nat_abs]; rw [ coe_nat_lt] }
 
 end int
 
 end absolute_value
+

@@ -7,11 +7,11 @@ local attribute [instance]
 def a_to_quot {α} (R : setoid α) : has_coe α (quotient R) := ⟨quotient.mk⟩
 
 run_cmd do
-  d ← get_decl ``a_to_quot,
-  some _ ← linter.has_coe_variable.test d,
-  d ← get_decl ``coe_trans,
-  some s ← fails_quickly 3000 d,
-  guard $ "maximum class-instance resolution depth has been reached".is_prefix_of s
+ d ← get_decl ``a_to_quot,
+ some _ ← linter.has_coe_variable.test d,
+ d ← get_decl ``coe_trans,
+ some s ← fails_quickly 3000 d,
+ guard $ "maximum class-instance resolution depth has been reached".is_prefix_of s
 end
 
 -- good, because the term gets smaller in every iteration
@@ -35,3 +35,4 @@ decl ← get_decl ``int_to_a,
 some _ ← linter.has_coe_variable.test decl,
 skip
 end
+

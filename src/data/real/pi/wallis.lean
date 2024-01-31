@@ -44,73 +44,72 @@ noncomputable def W (k : ℕ) : ℝ :=
 ∏ i in range k, (2 * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))
 
 lemma W_succ (k : ℕ) :
-  W (k + 1) = W k * ((2 * k + 2) / (2 * k + 1) * ((2 * k + 2) / (2 * k + 3))) :=
+ W (k + 1) = W k * ((2 * k + 2) / (2 * k + 1) * ((2 * k + 2) / (2 * k + 3))) :=
 prod_range_succ _ _
 
 lemma W_pos (k : ℕ) : 0 < W k :=
 begin
-  induction k with k hk,
-  { unfold W, simp },
-  { rw W_succ,
-    refine mul_pos hk (mul_pos (div_pos _ _) (div_pos _ _));
-    positivity }
+ induction k with k hk,
+ { unfold W, simp },
+ { rw W_succ,
+ refine mul_pos hk (mul_pos (div_pos _ _) (div_pos _ _));
+ positivity }
 end
 
 lemma W_eq_factorial_ratio (n : ℕ) :
-  W n = (2 ^ (4 * n) * n! ^ 4) / ((2 * n)!^ 2 * (2 * n + 1)) :=
+ W n = (2 ^ (4 * n) * n! ^ 4) / ((2 * n)!^ 2 * (2 * n + 1)) :=
 begin
-  induction n with n IH,
-  { simp only [W, prod_range_zero, nat.factorial_zero, mul_zero, pow_zero, algebra_map.coe_one,
-      one_pow, mul_one, algebra_map.coe_zero, zero_add, div_self, ne.def, one_ne_zero,
-      not_false_iff] },
-  { unfold W at ⊢ IH,
-    rw [prod_range_succ, IH, _root_.div_mul_div_comm, _root_.div_mul_div_comm],
-    refine (div_eq_div_iff _ _).mpr _,
-    any_goals { exact ne_of_gt (by positivity) },
-    simp_rw [nat.mul_succ, nat.factorial_succ, pow_succ],
-    push_cast,
-    ring_nf }
+ induction n with n IH,
+ { simp only [W, prod_range_zero, nat.factorial_zero, mul_zero, pow_zero, algebra_map.coe_one,
+ one_pow, mul_one, algebra_map.coe_zero, zero_add, div_self, ne.def, one_ne_zero,
+ not_false_iff] },
+ { unfold W at ⊢ IH,
+ rw [prod_range_succ]; rw [ IH]; rw [ _root_.div_mul_div_comm]; rw [ _root_.div_mul_div_comm],
+ refine (div_eq_div_iff _ _).mpr _,
+ any_goals { exact ne_of_gt (by positivity) },
+ simp_rw [nat.mul_succ, nat.factorial_succ, pow_succ],
+ push_cast,
+ ring_nf }
 end
 
 lemma W_eq_integral_sin_pow_div_integral_sin_pow (k : ℕ) :
-  (π/2)⁻¹ * W k = (∫ (x : ℝ) in 0..π, sin x ^ (2 * k + 1)) / ∫ (x : ℝ) in 0..π, sin x ^ (2 * k) :=
+ (π/2)⁻¹ * W k = (∫ (x : ℝ) in 0..π, sin x ^ (2 * k + 1)) / ∫ (x : ℝ) in 0..π, sin x ^ (2 * k) :=
 begin
-  rw [integral_sin_pow_even, integral_sin_pow_odd, mul_div_mul_comm, ←prod_div_distrib, inv_div],
-  simp_rw [div_div_div_comm, div_div_eq_mul_div, mul_div_assoc],
-  refl,
+ rw [integral_sin_pow_even]; rw [ integral_sin_pow_odd]; rw [ mul_div_mul_comm]; rw [ ←prod_div_distrib]; rw [ inv_div],
+ simp_rw [div_div_div_comm, div_div_eq_mul_div, mul_div_assoc],
+ refl,
 end
 
 lemma W_le (k : ℕ) : W k ≤ π / 2 :=
 begin
-  rw [←div_le_one pi_div_two_pos, div_eq_inv_mul],
-  rw [W_eq_integral_sin_pow_div_integral_sin_pow, div_le_one (integral_sin_pow_pos _)],
-  apply integral_sin_pow_succ_le,
+ rw [←div_le_one pi_div_two_pos]; rw [ div_eq_inv_mul],
+ rw [W_eq_integral_sin_pow_div_integral_sin_pow]; rw [ div_le_one (integral_sin_pow_pos _)],
+ apply integral_sin_pow_succ_le,
 end
 
 lemma le_W (k : ℕ) : ((2:ℝ) * k + 1) / (2 * k + 2) * (π / 2) ≤ W k :=
 begin
-  rw [←le_div_iff pi_div_two_pos, div_eq_inv_mul (W k) _],
-  rw [W_eq_integral_sin_pow_div_integral_sin_pow, le_div_iff (integral_sin_pow_pos _)],
-  convert integral_sin_pow_succ_le (2 * k + 1),
-  rw integral_sin_pow (2 * k),
-  simp only [sin_zero, zero_pow', ne.def, nat.succ_ne_zero, not_false_iff, zero_mul, sin_pi,
-    tsub_zero, nat.cast_mul, nat.cast_bit0, algebra_map.coe_one, zero_div, zero_add],
+ rw [←le_div_iff pi_div_two_pos]; rw [ div_eq_inv_mul (W k) _],
+ rw [W_eq_integral_sin_pow_div_integral_sin_pow]; rw [ le_div_iff (integral_sin_pow_pos _)],
+ convert integral_sin_pow_succ_le (2 * k + 1),
+ rw integral_sin_pow (2 * k),
+ simp only [sin_zero, zero_pow', ne.def, nat.succ_ne_zero, not_false_iff, zero_mul, sin_pi,
+ tsub_zero, nat.cast_mul, nat.cast_bit0, algebra_map.coe_one, zero_div, zero_add],
 end
 
 lemma tendsto_W_nhds_pi_div_two : tendsto W at_top (𝓝 $ π / 2) :=
 begin
-  refine tendsto_of_tendsto_of_tendsto_of_le_of_le _ tendsto_const_nhds le_W W_le,
-  have : 𝓝 (π / 2) = 𝓝 ((1 - 0) * (π / 2)), by rw [sub_zero, one_mul], rw this,
-  refine tendsto.mul _ tendsto_const_nhds,
-  have h : ∀ (n:ℕ), ((2:ℝ) * n + 1) / (2 * n + 2) = 1 - 1 / (2 * n + 2),
-  { intro n,
-    rw [sub_div' _ _ _ (ne_of_gt (add_pos_of_nonneg_of_pos
-      (mul_nonneg ((two_pos : 0 < (2:ℝ)).le) (nat.cast_nonneg _)) two_pos)), one_mul],
-    congr' 1, ring },
-  simp_rw h,
-  refine (tendsto_const_nhds.div_at_top _).const_sub _,
-  refine tendsto.at_top_add _ tendsto_const_nhds,
-  exact tendsto_coe_nat_at_top_at_top.const_mul_at_top two_pos
+ refine tendsto_of_tendsto_of_tendsto_of_le_of_le _ tendsto_const_nhds le_W W_le,
+ have : 𝓝 (π / 2) = 𝓝 ((1 - 0) * (π / 2)), by rw [sub_zero]; rw [ one_mul], rw this,
+ refine tendsto.mul _ tendsto_const_nhds,
+ have h : ∀ (n:ℕ), ((2:ℝ) * n + 1) / (2 * n + 2) = 1 - 1 / (2 * n + 2),
+ { intro n,
+ rw [sub_div' _ _ _ (ne_of_gt (add_pos_of_nonneg_of_pos (mul_nonneg ((two_pos : 0 < (2:ℝ)).le) (nat.cast_nonneg _)) two_pos))]; rw [ one_mul],
+ congr' 1, ring },
+ simp_rw h,
+ refine (tendsto_const_nhds.div_at_top _).const_sub _,
+ refine tendsto.at_top_add _ tendsto_const_nhds,
+ exact tendsto_coe_nat_at_top_at_top.const_mul_at_top two_pos
 end
 
 end wallis
@@ -119,7 +118,8 @@ end real
 
 /-- Wallis' product formula for `π / 2`. -/
 theorem real.tendsto_prod_pi_div_two :
-  tendsto
-  (λ k, ∏ i in range k, (((2:ℝ) * i + 2) / (2 * i + 1)) * ((2 * i + 2) / (2 * i + 3)))
-  at_top (𝓝 (π/2)) :=
+ tendsto
+ (λ k, ∏ i in range k, (((2:ℝ) * i + 2) / (2 * i + 1)) * ((2 * i + 2) / (2 * i + 3)))
+ at_top (𝓝 (π/2)) :=
 real.wallis.tendsto_W_nhds_pi_div_two
+

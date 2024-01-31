@@ -41,12 +41,12 @@ lemma is_conj_comm {g h : α} : is_conj g h ↔ is_conj h g :=
 
 @[simp] lemma is_conj_iff_eq {α : Type*} [comm_monoid α] {a b : α} : is_conj a b ↔ a = b :=
 ⟨λ ⟨c, hc⟩, begin
-  rw [semiconj_by, mul_comm, ← units.mul_inv_eq_iff_eq_mul, mul_assoc, c.mul_inv, mul_one] at hc,
-  exact hc,
+ rw [semiconj_by] at hc; rw [ mul_comm] at hc; rw [ ← units.mul_inv_eq_iff_eq_mul] at hc; rw [ mul_assoc] at hc; rw [ c.mul_inv] at hc; rw [ mul_one] at hc,
+ exact hc,
 end, λ h, by rw h⟩
 
 protected lemma monoid_hom.map_is_conj (f : α →* β) {a b : α} : is_conj a b → is_conj (f a) (f b)
-| ⟨c, hc⟩ := ⟨units.map f c, by rw [units.coe_map, semiconj_by, ← f.map_mul, hc.eq, f.map_mul]⟩
+| ⟨c, hc⟩ := ⟨units.map f c, by rw [units.coe_map]; rw [ semiconj_by]; rw [ ← f.map_mul]; rw [ hc.eq]; rw [ f.map_mul]⟩
 
 end monoid
 
@@ -57,7 +57,7 @@ variables [cancel_monoid α]
 -- not duplicating code (these lemmas also hold for `left_cancel_monoids`) we leave these
 -- not generalised.
 
-@[simp] lemma is_conj_one_right {a : α} : is_conj 1 a  ↔ a = 1 :=
+@[simp] lemma is_conj_one_right {a : α} : is_conj 1 a ↔ a = 1 :=
 ⟨λ ⟨c, hc⟩, mul_right_cancel (hc.symm.trans ((mul_one _).trans (one_mul _).symm)), λ h, by rw [h]⟩
 
 @[simp] lemma is_conj_one_left {a : α} : is_conj a 1 ↔ a = 1 :=
@@ -71,9 +71,9 @@ section group
 variables [group α]
 
 @[simp] lemma is_conj_iff {a b : α} :
-  is_conj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
+ is_conj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
 ⟨λ ⟨c, hc⟩, ⟨c, mul_inv_eq_iff_eq_mul.2 hc⟩, λ ⟨c, hc⟩,
-  ⟨⟨c, c⁻¹, mul_inv_self c, inv_mul_self c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
+ ⟨⟨c, c⁻¹, mul_inv_self c, inv_mul_self c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
 
 @[simp] lemma conj_inv {a b : α} : (b * a * b⁻¹)⁻¹ = b * a⁻¹ * b⁻¹ :=
 ((mul_aut.conj b).map_inv a).symm
@@ -83,16 +83,16 @@ variables [group α]
 
 @[simp] lemma conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * (b ^ i) * a⁻¹ :=
 begin
-  induction i with i hi,
-  { simp },
-  { simp [pow_succ, hi] }
+ induction i with i hi,
+ { simp },
+ { simp [pow_succ, hi] }
 end
 
 @[simp] lemma conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * (b ^ i) * a⁻¹ :=
 begin
-  induction i,
-  { simp },
-  { simp [zpow_neg_succ_of_nat, conj_pow] }
+ induction i,
+ { simp },
+ { simp [zpow_neg_succ_of_nat, conj_pow] }
 end
 
 lemma conj_injective {x : α} : function.injective (λ (g : α), x * g * x⁻¹) :=
@@ -101,15 +101,15 @@ lemma conj_injective {x : α} : function.injective (λ (g : α), x * g * x⁻¹)
 end group
 
 @[simp] lemma is_conj_iff₀ [group_with_zero α] {a b : α} :
-  is_conj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
+ is_conj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
 ⟨λ ⟨c, hc⟩, ⟨c, begin
-    rw [← units.coe_inv, units.mul_inv_eq_iff_eq_mul],
-    exact ⟨c.ne_zero, hc⟩,
-  end⟩, λ ⟨c, c0, hc⟩,
-  ⟨units.mk0 c c0, begin
-    rw [semiconj_by, ← units.mul_inv_eq_iff_eq_mul, units.coe_inv, units.coe_mk0],
-    exact hc
-  end⟩⟩
+ rw [← units.coe_inv]; rw [ units.mul_inv_eq_iff_eq_mul],
+ exact ⟨c.ne_zero, hc⟩,
+ end⟩, λ ⟨c, c0, hc⟩,
+ ⟨units.mk0 c c0, begin
+ rw [semiconj_by]; rw [ ← units.mul_inv_eq_iff_eq_mul]; rw [ units.coe_inv]; rw [ units.coe_mk0],
+ exact hc
+ end⟩⟩
 
 namespace is_conj
 /- This small quotient API is largely copied from the API of `associates`;
@@ -139,7 +139,7 @@ protected def mk {α : Type*} [monoid α] (a : α) : conj_classes α :=
 instance : inhabited (conj_classes α) := ⟨⟦1⟧⟩
 
 theorem mk_eq_mk_iff_is_conj {a b : α} :
-  conj_classes.mk a = conj_classes.mk b ↔ is_conj a b :=
+ conj_classes.mk a = conj_classes.mk b ↔ is_conj a b :=
 iff.intro quotient.exact quot.sound
 
 theorem quotient_mk_eq_mk (a : α) : ⟦ a ⟧ = conj_classes.mk a := rfl
@@ -147,10 +147,10 @@ theorem quotient_mk_eq_mk (a : α) : ⟦ a ⟧ = conj_classes.mk a := rfl
 theorem quot_mk_eq_mk (a : α) : quot.mk setoid.r a = conj_classes.mk a := rfl
 
 theorem forall_is_conj {p : conj_classes α → Prop} :
-  (∀a, p a) ↔ (∀a, p (conj_classes.mk a)) :=
+ (∀a, p a) ↔ (∀a, p (conj_classes.mk a)) :=
 iff.intro
-  (assume h a, h _)
-  (assume h a, quotient.induction_on a h)
+ (assume h a, h _)
+ (assume h a, quotient.induction_on a h)
 
 theorem mk_surjective : function.surjective (@conj_classes.mk α _) :=
 forall_is_conj.2 (λ a, ⟨a, rfl⟩)
@@ -167,12 +167,12 @@ def map (f : α →* β) : conj_classes α → conj_classes β :=
 quotient.lift (conj_classes.mk ∘ f) (λ a b ab, mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab))
 
 lemma map_surjective {f : α →* β} (hf : function.surjective f) :
-  function.surjective (conj_classes.map f) :=
+ function.surjective (conj_classes.map f) :=
 begin
-  intros b,
-  obtain ⟨b, rfl⟩ := conj_classes.mk_surjective b,
-  obtain ⟨a, rfl⟩ := hf b,
-  exact ⟨conj_classes.mk a, rfl⟩,
+ intros b,
+ obtain ⟨b, rfl⟩ := conj_classes.mk_surjective b,
+ obtain ⟨a, rfl⟩ := hf b,
+ exact ⟨conj_classes.mk a, rfl⟩,
 end
 
 /--
@@ -183,7 +183,7 @@ The conditions for this rule are as follows:
  * a class `C` has instances `instT : C T` and `instT' : C T'`
  * types `T` and `T'` are both specializations of another type `S`
  * the parameters supplied to `S` to produce `T` are not (fully) determined by `instT`,
-   instead they have to be found by instance search
+ instead they have to be found by instance search
 If those conditions hold, the instance `instT` should be assigned lower priority.
 
 For example, suppose the search for an instance of `decidable_eq (multiset α)` tries the
@@ -223,11 +223,11 @@ lemma mk_bijective : function.bijective (@conj_classes.mk α _) :=
 /-- The bijection between a `comm_group` and its `conj_classes`. -/
 def mk_equiv : α ≃ conj_classes α :=
 ⟨conj_classes.mk, quotient.lift id (λ (a : α) b, is_conj_iff_eq.1), quotient.lift_mk _ _,
-  begin
-    rw [function.right_inverse, function.left_inverse, forall_is_conj],
-    intro x,
-    rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, quotient.lift_mk, id.def],
-  end⟩
+ begin
+ rw [function.right_inverse]; rw [ function.left_inverse]; rw [ forall_is_conj],
+ intro x,
+ rw [← quotient_mk_eq_mk]; rw [ ← quotient_mk_eq_mk]; rw [ quotient.lift_mk]; rw [ id.def],
+ end⟩
 
 end comm_monoid
 end conj_classes
@@ -242,14 +242,14 @@ def conjugates_of (a : α) : set α := {b | is_conj a b}
 lemma mem_conjugates_of_self {a : α} : a ∈ conjugates_of a := is_conj.refl _
 
 lemma is_conj.conjugates_of_eq {a b : α} (ab : is_conj a b) :
-  conjugates_of a = conjugates_of b :=
+ conjugates_of a = conjugates_of b :=
 set.ext (λ g, ⟨λ ag, (ab.symm).trans ag, λ bg, ab.trans bg⟩)
 
 lemma is_conj_iff_conjugates_of_eq {a b : α} :
-  is_conj a b ↔ conjugates_of a = conjugates_of b :=
+ is_conj a b ↔ conjugates_of a = conjugates_of b :=
 ⟨is_conj.conjugates_of_eq, λ h, begin
-  have ha := mem_conjugates_of_self,
-  rwa ← h at ha,
+ have ha := mem_conjugates_of_self,
+ rwa ← h at ha,
 end⟩
 
 end monoid
@@ -267,19 +267,20 @@ quotient.lift conjugates_of (λ (a : α) b ab, is_conj.conjugates_of_eq ab)
 lemma mem_carrier_mk {a : α} : a ∈ carrier (conj_classes.mk a) := is_conj.refl _
 
 lemma mem_carrier_iff_mk_eq {a : α} {b : conj_classes α} :
-  a ∈ carrier b ↔ conj_classes.mk a = b :=
+ a ∈ carrier b ↔ conj_classes.mk a = b :=
 begin
-  revert b,
-  rw forall_is_conj,
-  intro b,
-  rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, quotient.lift_mk],
-  refl,
+ revert b,
+ rw forall_is_conj,
+ intro b,
+ rw [carrier]; rw [ eq_comm]; rw [ mk_eq_mk_iff_is_conj]; rw [ ← quotient_mk_eq_mk]; rw [ quotient.lift_mk],
+ refl,
 end
 
 lemma carrier_eq_preimage_mk {a : conj_classes α} :
-  a.carrier = conj_classes.mk ⁻¹' {a} :=
+ a.carrier = conj_classes.mk ⁻¹' {a} :=
 set.ext (λ x, mem_carrier_iff_mk_eq)
 
 end conj_classes
 
 assert_not_exists multiset
+

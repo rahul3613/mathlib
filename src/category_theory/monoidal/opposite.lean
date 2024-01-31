@@ -52,8 +52,8 @@ attribute [irreducible] monoidal_opposite
 
 instance monoidal_opposite_category [I : category.{v₁} C] : category Cᴹᵒᵖ :=
 { hom := λ X Y, unmop X ⟶ unmop Y,
-  id := λ X, 𝟙 (unmop X),
-  comp := λ X Y Z f g, f ≫ g, }
+ id := λ X, 𝟙 (unmop X),
+ comp := λ X Y Z f g, f ≫ g, }
 
 end monoidal_opposite
 
@@ -72,22 +72,22 @@ def quiver.hom.unmop {X Y : Cᴹᵒᵖ} (f : X ⟶ Y) : unmop X ⟶ unmop Y := f
 namespace category_theory
 
 lemma mop_inj {X Y : C} :
-  function.injective (quiver.hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) :=
+ function.injective (quiver.hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) :=
 λ _ _ H, congr_arg quiver.hom.unmop H
 
 lemma unmop_inj {X Y : Cᴹᵒᵖ} :
-  function.injective (quiver.hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) :=
+ function.injective (quiver.hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) :=
 λ _ _ H, congr_arg quiver.hom.mop H
 
 @[simp] lemma unmop_mop {X Y : C} {f : X ⟶ Y} : f.mop.unmop = f := rfl
 @[simp] lemma mop_unmop {X Y : Cᴹᵒᵖ} {f : X ⟶ Y} : f.unmop.mop = f := rfl
 
 @[simp] lemma mop_comp {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} :
-  (f ≫ g).mop = f.mop ≫ g.mop := rfl
+ (f ≫ g).mop = f.mop ≫ g.mop := rfl
 @[simp] lemma mop_id {X : C} : (𝟙 X).mop = 𝟙 (mop X) := rfl
 
 @[simp] lemma unmop_comp {X Y Z : Cᴹᵒᵖ} {f : X ⟶ Y} {g : Y ⟶ Z} :
-  (f ≫ g).unmop = f.unmop ≫ g.unmop := rfl
+ (f ≫ g).unmop = f.unmop ≫ g.unmop := rfl
 @[simp] lemma unmop_id {X : Cᴹᵒᵖ} : (𝟙 X).unmop = 𝟙 (unmop X) := rfl
 
 @[simp] lemma unmop_id_mop {X : C} : (𝟙 (mop X)).unmop = 𝟙 X := rfl
@@ -101,9 +101,9 @@ variables {X Y : C}
 @[simps]
 def mop (f : X ≅ Y) : mop X ≅ mop Y :=
 { hom := f.hom.mop,
-  inv := f.inv.mop,
-  hom_inv_id' := unmop_inj f.hom_inv_id,
-  inv_hom_id' := unmop_inj f.inv_hom_id }
+ inv := f.inv.mop,
+ hom_inv_id' := unmop_inj f.hom_inv_id,
+ inv_hom_id' := unmop_inj f.inv_hom_id }
 
 end iso
 
@@ -113,34 +113,35 @@ open opposite monoidal_category
 
 instance monoidal_category_op : monoidal_category Cᵒᵖ :=
 { tensor_obj := λ X Y, op (unop X ⊗ unop Y),
-  tensor_hom := λ X₁ Y₁ X₂ Y₂ f g, (f.unop ⊗ g.unop).op,
-  tensor_unit := op (𝟙_ C),
-  associator := λ X Y Z, (α_ (unop X) (unop Y) (unop Z)).symm.op,
-  left_unitor := λ X, (λ_ (unop X)).symm.op,
-  right_unitor := λ X, (ρ_ (unop X)).symm.op,
-  associator_naturality' := by { intros, apply quiver.hom.unop_inj, simp, },
-  left_unitor_naturality' := by { intros, apply quiver.hom.unop_inj, simp, },
-  right_unitor_naturality' := by { intros, apply quiver.hom.unop_inj, simp, },
-  triangle' := by { intros, apply quiver.hom.unop_inj, coherence, },
-  pentagon' := by { intros, apply quiver.hom.unop_inj, coherence, }, }
+ tensor_hom := λ X₁ Y₁ X₂ Y₂ f g, (f.unop ⊗ g.unop).op,
+ tensor_unit := op (𝟙_ C),
+ associator := λ X Y Z, (α_ (unop X) (unop Y) (unop Z)).symm.op,
+ left_unitor := λ X, (λ_ (unop X)).symm.op,
+ right_unitor := λ X, (ρ_ (unop X)).symm.op,
+ associator_naturality' := by { intros, apply quiver.hom.unop_inj, simp, },
+ left_unitor_naturality' := by { intros, apply quiver.hom.unop_inj, simp, },
+ right_unitor_naturality' := by { intros, apply quiver.hom.unop_inj, simp, },
+ triangle' := by { intros, apply quiver.hom.unop_inj, coherence, },
+ pentagon' := by { intros, apply quiver.hom.unop_inj, coherence, }, }
 
 lemma op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) := rfl
 lemma op_tensor_unit : (𝟙_ Cᵒᵖ) = op (𝟙_ C) := rfl
 
 instance monoidal_category_mop : monoidal_category Cᴹᵒᵖ :=
 { tensor_obj := λ X Y, mop (unmop Y ⊗ unmop X),
-  tensor_hom := λ X₁ Y₁ X₂ Y₂ f g, (g.unmop ⊗ f.unmop).mop,
-  tensor_unit := mop (𝟙_ C),
-  associator := λ X Y Z, (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop,
-  left_unitor := λ X, (ρ_ (unmop X)).mop,
-  right_unitor := λ X, (λ_ (unmop X)).mop,
-  associator_naturality' := by { intros, apply unmop_inj, simp, },
-  left_unitor_naturality' := by { intros, apply unmop_inj, simp, },
-  right_unitor_naturality' := by { intros, apply unmop_inj, simp, },
-  triangle' := by { intros, apply unmop_inj, coherence, },
-  pentagon' := by { intros, apply unmop_inj, coherence, }, }
+ tensor_hom := λ X₁ Y₁ X₂ Y₂ f g, (g.unmop ⊗ f.unmop).mop,
+ tensor_unit := mop (𝟙_ C),
+ associator := λ X Y Z, (α_ (unmop Z) (unmop Y) (unmop X)).symm.mop,
+ left_unitor := λ X, (ρ_ (unmop X)).mop,
+ right_unitor := λ X, (λ_ (unmop X)).mop,
+ associator_naturality' := by { intros, apply unmop_inj, simp, },
+ left_unitor_naturality' := by { intros, apply unmop_inj, simp, },
+ right_unitor_naturality' := by { intros, apply unmop_inj, simp, },
+ triangle' := by { intros, apply unmop_inj, coherence, },
+ pentagon' := by { intros, apply unmop_inj, coherence, }, }
 
 lemma mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) := rfl
 lemma mop_tensor_unit : (𝟙_ Cᴹᵒᵖ) = mop (𝟙_ C) := rfl
 
 end category_theory
+

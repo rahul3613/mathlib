@@ -40,26 +40,27 @@ If a functor preserves span and cospan, then it preserves images.
 @[simps] def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
 let aux1 : strong_epi_mono_factorisation (L.map f) :=
 { I := L.obj (limits.image f),
-  m := L.map $ limits.image.ι _,
-  m_mono := preserves_mono_of_preserves_limit _ _,
-  e := L.map $ factor_thru_image _,
-  e_strong_epi := @@strong_epi_of_epi _ _ _ $ preserves_epi_of_preserves_colimit L _,
-  fac' := by rw [←L.map_comp, limits.image.fac] } in
+ m := L.map $ limits.image.ι _,
+ m_mono := preserves_mono_of_preserves_limit _ _,
+ e := L.map $ factor_thru_image _,
+ e_strong_epi := @@strong_epi_of_epi _ _ _ $ preserves_epi_of_preserves_colimit L _,
+ fac' := by rw [←L.map_comp]; rw [ limits.image.fac] } in
 is_image.iso_ext (image.is_image (L.map f)) aux1.to_mono_is_image
 
 @[reassoc] lemma factor_thru_image_comp_hom {X Y : A} (f : X ⟶ Y) :
-  factor_thru_image (L.map f) ≫ (iso L f).hom =
-  L.map (factor_thru_image f) :=
+ factor_thru_image (L.map f) ≫ (iso L f).hom =
+ L.map (factor_thru_image f) :=
 by simp
 
 @[reassoc] lemma hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) :
-  (iso L f).hom ≫ L.map (image.ι f) = image.ι (L.map f) :=
+ (iso L f).hom ≫ L.map (image.ι f) = image.ι (L.map f) :=
 by simp
 
 @[reassoc] lemma inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) :
-  (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) :=
+ (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) :=
 by simp
 
 end preserves_image
 
 end category_theory
+

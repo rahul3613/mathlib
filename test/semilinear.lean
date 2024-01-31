@@ -13,14 +13,14 @@ The implementation of conjugate-linear maps in mathlib is designed to have a few
 properties:
 
 1. A conjugate-linear map with respect to the ring `ℝ` (or any other ring given the "trivial"
-  `star_ring` instance) is *definitionally* a plain linear map; that is, the type is the same.
+ `star_ring` instance) is *definitionally* a plain linear map; that is, the type is the same.
 
 2. The composition of two conjugate-linear maps is *definitionally* a plain linear map.
 
 3. The composition of a plain linear map and a conjugate-linear map is conjugate-linear.
 
 4. The inverse of a conjugate-linear equivalence is *definitionally* a conjugate-linear
-  equivalence.
+ equivalence.
 
 This file contains tests to make sure that future refactors do not lose these definitional
 properties.
@@ -55,3 +55,4 @@ example (f : M →ₗ⋆[R] M₂) (g : M₂ →ₗ[R] M₃) : M →ₗ⋆[R] M�
 example (f : M ≃ₗ⋆[R] M₂) : M₂ ≃ₗ⋆[R] M := f.symm
 
 end star_ring
+

@@ -33,3 +33,4 @@ lemma with_zero_unit_not_char_zero : ¬ char_zero (with_zero unit) :=
 λ ⟨h⟩, h.ne (by simp : 1 + 1 ≠ 0 + 1) (by simp)
 
 end counterexample
+

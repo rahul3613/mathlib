@@ -14,7 +14,7 @@ by apply_rules [add_le_add, mul_le_mul_of_nonneg_right]
 @[user_attribute]
 meta def mono_rules : user_attribute :=
 { name := `mono_rules,
-  descr := "lemmas usable to prove monotonicity" }
+ descr := "lemmas usable to prove monotonicity" }
 attribute [mono_rules] add_le_add mul_le_mul_of_nonneg_right
 
 example {a b c d e : nat} (h1 : a ≤ b) (h2 : c ≤ d) (h3 : 0 ≤ e) :
@@ -28,7 +28,7 @@ by apply_rules with mono_rules
 -- test that metavariables created for implicit arguments don't get stuck
 example (P : ℕ → Type) (f : Π {n : ℕ}, P n → P (n + 1)) (g : P 0) : P 2 :=
 begin
-  apply_rules [f, g],
+ apply_rules [f, g],
 end
 
 /-
@@ -39,7 +39,7 @@ After #13227 there is little chance of ambiguity here, but this is still a valid
 @[user_attribute]
 meta def p_rules_attr : user_attribute :=
 { name := `p_rules,
-  descr := "testing" }
+ descr := "testing" }
 
 constant P : ℕ → Prop
 
@@ -58,3 +58,4 @@ open nat
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/namespace.20affects.20behaviour.20of.20.60apply_list_expr.60
 example {x y : ℤ} (n : ℕ) (h1 : x < y) (h2 : 0 ≤ x) (h3 : 0 < n) : x ^ n < y ^ n :=
 by apply_rules with p_rules
+

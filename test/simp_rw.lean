@@ -19,7 +19,7 @@ example (f : ℕ → ℕ) {a b c : ℕ} (ha : f b = a) (hc : f b = c) : a = c :=
 
 -- `simp_rw` performs rewrites in the given order (`simp` fails on this example):
 example {α β : Type} {f : α → β} {t : set β} :
-  (∀ s, f '' s ⊆ t) = ∀ s : set α, ∀ x ∈ s, x ∈ f ⁻¹' t :=
+ (∀ s, f '' s ⊆ t) = ∀ s : set α, ∀ x ∈ s, x ∈ f ⁻¹' t :=
 by simp_rw [set.image_subset_iff, set.subset_def]
 
 -- `simp_rw` applies rewrite rules multiple times:
@@ -32,8 +32,9 @@ by {simp_rw [add_comm a b] at h, exact h}
 example (p : ℕ → Prop) (a b : ℕ) (h : p (a + b)) : p (b + a) :=
 by {simp_rw [add_comm b a] at ⊢, exact h}
 -- or at multiple assumptions:
-example (p : ℕ → Prop) (a b : ℕ) (h₁ : p (b + a) → p (a + b))  (h₂ : p (a + b)) : p (b + a) :=
+example (p : ℕ → Prop) (a b : ℕ) (h₁ : p (b + a) → p (a + b)) (h₂ : p (a + b)) : p (b + a) :=
 by {simp_rw [add_comm a b] at h₁ h₂, exact h₁ h₂}
 -- or everywhere:
-example (p : ℕ → Prop) (a b : ℕ) (h₁ : p (b + a) → p (a + b))  (h₂ : p (a + b)) : p (a + b) :=
+example (p : ℕ → Prop) (a b : ℕ) (h₁ : p (b + a) → p (a + b)) (h₂ : p (a + b)) : p (a + b) :=
 by {simp_rw [add_comm a b] at *, exact h₁ h₂}
+

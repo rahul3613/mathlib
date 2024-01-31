@@ -42,9 +42,9 @@ def cont_mdiff_map := {f : M → M' // cont_mdiff I I' n f}
 @[reducible] def smooth_map := cont_mdiff_map I I' M M' ⊤
 
 localized "notation (name := cont_mdiff_map) `C^` n `⟮` I `, ` M `; ` I' `, ` M' `⟯` :=
-  cont_mdiff_map I I' M M' n" in manifold
+ cont_mdiff_map I I' M M' n" in manifold
 localized "notation (name := cont_mdiff_map.self) `C^` n `⟮` I `, ` M `; ` k `⟯` :=
-  cont_mdiff_map I (model_with_corners_self k k) M k n" in manifold
+ cont_mdiff_map I (model_with_corners_self k k) M k n" in manifold
 
 open_locale manifold
 
@@ -54,23 +54,23 @@ variables {I} {I'} {M} {M'} {n}
 
 instance fun_like : fun_like C^n⟮I, M; I', M'⟯ M (λ _, M') :=
 { coe := subtype.val,
-  coe_injective' := subtype.coe_injective }
+ coe_injective' := subtype.coe_injective }
 
 protected lemma cont_mdiff (f : C^n⟮I, M; I', M'⟯) :
-  cont_mdiff I I' n f := f.prop
+ cont_mdiff I I' n f := f.prop
 
 protected lemma smooth (f : C^∞⟮I, M; I', M'⟯) :
-  smooth I I' f := f.prop
+ smooth I I' f := f.prop
 
 instance : has_coe C^n⟮I, M; I', M'⟯ C(M, M') :=
 ⟨λ f, ⟨f, f.cont_mdiff.continuous⟩⟩
 
 attribute [to_additive_ignore_args 21] cont_mdiff_map
-  cont_mdiff_map.fun_like cont_mdiff_map.continuous_map.has_coe
+ cont_mdiff_map.fun_like cont_mdiff_map.continuous_map.has_coe
 variables {f g : C^n⟮I, M; I', M'⟯}
 
 @[simp] lemma coe_fn_mk (f : M → M') (hf : cont_mdiff I I' n f) :
-  ((by exact subtype.mk f hf : C^n⟮I, M; I', M'⟯) : M → M') = f :=
+ ((by exact subtype.mk f hf : C^n⟮I, M; I', M'⟯) : M → M') = f :=
 rfl
 
 lemma coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g :=
@@ -81,8 +81,8 @@ by cases f; cases g; congr'; exact funext h
 
 instance : continuous_map_class C^n⟮I, M; I', M'⟯ M M' :=
 { coe := (λ f, ⇑f),
-  coe_injective' := coe_inj,
-  map_continuous := λ f, f.cont_mdiff.continuous }
+ coe_injective' := coe_inj,
+ map_continuous := λ f, f.cont_mdiff.continuous }
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ := ⟨id, cont_mdiff_id⟩
@@ -90,10 +90,10 @@ def id : C^n⟮I, M; I, M⟯ := ⟨id, cont_mdiff_id⟩
 /-- The composition of smooth maps, as a smooth map. -/
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯ :=
 { val := λ a, f (g a),
-  property := f.cont_mdiff.comp g.cont_mdiff, }
+ property := f.cont_mdiff.comp g.cont_mdiff, }
 
 @[simp] lemma comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (x : M) :
-  f.comp g x = f (g x) := rfl
+ f.comp g x = f (g x) := rfl
 
 instance [inhabited M'] : inhabited C^n⟮I, M; I', M'⟯ :=
 ⟨⟨λ _, default, cont_mdiff_const⟩⟩
@@ -114,5 +114,6 @@ def prod_mk (f : C^n⟮J, N; I, M⟯) (g : C^n⟮J, N; I', M'⟯) : C^n⟮J, N; 
 end cont_mdiff_map
 
 instance continuous_linear_map.has_coe_to_cont_mdiff_map :
-  has_coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
+ has_coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
 ⟨λ f, ⟨f.to_fun, f.cont_mdiff⟩⟩
+

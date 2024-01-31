@@ -48,3 +48,4 @@ class my_class (M : Type*) :=
 
 instance {M : Type*} [fintype M] [decidable_eq M] : fintype (my_class M) :=
 by tactic.mk_fintype_instance
+

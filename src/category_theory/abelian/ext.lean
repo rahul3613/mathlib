@@ -33,7 +33,7 @@ noncomputable theory
 open category_theory
 
 variables (R : Type*) [ring R] (C : Type*) [category C] [abelian C] [linear R C]
-  [enough_projectives C]
+ [enough_projectives C]
 
 /--
 `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
@@ -43,35 +43,35 @@ variables (R : Type*) [ring R] (C : Type*) [category C] [abelian C] [linear R C]
 def Ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ Module R :=
 functor.flip
 { obj := λ Y, (((linear_yoneda R C).obj Y).right_op.left_derived n).left_op,
-  map := λ Y Y' f, (nat_trans.left_derived ((linear_yoneda R C).map f).right_op n).left_op,
-  map_id' := begin
-    intros X,
-    ext Y : 2,
-    dsimp only [nat_trans.id_app, nat_trans.left_op_app,
-      nat_trans.right_op_app, functor.left_op_obj, functor.right_op_obj],
-    rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id],
-    refl,
-  end,
-  map_comp' := begin
-    intros X Y Z f g,
-    rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp],
-    refl,
-  end }.
+ map := λ Y Y' f, (nat_trans.left_derived ((linear_yoneda R C).map f).right_op n).left_op,
+ map_id' := begin
+ intros X,
+ ext Y : 2,
+ dsimp only [nat_trans.id_app, nat_trans.left_op_app,
+ nat_trans.right_op_app, functor.left_op_obj, functor.right_op_obj],
+ rw [(linear_yoneda R C).map_id]; rw [ ← unop_id]; rw [ nat_trans.right_op_id]; rw [ nat_trans.left_derived_id],
+ refl,
+ end,
+ map_comp' := begin
+ intros X Y Z f g,
+ rw [(linear_yoneda R C).map_comp]; rw [ nat_trans.right_op_comp]; rw [ nat_trans.left_derived_comp],
+ refl,
+ end }.
 
 open_locale zero_object
 
 /-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
 def Ext_succ_of_projective (X Y : C) [projective X] (n : ℕ) :
-  ((Ext R C (n+1)).obj (opposite.op X)).obj Y ≅ 0 :=
+ ((Ext R C (n+1)).obj (opposite.op X)).obj Y ≅ 0 :=
 let E := (((linear_yoneda R C).obj Y).right_op.left_derived_obj_projective_succ n X).unop.symm in
 E ≪≫
 { hom := 0,
-  inv := 0,
-  hom_inv_id' := begin
-    let Z : (Module R)ᵒᵖ := 0,
-    rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op,
-      ← unop_id, ← unop_comp],
-    congr' 1,
-    dsimp,
-    dec_trivial,
-  end }
+ inv := 0,
+ hom_inv_id' := begin
+ let Z : (Module R)ᵒᵖ := 0,
+ rw [← (0 : 0 ⟶ Z.unop).unop_op]; rw [ ← (0 : Z.unop ⟶ 0).unop_op]; rw [ ← unop_id]; rw [ ← unop_comp],
+ congr' 1,
+ dsimp,
+ dec_trivial,
+ end }
+

@@ -21,7 +21,7 @@ namespace native
 namespace rb_set
 
 meta instance {key} [has_lt key] [decidable_rel ((<) : key → key → Prop)] :
-  inhabited (rb_set key) :=
+ inhabited (rb_set key) :=
 ⟨mk_rb_set⟩
 
 /-- `filter s P` returns the subset of elements of `s` satisfying `P`. -/
@@ -32,8 +32,8 @@ s.fold s (λ a m, if P a then m else m.erase a)
 where the check `P` is monadic. -/
 meta def mfilter {m} [monad m] {key} (s : rb_set key) (P : key → m bool) : m (rb_set key) :=
 s.fold (pure s) (λ a m,
-  do x ← m,
-     mcond (P a) (pure x) (pure $ x.erase a))
+ do x ← m,
+ mcond (P a) (pure x) (pure $ x.erase a))
 
 /-- `union s t` returns an rb_set containing every element that appears in either `s` or `t`. -/
 meta def union {key} (s t : rb_set key) : rb_set key :=
@@ -46,7 +46,7 @@ This can be used to pre-seed the set with additional elements,
 and/or to use a custom comparison operator.
 -/
 meta def of_list_core {key} (base : rb_set key) : list key → rb_map key unit
-| []      := base
+| [] := base
 | (x::xs) := rb_set.insert (of_list_core xs) x
 
 /--
@@ -54,7 +54,7 @@ meta def of_list_core {key} (base : rb_set key) : list key → rb_map key unit
 inferring an order on the type `key`.
 -/
 meta def of_list {key} [has_lt key] [decidable_rel ((<) : key → key → Prop)] :
-  list key → rb_set key :=
+ list key → rb_set key :=
 of_list_core mk_rb_set
 
 /--
@@ -78,7 +78,7 @@ end rb_set
 namespace rb_map
 
 meta instance {key data : Type} [has_lt key] [decidable_rel ((<) : key → key → Prop)] :
-  inhabited (rb_map key data) :=
+ inhabited (rb_map key data) :=
 ⟨mk_rb_map⟩
 
 /-- `find_def default m k` returns the value corresponding to `k` in `m`, if it exists.
@@ -98,28 +98,28 @@ meta def zfind {key value} [has_zero value] (m : rb_map key value) (k : key) : v
 
 /-- Returns the pointwise sum of `m1` and `m2`, treating nonexistent values as 0. -/
 meta def add {key value} [has_add value] [has_zero value] [decidable_eq value]
-  (m1 m2 : rb_map key value) : rb_map key value :=
+ (m1 m2 : rb_map key value) : rb_map key value :=
 m1.fold m2
-  (λ n v m,
-   let nv := v + m2.zfind n in
-   if nv = 0 then m.erase n else m.insert n nv)
+ (λ n v m,
+ let nv := v + m2.zfind n in
+ if nv = 0 then m.erase n else m.insert n nv)
 
 variables {m : Type → Type*} [monad m]
 open function
 
 /-- `mfilter P s` filters `s` by the monadic predicate `P` on keys and values. -/
 meta def mfilter {key val} [has_lt key] [decidable_rel ((<) : key → key → Prop)]
-  (P : key → val → m bool) (s : rb_map key val) : m (rb_map.{0 0} key val) :=
+ (P : key → val → m bool) (s : rb_map key val) : m (rb_map.{0 0} key val) :=
 rb_map.of_list <$> s.to_list.mfilter (uncurry P)
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 meta def mmap {key val val'} [has_lt key] [decidable_rel ((<) : key → key → Prop)]
-  (f : val → m val') (s : rb_map key val) : m (rb_map.{0 0} key val') :=
+ (f : val → m val') (s : rb_map key val) : m (rb_map.{0 0} key val') :=
 rb_map.of_list <$> s.to_list.mmap (λ ⟨a,b⟩, prod.mk a <$> f b)
 
 /-- `scale b m` multiplies every value in `m` by `b`. -/
 meta def scale {key value} [has_lt key] [decidable_rel ((<) : key → key → Prop)] [has_mul value]
-  (b : value) (m : rb_map key value) : rb_map key value :=
+ (b : value) (m : rb_map key value) : rb_map key value :=
 m.map ((*) b)
 
 section
@@ -131,9 +131,9 @@ do fk ← tactic.pp k, fd ← tactic.pp d, return $
 
 meta instance : has_to_tactic_format (rb_map key data) :=
 ⟨λ m, do
-  (fmt, _) ← fold m (return (to_fmt "", tt))
-     (λ k d p, do p ← p, pkd ← pp_key_data k d (snd p), return (fst p ++ pkd, ff)),
-  return $ group $ to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
+ (fmt, _) ← fold m (return (to_fmt "", tt))
+ (λ k d p, do p ← p, pkd ← pp_key_data k d (snd p), return (fst p ++ pkd, ff)),
+ return $ group $ to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
 end
 
 end rb_map
@@ -143,13 +143,13 @@ end rb_map
 namespace rb_lmap
 
 meta instance (key : Type) [has_lt key] [decidable_rel ((<) : key → key → Prop)] (data : Type) :
-  inhabited (rb_lmap key data) :=
+ inhabited (rb_lmap key data) :=
 ⟨rb_lmap.mk _ _⟩
 
 /-- Construct a rb_lmap from a list of key-data pairs -/
 protected meta def of_list {key : Type} {data : Type} [has_lt key]
-  [decidable_rel ((<) : key → key → Prop)] : list (key × data) → rb_lmap key data
-| []           := rb_lmap.mk key data
+ [decidable_rel ((<) : key → key → Prop)] : list (key × data) → rb_lmap key data
+| [] := rb_lmap.mk key data
 | ((k, v)::ls) := (of_list ls).insert k v
 
 /-- Returns the list of values of an `rb_lmap`. -/
@@ -173,15 +173,15 @@ s.fold s (λ a m, if P a then m else m.erase a)
 where the check `P` is monadic. -/
 meta def mfilter {m} [monad m] (P : name → m bool) (s : name_set) : m name_set :=
 s.fold (pure s) (λ a m,
-  do x ← m,
-     mcond (P a) (pure x) (pure $ x.erase a))
+ do x ← m,
+ mcond (P a) (pure x) (pure $ x.erase a))
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 meta def mmap {m} [monad m] (f : name → m name) (s : name_set) : m name_set :=
 s.fold (pure mk_name_set) (λ a m,
-  do x ← m,
-     b ← f a,
-     (pure $ x.insert b))
+ do x ← m,
+ b ← f a,
+ (pure $ x.insert b))
 
 /-- `insert_list s l` inserts every element of `l` into `s`. -/
 meta def insert_list (s : name_set) (l : list name) : name_set :=
@@ -234,3 +234,4 @@ meta def to_rb_map {α : Type} : list α → native.rb_map ℕ α :=
 foldl_with_index (λ i mapp a, mapp.insert i a) native.mk_rb_map
 
 end list
+

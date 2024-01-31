@@ -83,10 +83,10 @@ end tauto₃
 section closer
 
 example {α : Type*} {β : Type*} (a : α)
-  {s_1 : set α} :
-  (∃ (a_1 : α), a_1 = a ∨ a_1 ∈ s_1) :=
+ {s_1 : set α} :
+ (∃ (a_1 : α), a_1 = a ∨ a_1 ∈ s_1) :=
 begin
-  tauto {closer := `[simp]}
+ tauto {closer := `[simp]}
 end
 
 variables {p q r : Prop} {α : Type} {x y z w : α}
@@ -96,15 +96,16 @@ include h h₁ h₂ h''
 
 example : (((r ∧ p ↔ r ∨ q) ∧ (q ∨ r)) → (p ∧ (x = w) ∧ (¬ x = w → p ∧ q ∧ r))) :=
 begin
-  tauto {closer := `[cc]}
+ tauto {closer := `[cc]}
 end
 
 end closer
 
-/-  Zulip discussion:
+/- Zulip discussion:
 https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/tauto!.20fails.20on.20ne
 -/
 example {x y : ℕ} (h : ¬x ≠ y) : x = y :=
 begin
-  tauto!,
+ tauto!,
 end
+

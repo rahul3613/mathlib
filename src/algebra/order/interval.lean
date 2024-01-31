@@ -83,7 +83,7 @@ Note that this multiplication does not apply to `ℚ` or `ℝ`.
 
 section mul
 variables [preorder α] [has_mul α] [covariant_class α α (*) (≤)]
-  [covariant_class α α (swap (*)) (≤)]
+ [covariant_class α α (swap (*)) (≤)]
 
 @[to_additive] instance : has_mul (nonempty_interval α) :=
 ⟨λ s t, ⟨s.to_prod * t.to_prod, mul_le_mul' s.fst_le_snd t.fst_le_snd⟩⟩
@@ -114,7 +114,7 @@ end mul
 
 -- TODO: if `to_additive` gets improved sufficiently, derive this from `has_pow`
 instance nonempty_interval.has_nsmul [add_monoid α] [preorder α] [covariant_class α α (+) (≤)]
-  [covariant_class α α (swap (+)) (≤)] : has_smul ℕ (nonempty_interval α) :=
+ [covariant_class α α (swap (+)) (≤)] : has_smul ℕ (nonempty_interval α) :=
 ⟨λ n s, ⟨(n • s.fst, n • s.snd), nsmul_le_nsmul_of_le_right s.fst_le_snd _⟩⟩
 
 section pow
@@ -146,23 +146,23 @@ end nonempty_interval
 @[to_additive]
 instance [ordered_comm_monoid α] : mul_one_class (interval α) :=
 { mul := (*),
-  one := 1,
-  one_mul := λ s, (option.map₂_coe_left _ _ _).trans $
-    by simp only [nonempty_interval.pure_one, one_mul, ←id_def, option.map_id, id],
-  mul_one := λ s, (option.map₂_coe_right _ _ _).trans $
-    by simp only [nonempty_interval.pure_one, mul_one, ←id_def, option.map_id, id] }
+ one := 1,
+ one_mul := λ s, (option.map₂_coe_left _ _ _).trans $
+ by simp only [nonempty_interval.pure_one, one_mul, ←id_def, option.map_id, id],
+ mul_one := λ s, (option.map₂_coe_right _ _ _).trans $
+ by simp only [nonempty_interval.pure_one, mul_one, ←id_def, option.map_id, id] }
 
 @[to_additive]
 instance [ordered_comm_monoid α] : comm_monoid (interval α) :=
 { mul_comm := λ _ _, option.map₂_comm mul_comm,
-  mul_assoc := λ _ _ _, option.map₂_assoc mul_assoc,
-  ..interval.mul_one_class }
+ mul_assoc := λ _ _ _, option.map₂_assoc mul_assoc,
+ ..interval.mul_one_class }
 
 namespace nonempty_interval
 
 @[simp, to_additive] lemma coe_pow_interval [ordered_comm_monoid α] (s : nonempty_interval α)
-  (n : ℕ) :
-  (↑(s ^ n) : interval α) = s ^ n :=
+ (n : ℕ) :
+ (↑(s ^ n) : interval α) = s ^ n :=
 map_pow (⟨coe, coe_one_interval, coe_mul_interval⟩ : nonempty_interval α →* interval α) _ _
 
 end nonempty_interval
@@ -185,7 +185,7 @@ is not a thing and probably should not become one).
 
 section sub
 variables [preorder α] [add_comm_semigroup α] [has_sub α] [has_ordered_sub α]
-  [covariant_class α α (+) (≤)]
+ [covariant_class α α (+) (≤)]
 
 instance : has_sub (nonempty_interval α) :=
 ⟨λ s t, ⟨(s.fst - t.snd, s.snd - t.fst), tsub_le_tsub s.fst_le_snd t.fst_le_snd⟩⟩
@@ -277,41 +277,41 @@ namespace nonempty_interval
 variables [ordered_comm_group α] {s t : nonempty_interval α}
 
 @[to_additive] protected lemma mul_eq_one_iff :
-  s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
+ s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
 begin
-  refine ⟨λ h, _, _⟩,
-  { rw [ext_iff, prod.ext_iff] at h,
-    have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le,
-    refine ⟨s.fst, t.fst, _, _, h.1⟩; ext; try { refl },
-    exacts [this.1.symm, this.2.symm] },
-  { rintro ⟨b, c, rfl, rfl, h⟩,
-    rw [pure_mul_pure, h, pure_one] }
+ refine ⟨λ h, _, _⟩,
+ { rw [ext_iff] at h; rw [ prod.ext_iff] at h,
+ have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le,
+ refine ⟨s.fst, t.fst, _, _, h.1⟩; ext; try { refl },
+ exacts [this.1.symm, this.2.symm] },
+ { rintro ⟨b, c, rfl, rfl, h⟩,
+ rw [pure_mul_pure]; rw [ h]; rw [ pure_one] }
 end
 
 instance {α : Type u} [ordered_add_comm_group α] : subtraction_comm_monoid (nonempty_interval α) :=
 { neg := has_neg.neg,
-  sub := has_sub.sub,
-  sub_eq_add_neg := λ s t, by ext; exact sub_eq_add_neg _ _,
-  neg_neg := λ s, by ext; exact neg_neg _,
-  neg_add_rev := λ s t, by ext; exact neg_add_rev _ _,
-  neg_eq_of_add := λ s t h, begin
-    obtain ⟨a, b, rfl, rfl, hab⟩ := nonempty_interval.add_eq_zero_iff.1 h,
-    rw [neg_pure, neg_eq_of_add_eq_zero_right hab],
-  end,
-  ..nonempty_interval.add_comm_monoid }
+ sub := has_sub.sub,
+ sub_eq_add_neg := λ s t, by ext; exact sub_eq_add_neg _ _,
+ neg_neg := λ s, by ext; exact neg_neg _,
+ neg_add_rev := λ s t, by ext; exact neg_add_rev _ _,
+ neg_eq_of_add := λ s t h, begin
+ obtain ⟨a, b, rfl, rfl, hab⟩ := nonempty_interval.add_eq_zero_iff.1 h,
+ rw [neg_pure]; rw [ neg_eq_of_add_eq_zero_right hab],
+ end,
+ ..nonempty_interval.add_comm_monoid }
 
 @[to_additive nonempty_interval.subtraction_comm_monoid]
 instance : division_comm_monoid (nonempty_interval α) :=
 { inv := has_inv.inv,
-  div := (/),
-  div_eq_mul_inv := λ s t, by ext; exact div_eq_mul_inv _ _,
-  inv_inv := λ s, by ext; exact inv_inv _,
-  mul_inv_rev := λ s t, by ext; exact mul_inv_rev _ _,
-  inv_eq_of_mul := λ s t h, begin
-    obtain ⟨a, b, rfl, rfl, hab⟩ := nonempty_interval.mul_eq_one_iff.1 h,
-    rw [inv_pure, inv_eq_of_mul_eq_one_right hab],
-  end,
-  ..nonempty_interval.comm_monoid }
+ div := (/),
+ div_eq_mul_inv := λ s t, by ext; exact div_eq_mul_inv _ _,
+ inv_inv := λ s, by ext; exact inv_inv _,
+ mul_inv_rev := λ s t, by ext; exact mul_inv_rev _ _,
+ inv_eq_of_mul := λ s t h, begin
+ obtain ⟨a, b, rfl, rfl, hab⟩ := nonempty_interval.mul_eq_one_iff.1 h,
+ rw [inv_pure]; rw [ inv_eq_of_mul_eq_one_right hab],
+ end,
+ ..nonempty_interval.comm_monoid }
 
 end nonempty_interval
 
@@ -319,36 +319,36 @@ namespace interval
 variables [ordered_comm_group α] {s t : interval α}
 
 @[to_additive] protected lemma mul_eq_one_iff :
-  s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
+ s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 :=
 begin
-  cases s,
-  { simp [with_bot.none_eq_bot] },
-  cases t,
-  { simp [with_bot.none_eq_bot] },
-  { simp [with_bot.some_eq_coe, ←nonempty_interval.coe_mul_interval,
-    nonempty_interval.mul_eq_one_iff] }
+ cases s,
+ { simp [with_bot.none_eq_bot] },
+ cases t,
+ { simp [with_bot.none_eq_bot] },
+ { simp [with_bot.some_eq_coe, ←nonempty_interval.coe_mul_interval,
+ nonempty_interval.mul_eq_one_iff] }
 end
 
 instance {α : Type u} [ordered_add_comm_group α] : subtraction_comm_monoid (interval α) :=
 { neg := has_neg.neg,
-  sub := has_sub.sub,
-  sub_eq_add_neg := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (sub_eq_add_neg _ _),
-  neg_neg := by rintro (_ | s); refl <|> exact congr_arg some (neg_neg _),
-  neg_add_rev := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (neg_add_rev _ _),
-  neg_eq_of_add := by rintro (_ | s) (_ | t) h;
-    cases h <|> exact congr_arg some (neg_eq_of_add_eq_zero_right $ option.some_injective _ h),
-  ..interval.add_comm_monoid }
+ sub := has_sub.sub,
+ sub_eq_add_neg := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (sub_eq_add_neg _ _),
+ neg_neg := by rintro (_ | s); refl <|> exact congr_arg some (neg_neg _),
+ neg_add_rev := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (neg_add_rev _ _),
+ neg_eq_of_add := by rintro (_ | s) (_ | t) h;
+ cases h <|> exact congr_arg some (neg_eq_of_add_eq_zero_right $ option.some_injective _ h),
+ ..interval.add_comm_monoid }
 
 @[to_additive interval.subtraction_comm_monoid]
 instance : division_comm_monoid (interval α) :=
 { inv := has_inv.inv,
-  div := (/),
-  div_eq_mul_inv := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (div_eq_mul_inv _ _),
-  inv_inv := by rintro (_ | s); refl <|> exact congr_arg some (inv_inv _),
-  mul_inv_rev := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (mul_inv_rev _ _),
-  inv_eq_of_mul := by rintro (_ | s) (_ | t) h;
-    cases h <|> exact congr_arg some (inv_eq_of_mul_eq_one_right $ option.some_injective _ h),
-  ..interval.comm_monoid }
+ div := (/),
+ div_eq_mul_inv := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (div_eq_mul_inv _ _),
+ inv_inv := by rintro (_ | s); refl <|> exact congr_arg some (inv_inv _),
+ mul_inv_rev := by rintro (_ | s) (_ | t); refl <|> exact congr_arg some (mul_inv_rev _ _),
+ inv_eq_of_mul := by rintro (_ | s) (_ | t) h;
+ cases h <|> exact congr_arg some (inv_eq_of_mul_eq_one_right $ option.some_injective _ h),
+ ..interval.comm_monoid }
 
 end interval
 
@@ -370,7 +370,7 @@ def length : α := s.snd - s.fst
 @[simp] lemma length_sub : (s - t).length = s.length + t.length := by simp [sub_eq_add_neg]
 
 @[simp] lemma length_sum (f : ι → nonempty_interval α) (s : finset ι) :
-  (∑ i in s, f i).length = ∑ i in s, (f i).length :=
+ (∑ i in s, f i).length = ∑ i in s, (f i).length :=
 map_sum (⟨length, length_zero, length_add⟩ : nonempty_interval α →+ α) _ _
 
 end nonempty_interval
@@ -389,7 +389,7 @@ def length : interval α → α
 | (s : nonempty_interval α) := s.length_nonneg
 @[simp] lemma length_pure : (pure a).length = 0 := nonempty_interval.length_pure _
 @[simp] lemma length_zero : (0 : interval α).length = 0 := length_pure _
-@[simp] lemma length_neg :  ∀ s : interval α, (-s).length = s.length
+@[simp] lemma length_neg : ∀ s : interval α, (-s).length = s.length
 | ⊥ := rfl
 | (s : nonempty_interval α) := s.length_neg
 lemma length_add_le : ∀ s t : interval α, (s + t).length ≤ s.length + t.length
@@ -400,7 +400,7 @@ lemma length_sub_le : (s - t).length ≤ s.length + t.length :=
 by simpa [sub_eq_add_neg] using length_add_le s (-t)
 
 lemma length_sum_le (f : ι → interval α) (s : finset ι) :
-  (∑ i in s, f i).length ≤ ∑ i in s, (f i).length :=
+ (∑ i in s, f i).length ≤ ∑ i in s, (f i).length :=
 finset.le_sum_of_subadditive _ length_zero length_add_le _ _
 
 end interval
@@ -415,6 +415,7 @@ meta def positivity_interval_length : expr → tactic strictness
 | `(nonempty_interval.length %%s) := nonnegative <$> mk_app `nonempty_interval.length_nonneg [s]
 | `(interval.length %%s) := nonnegative <$> mk_app `interval.length_nonneg [s]
 | e := pp e >>= fail ∘ format.bracket "The expression `"
-         "` isn't of the form `nonempty_interval.length s` or `interval.length s`"
+ "` isn't of the form `nonempty_interval.length s` or `interval.length s`"
 
 end tactic
+

@@ -18,10 +18,10 @@ In this file we define `Gδ` sets and prove their basic properties.
 ## Main definitions
 
 * `is_Gδ`: a set `s` is a `Gδ` set if it can be represented as an intersection
-  of countably many open sets;
+ of countably many open sets;
 
 * `residual`: the σ-filter of residual sets. A set `s` is called *residual* if it includes a
-  countable intersection of dense open sets.
+ countable intersection of dense open sets.
 
 ## Main results
 
@@ -45,7 +45,7 @@ variable [topological_space α]
 
 /-- A Gδ set is a countable intersection of open sets. -/
 def is_Gδ (s : set α) : Prop :=
-  ∃T : set (set α), (∀t ∈ T, is_open t) ∧ T.countable ∧ s = (⋂₀ T)
+ ∃T : set (set α), (∀t ∈ T, is_open t) ∧ T.countable ∧ s = (⋂₀ T)
 
 /-- An open set is a Gδ set. -/
 lemma is_open.is_Gδ {s : set α} (h : is_open s) : is_Gδ s :=
@@ -56,28 +56,28 @@ lemma is_open.is_Gδ {s : set α} (h : is_open s) : is_Gδ s :=
 @[simp] lemma is_Gδ_univ : is_Gδ (univ : set α) := is_open_univ.is_Gδ
 
 lemma is_Gδ_bInter_of_open {I : set ι} (hI : I.countable) {f : ι → set α}
-  (hf : ∀i ∈ I, is_open (f i)) : is_Gδ (⋂i∈I, f i) :=
+ (hf : ∀i ∈ I, is_open (f i)) : is_Gδ (⋂i∈I, f i) :=
 ⟨f '' I, by rwa ball_image_iff, hI.image _, by rw sInter_image⟩
 
 lemma is_Gδ_Inter_of_open [encodable ι] {f : ι → set α}
-  (hf : ∀i, is_open (f i)) : is_Gδ (⋂i, f i) :=
+ (hf : ∀i, is_open (f i)) : is_Gδ (⋂i, f i) :=
 ⟨range f, by rwa forall_range_iff, countable_range _, by rw sInter_range⟩
 
 /-- The intersection of an encodable family of Gδ sets is a Gδ set. -/
 lemma is_Gδ_Inter [encodable ι] {s : ι → set α} (hs : ∀ i, is_Gδ (s i)) : is_Gδ (⋂ i, s i) :=
 begin
-  choose T hTo hTc hTs using hs,
-  obtain rfl : s = λ i, ⋂₀ T i := funext hTs,
-  refine ⟨⋃ i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩,
-  simpa [@forall_swap ι] using hTo
+ choose T hTo hTc hTs using hs,
+ obtain rfl : s = λ i, ⋂₀ T i := funext hTs,
+ refine ⟨⋃ i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩,
+ simpa [@forall_swap ι] using hTo
 end
 
 lemma is_Gδ_bInter {s : set ι} (hs : s.countable) {t : Π i ∈ s, set α}
-  (ht : ∀ i ∈ s, is_Gδ (t i ‹_›)) : is_Gδ (⋂ i ∈ s, t i ‹_›) :=
+ (ht : ∀ i ∈ s, is_Gδ (t i ‹_›)) : is_Gδ (⋂ i ∈ s, t i ‹_›) :=
 begin
-  rw [bInter_eq_Inter],
-  haveI := hs.to_encodable,
-  exact is_Gδ_Inter (λ x, ht x x.2)
+ rw [bInter_eq_Inter],
+ haveI := hs.to_encodable,
+ exact is_Gδ_Inter (λ x, ht x x.2)
 end
 
 /-- A countable intersection of Gδ sets is a Gδ set. -/
@@ -90,30 +90,30 @@ by { rw inter_eq_Inter, exact is_Gδ_Inter (bool.forall_bool.2 ⟨ht, hs⟩) }
 /-- The union of two Gδ sets is a Gδ set. -/
 lemma is_Gδ.union {s t : set α} (hs : is_Gδ s) (ht : is_Gδ t) : is_Gδ (s ∪ t) :=
 begin
-  rcases hs with ⟨S, Sopen, Scount, rfl⟩,
-  rcases ht with ⟨T, Topen, Tcount, rfl⟩,
-  rw [sInter_union_sInter],
-  apply is_Gδ_bInter_of_open (Scount.prod Tcount),
-  rintros ⟨a, b⟩ ⟨ha, hb⟩,
-  exact (Sopen a ha).union (Topen b hb)
+ rcases hs with ⟨S, Sopen, Scount, rfl⟩,
+ rcases ht with ⟨T, Topen, Tcount, rfl⟩,
+ rw [sInter_union_sInter],
+ apply is_Gδ_bInter_of_open (Scount.prod Tcount),
+ rintros ⟨a, b⟩ ⟨ha, hb⟩,
+ exact (Sopen a ha).union (Topen b hb)
 end
 
 /-- The union of finitely many Gδ sets is a Gδ set. -/
 lemma is_Gδ_bUnion {s : set ι} (hs : s.finite) {f : ι → set α} (h : ∀ i ∈ s, is_Gδ (f i)) :
-  is_Gδ (⋃ i ∈ s, f i) :=
+ is_Gδ (⋃ i ∈ s, f i) :=
 begin
-  refine finite.induction_on hs (by simp) _ h,
-  simp only [ball_insert_iff, bUnion_insert],
-  exact λ a s _ _ ihs H, H.1.union (ihs H.2)
+ refine finite.induction_on hs (by simp) _ h,
+ simp only [ball_insert_iff, bUnion_insert],
+ exact λ a s _ _ ihs H, H.1.union (ihs H.2)
 end
 
 lemma is_closed.is_Gδ {α} [uniform_space α] [is_countably_generated (𝓤 α)]
-  {s : set α} (hs : is_closed s) : is_Gδ s :=
+ {s : set α} (hs : is_closed s) : is_Gδ s :=
 begin
-  rcases (@uniformity_has_basis_open α _).exists_antitone_subbasis  with ⟨U, hUo, hU, -⟩,
-  rw [← hs.closure_eq, ← hU.bInter_bUnion_ball],
-  refine is_Gδ_bInter (to_countable _) (λ n hn, is_open.is_Gδ _),
-  exact is_open_bUnion (λ x hx, uniform_space.is_open_ball _ (hUo _).2)
+ rcases (@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩,
+ rw [← hs.closure_eq]; rw [ ← hU.bInter_bUnion_ball],
+ refine is_Gδ_bInter (to_countable _) (λ n hn, is_open.is_Gδ _),
+ exact is_open_bUnion (λ x hx, uniform_space.is_open_ball _ (hUo _).2)
 end
 
 section t1_space
@@ -125,8 +125,8 @@ is_open_compl_singleton.is_Gδ
 
 lemma set.countable.is_Gδ_compl {s : set α} (hs : s.countable) : is_Gδ sᶜ :=
 begin
-  rw [← bUnion_of_singleton s, compl_Union₂],
-  exact is_Gδ_bInter hs (λ x _, is_Gδ_compl_singleton x)
+ rw [← bUnion_of_singleton s]; rw [ compl_Union₂],
+ exact is_Gδ_bInter hs (λ x _, is_Gδ_compl_singleton x)
 end
 
 lemma set.finite.is_Gδ_compl {s : set α} (hs : s.finite) : is_Gδ sᶜ :=
@@ -144,9 +144,9 @@ variables [first_countable_topology α]
 
 lemma is_Gδ_singleton (a : α) : is_Gδ ({a} : set α) :=
 begin
-  rcases (nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩,
-  rw [← bInter_basis_nhds h_basis.to_has_basis],
-  exact is_Gδ_bInter (to_countable _) (λ n hn, (hU n).2.is_Gδ),
+ rcases (nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩,
+ rw [← bInter_basis_nhds h_basis.to_has_basis],
+ exact is_Gδ_bInter (to_countable _) (λ n hn, (hU n).2.is_Gδ),
 end
 
 lemma set.finite.is_Gδ {s : set α} (hs : s.finite) : is_Gδ s :=
@@ -165,15 +165,15 @@ variables [topological_space α]
 
 /-- The set of points where a function is continuous is a Gδ set. -/
 lemma is_Gδ_set_of_continuous_at [uniform_space β] [is_countably_generated (𝓤 β)] (f : α → β) :
-  is_Gδ {x | continuous_at f x} :=
+ is_Gδ {x | continuous_at f x} :=
 begin
-  obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis,
-  simp only [uniform.continuous_at_iff_prod, nhds_prod_eq],
-  simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true,
-    set_of_forall, id],
-  refine is_Gδ_Inter (λ k, is_open.is_Gδ $ is_open_iff_mem_nhds.2 $ λ x, _),
-  rintros ⟨s, ⟨hsx, hso⟩, hsU⟩,
-  filter_upwards [is_open.mem_nhds hso hsx] with _ hy using ⟨s, ⟨hy, hso⟩, hsU⟩,
+ obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis,
+ simp only [uniform.continuous_at_iff_prod, nhds_prod_eq],
+ simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true,
+ set_of_forall, id],
+ refine is_Gδ_Inter (λ k, is_open.is_Gδ $ is_open_iff_mem_nhds.2 $ λ x, _),
+ rintros ⟨s, ⟨hsx, hso⟩, hsU⟩,
+ filter_upwards [is_open.mem_nhds hso hsx] with _ hy using ⟨s, ⟨hy, hso⟩, hsU⟩,
 end
 
 end continuous_at
@@ -197,15 +197,16 @@ countable_generate_sets.basic ⟨ho, hd⟩
 /-- Dense Gδ sets are residual. -/
 lemma residual_of_dense_Gδ {s : set α} (ho : is_Gδ s) (hd : dense s) : s ∈ residual α :=
 begin
-  rcases ho with ⟨T, To, Tct, rfl⟩,
-  exact (countable_sInter_mem Tct).mpr (λ t tT, residual_of_dense_open (To t tT)
-    (hd.mono (sInter_subset_of_mem tT))),
+ rcases ho with ⟨T, To, Tct, rfl⟩,
+ exact (countable_sInter_mem Tct).mpr (λ t tT, residual_of_dense_open (To t tT)
+ (hd.mono (sInter_subset_of_mem tT))),
 end
 
 /-- A set is residual iff it includes a countable intersection of dense open sets. -/
 lemma mem_residual_iff {s : set α} : s ∈ residual α ↔
-  ∃ (S : set (set α)), (∀ t ∈ S, is_open t) ∧ (∀ t ∈ S, dense t) ∧ S.countable ∧ ⋂₀ S ⊆ s :=
+ ∃ (S : set (set α)), (∀ t ∈ S, is_open t) ∧ (∀ t ∈ S, dense t) ∧ S.countable ∧ ⋂₀ S ⊆ s :=
 mem_countable_generate_iff.trans $ by simp_rw
-  [subset_def, mem_set_of, forall_and_distrib, and_assoc]
+ [subset_def, mem_set_of, forall_and_distrib, and_assoc]
 
 end residual
+

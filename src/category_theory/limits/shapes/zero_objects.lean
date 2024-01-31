@@ -39,7 +39,7 @@ there is a unique morphism `to : X → Y` and a unique morphism `from : Y → X`
 
 This is a characteristic predicate for `has_zero_object`. -/
 structure is_zero (X : C) : Prop :=
-(unique_to   : ∀ Y, nonempty (unique (X ⟶ Y)))
+(unique_to : ∀ Y, nonempty (unique (X ⟶ Y)))
 (unique_from : ∀ Y, nonempty (unique (Y ⟶ X)))
 
 namespace is_zero
@@ -75,9 +75,9 @@ lemma eq_of_tgt (hX : is_zero X) (f g : Y ⟶ X) : f = g :=
 /-- Any two zero objects are isomorphic. -/
 def iso (hX : is_zero X) (hY : is_zero Y) : X ≅ Y :=
 { hom := hX.to Y,
-  inv := hX.from Y,
-  hom_inv_id' := hX.eq_of_src _ _,
-  inv_hom_id' := hY.eq_of_src _ _, }
+ inv := hX.from Y,
+ hom_inv_id' := hX.eq_of_src _ _,
+ inv_hom_id' := hY.eq_of_src _ _, }
 
 /-- A zero object is in particular initial. -/
 protected def is_initial (hX : is_zero X) : is_initial X :=
@@ -97,18 +97,18 @@ hX.is_terminal.unique_up_to_iso hY
 
 lemma of_iso (hY : is_zero Y) (e : X ≅ Y) : is_zero X :=
 begin
-  refine ⟨λ Z, ⟨⟨⟨e.hom ≫ hY.to Z⟩, λ f, _⟩⟩, λ Z, ⟨⟨⟨hY.from Z ≫ e.inv⟩, λ f, _⟩⟩⟩,
-  { rw ← cancel_epi e.inv, apply hY.eq_of_src, },
-  { rw ← cancel_mono e.hom, apply hY.eq_of_tgt, },
+ refine ⟨λ Z, ⟨⟨⟨e.hom ≫ hY.to Z⟩, λ f, _⟩⟩, λ Z, ⟨⟨⟨hY.from Z ≫ e.inv⟩, λ f, _⟩⟩⟩,
+ { rw ← cancel_epi e.inv, apply hY.eq_of_src, },
+ { rw ← cancel_mono e.hom, apply hY.eq_of_tgt, },
 end
 
 lemma op (h : is_zero X) : is_zero (opposite.op X) :=
 ⟨λ Y, ⟨⟨⟨(h.from (opposite.unop Y)).op⟩, λ f, quiver.hom.unop_inj (h.eq_of_tgt _ _)⟩⟩,
-  λ Y, ⟨⟨⟨(h.to (opposite.unop Y)).op⟩, λ f, quiver.hom.unop_inj (h.eq_of_src _ _)⟩⟩⟩
+ λ Y, ⟨⟨⟨(h.to (opposite.unop Y)).op⟩, λ f, quiver.hom.unop_inj (h.eq_of_src _ _)⟩⟩⟩
 
 lemma unop {X : Cᵒᵖ} (h : is_zero X) : is_zero (opposite.unop X) :=
 ⟨λ Y, ⟨⟨⟨(h.from (opposite.op Y)).unop⟩, λ f, quiver.hom.op_inj (h.eq_of_tgt _ _)⟩⟩,
-  λ Y, ⟨⟨⟨(h.to (opposite.op Y)).unop⟩, λ f, quiver.hom.op_inj (h.eq_of_src _ _)⟩⟩⟩
+ λ Y, ⟨⟨⟨(h.to (opposite.op Y)).unop⟩, λ f, quiver.hom.op_inj (h.eq_of_src _ _)⟩⟩⟩
 
 end is_zero
 
@@ -117,19 +117,19 @@ end limits
 open category_theory.limits
 
 lemma iso.is_zero_iff {X Y : C} (e : X ≅ Y) :
-  is_zero X ↔ is_zero Y :=
+ is_zero X ↔ is_zero Y :=
 ⟨λ h, h.of_iso e.symm, λ h, h.of_iso e⟩
 
 lemma functor.is_zero (F : C ⥤ D) (hF : ∀ X, is_zero (F.obj X)) :
-  is_zero F :=
+ is_zero F :=
 begin
-  split; intros G; refine ⟨⟨⟨_⟩, _⟩⟩,
-  { refine { app := λ X, (hF _).to _, naturality' := _ },
-    intros, exact (hF _).eq_of_src _ _ },
-  { intro f, ext, apply (hF _).eq_of_src _ _ },
-  { refine { app := λ X, (hF _).from _, naturality' := _ },
-    intros, exact (hF _).eq_of_tgt _ _ },
-  { intro f, ext, apply (hF _).eq_of_tgt _ _ },
+ split; intros G; refine ⟨⟨⟨_⟩, _⟩⟩,
+ { refine { app := λ X, (hF _).to _, naturality' := _ },
+ intros, exact (hF _).eq_of_src _ _ },
+ { intro f, ext, apply (hF _).eq_of_src _ _ },
+ { refine { app := λ X, (hF _).from _, naturality' := _ },
+ intros, exact (hF _).eq_of_tgt _ _ },
+ { intro f, ext, apply (hF _).eq_of_tgt _ _ },
 end
 
 namespace limits
@@ -177,12 +177,12 @@ def is_zero.iso_zero [has_zero_object C] {X : C} (hX : is_zero X) : X ≅ 0 :=
 hX.iso (is_zero_zero C)
 
 lemma is_zero.obj [has_zero_object D] {F : C ⥤ D} (hF : is_zero F) (X : C) :
-  is_zero (F.obj X) :=
+ is_zero (F.obj X) :=
 begin
-  let G : C ⥤ D := (category_theory.functor.const C).obj 0,
-  have hG : is_zero G := functor.is_zero _ (λ X, is_zero_zero _),
-  let e : F ≅ G := hF.iso hG,
-  exact (is_zero_zero _).of_iso (e.app X),
+ let G : C ⥤ D := (category_theory.functor.const C).obj 0,
+ have hG : is_zero G := functor.is_zero _ (λ X, is_zero_zero _),
+ let e : F ≅ G := hF.iso hG,
+ exact (is_zero_zero _).of_iso (e.app X),
 end
 
 namespace has_zero_object
@@ -216,7 +216,7 @@ instance {X : C} (f : X ⟶ 0) : epi f :=
 { left_cancellation := λ Z g h w, by ext, }
 
 instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) :
-  is_iso f :=
+ is_iso f :=
 by convert (show is_iso (𝟙 (0 : C)), by apply_instance)
 
 /-- A zero object is in particular initial. -/
@@ -265,7 +265,8 @@ open category_theory.limits
 open_locale zero_object
 
 lemma functor.is_zero_iff [has_zero_object D] (F : C ⥤ D) :
-  is_zero F ↔ ∀ X, is_zero (F.obj X) :=
+ is_zero F ↔ ∀ X, is_zero (F.obj X) :=
 ⟨λ hF X, hF.obj X, functor.is_zero _⟩
 
 end category_theory
+

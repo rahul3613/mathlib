@@ -44,17 +44,17 @@ digits_ne_nil_iff_ne_zero.mp h2
 
 lemma ge_100 {n : ℕ} (h1 : problem_predicate n) : 100 ≤ n :=
 have h2 : 10^3 ≤ 10 * n, begin
-  rw ← h1.left,
-  refine nat.base_pow_length_digits_le 10 n _ (not_zero h1),
-  simp,
+ rw ← h1.left,
+ refine nat.base_pow_length_digits_le 10 n _ (not_zero h1),
+ simp,
 end,
 by linarith
 
 lemma lt_1000 {n : ℕ} (h1 : problem_predicate n) : n < 1000 :=
 have h2 : n < 10^3, begin
-  rw ← h1.left,
-  refine nat.lt_base_pow_length_digits _,
-  simp,
+ rw ← h1.left,
+ refine nat.lt_base_pow_length_digits _,
+ simp,
 end,
 by linarith
 
@@ -68,32 +68,32 @@ n = c * 11 ∧ ∀ m : ℕ, m < n → problem_predicate m → solution_predicate
 lemma search_up_to_start : search_up_to 9 99 := ⟨rfl, λ n h p, by linarith [ge_100 p]⟩
 
 lemma search_up_to_step {c n} (H : search_up_to c n)
-  {c' n'} (ec : c + 1 = c') (en : n + 11 = n')
-  {l} (el : nat.digits 10 n = l)
-  (H' : c = sum_of_squares l → c = 50 ∨ c = 73) :
-  search_up_to c' n' :=
+ {c' n'} (ec : c + 1 = c') (en : n + 11 = n')
+ {l} (el : nat.digits 10 n = l)
+ (H' : c = sum_of_squares l → c = 50 ∨ c = 73) :
+ search_up_to c' n' :=
 begin
-  subst ec, subst en, subst el,
-  obtain ⟨rfl, H⟩ := H,
-  refine ⟨by ring, λ m l p, _⟩,
-  obtain ⟨h₁, ⟨m, rfl⟩, h₂⟩ := id p,
-  by_cases h : 11 * m < c * 11, { exact H _ h p },
-  obtain rfl : m = c := by linarith,
-  rw [nat.mul_div_cancel_left _ (by norm_num : 11 > 0), mul_comm] at h₂,
-  refine (H' h₂).imp _ _; {rintro rfl, norm_num}
+ subst ec, subst en, subst el,
+ obtain ⟨rfl, H⟩ := H,
+ refine ⟨by ring, λ m l p, _⟩,
+ obtain ⟨h₁, ⟨m, rfl⟩, h₂⟩ := id p,
+ by_cases h : 11 * m < c * 11, { exact H _ h p },
+ obtain rfl : m = c := by linarith,
+ rw [nat.mul_div_cancel_left _ (by norm_num : 11 > 0)] at h₂; rw [ mul_comm] at h₂,
+ refine (H' h₂).imp _ _; {rintro rfl, norm_num}
 end
 
 lemma search_up_to_end {c} (H : search_up_to c 1001)
-  {n : ℕ} (ppn : problem_predicate n) : solution_predicate n :=
+ {n : ℕ} (ppn : problem_predicate n) : solution_predicate n :=
 H.2 _ (by linarith [lt_1000 ppn]) ppn
 
 lemma right_direction {n : ℕ} : problem_predicate n → solution_predicate n :=
 begin
-  have := search_up_to_start,
-  iterate 82
-  { replace := search_up_to_step this (by norm_num1; refl) (by norm_num1; refl)
-      (by norm_num1; refl) dec_trivial },
-  exact search_up_to_end this
+ have := search_up_to_start,
+ iterate 82
+ { replace := search_up_to_step this (by norm_num1; refl) (by norm_num1; refl)
+ (by norm_num1; refl) dec_trivial },
+ exact search_up_to_end this
 end
 
 /-
@@ -109,3 +109,4 @@ open imo1960_q1
 
 theorem imo1960_q1 (n : ℕ) : problem_predicate n ↔ solution_predicate n :=
 ⟨right_direction, left_direction n⟩
+

@@ -12,11 +12,12 @@ meta def metafoo : ℕ → empty := metafoo
 open tactic
 
 #eval show tactic unit, from do
-  env ← get_env,
-  data ← find_all_exprs env (λ e, e.const_name = `my_sorry) (λ _, ff) `foo5,
-  guard $ data.map (λ x, x.1) = [`foo5, `foo3, `foo2, `foo1],
-  guard $ data.map (λ x, x.2.1) = [ff, tt, tt, tt],
-  guard $ data.map (λ x, x.2.2.to_list) = [[`foo3], [`foo2], [`foo1], []],
-  -- make sure it doesn't loop on self-referencing meta expressions
-  find_all_exprs env (λ e, e.const_name = `my_sorry) (λ _, ff) `metafoo,
-  skip
+ env ← get_env,
+ data ← find_all_exprs env (λ e, e.const_name = `my_sorry) (λ _, ff) `foo5,
+ guard $ data.map (λ x, x.1) = [`foo5, `foo3, `foo2, `foo1],
+ guard $ data.map (λ x, x.2.1) = [ff, tt, tt, tt],
+ guard $ data.map (λ x, x.2.2.to_list) = [[`foo3], [`foo2], [`foo1], []],
+ -- make sure it doesn't loop on self-referencing meta expressions
+ find_all_exprs env (λ e, e.const_name = `my_sorry) (λ _, ff) `metafoo,
+ skip
+

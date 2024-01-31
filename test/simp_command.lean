@@ -43,7 +43,7 @@ section real
 
 open real
 #simp [exp_ne_zero] : (λ x, deriv (λ x, (sin x) / (exp x)) x) =
-  (λ (x : ℝ), (cos x * exp x - sin x * exp x) / exp x ^ 2)
+ (λ (x : ℝ), (cos x * exp x - sin x * exp x) / exp x ^ 2)
 
 variables (x : ℝ)
 
@@ -78,7 +78,7 @@ variables (t : ℤ) (k : ℕ) [magic_data k] [ii : magic_data k] (h : k = 77 ↔
 -- We want to be able to emulate this:
 example : (t = t) ∧ (h = h) ∧ ((k = 3) ↔ (k = 8)) :=
 begin
-  simp [spell t, h]
+ simp [spell t, h]
 end
 
 -- Check that we can:
@@ -104,7 +104,7 @@ variables (n : ℕ) [magic_data n] [doubly_magic_data n] (h₂ : n = 77 ↔ n = 
 
 example : (h₂ = h₂) ∧ ((n = 4) ↔ (n = 8)) :=
 begin
-  simp [h₂],
+ simp [h₂],
 end
 
 #simp [h₂, ii] : (n = 4) ↔ (n = 8)
@@ -112,3 +112,4 @@ end
 
 
 end inst
+

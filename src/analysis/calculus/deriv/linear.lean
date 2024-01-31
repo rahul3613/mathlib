@@ -54,7 +54,7 @@ e.has_deriv_at_filter
 e.has_deriv_at.deriv
 
 protected lemma continuous_linear_map.deriv_within (hxs : unique_diff_within_at 𝕜 s x) :
-  deriv_within e s x = e 1 :=
+ deriv_within e s x = e 1 :=
 e.has_deriv_within_at.deriv_within hxs
 
 end continuous_linear_map
@@ -79,8 +79,9 @@ e.has_deriv_at_filter
 e.has_deriv_at.deriv
 
 protected lemma linear_map.deriv_within (hxs : unique_diff_within_at 𝕜 s x) :
-  deriv_within e s x = e 1 :=
+ deriv_within e s x = e 1 :=
 e.has_deriv_within_at.deriv_within hxs
 
 end linear_map
+
 

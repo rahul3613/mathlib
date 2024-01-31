@@ -27,22 +27,23 @@ lemma multiset.sum_smul {l : multiset R} {x : M} : l.sum • x = (l.map (λ r, r
 ((smul_add_hom R M).flip x).map_multiset_sum l
 
 lemma multiset.sum_smul_sum {s : multiset R} {t : multiset M} :
-  s.sum • t.sum = ((s ×ˢ t).map $ λ p : R × M, p.fst • p.snd).sum :=
+ s.sum • t.sum = ((s ×ˢ t).map $ λ p : R × M, p.fst • p.snd).sum :=
 begin
-  induction s using multiset.induction with a s ih,
-  { simp },
-  { simp [add_smul, ih, ←multiset.smul_sum] }
+ induction s using multiset.induction with a s ih,
+ { simp },
+ { simp [add_smul, ih, ←multiset.smul_sum] }
 end
 
 lemma finset.sum_smul {f : ι → R} {s : finset ι} {x : M} :
-  (∑ i in s, f i) • x = (∑ i in s, (f i) • x) :=
+ (∑ i in s, f i) • x = (∑ i in s, (f i) • x) :=
 ((smul_add_hom R M).flip x).map_sum f s
 
 lemma finset.sum_smul_sum {f : α → R} {g : β → M} {s : finset α} {t : finset β} :
-  (∑ i in s, f i) • (∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd :=
-by { rw [finset.sum_product, finset.sum_smul, finset.sum_congr rfl], intros, rw finset.smul_sum }
+ (∑ i in s, f i) • (∑ i in t, g i) = ∑ p in s ×ˢ t, f p.fst • g p.snd :=
+by { rw [finset.sum_product]; rw [ finset.sum_smul]; rw [ finset.sum_congr rfl], intros, rw finset.smul_sum }
 
 end add_comm_monoid
 
 lemma finset.cast_card [comm_semiring R] (s : finset α) : (s.card : R) = ∑ a in s, 1 :=
-by rw [finset.sum_const, nat.smul_one_eq_coe]
+by rw [finset.sum_const]; rw [ nat.smul_one_eq_coe]
+

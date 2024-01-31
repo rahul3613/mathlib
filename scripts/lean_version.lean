@@ -8,3 +8,4 @@ sformat!("{major}.{minor}.{patch}")
 
 def main : io unit :=
 io.put_str_ln lean_version_string_core
+

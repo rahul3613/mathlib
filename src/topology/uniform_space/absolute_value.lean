@@ -43,11 +43,12 @@ variables {R : Type*} [comm_ring R] (abv : absolute_value R 𝕜)
 /-- The uniform space structure coming from an absolute value. -/
 protected def uniform_space : uniform_space R :=
 uniform_space.of_fun (λ x y, abv (y - x)) (by simp) (λ x y, abv.map_sub y x)
-  (λ x y z, (abv.sub_le _ _ _).trans_eq (add_comm _ _)) $
-  λ ε ε0, ⟨ε / 2, half_pos ε0, λ _ h₁ _ h₂, (add_lt_add h₁ h₂).trans_eq (add_halves ε)⟩
+ (λ x y z, (abv.sub_le _ _ _).trans_eq (add_comm _ _)) $
+ λ ε ε0, ⟨ε / 2, half_pos ε0, λ _ h₁ _ h₂, (add_lt_add h₁ h₂).trans_eq (add_halves ε)⟩
 
 theorem has_basis_uniformity :
-  𝓤[abv.uniform_space].has_basis (λ ε : 𝕜, 0 < ε) (λ ε, {p : R × R | abv (p.2 - p.1) < ε}) :=
+ 𝓤[abv.uniform_space].has_basis (λ ε : 𝕜, 0 < ε) (λ ε, {p : R × R | abv (p.2 - p.1) < ε}) :=
 uniform_space.has_basis_of_fun (exists_gt _) _ _ _ _ _
 
 end absolute_value
+

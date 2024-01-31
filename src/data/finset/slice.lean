@@ -46,7 +46,7 @@ lemma sized.mono (h : A ⊆ B) (hB : B.sized r) : A.sized r := λ x hx, hB $ h h
 
 lemma sized_union : (A ∪ B).sized r ↔ A.sized r ∧ B.sized r :=
 ⟨λ hA, ⟨hA.mono $ subset_union_left _ _, hA.mono $ subset_union_right _ _⟩,
-  λ hA x hx, hx.elim (λ h, hA.1 h) $ λ h, hA.2 h⟩
+ λ hA x hx, hx.elim (λ h, hA.1 h) $ λ h, hA.2 h⟩
 
 alias sized_union ↔ _ sized.union
 
@@ -55,7 +55,7 @@ alias sized_union ↔ _ sized.union
 by { simp_rw [set.sized, set.mem_Union, forall_exists_index], exact forall_swap }
 
 @[simp] lemma sized_Union₂ {f : Π i, κ i → set (finset α)} :
-  (⋃ i j, f i j).sized r ↔ ∀ i j, (f i j).sized r :=
+ (⋃ i j, f i j).sized r ↔ ∀ i j, (f i j).sized r :=
 by simp_rw sized_Union
 
 protected lemma sized.is_antichain (hA : A.sized r) : is_antichain (⊆) A :=
@@ -82,15 +82,15 @@ section sized
 variables [fintype α] {𝒜 : finset (finset α)} {s : finset α} {r : ℕ}
 
 lemma subset_powerset_len_univ_iff : 𝒜 ⊆ powerset_len r univ ↔ (𝒜 : set (finset α)).sized r :=
-forall_congr $ λ A, by rw [mem_powerset_len_univ_iff, mem_coe]
+forall_congr $ λ A, by rw [mem_powerset_len_univ_iff]; rw [ mem_coe]
 
-alias subset_powerset_len_univ_iff  ↔ _ _root_.set.sized.subset_powerset_len_univ
+alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
 
 lemma _root_.set.sized.card_le (h𝒜 : (𝒜 : set (finset α)).sized r) :
-  card 𝒜 ≤ (fintype.card α).choose r :=
+ card 𝒜 ≤ (fintype.card α).choose r :=
 begin
-  rw [fintype.card, ←card_powerset_len],
-  exact card_le_of_subset h𝒜.subset_powerset_len_univ,
+ rw [fintype.card]; rw [ ←card_powerset_len],
+ exact card_le_of_subset h𝒜.subset_powerset_len_univ,
 end
 
 end sized
@@ -128,14 +128,15 @@ variables [fintype α] (𝒜)
 
 @[simp] lemma bUnion_slice [decidable_eq α] : (Iic $ fintype.card α).bUnion 𝒜.slice = 𝒜 :=
 subset.antisymm (bUnion_subset.2 $ λ r _, slice_subset) $ λ s hs,
-  mem_bUnion.2 ⟨s.card, mem_Iic.2 $ s.card_le_univ, mem_slice.2 $ ⟨hs, rfl⟩⟩
+ mem_bUnion.2 ⟨s.card, mem_Iic.2 $ s.card_le_univ, mem_slice.2 $ ⟨hs, rfl⟩⟩
 
 @[simp] lemma sum_card_slice : ∑ r in Iic (fintype.card α), (𝒜 # r).card = 𝒜.card :=
 begin
-  letI := classical.dec_eq α,
-  rw [←card_bUnion, bUnion_slice],
-  exact finset.pairwise_disjoint_slice.subset (set.subset_univ _),
+ letI := classical.dec_eq α,
+ rw [←card_bUnion]; rw [ bUnion_slice],
+ exact finset.pairwise_disjoint_slice.subset (set.subset_univ _),
 end
 
 end slice
 end finset
+

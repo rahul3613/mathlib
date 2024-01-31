@@ -22,15 +22,15 @@ uses is `fintype.card_embedding_eq`.
 
 namespace theorems_100
 
-local notation (name := finset.card)  `|` x `|` := finset.card x
+local notation (name := finset.card) `|` x `|` := finset.card x
 local notation (name := fintype.card) `‖` x `‖` := fintype.card x
 
 /-- **Birthday Problem**: set cardinality interpretation. -/
 theorem birthday :
-  2 * ‖fin 23 ↪ fin 365‖ < ‖fin 23 → fin 365‖ ∧ 2 * ‖fin 22 ↪ fin 365‖ > ‖fin 22 → fin 365‖ :=
+ 2 * ‖fin 23 ↪ fin 365‖ < ‖fin 23 → fin 365‖ ∧ 2 * ‖fin 22 ↪ fin 365‖ > ‖fin 22 → fin 365‖ :=
 begin
-  simp only [nat.desc_factorial, fintype.card_fin, fintype.card_embedding_eq, fintype.card_fun],
-  norm_num
+ simp only [nat.desc_factorial, fintype.card_fin, fintype.card_embedding_eq, fintype.card_fun],
+ norm_num
 end
 
 section measure_theory
@@ -57,28 +57,29 @@ instance : is_probability_measure (ℙ : measure (fin n → fin (m + 1))) :=
 cond_count_is_probability_measure set.finite_univ set.univ_nonempty
 
 lemma fin_fin.measure_apply {s : set $ fin n → fin m} :
-  ℙ s = (|s.to_finite.to_finset|) / ‖fin n → fin m‖ :=
-by erw [cond_count_univ, measure.count_apply_finite]
+ ℙ s = (|s.to_finite.to_finset|) / ‖fin n → fin m‖ :=
+by erw [cond_count_univ]; erw [ measure.count_apply_finite]
 
 /-- **Birthday Problem**: first probabilistic interpretation. -/
 theorem birthday_measure : ℙ {f : fin 23 → fin 365 | function.injective f} < 1 / 2 :=
 begin
-  -- most of this proof is essentially converting it to the same form as `birthday`.
-  rw [fin_fin.measure_apply],
-  generalize_proofs hfin,
-  have : |hfin.to_finset| = 42200819302092359872395663074908957253749760700776448000000,
-  { transitivity ‖fin 23 ↪ fin 365‖,
-    { simp_rw [←fintype.card_coe, set.finite.coe_sort_to_finset, set.coe_set_of],
-      exact fintype.card_congr (equiv.subtype_injective_equiv_embedding _ _) },
-    { simp only [fintype.card_embedding_eq, fintype.card_fin, nat.desc_factorial],
-      norm_num } },
-  rw [this, ennreal.lt_div_iff_mul_lt, mul_comm, mul_div, ennreal.div_lt_iff],
-  rotate, iterate 2 { right, norm_num }, iterate 2 { left, norm_num },
-  norm_cast,
-  simp only [fintype.card_pi, fintype.card_fin],
-  norm_num
+ -- most of this proof is essentially converting it to the same form as `birthday`.
+ rw [fin_fin.measure_apply],
+ generalize_proofs hfin,
+ have : |hfin.to_finset| = 42200819302092359872395663074908957253749760700776448000000,
+ { transitivity ‖fin 23 ↪ fin 365‖,
+ { simp_rw [←fintype.card_coe, set.finite.coe_sort_to_finset, set.coe_set_of],
+ exact fintype.card_congr (equiv.subtype_injective_equiv_embedding _ _) },
+ { simp only [fintype.card_embedding_eq, fintype.card_fin, nat.desc_factorial],
+ norm_num } },
+ rw [this]; rw [ ennreal.lt_div_iff_mul_lt]; rw [ mul_comm]; rw [ mul_div]; rw [ ennreal.div_lt_iff],
+ rotate, iterate 2 { right, norm_num }, iterate 2 { left, norm_num },
+ norm_cast,
+ simp only [fintype.card_pi, fintype.card_fin],
+ norm_num
 end
 
 end measure_theory
 
 end theorems_100
+

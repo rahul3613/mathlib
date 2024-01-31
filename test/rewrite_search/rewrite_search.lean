@@ -19,8 +19,8 @@ private axiom bar' : [[5], [5]] = [[6], [6]]
 
 example : [[7], [6]] = [[5], [5]] :=
 begin
-  success_if_fail { rewrite_search },
-  rewrite_search [foo', bar']
+ success_if_fail { rewrite_search },
+ rewrite_search [foo', bar']
 end
 
 @[rewrite] private axiom foo : [0] = [1]
@@ -89,3 +89,4 @@ by rewrite_search [rat.cast_zero, nat.cast_zero, add_comm]
 example (x : ℕ) : x = x := by rewrite_search
 
 end tactic.rewrite_search.testing
+

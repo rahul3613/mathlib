@@ -17,6 +17,7 @@ lemma injective_iff (f : M →ₗ[R] N) : function.injective f ↔ ∀ m, f m = 
 injective_iff_map_eq_zero f
 
 lemma foo (L : submodule R (unit → R))
-  (H : ∀ (m : tensor_product R ↥L ↥L), (tensor_product.map L.subtype L.subtype) m = 0 → m = 0) :
-  injective (tensor_product.map L.subtype L.subtype) :=
+ (H : ∀ (m : tensor_product R ↥L ↥L), (tensor_product.map L.subtype L.subtype) m = 0 → m = 0) :
+ injective (tensor_product.map L.subtype L.subtype) :=
 (injective_iff _).mpr H
+

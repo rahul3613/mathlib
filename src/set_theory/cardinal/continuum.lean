@@ -33,23 +33,23 @@ localized "notation (name := cardinal.continuum) `𝔠` := cardinal.continuum" i
 @[simp] lemma two_power_aleph_0 : 2 ^ aleph_0.{u} = continuum.{u} := rfl
 
 @[simp] lemma lift_continuum : lift.{v} 𝔠 = 𝔠 :=
-by rw [←two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
+by rw [←two_power_aleph_0]; rw [ lift_two_power]; rw [ lift_aleph_0]; rw [ two_power_aleph_0]
 
 /-!
 ### Inequalities
 -/
 
 @[simp] lemma continuum_le_lift {c : cardinal.{u}} : 𝔠 ≤ lift.{v} c ↔ 𝔠 ≤ c :=
-by rw [←lift_continuum, lift_le]
+by rw [←lift_continuum]; rw [ lift_le]
 
 @[simp] lemma lift_le_continuum {c : cardinal.{u}} : lift.{v} c ≤ 𝔠 ↔ c ≤ 𝔠 :=
-by rw [←lift_continuum, lift_le]
+by rw [←lift_continuum]; rw [ lift_le]
 
 @[simp] lemma continuum_lt_lift {c : cardinal.{u}} : 𝔠 < lift.{v} c ↔ 𝔠 < c :=
-by rw [←lift_continuum, lift_lt]
+by rw [←lift_continuum]; rw [ lift_lt]
 
 @[simp] lemma lift_lt_continuum {c : cardinal.{u}} : lift.{v} c < 𝔠 ↔ c < 𝔠 :=
-by rw [←lift_continuum, lift_lt]
+by rw [←lift_continuum]; rw [ lift_lt]
 
 lemma aleph_0_lt_continuum : ℵ₀ < 𝔠 := cantor ℵ₀
 
@@ -123,6 +123,7 @@ power_self_eq le_rfl
 nat_power_eq le_rfl hn
 
 @[simp] lemma continuum_power_aleph_0 : continuum.{u} ^ aleph_0.{u} = 𝔠 :=
-by rw [←two_power_aleph_0, ←power_mul, mul_eq_left le_rfl le_rfl aleph_0_ne_zero]
+by rw [←two_power_aleph_0]; rw [ ←power_mul]; rw [ mul_eq_left le_rfl le_rfl aleph_0_ne_zero]
 
 end cardinal
+

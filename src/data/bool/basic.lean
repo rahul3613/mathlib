@@ -57,15 +57,15 @@ eq_comm.trans (to_bool_ff_iff _)
 by by_cases p; simp *
 
 @[simp] theorem to_bool_and (p q : Prop) [decidable p] [decidable q] :
-  to_bool (p ∧ q) = p && q :=
+ to_bool (p ∧ q) = p && q :=
 by by_cases p; by_cases q; simp *
 
 @[simp] theorem to_bool_or (p q : Prop) [decidable p] [decidable q] :
-  to_bool (p ∨ q) = p || q :=
+ to_bool (p ∨ q) = p || q :=
 by by_cases p; by_cases q; simp *
 
 @[simp] theorem to_bool_eq {p q : Prop} [decidable p] [decidable q] :
-  to_bool p = to_bool q ↔ (p ↔ q) :=
+ to_bool p = to_bool q ↔ (p ↔ q) :=
 ⟨λ h, (coe_to_bool p).symm.trans $ by simp [h], to_bool_congr⟩
 
 lemma not_ff : ¬ ff := ff_ne_tt
@@ -97,7 +97,7 @@ decidable_of_decidable_of_iff or.decidable exists_bool.symm
 theorem cond_eq_ite {α} (b : bool) (t e : α) : cond b t e = if b then t else e := by cases b; simp
 
 @[simp] theorem cond_to_bool {α} (p : Prop) [decidable p] (t e : α) :
-  cond (to_bool p) t e = if p then t else e :=
+ cond (to_bool p) t e = if p then t else e :=
 by simp [cond_eq_ite]
 
 @[simp] theorem cond_bnot {α} (b : bool) (t e : α) : cond (!b) t e = cond b e t :=
@@ -193,16 +193,16 @@ lemma bnot_inj : ∀ {a b : bool}, !a = !b → a = b := dec_trivial
 
 instance : linear_order bool :=
 { le := λ a b, a = ff ∨ b = tt,
-  le_refl := dec_trivial,
-  le_trans := dec_trivial,
-  le_antisymm := dec_trivial,
-  le_total := dec_trivial,
-  decidable_le := infer_instance,
-  decidable_eq := infer_instance,
-  max := bor,
-  max_def := by { funext x y, revert x y, exact dec_trivial },
-  min := band,
-  min_def := by { funext x y, revert x y, exact dec_trivial } }
+ le_refl := dec_trivial,
+ le_trans := dec_trivial,
+ le_antisymm := dec_trivial,
+ le_total := dec_trivial,
+ decidable_le := infer_instance,
+ decidable_eq := infer_instance,
+ max := bor,
+ max_def := by { funext x y, revert x y, exact dec_trivial },
+ min := band,
+ min_def := by { funext x y, revert x y, exact dec_trivial } }
 
 @[simp] lemma ff_le {x : bool} : ff ≤ x := or.intro_left _ rfl
 
@@ -236,13 +236,13 @@ to_bool (n ≠ 0)
 
 lemma of_nat_le_of_nat {n m : ℕ} (h : n ≤ m) : of_nat n ≤ of_nat m :=
 begin
-  simp [of_nat];
-    cases nat.decidable_eq n 0;
-    cases nat.decidable_eq m 0;
-    simp only [to_bool],
-  { subst m, have h := le_antisymm h (nat.zero_le _),
-    contradiction },
-  { left, refl }
+ simp [of_nat];
+ cases nat.decidable_eq n 0;
+ cases nat.decidable_eq m 0;
+ simp only [to_bool],
+ { subst m, have h := le_antisymm h (nat.zero_le _),
+ contradiction },
+ { left, refl }
 end
 
 lemma to_nat_le_to_nat {b₀ b₁ : bool} (h : b₀ ≤ b₁) : to_nat b₀ ≤ to_nat b₁ :=
@@ -253,10 +253,11 @@ by cases b; simp only [of_nat,to_nat]; exact dec_trivial
 
 @[simp] lemma injective_iff {α : Sort*} {f : bool → α} : function.injective f ↔ f ff ≠ f tt :=
 ⟨λ Hinj Heq, ff_ne_tt (Hinj Heq),
-  λ H x y hxy, by { cases x; cases y, exacts [rfl, (H hxy).elim, (H hxy.symm).elim, rfl] }⟩
+ λ H x y hxy, by { cases x; cases y, exacts [rfl, (H hxy).elim, (H hxy.symm).elim, rfl] }⟩
 
 /-- **Kaminski's Equation** -/
 theorem apply_apply_apply (f : bool → bool) (x : bool) : f (f (f x)) = f x :=
 by cases x; cases h₁ : f tt; cases h₂ : f ff; simp only [h₁, h₂]
 
 end bool
+

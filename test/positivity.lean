@@ -139,7 +139,7 @@ example {a : ℤ} (ha : 3 < a) : 0 ≤ a + a := by positivity
 example {a b : ℤ} (ha : 3 < a) (hb : 4 ≤ b) : 0 ≤ 3 + a + b + b + 14 := by positivity
 
 example {H : Type*} [linear_ordered_add_comm_group H] {a b : H} (ha : 0 < a) (hb : 0 ≤ b) :
-  0 ≤ a + a + b :=
+ 0 ≤ a + a + b :=
 by positivity
 
 example {a : ℤ} (ha : 3 < a) : 0 < a + a := by positivity
@@ -208,8 +208,8 @@ example {a b : ℤ} (ha : 3 < a) : 0 ≤ min a (b ^ 2) := by positivity
 -- test that the tactic can ignore arithmetic operations whose associated extension tactic requires
 -- more typeclass assumptions than are available
 example {R : Type*} [has_zero R] [has_div R] [linear_order R] {a b c : R} (h1 : 0 < a) (h2 : 0 < b)
-  (h3 : 0 < c) :
-  0 < max (a / b) c :=
+ (h3 : 0 < c) :
+ 0 < max (a / b) c :=
 by positivity
 
 example : 0 ≤ max 3 4 := by positivity
@@ -223,7 +223,7 @@ example : 0 ≤ max (0:ℤ) (-3) := by positivity
 example : 0 ≤ max (-3 : ℤ) 5 := by positivity
 
 example [ordered_semiring α] [ordered_add_comm_monoid β] [smul_with_zero α β]
-  [ordered_smul α β] {a : α} (ha : 0 < a) {b : β} (hb : 0 < b) : 0 ≤ a • b := by positivity
+ [ordered_smul α β] {a : α} (ha : 0 < a) {b : β} (hb : 0 < b) : 0 ≤ a • b := by positivity
 
 example (n : ℕ) : 0 < n.succ := by positivity
 example (n : ℕ) : 0 < n! := by positivity
@@ -246,9 +246,9 @@ example {E : Type*} [add_group E] {p : add_group_seminorm E} {x : E} : 0 ≤ p x
 example {E : Type*} [group E] {p : group_seminorm E} {x : E} : 0 ≤ p x := by positivity
 
 example {r : α → β → Prop} [Π a, decidable_pred (r a)] {s : finset α} {t : finset β} :
-  0 ≤ rel.edge_density r s t := by positivity
+ 0 ≤ rel.edge_density r s t := by positivity
 example {G : simple_graph α} [decidable_rel G.adj] {s t : finset α} :
-  0 ≤ G.edge_density s t := by positivity
+ 0 ≤ G.edge_density s t := by positivity
 
 /- ### Canonical orders -/
 
@@ -301,3 +301,4 @@ https://leanprover.zulipchat.com/#narrow/stream/239415-metaprogramming-.2F-tacti
 -/
 
 example : 0 ≤ 0 := by { apply le_trans _ le_rfl, positivity }
+

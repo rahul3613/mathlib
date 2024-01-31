@@ -29,12 +29,12 @@ lemma units_int.one_ne_neg_one : (1 : ℤˣ) ≠ -1 := dec_trivial
 /-- Submodules of positive and negative integers, keyed by sign. -/
 def with_sign (i : ℤˣ) : submodule ℕ ℤ :=
 add_submonoid.to_nat_submodule $ show add_submonoid ℤ, from
-  { carrier := {z | 0 ≤ i • z},
-    zero_mem' := show 0 ≤ i • (0 : ℤ), from (smul_zero _).ge,
-    add_mem' := λ x y (hx : 0 ≤ i • x) (hy : 0 ≤ i • y), show _ ≤ _, begin
-      rw smul_add,
-      exact add_nonneg hx hy
-    end }
+ { carrier := {z | 0 ≤ i • z},
+ zero_mem' := show 0 ≤ i • (0 : ℤ), from (smul_zero _).ge,
+ add_mem' := λ x y (hx : 0 ≤ i • x) (hy : 0 ≤ i • y), show _ ≤ _, begin
+ rw smul_add,
+ exact add_nonneg hx hy
+ end }
 
 local notation `ℤ≥0` := with_sign 1
 local notation `ℤ≤0` := with_sign (-1)
@@ -43,56 +43,54 @@ lemma mem_with_sign_one {x : ℤ} : x ∈ ℤ≥0 ↔ 0 ≤ x :=
 show _ ≤ _ ↔ _, by rw one_smul
 
 lemma mem_with_sign_neg_one {x : ℤ} : x ∈ ℤ≤0 ↔ x ≤ 0 :=
-show _ ≤ _ ↔ _, by rw [units.neg_smul, le_neg, one_smul, neg_zero]
+show _ ≤ _ ↔ _, by rw [units.neg_smul]; rw [ le_neg]; rw [ one_smul]; rw [ neg_zero]
 
 /-- The two submodules are complements. -/
 lemma with_sign.is_compl : is_compl (ℤ≥0) (ℤ≤0) :=
 begin
-  split,
-  { apply submodule.disjoint_def.2,
-    intros x hx hx',
-    exact le_antisymm (mem_with_sign_neg_one.mp hx') (mem_with_sign_one.mp hx), },
-  { rw codisjoint_iff_le_sup,
-    intros x hx,
-    obtain hp | hn := (le_refl (0 : ℤ)).le_or_le x,
-    exact submodule.mem_sup_left (mem_with_sign_one.mpr hp),
-    exact submodule.mem_sup_right (mem_with_sign_neg_one.mpr hn), }
+ split,
+ { apply submodule.disjoint_def.2,
+ intros x hx hx',
+ exact le_antisymm (mem_with_sign_neg_one.mp hx') (mem_with_sign_one.mp hx), },
+ { rw codisjoint_iff_le_sup,
+ intros x hx,
+ obtain hp | hn := (le_refl (0 : ℤ)).le_or_le x,
+ exact submodule.mem_sup_left (mem_with_sign_one.mpr hp),
+ exact submodule.mem_sup_right (mem_with_sign_neg_one.mpr hn), }
 end
 
 def with_sign.independent : complete_lattice.independent with_sign :=
 begin
-  refine (complete_lattice.independent_pair units_int.one_ne_neg_one _).mpr
-    with_sign.is_compl.disjoint,
-  intros i,
-  fin_cases i; simp,
+ refine (complete_lattice.independent_pair units_int.one_ne_neg_one _).mpr
+ with_sign.is_compl.disjoint,
+ intros i,
+ fin_cases i; simp,
 end
 
 lemma with_sign.supr : supr with_sign = ⊤ :=
 begin
-  rw [←finset.sup_univ_eq_supr, units_int.univ, finset.sup_insert, finset.sup_singleton],
-  exact with_sign.is_compl.sup_eq_top,
+ rw [←finset.sup_univ_eq_supr]; rw [ units_int.univ]; rw [ finset.sup_insert]; rw [ finset.sup_singleton],
+ exact with_sign.is_compl.sup_eq_top,
 end
 
 /-- But there is no embedding into `ℤ` from the direct sum. -/
 lemma with_sign.not_injective :
-  ¬function.injective (direct_sum.to_module ℕ ℤˣ ℤ (λ i, (with_sign i).subtype)) :=
+ ¬function.injective (direct_sum.to_module ℕ ℤˣ ℤ (λ i, (with_sign i).subtype)) :=
 begin
-  intro hinj,
-  let p1 : ℤ≥0 := ⟨1, mem_with_sign_one.2 zero_le_one⟩,
-  let n1 : ℤ≤0 := ⟨-1, mem_with_sign_neg_one.2 $ neg_nonpos.2 zero_le_one⟩,
-  let z := direct_sum.lof ℕ _ (λ i, with_sign i) 1 p1 +
-           direct_sum.lof ℕ _ (λ i, with_sign i) (-1) n1,
-  have : z ≠ 0,
-  { intro h,
-    dsimp [z, direct_sum.lof_eq_of, direct_sum.of] at h,
-    replace h := dfinsupp.ext_iff.mp h 1,
-    rw [dfinsupp.zero_apply, dfinsupp.add_apply, dfinsupp.single_eq_same,
-      dfinsupp.single_eq_of_ne (units_int.one_ne_neg_one.symm), add_zero, subtype.ext_iff,
-      submodule.coe_zero] at h,
-    apply zero_ne_one h.symm, },
-  apply hinj.ne this,
-  rw [linear_map.map_zero, linear_map.map_add, direct_sum.to_module_lof, direct_sum.to_module_lof],
-  simp,
+ intro hinj,
+ let p1 : ℤ≥0 := ⟨1, mem_with_sign_one.2 zero_le_one⟩,
+ let n1 : ℤ≤0 := ⟨-1, mem_with_sign_neg_one.2 $ neg_nonpos.2 zero_le_one⟩,
+ let z := direct_sum.lof ℕ _ (λ i, with_sign i) 1 p1 +
+ direct_sum.lof ℕ _ (λ i, with_sign i) (-1) n1,
+ have : z ≠ 0,
+ { intro h,
+ dsimp [z, direct_sum.lof_eq_of, direct_sum.of] at h,
+ replace h := dfinsupp.ext_iff.mp h 1,
+ rw [dfinsupp.zero_apply] at h; rw [ dfinsupp.add_apply] at h; rw [ dfinsupp.single_eq_same] at h; rw [ dfinsupp.single_eq_of_ne (units_int.one_ne_neg_one.symm)] at h; rw [ add_zero] at h; rw [ subtype.ext_iff] at h; rw [ submodule.coe_zero] at h,
+ apply zero_ne_one h.symm, },
+ apply hinj.ne this,
+ rw [linear_map.map_zero]; rw [ linear_map.map_add]; rw [ direct_sum.to_module_lof]; rw [ direct_sum.to_module_lof],
+ simp,
 end
 
 /-- And so they do not represent an internal direct sum. -/
@@ -100,3 +98,4 @@ lemma with_sign.not_internal : ¬direct_sum.is_internal with_sign :=
 with_sign.not_injective ∘ and.elim_left
 
 end counterexample
+

@@ -195,13 +195,13 @@ example (X : C) : F.obj X ⟶ G.obj X := α.app X
 
 /- The diagram coming from g and α
 
-    F(f)
+ F(f)
 F X ---> F Y
- |        |
- |α(X)    |α(Y)
- v        v
+ | |
+ |α(X) |α(Y)
+ v v
 G X ---> G Y
-    G(f)
+ G(f)
 
 commutes.
 -/
@@ -217,3 +217,4 @@ There are several lean files in the [category theory docs directory of
 mathlib](https://github.com/leanprover-community/mathlib/tree/master/docs/tutorial/category_theory)
 which give further examples of using the category theory library in Lean.
 -/
+

@@ -61,13 +61,13 @@ add_decl_doc AddMon.of
 
 /-- Typecheck a `monoid_hom` as a morphism in `Mon`. -/
 @[to_additive] def of_hom {X Y : Type u} [monoid X] [monoid Y] (f : X →* Y) :
-  of X ⟶ of Y := f
+ of X ⟶ of Y := f
 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddMon`. -/
 add_decl_doc AddMon.of_hom
 
 @[simp] lemma of_hom_apply {X Y : Type u} [monoid X] [monoid Y] (f : X →* Y)
-  (x : X) : of_hom f x = f x := rfl
+ (x : X) : of_hom f x = f x := rfl
 
 @[to_additive]
 instance : inhabited Mon :=
@@ -128,7 +128,7 @@ instance has_forget_to_Mon : has_forget₂ CommMon Mon := bundled_hom.forget₂ 
 end CommMon
 
 -- We verify that the coercions of morphisms to functions work correctly:
-example {R S : Mon}     (f : R ⟶ S) : (R : Type) → (S : Type) := f
+example {R S : Mon} (f : R ⟶ S) : (R : Type) → (S : Type) := f
 example {R S : CommMon} (f : R ⟶ S) : (R : Type) → (S : Type) := f
 
 -- We verify that when constructing a morphism in `CommMon`,
@@ -136,14 +136,14 @@ example {R S : CommMon} (f : R ⟶ S) : (R : Type) → (S : Type) := f
 -- rather than `R.α` or (as we used to have) `↥(bundled.map comm_monoid.to_monoid R)`.
 example (R : CommMon.{u}) : R ⟶ R :=
 { to_fun := λ x,
-  begin
-    match_target (R : Type u),
-    match_hyp x : (R : Type u),
-    exact x * x
-  end ,
-  map_one' := by simp,
-  map_mul' := λ x y,
-  begin rw [mul_assoc x y (x * y), ←mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc], end, }
+ begin
+ match_target (R : Type u),
+ match_hyp x : (R : Type u),
+ exact x * x
+ end ,
+ map_one' := by simp,
+ map_mul' := λ x y,
+ begin rw [mul_assoc x y (x * y)]; rw [ ←mul_assoc y x y]; rw [ mul_comm y x]; rw [ mul_assoc]; rw [ mul_assoc], end, }
 
 variables {X Y : Type u}
 
@@ -155,7 +155,7 @@ variables [monoid X] [monoid Y]
 an `add_equiv` between `add_monoid`s.", simps]
 def mul_equiv.to_Mon_iso (e : X ≃* Y) : Mon.of X ≅ Mon.of Y :=
 { hom := e.to_monoid_hom,
-  inv := e.symm.to_monoid_hom }
+ inv := e.symm.to_monoid_hom }
 
 end
 
@@ -167,7 +167,7 @@ variables [comm_monoid X] [comm_monoid Y]
 from an `add_equiv` between `add_comm_monoid`s.", simps]
 def mul_equiv.to_CommMon_iso (e : X ≃* Y) : CommMon.of X ≅ CommMon.of Y :=
 { hom := e.to_monoid_hom,
-  inv := e.symm.to_monoid_hom }
+ inv := e.symm.to_monoid_hom }
 
 end
 
@@ -192,38 +192,38 @@ in `Mon` -/
 @[to_additive add_equiv_iso_AddMon_iso "additive equivalences between `add_monoid`s are the same
 as (isomorphic to) isomorphisms in `AddMon`"]
 def mul_equiv_iso_Mon_iso {X Y : Type u} [monoid X] [monoid Y] :
-  (X ≃* Y) ≅ (Mon.of X ≅ Mon.of Y) :=
+ (X ≃* Y) ≅ (Mon.of X ≅ Mon.of Y) :=
 { hom := λ e, e.to_Mon_iso,
-  inv := λ i, i.Mon_iso_to_mul_equiv, }
+ inv := λ i, i.Mon_iso_to_mul_equiv, }
 
 /-- multiplicative equivalences between `comm_monoid`s are the same as (isomorphic to) isomorphisms
 in `CommMon` -/
 @[to_additive add_equiv_iso_AddCommMon_iso "additive equivalences between `add_comm_monoid`s are
 the same as (isomorphic to) isomorphisms in `AddCommMon`"]
 def mul_equiv_iso_CommMon_iso {X Y : Type u} [comm_monoid X] [comm_monoid Y] :
-  (X ≃* Y) ≅ (CommMon.of X ≅ CommMon.of Y) :=
+ (X ≃* Y) ≅ (CommMon.of X ≅ CommMon.of Y) :=
 { hom := λ e, e.to_CommMon_iso,
-  inv := λ i, i.CommMon_iso_to_mul_equiv, }
+ inv := λ i, i.CommMon_iso_to_mul_equiv, }
 
 @[to_additive]
 instance Mon.forget_reflects_isos : reflects_isomorphisms (forget Mon.{u}) :=
 { reflects := λ X Y f _,
-  begin
-    resetI,
-    let i := as_iso ((forget Mon).map f),
-    let e : X ≃* Y := { ..f, ..i.to_equiv },
-    exact ⟨(is_iso.of_iso e.to_Mon_iso).1⟩,
-  end }
+ begin
+ resetI,
+ let i := as_iso ((forget Mon).map f),
+ let e : X ≃* Y := { ..f, ..i.to_equiv },
+ exact ⟨(is_iso.of_iso e.to_Mon_iso).1⟩,
+ end }
 
 @[to_additive]
 instance CommMon.forget_reflects_isos : reflects_isomorphisms (forget CommMon.{u}) :=
 { reflects := λ X Y f _,
-  begin
-    resetI,
-    let i := as_iso ((forget CommMon).map f),
-    let e : X ≃* Y := { ..f, ..i.to_equiv },
-    exact ⟨(is_iso.of_iso e.to_CommMon_iso).1⟩,
-  end }
+ begin
+ resetI,
+ let i := as_iso ((forget CommMon).map f),
+ let e : X ≃* Y := { ..f, ..i.to_equiv },
+ exact ⟨(is_iso.of_iso e.to_CommMon_iso).1⟩,
+ end }
 
 /-!
 Once we've shown that the forgetful functors to type reflect isomorphisms,
@@ -231,3 +231,4 @@ we automatically obtain that the `forget₂` functors between our concrete categ
 reflect isomorphisms.
 -/
 example : reflects_isomorphisms (forget₂ CommMon Mon) := by apply_instance
+

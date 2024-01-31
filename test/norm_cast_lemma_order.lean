@@ -18,3 +18,4 @@ run_cmd norm_cast.coe_to_numeral `((0 : ℕ) : ℝ)
 run_cmd norm_cast.coe_to_numeral `((1 : ℕ) : ℝ)
 run_cmd norm_cast.coe_to_numeral `((2 : ℕ) : ℝ)
 run_cmd norm_cast.coe_to_numeral `((3 : ℕ) : ℝ)
+

@@ -42,7 +42,7 @@ variables {R R' M M' : Type*}
 section has_zero
 
 variables (R M)
-/--  `smul_with_zero` is a class consisting of a Type `R` with `0 ∈ R` and a scalar multiplication
+/-- `smul_with_zero` is a class consisting of a Type `R` with `0 ∈ R` and a scalar multiplication
 of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at least one among `r`
 or `m` equals `0`. -/
 class smul_with_zero [has_zero R] [has_zero M] extends smul_zero_class R M :=
@@ -50,14 +50,14 @@ class smul_with_zero [has_zero R] [has_zero M] extends smul_zero_class R M :=
 
 instance mul_zero_class.to_smul_with_zero [mul_zero_class R] : smul_with_zero R R :=
 { smul := (*),
-  smul_zero := mul_zero,
-  zero_smul := zero_mul }
+ smul_zero := mul_zero,
+ zero_smul := zero_mul }
 
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
 instance mul_zero_class.to_opposite_smul_with_zero [mul_zero_class R] : smul_with_zero Rᵐᵒᵖ R :=
 { smul := (•),
-  smul_zero := λ r, zero_mul _,
-  zero_smul := mul_zero }
+ smul_zero := λ r, zero_mul _,
+ zero_smul := mul_zero }
 
 variables (R) {M} [has_zero R] [has_zero M] [smul_with_zero R M]
 
@@ -76,46 +76,46 @@ variables {R M} [has_zero R'] [has_zero M'] [has_smul R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def function.injective.smul_with_zero
-  (f : zero_hom M' M) (hf : function.injective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
-  smul_with_zero R M' :=
+ (f : zero_hom M' M) (hf : function.injective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
+ smul_with_zero R M' :=
 { smul := (•),
-  zero_smul := λ a, hf $ by simp [smul],
-  smul_zero := λ a, hf $ by simp [smul]}
+ zero_smul := λ a, hf $ by simp [smul],
+ smul_zero := λ a, hf $ by simp [smul]}
 
 /-- Pushforward a `smul_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def function.surjective.smul_with_zero
-  (f : zero_hom M M') (hf : function.surjective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
-  smul_with_zero R M' :=
+ (f : zero_hom M M') (hf : function.surjective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
+ smul_with_zero R M' :=
 { smul := (•),
-  zero_smul := λ m, by { rcases hf m with ⟨x, rfl⟩, simp [←smul] },
-  smul_zero := λ c, by simp only [← f.map_zero, ← smul, smul_zero] }
+ zero_smul := λ m, by { rcases hf m with ⟨x, rfl⟩, simp [←smul] },
+ smul_zero := λ c, by simp only [← f.map_zero, ← smul, smul_zero] }
 
 variables (M)
 
 /-- Compose a `smul_with_zero` with a `zero_hom`, with action `f r' • m` -/
 def smul_with_zero.comp_hom (f : zero_hom R' R) : smul_with_zero R' M :=
 { smul := (•) ∘ f,
-  smul_zero := λ m, by simp,
-  zero_smul := λ m, by simp }
+ smul_zero := λ m, by simp,
+ zero_smul := λ m, by simp }
 
 end has_zero
 
 instance add_monoid.nat_smul_with_zero [add_monoid M] : smul_with_zero ℕ M :=
 { smul_zero := nsmul_zero,
-  zero_smul := zero_nsmul }
+ zero_smul := zero_nsmul }
 
 instance add_group.int_smul_with_zero [add_group M] : smul_with_zero ℤ M :=
 { smul_zero := zsmul_zero,
-  zero_smul := zero_zsmul }
+ zero_smul := zero_zsmul }
 
 section monoid_with_zero
 
 variables [monoid_with_zero R] [monoid_with_zero R'] [has_zero M]
 
 variables (R M)
-/--  An action of a monoid with zero `R` on a Type `M`, also with `0`, extends `mul_action` and
+/-- An action of a monoid with zero `R` on a Type `M`, also with `0`, extends `mul_action` and
 is compatible with `0` (both in `R` and in `M`), with `1 ∈ R`, and with associativity of
 multiplication on the monoid `M`. -/
 class mul_action_with_zero extends mul_action R M :=
@@ -125,28 +125,28 @@ class mul_action_with_zero extends mul_action R M :=
 
 @[priority 100] -- see Note [lower instance priority]
 instance mul_action_with_zero.to_smul_with_zero [m : mul_action_with_zero R M] :
-  smul_with_zero R M :=
+ smul_with_zero R M :=
 {..m}
 
 /-- See also `semiring.to_module` -/
 instance monoid_with_zero.to_mul_action_with_zero : mul_action_with_zero R R :=
 { ..mul_zero_class.to_smul_with_zero R,
-  ..monoid.to_mul_action R }
+ ..monoid.to_mul_action R }
 
 /-- Like `monoid_with_zero.to_mul_action_with_zero`, but multiplies on the right. See also
 `semiring.to_opposite_module` -/
 instance monoid_with_zero.to_opposite_mul_action_with_zero : mul_action_with_zero Rᵐᵒᵖ R :=
 { ..mul_zero_class.to_opposite_smul_with_zero R,
-  ..monoid.to_opposite_mul_action R }
+ ..monoid.to_opposite_mul_action R }
 
 protected lemma mul_action_with_zero.subsingleton
-  [mul_action_with_zero R M] [subsingleton R] : subsingleton M :=
-⟨λ x y, by rw [←one_smul R x, ←one_smul R y, subsingleton.elim (1 : R) 0, zero_smul, zero_smul]⟩
+ [mul_action_with_zero R M] [subsingleton R] : subsingleton M :=
+⟨λ x y, by rw [←one_smul R x]; rw [ ←one_smul R y]; rw [ subsingleton.elim (1 : R) 0]; rw [ zero_smul]; rw [ zero_smul]⟩
 
 protected lemma mul_action_with_zero.nontrivial
-  [mul_action_with_zero R M] [nontrivial M] : nontrivial R :=
+ [mul_action_with_zero R M] [nontrivial M] : nontrivial R :=
 (subsingleton_or_nontrivial R).resolve_left $ λ hR, not_subsingleton M $
-  by exactI mul_action_with_zero.subsingleton R M
+ by exactI mul_action_with_zero.subsingleton R M
 
 variables {R M} [mul_action_with_zero R M] [has_zero M'] [has_smul R M']
 
@@ -154,16 +154,16 @@ variables {R M} [mul_action_with_zero R M] [has_zero M'] [has_smul R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def function.injective.mul_action_with_zero
-  (f : zero_hom M' M) (hf : function.injective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
-  mul_action_with_zero R M' :=
+ (f : zero_hom M' M) (hf : function.injective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
+ mul_action_with_zero R M' :=
 { ..hf.mul_action f smul, ..hf.smul_with_zero f smul }
 
 /-- Pushforward a `mul_action_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def function.surjective.mul_action_with_zero
-  (f : zero_hom M M') (hf : function.surjective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
-  mul_action_with_zero R M' :=
+ (f : zero_hom M M') (hf : function.surjective f) (smul : ∀ (a : R) b, f (a • b) = a • f b) :
+ mul_action_with_zero R M' :=
 { ..hf.mul_action f smul, ..hf.smul_with_zero f smul }
 
 variables (M)
@@ -171,9 +171,9 @@ variables (M)
 /-- Compose a `mul_action_with_zero` with a `monoid_with_zero_hom`, with action `f r' • m` -/
 def mul_action_with_zero.comp_hom (f : R' →*₀ R) : mul_action_with_zero R' M :=
 { smul := (•) ∘ f,
-  mul_smul := λ r s m, by simp [mul_smul],
-  one_smul := λ m, by simp,
-  .. smul_with_zero.comp_hom M f.to_zero_hom}
+ mul_smul := λ r s m, by simp [mul_smul],
+ one_smul := λ m, by simp,
+ .. smul_with_zero.comp_hom M f.to_zero_hom}
 
 end monoid_with_zero
 
@@ -181,14 +181,14 @@ section group_with_zero
 variables {α β : Type*} [group_with_zero α] [group_with_zero β] [mul_action_with_zero α β]
 
 lemma smul_inv₀ [smul_comm_class α β β] [is_scalar_tower α β β] (c : α) (x : β) :
-  (c • x)⁻¹ = c⁻¹ • x⁻¹ :=
+ (c • x)⁻¹ = c⁻¹ • x⁻¹ :=
 begin
-  obtain rfl | hc := eq_or_ne c 0,
-  { simp only [inv_zero, zero_smul] },
-  obtain rfl | hx := eq_or_ne x 0,
-  { simp only [inv_zero, smul_zero] },
-  { refine inv_eq_of_mul_eq_one_left _,
-    rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul] }
+ obtain rfl | hc := eq_or_ne c 0,
+ { simp only [inv_zero, zero_smul] },
+ obtain rfl | hx := eq_or_ne x 0,
+ { simp only [inv_zero, smul_zero] },
+ { refine inv_eq_of_mul_eq_one_left _,
+ rw [smul_mul_smul]; rw [ inv_mul_cancel hc]; rw [ inv_mul_cancel hx]; rw [ one_smul] }
 end
 
 end group_with_zero
@@ -196,7 +196,8 @@ end group_with_zero
 /-- Scalar multiplication as a monoid homomorphism with zero. -/
 @[simps]
 def smul_monoid_with_zero_hom {α β : Type*} [monoid_with_zero α] [mul_zero_one_class β]
-  [mul_action_with_zero α β] [is_scalar_tower α β β] [smul_comm_class α β β] :
-  α × β →*₀ β :=
+ [mul_action_with_zero α β] [is_scalar_tower α β β] [smul_comm_class α β β] :
+ α × β →*₀ β :=
 { map_zero' := smul_zero _,
-  .. smul_monoid_hom }
+ .. smul_monoid_hom }
+

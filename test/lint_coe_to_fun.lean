@@ -58,3 +58,4 @@ res ← linter.has_coe_to_fun.test decl,
 guard res.is_some
 
 end with_tc_param
+

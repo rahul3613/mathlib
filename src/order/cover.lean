@@ -88,25 +88,25 @@ lemma wcovby.of_image (f : α ↪o β) (h : f a ⩿ f b) : a ⩿ b :=
 
 lemma wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).ord_connected) : f a ⩿ f b :=
 begin
-  refine ⟨f.monotone hab.le, λ c ha hb, _⟩,
-  obtain ⟨c, rfl⟩ := h.out (mem_range_self _) (mem_range_self _) ⟨ha.le, hb.le⟩,
-  rw f.lt_iff_lt at ha hb,
-  exact hab.2 ha hb,
+ refine ⟨f.monotone hab.le, λ c ha hb, _⟩,
+ obtain ⟨c, rfl⟩ := h.out (mem_range_self _) (mem_range_self _) ⟨ha.le, hb.le⟩,
+ rw f.lt_iff_lt at ha hb,
+ exact hab.2 ha hb,
 end
 
 lemma set.ord_connected.apply_wcovby_apply_iff (f : α ↪o β) (h : (range f).ord_connected) :
-  f a ⩿ f b ↔ a ⩿ b :=
+ f a ⩿ f b ↔ a ⩿ b :=
 ⟨λ h2, h2.of_image f, λ hab, hab.image f h⟩
 
 @[simp] lemma apply_wcovby_apply_iff {E : Type*} [order_iso_class E α β] (e : E) :
-  e a ⩿ e b ↔ a ⩿ b :=
+ e a ⩿ e b ↔ a ⩿ b :=
 (ord_connected_range (e : α ≃o β)).apply_wcovby_apply_iff ((e : α ≃o β) : α ↪o β)
 
 @[simp] lemma to_dual_wcovby_to_dual_iff : to_dual b ⩿ to_dual a ↔ a ⩿ b :=
 and_congr_right' $ forall_congr $ λ c, forall_swap
 
 @[simp] lemma of_dual_wcovby_of_dual_iff {a b : αᵒᵈ} :
-  of_dual a ⩿ of_dual b ↔ b ⩿ a :=
+ of_dual a ⩿ of_dual b ↔ b ⩿ a :=
 and_congr_right' $ forall_congr $ λ c, forall_swap
 
 alias to_dual_wcovby_to_dual_iff ↔ _ wcovby.to_dual
@@ -119,9 +119,9 @@ variables [partial_order α] {a b c : α}
 
 lemma wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
 begin
-  rcases h2.eq_or_lt with h2|h2, { exact or.inl h2.symm },
-  rcases h3.eq_or_lt with h3|h3, { exact or.inr h3 },
-  exact (h.2 h2 h3).elim
+ rcases h2.eq_or_lt with h2|h2, { exact or.inl h2.symm },
+ rcases h3.eq_or_lt with h3|h3, { exact or.inr h3 },
+ exact (h.2 h2 h3).elim
 end
 
 /-- An `iff` version of `wcovby.eq_or_eq` and `wcovby_of_eq_or_eq`. -/
@@ -130,17 +130,17 @@ lemma wcovby_iff_le_and_eq_or_eq : a ⩿ b ↔ a ≤ b ∧ ∀ c, a ≤ c → c 
 
 lemma wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c = b :=
 begin
-  refine ⟨λ h2, h.eq_or_eq h2.1 h2.2, _⟩, rintro (rfl|rfl), exacts [⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
+ refine ⟨λ h2, h.eq_or_eq h2.1 h2.2, _⟩, rintro (rfl|rfl), exacts [⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
 end
 
 lemma wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} :=
 by { ext c, exact h.le_and_le_iff }
 
 lemma wcovby.Ico_subset (h : a ⩿ b) : Ico a b ⊆ {a} :=
-by rw [← Icc_diff_right, h.Icc_eq, diff_singleton_subset_iff, pair_comm]
+by rw [← Icc_diff_right]; rw [ h.Icc_eq]; rw [ diff_singleton_subset_iff]; rw [ pair_comm]
 
 lemma wcovby.Ioc_subset (h : a ⩿ b) : Ioc a b ⊆ {b} :=
-by rw [← Icc_diff_left, h.Icc_eq, diff_singleton_subset_iff]
+by rw [← Icc_diff_left]; rw [ h.Icc_eq]; rw [ diff_singleton_subset_iff]
 
 end partial_order
 
@@ -149,7 +149,7 @@ variables [semilattice_sup α] {a b c : α}
 
 lemma wcovby.sup_eq (hac : a ⩿ c) (hbc : b ⩿ c) (hab : a ≠ b) : a ⊔ b = c :=
 (sup_le hac.le hbc.le).eq_of_not_lt $ λ h,
-  hab.lt_sup_or_lt_sup.elim (λ h', hac.2 h' h) (λ h', hbc.2 h' h)
+ hab.lt_sup_or_lt_sup.elim (λ h', hac.2 h' h) (λ h', hbc.2 h' h)
 
 end semilattice_sup
 
@@ -220,7 +220,7 @@ lemma covby_iff_wcovby_and_not_le : a ⋖ b ↔ a ⩿ b ∧ ¬ b ≤ a :=
 
 lemma wcovby_iff_covby_or_le_and_le : a ⩿ b ↔ a ⋖ b ∨ (a ≤ b ∧ b ≤ a) :=
 ⟨λ h, or_iff_not_imp_right.mpr $ λ h', h.covby_of_not_le $ λ hba, h' ⟨h.le, hba⟩,
-  λ h', h'.elim (λ h, h.wcovby) (λ h, h.1.wcovby_of_le h.2)⟩
+ λ h', h'.elim (λ h, h.wcovby) (λ h, h.1.wcovby_of_le h.2)⟩
 
 lemma antisymm_rel.trans_covby (hab : antisymm_rel (≤) a b) (hbc : b ⋖ c) : a ⋖ c :=
 ⟨hab.1.trans_lt hbc.lt, λ d had hdc, hbc.2 (hab.2.trans_lt had) hdc⟩
@@ -252,11 +252,11 @@ lemma covby.image (f : α ↪o β) (hab : a ⋖ b) (h : (range f).ord_connected)
 (hab.wcovby.image f h).covby_of_lt $ f.strict_mono hab.lt
 
 lemma set.ord_connected.apply_covby_apply_iff (f : α ↪o β) (h : (range f).ord_connected) :
-  f a ⋖ f b ↔ a ⋖ b :=
+ f a ⋖ f b ↔ a ⋖ b :=
 ⟨covby.of_image f, λ hab, hab.image f h⟩
 
 @[simp] lemma apply_covby_apply_iff {E : Type*} [order_iso_class E α β] (e : E) :
-  e a ⋖ e b ↔ a ⋖ b :=
+ e a ⋖ e b ↔ a ⋖ b :=
 (ord_connected_range (e : α ≃o β)).apply_covby_apply_iff ((e : α ≃o β) : α ↪o β)
 
 lemma covby_of_eq_or_eq (hab : a < b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⋖ b :=
@@ -273,7 +273,7 @@ lemma covby_iff_wcovby_and_ne : a ⋖ b ↔ a ⩿ b ∧ a ≠ b :=
 ⟨λ h, ⟨h.wcovby, h.ne⟩, λ h, h.1.covby_of_ne h.2⟩
 
 lemma wcovby_iff_covby_or_eq : a ⩿ b ↔ a ⋖ b ∨ a = b :=
-by rw [le_antisymm_iff, wcovby_iff_covby_or_le_and_le]
+by rw [le_antisymm_iff]; rw [ wcovby_iff_covby_or_le_and_le]
 
 lemma wcovby_iff_eq_or_covby : a ⩿ b ↔ a = b ∨ a ⋖ b := wcovby_iff_covby_or_eq.trans or.comm
 
@@ -288,10 +288,10 @@ lemma covby_iff_lt_and_eq_or_eq : a ⋖ b ↔ a < b ∧ ∀ c, a ≤ c → c ≤
 ⟨λ h, ⟨h.lt, λ c, h.eq_or_eq⟩, and.rec covby_of_eq_or_eq⟩
 
 lemma covby.Ico_eq (h : a ⋖ b) : Ico a b = {a} :=
-by rw [←Ioo_union_left h.lt, h.Ioo_eq, empty_union]
+by rw [←Ioo_union_left h.lt]; rw [ h.Ioo_eq]; rw [ empty_union]
 
 lemma covby.Ioc_eq (h : a ⋖ b) : Ioc a b = {b} :=
-by rw [←Ioo_union_right h.lt, h.Ioo_eq, empty_union]
+by rw [←Ioo_union_right h.lt]; rw [ h.Ioo_eq]; rw [ empty_union]
 
 lemma covby.Icc_eq (h : a ⋖ b) : Icc a b = {a, b} :=
 h.wcovby.Icc_eq
@@ -302,10 +302,10 @@ section linear_order
 variables [linear_order α] {a b c : α}
 
 lemma covby.Ioi_eq (h : a ⋖ b) : Ioi a = Ici b :=
-by rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
+by rw [← Ioo_union_Ici_eq_Ioi h.lt]; rw [ h.Ioo_eq]; rw [ empty_union]
 
 lemma covby.Iio_eq (h : a ⋖ b) : Iio b = Iic a :=
-by rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
+by rw [← Iic_union_Ioo_eq_Iio h.lt]; rw [ h.Ioo_eq]; rw [ union_empty]
 
 lemma wcovby.le_of_lt (hab : a ⩿ b) (hcb : c < b) : c ≤ a := not_lt.1 $ λ hac, hab.2 hac hcb
 lemma wcovby.ge_of_gt (hab : a ⩿ b) (hac : a < c) : b ≤ c := not_lt.1 $ hab.2 hac
@@ -320,7 +320,7 @@ lemma covby.unique_right (hb : a ⋖ b) (hc : a ⋖ c) : b = c :=
 
 /-- If `a`, `b`, `c` are consecutive and `a < x < c` then `x = b`. -/
 lemma covby.eq_of_between {x : α} (hab : a ⋖ b) (hbc : b ⋖ c) (hax : a < x) (hxc : x < c) :
-  x = b :=
+ x = b :=
 le_antisymm (le_of_not_lt $ λ h, hbc.2 h hxc) (le_of_not_lt $ hab.2 hax)
 
 end linear_order
@@ -329,11 +329,11 @@ namespace set
 
 lemma wcovby_insert (x : α) (s : set α) : s ⩿ insert x s :=
 begin
-  refine wcovby_of_eq_or_eq (subset_insert x s) (λ t hst h2t, _),
-  by_cases h : x ∈ t,
-  { exact or.inr (subset_antisymm h2t $ insert_subset.mpr ⟨h, hst⟩) },
-  { refine or.inl (subset_antisymm _ hst),
-    rwa [← diff_singleton_eq_self h, diff_singleton_subset_iff] }
+ refine wcovby_of_eq_or_eq (subset_insert x s) (λ t hst h2t, _),
+ by_cases h : x ∈ t,
+ { exact or.inr (subset_antisymm h2t $ insert_subset.mpr ⟨h, hst⟩) },
+ { refine or.inl (subset_antisymm _ hst),
+ rwa [← diff_singleton_eq_self h]; rwa [ diff_singleton_subset_iff] }
 end
 
 lemma covby_insert {x : α} {s : set α} (hx : x ∉ s) : s ⋖ insert x s :=
@@ -352,10 +352,10 @@ apply_covby_apply_iff (order_iso.prod_comm : α × β ≃o β × α)
 
 lemma fst_eq_or_snd_eq_of_wcovby : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 :=
 begin
-  refine λ h, of_not_not (λ hab, _),
-  push_neg at hab,
-  exact h.2 (mk_lt_mk.2 $ or.inl ⟨hab.1.lt_of_le h.1.1, le_rfl⟩)
-    (mk_lt_mk.2 $ or.inr ⟨le_rfl, hab.2.lt_of_le h.1.2⟩),
+ refine λ h, of_not_not (λ hab, _),
+ push_neg at hab,
+ exact h.2 (mk_lt_mk.2 $ or.inl ⟨hab.1.lt_of_le h.1.1, le_rfl⟩)
+ (mk_lt_mk.2 $ or.inr ⟨le_rfl, hab.2.lt_of_le h.1.2⟩),
 end
 
 lemma _root_.wcovby.fst (h : x ⩿ y) : x.1 ⩿ y.1 :=
@@ -366,10 +366,10 @@ lemma _root_.wcovby.snd (h : x ⩿ y) : x.2 ⩿ y.2 :=
 
 lemma mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
 begin
-  refine ⟨wcovby.fst, and.imp mk_le_mk_iff_left.2 $ λ h c h₁ h₂, _⟩,
-  have : c.2 = b:= h₂.le.2.antisymm h₁.le.2,
-  rw [←@prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂,
-  exact h h₁ h₂,
+ refine ⟨wcovby.fst, and.imp mk_le_mk_iff_left.2 $ λ h c h₁ h₂, _⟩,
+ have : c.2 = b:= h₂.le.2.antisymm h₁.le.2,
+ rw [←@prod.mk.eta _ _ c] at h₁ h₂; rw [ this] at h₁ h₂; rw [ mk_lt_mk_iff_left] at h₁ h₂,
+ exact h h₁ h₂,
 end
 
 lemma mk_wcovby_mk_iff_right : (a, b₁) ⩿ (a, b₂) ↔ b₁ ⩿ b₂ :=
@@ -383,24 +383,24 @@ by simp_rw [covby_iff_wcovby_and_lt, mk_wcovby_mk_iff_right, mk_lt_mk_iff_right]
 
 lemma mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b₁ = b₂ ∨ b₁ ⩿ b₂ ∧ a₁ = a₂ :=
 begin
-  refine ⟨λ h, _, _⟩,
-  { obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h,
-    { exact or.inr ⟨mk_wcovby_mk_iff_right.1 h, rfl⟩ },
-    { exact or.inl ⟨mk_wcovby_mk_iff_left.1 h, rfl⟩ } },
-  { rintro (⟨h, rfl⟩ | ⟨h, rfl⟩),
-    { exact mk_wcovby_mk_iff_left.2 h },
-    { exact mk_wcovby_mk_iff_right.2 h } }
+ refine ⟨λ h, _, _⟩,
+ { obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h,
+ { exact or.inr ⟨mk_wcovby_mk_iff_right.1 h, rfl⟩ },
+ { exact or.inl ⟨mk_wcovby_mk_iff_left.1 h, rfl⟩ } },
+ { rintro (⟨h, rfl⟩ | ⟨h, rfl⟩),
+ { exact mk_wcovby_mk_iff_left.2 h },
+ { exact mk_wcovby_mk_iff_right.2 h } }
 end
 
 lemma mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b₁ = b₂ ∨ b₁ ⋖ b₂ ∧ a₁ = a₂ :=
 begin
-  refine ⟨λ h, _, _⟩,
-  { obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h.wcovby,
-    { exact or.inr ⟨mk_covby_mk_iff_right.1 h, rfl⟩ },
-    { exact or.inl ⟨mk_covby_mk_iff_left.1 h, rfl⟩ } },
-  { rintro (⟨h, rfl⟩ | ⟨h, rfl⟩),
-    { exact mk_covby_mk_iff_left.2 h },
-    { exact mk_covby_mk_iff_right.2 h } }
+ refine ⟨λ h, _, _⟩,
+ { obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovby h.wcovby,
+ { exact or.inr ⟨mk_covby_mk_iff_right.1 h, rfl⟩ },
+ { exact or.inl ⟨mk_covby_mk_iff_left.1 h, rfl⟩ } },
+ { rintro (⟨h, rfl⟩ | ⟨h, rfl⟩),
+ { exact mk_covby_mk_iff_left.2 h },
+ { exact mk_covby_mk_iff_right.2 h } }
 end
 
 lemma wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 :=
@@ -410,3 +410,4 @@ lemma covby_iff : x ⋖ y ↔ x.1 ⋖ y.1 ∧ x.2 = y.2 ∨ x.2 ⋖ y.2 ∧ x.1 
 by { cases x, cases y, exact mk_covby_mk_iff }
 
 end prod
+

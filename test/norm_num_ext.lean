@@ -245,26 +245,26 @@ example : ¬ squarefree (2*3*5*5*17) := by norm_num
 example : squarefree 251 := by norm_num
 example : squarefree (3 : ℤ) :=
 begin
-  -- `norm_num` should fail on this example, instead of producing an incorrect proof.
-  success_if_fail { norm_num },
-  exact irreducible.squarefree (prime.irreducible
-    (int.prime_iff_nat_abs_prime.mpr (by norm_num)))
+ -- `norm_num` should fail on this example, instead of producing an incorrect proof.
+ success_if_fail { norm_num },
+ exact irreducible.squarefree (prime.irreducible
+ (int.prime_iff_nat_abs_prime.mpr (by norm_num)))
 end
 example : @squarefree ℕ multiplicative.monoid 1 :=
 begin
-  -- `norm_num` should fail on this example, instead of producing an incorrect proof.
-  success_if_fail { norm_num },
-  -- the statement was deliberately wacky, let's fix it
-  change squarefree (multiplicative.of_add 1 : multiplicative ℕ),
-  rintros x ⟨dx, hd⟩,
-  revert x dx,
-  rw multiplicative.of_add.surjective.forall₂,
-  intros x dx h,
-  simp_rw [←of_add_add, multiplicative.of_add.injective.eq_iff] at h,
-  cases x,
-  { simp [is_unit_one], exact is_unit_one },
-  { simp only [nat.succ_add, nat.add_succ] at h,
-    cases h },
+ -- `norm_num` should fail on this example, instead of producing an incorrect proof.
+ success_if_fail { norm_num },
+ -- the statement was deliberately wacky, let's fix it
+ change squarefree (multiplicative.of_add 1 : multiplicative ℕ),
+ rintros x ⟨dx, hd⟩,
+ revert x dx,
+ rw multiplicative.of_add.surjective.forall₂,
+ intros x dx h,
+ simp_rw [←of_add_add, multiplicative.of_add.injective.eq_iff] at h,
+ cases x,
+ { simp [is_unit_one], exact is_unit_one },
+ { simp only [nat.succ_add, nat.add_succ] at h,
+ cases h },
 end
 
 example : nat.fib 0 = 0 := by norm_num
@@ -320,7 +320,7 @@ example : (∑ i in finset.Ioc 5 10, (i^2 : ℕ)) = 330 := by norm_num
 example : (∑ i in finset.Ioo 5 10, (i^2 : ℕ)) = 230 := by norm_num
 example : (∑ i : ℤ in finset.Ioo (-5) 5, i^2) = 60 := by norm_num
 example (f : ℕ → α) : ∑ i in finset.mk {0, 1, 2} dec_trivial, f i = f 0 + f 1 + f 2 :=
-  by norm_num; ring
+ by norm_num; ring
 
 -- Combined with other `norm_num` extensions:
 example : ∏ i in finset.range 9, nat.sqrt (i + 1) = 96 := by norm_num
@@ -344,7 +344,7 @@ example : J(-1 | 1655801) = 1 := by norm_num
 example : J(-102334155 | 165580141) = -1 := by norm_num
 
 example : J(58378362899022564339483801989973056405585914719065 |
-            53974350278769849773003214636618718468638750007307) = -1 := by norm_num
+ 53974350278769849773003214636618718468638750007307) = -1 := by norm_num
 
 example : J(3 + 4 | 3 * 5) = -1 := by norm_num
 example : J(J(-1 | 7) | 11) = -1 := by norm_num
@@ -353,3 +353,4 @@ instance prime_1000003 : fact (nat.prime 1000003) := ⟨by norm_num⟩
 example : legendre_sym 1000003 7 = -1 := by norm_num
 
 end jacobi
+

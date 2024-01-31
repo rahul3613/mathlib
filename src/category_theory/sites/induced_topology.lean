@@ -60,13 +60,13 @@ variables [full G] [faithful G] (Hld : locally_cover_dense K G)
 include Hld
 
 lemma pushforward_cover_iff_cover_pullback {X : C} (S : sieve X) :
-  K _ (S.functor_pushforward G) ↔ ∃ (T : K (G.obj X)), T.val.functor_pullback G = S :=
+ K _ (S.functor_pushforward G) ↔ ∃ (T : K (G.obj X)), T.val.functor_pullback G = S :=
 begin
-  split,
-  { intros hS,
-    exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩ },
-  { rintros ⟨T, rfl⟩,
-    exact Hld T }
+ split,
+ { intros hS,
+ exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩ },
+ { rintros ⟨T, rfl⟩,
+ exact Hld T }
 end
 
 /--
@@ -75,70 +75,70 @@ then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
 @[simps]
 def induced_topology :
-  grothendieck_topology C :=
+ grothendieck_topology C :=
 { sieves := λ X S, K _ (S.functor_pushforward G),
-  top_mem' := λ X, by { change K _ _, rw sieve.functor_pushforward_top, exact K.top_mem _ },
-  pullback_stable' := λ X Y S f hS,
-  begin
-    have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).functor_pullback G,
-    { conv_lhs { rw ← (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S },
-      ext,
-      change (S.functor_pushforward G) _ ↔ (S.functor_pushforward G) _,
-      rw G.map_comp },
-    rw this,
-    change K _ _,
-    apply Hld ⟨_, K.pullback_stable (G.map f) hS⟩
-  end,
-  transitive' := λ X S hS S' H',
-  begin
-    apply K.transitive hS,
-    rintros Y _ ⟨Z, g, i, hg, rfl⟩,
-    rw sieve.pullback_comp,
-    apply K.pullback_stable i,
-    refine K.superset_covering _ (H' hg),
-    rintros W _ ⟨Z', g', i', hg, rfl⟩,
-    use ⟨Z', g' ≫ g, i', hg, by simp⟩
-  end }
+ top_mem' := λ X, by { change K _ _, rw sieve.functor_pushforward_top, exact K.top_mem _ },
+ pullback_stable' := λ X Y S f hS,
+ begin
+ have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).functor_pullback G,
+ { conv_lhs { rw ← (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S },
+ ext,
+ change (S.functor_pushforward G) _ ↔ (S.functor_pushforward G) _,
+ rw G.map_comp },
+ rw this,
+ change K _ _,
+ apply Hld ⟨_, K.pullback_stable (G.map f) hS⟩
+ end,
+ transitive' := λ X S hS S' H',
+ begin
+ apply K.transitive hS,
+ rintros Y _ ⟨Z, g, i, hg, rfl⟩,
+ rw sieve.pullback_comp,
+ apply K.pullback_stable i,
+ refine K.superset_covering _ (H' hg),
+ rintros W _ ⟨Z', g', i', hg, rfl⟩,
+ use ⟨Z', g' ≫ g, i', hg, by simp⟩
+ end }
 
 /-- `G` is cover-lifting wrt the induced topology. -/
 lemma induced_topology_cover_lifting :
-  cover_lifting Hld.induced_topology K G := ⟨λ _ S hS, Hld ⟨S, hS⟩⟩
+ cover_lifting Hld.induced_topology K G := ⟨λ _ S hS, Hld ⟨S, hS⟩⟩
 
 /-- `G` is cover-preserving wrt the induced topology. -/
 lemma induced_topology_cover_preserving :
-  cover_preserving Hld.induced_topology K G := ⟨λ _ S hS, hS⟩
+ cover_preserving Hld.induced_topology K G := ⟨λ _ S hS, hS⟩
 
 end locally_cover_dense
 
 lemma cover_dense.locally_cover_dense [full G] (H : cover_dense K G) : locally_cover_dense K G :=
 begin
-  intros X T,
-  refine K.superset_covering _ (K.bind_covering T.property (λ Y f Hf, H.is_cover Y)),
-  rintros Y _ ⟨Z, _, f, hf, ⟨W, g, f', (rfl : _ = _)⟩, rfl⟩,
-  use W, use G.preimage (f' ≫ f), use g,
-  split,
-  simpa using T.val.downward_closed hf f',
-  simp,
+ intros X T,
+ refine K.superset_covering _ (K.bind_covering T.property (λ Y f Hf, H.is_cover Y)),
+ rintros Y _ ⟨Z, _, f, hf, ⟨W, g, f', (rfl : _ = _)⟩, rfl⟩,
+ use W, use G.preimage (f' ≫ f), use g,
+ split,
+ simpa using T.val.downward_closed hf f',
+ simp,
 end
 
 /--
 Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
 abbreviation cover_dense.induced_topology [full G] [faithful G] (H : cover_dense K G) :
-  grothendieck_topology C := H.locally_cover_dense.induced_topology
+ grothendieck_topology C := H.locally_cover_dense.induced_topology
 
 variable (J)
 
 lemma over_forget_locally_cover_dense (X : C) : locally_cover_dense J (over.forget X) :=
 begin
-  intros Y T,
-  convert T.property,
-  ext Z f,
-  split,
-  { rintros ⟨_, _, g', hg, rfl⟩,
-    exact T.val.downward_closed hg g' },
-  { intros hf,
-    exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩ }
+ intros Y T,
+ convert T.property,
+ ext Z f,
+ split,
+ { rintros ⟨_, _, g', hg, rfl⟩,
+ exact T.val.downward_closed hg g' },
+ { intros hf,
+ exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩ }
 end
 
 end
@@ -157,11 +157,12 @@ is complete.
 -/
 noncomputable
 def cover_dense.Sheaf_equiv [full G] [faithful G] (H : cover_dense K G) [has_limits A] :
-  Sheaf H.induced_topology A ≌ Sheaf K A :=
+ Sheaf H.induced_topology A ≌ Sheaf K A :=
 H.Sheaf_equiv_of_cover_preserving_cover_lifting
-  H.locally_cover_dense.induced_topology_cover_preserving
-  H.locally_cover_dense.induced_topology_cover_lifting
+ H.locally_cover_dense.induced_topology_cover_preserving
+ H.locally_cover_dense.induced_topology_cover_lifting
 
 end small_site
 
 end category_theory
+

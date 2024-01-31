@@ -48,15 +48,15 @@ lemma int_large {m : ℤ} (h : 1 < m) : 1 < m.nat_abs :=
 by exact_mod_cast lt_of_lt_of_le h le_nat_abs
 
 lemma not_prime_of_int_mul' {m n : ℤ} {c : ℕ}
-  (hm : 1 < m) (hn : 1 < n) (hc : m*n = (c : ℤ)) : ¬ nat.prime c :=
+ (hm : 1 < m) (hn : 1 < n) (hc : m*n = (c : ℤ)) : ¬ nat.prime c :=
 not_prime_of_int_mul (int_large hm) (int_large hn) hc
 
 /-- Every natural number of the form `n^4 + 4*m^4` is not prime. -/
 lemma polynomial_not_prime {m : ℕ} (h1 : 1 < m) (n : ℕ) : ¬ nat.prime (n^4 + 4*m^4) :=
 have h2 : 1 < (m : ℤ), from coe_nat_lt.mpr h1,
 begin
-  refine not_prime_of_int_mul' (left_factor_large (n : ℤ) h2) (right_factor_large (n : ℤ) h2) _,
-  exact_mod_cast factorization
+ refine not_prime_of_int_mul' (left_factor_large (n : ℤ) h2) (right_factor_large (n : ℤ) h2) _,
+ exact_mod_cast factorization
 end
 
 /--
@@ -80,3 +80,4 @@ open imo1969_q1
 to the set `good_nats`. -/
 theorem imo1969_q1 : set.infinite {a : ℕ | ∀ n : ℕ, ¬ nat.prime (n^4 + a)} :=
 set.infinite_of_injective_forall_mem a_choice_strict_mono.injective a_choice_good
+

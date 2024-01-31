@@ -31,12 +31,12 @@ section
 variables (X Y : C)
 
 /-- `f +ₗ g` is the composite `X ⟶ Y ⊞ Y ⟶ Y`, where the first map is `(f, g)` and the second map
-    is `(𝟙 𝟙)`. -/
+ is `(𝟙 𝟙)`. -/
 @[simp] def left_add (f g : X ⟶ Y) : X ⟶ Y :=
 biprod.lift f g ≫ biprod.desc (𝟙 Y) (𝟙 Y)
 
 /-- `f +ᵣ g` is the composite `X ⟶ X ⊞ X ⟶ Y`, where the first map is `(𝟙, 𝟙)` and the second map
-    is `(f g)`. -/
+ is `(f g)`. -/
 @[simp] def right_add (f g : X ⟶ Y) : X ⟶ Y :=
 biprod.lift (𝟙 X) (𝟙 X) ≫ biprod.desc f g
 
@@ -53,25 +53,25 @@ lemma is_unital_right_add : eckmann_hilton.is_unital (+ᵣ) 0 :=
 
 lemma distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ (h +ᵣ k) = (f +ₗ h) +ᵣ (g +ₗ k) :=
 begin
-  let diag : X ⊞ X ⟶ Y ⊞ Y := biprod.lift (biprod.desc f g) (biprod.desc h k),
-  have hd₁ : biprod.inl ≫ diag = biprod.lift f h := by { ext; simp },
-  have hd₂ : biprod.inr ≫ diag = biprod.lift g k := by { ext; simp },
-  have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag := by { ext; simp },
-  have h₂ : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k),
-  { ext; simp [reassoc_of hd₁, reassoc_of hd₂] },
-  rw [left_add, h₁, category.assoc, h₂, right_add]
+ let diag : X ⊞ X ⟶ Y ⊞ Y := biprod.lift (biprod.desc f g) (biprod.desc h k),
+ have hd₁ : biprod.inl ≫ diag = biprod.lift f h := by { ext; simp },
+ have hd₂ : biprod.inr ≫ diag = biprod.lift g k := by { ext; simp },
+ have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag := by { ext; simp },
+ have h₂ : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k),
+ { ext; simp [reassoc_of hd₁, reassoc_of hd₂] },
+ rw [left_add]; rw [ h₁]; rw [ category.assoc]; rw [ h₂]; rw [ right_add]
 end
 
 /-- In a category with binary biproducts, the morphisms form a commutative monoid. -/
 def add_comm_monoid_hom_of_has_binary_biproducts : add_comm_monoid (X ⟶ Y) :=
 { add := (+ᵣ),
-  add_assoc := (eckmann_hilton.mul_assoc (is_unital_left_add X Y)
-    (is_unital_right_add X Y) (distrib X Y)).assoc,
-  zero := 0,
-  zero_add := (is_unital_right_add X Y).left_id,
-  add_zero := (is_unital_right_add X Y).right_id,
-  add_comm := (eckmann_hilton.mul_comm (is_unital_left_add X Y)
-    (is_unital_right_add X Y) (distrib  X Y)).comm }
+ add_assoc := (eckmann_hilton.mul_assoc (is_unital_left_add X Y)
+ (is_unital_right_add X Y) (distrib X Y)).assoc,
+ zero := 0,
+ zero_add := (is_unital_right_add X Y).left_id,
+ add_zero := (is_unital_right_add X Y).right_id,
+ add_comm := (eckmann_hilton.mul_comm (is_unital_left_add X Y)
+ (is_unital_right_add X Y) (distrib X Y)).comm }
 
 end
 
@@ -85,7 +85,7 @@ rfl
 
 lemma add_eq_left_addition (f g : X ⟶ Y) : f + g = biprod.lift f g ≫ biprod.desc (𝟙 Y) (𝟙 Y) :=
 congr_fun₂
-  (eckmann_hilton.mul (is_unital_left_add X Y) (is_unital_right_add X Y) (distrib  X Y)).symm f g
+ (eckmann_hilton.mul (is_unital_left_add X Y) (is_unital_right_add X Y) (distrib X Y)).symm f g
 
 lemma add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h :=
 by { simp only [add_eq_right_addition, category.assoc], congr, ext; simp }
@@ -96,3 +96,4 @@ by { simp only [add_eq_left_addition, ← category.assoc], congr, ext; simp }
 end
 
 end category_theory.semiadditive_of_binary_biproducts
+

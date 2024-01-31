@@ -35,7 +35,7 @@ namespace FinPartOrd
 
 instance : has_coe_to_sort FinPartOrd Type* := ⟨λ X, X.to_PartOrd⟩
 instance (X : FinPartOrd) : partial_order X := X.to_PartOrd.str
-attribute [instance]  FinPartOrd.is_fintype
+attribute [instance] FinPartOrd.is_fintype
 
 @[simp] lemma coe_to_PartOrd (X : FinPartOrd) : ↥X.to_PartOrd = ↥X := rfl
 
@@ -61,9 +61,9 @@ instance has_forget_to_Fintype : has_forget₂ FinPartOrd Fintype :=
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
 @[simps] def iso.mk {α β : FinPartOrd.{u}} (e : α ≃o β) : α ≅ β :=
 { hom := e,
-  inv := e.symm,
-  hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
-  inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
+ inv := e.symm,
+ hom_inv_id' := by { ext, exact e.symm_apply_apply _ },
+ inv_hom_id' := by { ext, exact e.apply_symm_apply _ } }
 
 /-- `order_dual` as a functor. -/
 @[simps] def dual : FinPartOrd ⥤ FinPartOrd :=
@@ -72,11 +72,12 @@ instance has_forget_to_Fintype : has_forget₂ FinPartOrd Fintype :=
 /-- The equivalence between `FinPartOrd` and itself induced by `order_dual` both ways. -/
 @[simps functor inverse] def dual_equiv : FinPartOrd ≌ FinPartOrd :=
 equivalence.mk dual dual
-  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
-  (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+ (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
+ (nat_iso.of_components (λ X, iso.mk $ order_iso.dual_dual X) $ λ X Y f, rfl)
 
 end FinPartOrd
 
 lemma FinPartOrd_dual_comp_forget_to_PartOrd :
-  FinPartOrd.dual ⋙ forget₂ FinPartOrd PartOrd =
-    forget₂ FinPartOrd PartOrd ⋙ PartOrd.dual := rfl
+ FinPartOrd.dual ⋙ forget₂ FinPartOrd PartOrd =
+ forget₂ FinPartOrd PartOrd ⋙ PartOrd.dual := rfl
+

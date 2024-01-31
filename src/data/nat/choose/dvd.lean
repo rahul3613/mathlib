@@ -20,16 +20,15 @@ open_locale nat
 namespace prime
 
 lemma dvd_choose_add {p a b : ℕ} (hp : prime p) (hap : a < p) (hbp : b < p) (h : p ≤ a + b) :
-  p ∣ choose (a + b) a :=
+ p ∣ choose (a + b) a :=
 begin
-  have h₁ : p ∣ (a + b)!, from hp.dvd_factorial.2 h,
-  rw [← add_choose_mul_factorial_mul_factorial, ← choose_symm_add, hp.dvd_mul, hp.dvd_mul,
-    hp.dvd_factorial, hp.dvd_factorial] at h₁,
-  exact (h₁.resolve_right hbp.not_le).resolve_right hap.not_le
+ have h₁ : p ∣ (a + b)!, from hp.dvd_factorial.2 h,
+ rw [← add_choose_mul_factorial_mul_factorial] at h₁; rw [ ← choose_symm_add] at h₁; rw [ hp.dvd_mul] at h₁; rw [ hp.dvd_mul] at h₁; rw [ hp.dvd_factorial] at h₁; rw [ hp.dvd_factorial] at h₁,
+ exact (h₁.resolve_right hbp.not_le).resolve_right hap.not_le
 end
 
 lemma dvd_choose {p a b : ℕ} (hp : prime p) (ha : a < p) (hab : b - a < p) (h : p ≤ b) :
-  p ∣ choose b a :=
+ p ∣ choose b a :=
 have a + (b - a) = b := nat.add_sub_of_le (ha.le.trans h),
 this ▸ hp.dvd_choose_add ha hab (this.symm ▸ h)
 
@@ -39,3 +38,4 @@ hp.dvd_choose hkp (nat.sub_lt ((zero_le _).trans_lt hkp) hk.bot_lt) le_rfl
 end prime
 
 end nat
+

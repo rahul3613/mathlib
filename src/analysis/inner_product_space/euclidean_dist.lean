@@ -51,11 +51,11 @@ def closed_ball (x : E) (r : ℝ) : set E := {y | dist y x ≤ r}
 def ball (x : E) (r : ℝ) : set E := {y | dist y x < r}
 
 lemma ball_eq_preimage (x : E) (r : ℝ) :
-  ball x r = to_euclidean ⁻¹' (metric.ball (to_euclidean x) r) :=
+ ball x r = to_euclidean ⁻¹' (metric.ball (to_euclidean x) r) :=
 rfl
 
 lemma closed_ball_eq_preimage (x : E) (r : ℝ) :
-  closed_ball x r = to_euclidean ⁻¹' (metric.closed_ball (to_euclidean x) r) :=
+ closed_ball x r = to_euclidean ⁻¹' (metric.closed_ball (to_euclidean x) r) :=
 rfl
 
 lemma ball_subset_closed_ball {x : E} {r : ℝ} : ball x r ⊆ closed_ball x r :=
@@ -67,46 +67,45 @@ metric.is_open_ball.preimage to_euclidean.continuous
 lemma mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ ball x r := metric.mem_ball_self hr
 
 lemma closed_ball_eq_image (x : E) (r : ℝ) :
-  closed_ball x r = to_euclidean.symm '' metric.closed_ball (to_euclidean x) r :=
-by rw [to_euclidean.image_symm_eq_preimage, closed_ball_eq_preimage]
+ closed_ball x r = to_euclidean.symm '' metric.closed_ball (to_euclidean x) r :=
+by rw [to_euclidean.image_symm_eq_preimage]; rw [ closed_ball_eq_preimage]
 
 lemma is_compact_closed_ball {x : E} {r : ℝ} : is_compact (closed_ball x r) :=
 begin
-  rw closed_ball_eq_image,
-  exact (is_compact_closed_ball _ _).image to_euclidean.symm.continuous
+ rw closed_ball_eq_image,
+ exact (is_compact_closed_ball _ _).image to_euclidean.symm.continuous
 end
 
 lemma is_closed_closed_ball {x : E} {r : ℝ} : is_closed (closed_ball x r) :=
 is_compact_closed_ball.is_closed
 
 lemma closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = closed_ball x r :=
-by rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (to_euclidean x) h,
-  closed_ball_eq_preimage]
+by rw [ball_eq_preimage]; rw [ ← to_euclidean.preimage_closure]; rw [ closure_ball (to_euclidean x) h]; rw [ closed_ball_eq_preimage]
 
 lemma exists_pos_lt_subset_ball {R : ℝ} {s : set E} {x : E}
-  (hR : 0 < R) (hs : is_closed s) (h : s ⊆ ball x R) :
-  ∃ r ∈ Ioo 0 R, s ⊆ ball x r :=
+ (hR : 0 < R) (hs : is_closed s) (h : s ⊆ ball x R) :
+ ∃ r ∈ Ioo 0 R, s ⊆ ball x r :=
 begin
-  rw [ball_eq_preimage, ← image_subset_iff] at h,
-  rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩,
-  exact ⟨r, hr, image_subset_iff.1 hsr⟩
+ rw [ball_eq_preimage] at h; rw [ ← image_subset_iff] at h,
+ rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩,
+ exact ⟨r, hr, image_subset_iff.1 hsr⟩
 end
 
 lemma nhds_basis_closed_ball {x : E} :
-  (𝓝 x).has_basis (λ r : ℝ, 0 < r) (closed_ball x) :=
+ (𝓝 x).has_basis (λ r : ℝ, 0 < r) (closed_ball x) :=
 begin
-  rw [to_euclidean.to_homeomorph.nhds_eq_comap x],
-  exact metric.nhds_basis_closed_ball.comap _
+ rw [to_euclidean.to_homeomorph.nhds_eq_comap x],
+ exact metric.nhds_basis_closed_ball.comap _
 end
 
 lemma closed_ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : closed_ball x r ∈ 𝓝 x :=
 nhds_basis_closed_ball.mem_of_mem hr
 
 lemma nhds_basis_ball {x : E} :
-  (𝓝 x).has_basis (λ r : ℝ, 0 < r) (ball x) :=
+ (𝓝 x).has_basis (λ r : ℝ, 0 < r) (ball x) :=
 begin
-  rw [to_euclidean.to_homeomorph.nhds_eq_comap x],
-  exact metric.nhds_basis_ball.comap _
+ rw [to_euclidean.to_homeomorph.nhds_eq_comap x],
+ exact metric.nhds_basis_ball.comap _
 end
 
 lemma ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ball x r ∈ 𝓝 x :=
@@ -115,15 +114,16 @@ nhds_basis_ball.mem_of_mem hr
 end euclidean
 
 variables {F : Type*} [normed_add_comm_group F] [normed_space ℝ F]
-  {G : Type*} [normed_add_comm_group G] [normed_space ℝ G] [finite_dimensional ℝ G]
-  {f g : F → G} {n : ℕ∞}
+ {G : Type*} [normed_add_comm_group G] [normed_space ℝ G] [finite_dimensional ℝ G]
+ {f g : F → G} {n : ℕ∞}
 
 lemma cont_diff.euclidean_dist (hf : cont_diff ℝ n f) (hg : cont_diff ℝ n g)
-  (h : ∀ x, f x ≠ g x) :
-  cont_diff ℝ n (λ x, euclidean.dist (f x) (g x)) :=
+ (h : ∀ x, f x ≠ g x) :
+ cont_diff ℝ n (λ x, euclidean.dist (f x) (g x)) :=
 begin
-  simp only [euclidean.dist],
-  apply @cont_diff.dist ℝ,
-  exacts [(@to_euclidean G _ _ _ _ _ _ _).cont_diff.comp hf,
-    (@to_euclidean G _ _ _ _ _ _ _).cont_diff.comp hg, λ x, to_euclidean.injective.ne (h x)]
+ simp only [euclidean.dist],
+ apply @cont_diff.dist ℝ,
+ exacts [(@to_euclidean G _ _ _ _ _ _ _).cont_diff.comp hf,
+ (@to_euclidean G _ _ _ _ _ _ _).cont_diff.comp hg, λ x, to_euclidean.injective.ne (h x)]
 end
+

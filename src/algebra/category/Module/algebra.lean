@@ -60,3 +60,4 @@ instance linear_over_field : linear k (Module.{v} A) :=
 { hom_module := λ M N, by apply_instance, }
 
 end Module
+

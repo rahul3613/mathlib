@@ -24,10 +24,10 @@ The actual quotient structures are defined in the following files:
 The following notation is introduced:
 
 * `G ⧸ H` stands for the quotient of the type `G` by some term `H`
-  (for example, `H` can be a normal subgroup of `G`).
-  To implement this notation for other quotients, you should provide a `has_quotient` instance.
-  Note that since `G` can usually be inferred from `H`, `_ ⧸ H` can also be used,
-  but this is less readable.
+ (for example, `H` can be a normal subgroup of `G`).
+ To implement this notation for other quotients, you should provide a `has_quotient` instance.
+ Note that since `G` can usually be inferred from `H`, `_ ⧸ H` can also be used,
+ but this is less readable.
 
 ## Tags
 
@@ -53,7 +53,8 @@ to make Lean show the notation in the goal state.
 -/
 @[reducible, nolint has_nonempty_instance] -- Will be provided by e.g. `ideal.quotient.inhabited`
 def has_quotient.quotient (A : out_param $ Type u) {B : Type v} [has_quotient A B] (b : B) :
-  Type (max u v) :=
+ Type (max u v) :=
 has_quotient.quotient' b
 
 notation G ` ⧸ `:35 H:34 := has_quotient.quotient G H
+

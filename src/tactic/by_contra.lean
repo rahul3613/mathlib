@@ -38,40 +38,41 @@ Examples:
 ```lean
 example : 1 < 2 :=
 begin
-  by_contra' h,
-  -- h : 2 ≤ 1 ⊢ false
+ by_contra' h,
+ -- h : 2 ≤ 1 ⊢ false
 end
 
 example : 1 < 2 :=
 begin
-  by_contra' h : ¬ 1 < 2,
-  -- h : ¬ 1 < 2 ⊢ false
+ by_contra' h : ¬ 1 < 2,
+ -- h : ¬ 1 < 2 ⊢ false
 end
 ```
 -/
 meta def by_contra' (h : parse ident?) (t : parse (tk ":" *> texpr)?) : tactic unit := do
-  let h := h.get_or_else `this,
-  tgt ← target,
-  mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply,
-  h₁ ← tactic.intro h,
-  t' ← infer_type h₁,
-  -- negation-normalize `t'` to the expression `e'` and get a proof `pr'` of `t' = e'`
-  (e', pr') ← push_neg.normalize_negations t' <|> refl_conv t',
-  match t with
-  | none := () <$ replace_hyp h₁ e' pr'
-  | some t := do
-    t ← to_expr ``(%%t : Prop),
-    -- negation-normalize `t` to the expression `e` and get a proof `pr` of `t = e`
-    (e, pr) ← push_neg.normalize_negations t <|> refl_conv t,
-    unify e e',
-    () <$ (mk_eq_symm pr >>= mk_eq_trans pr' >>= replace_hyp h₁ t)
-  end
+ let h := h.get_or_else `this,
+ tgt ← target,
+ mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply,
+ h₁ ← tactic.intro h,
+ t' ← infer_type h₁,
+ -- negation-normalize `t'` to the expression `e'` and get a proof `pr'` of `t' = e'`
+ (e', pr') ← push_neg.normalize_negations t' <|> refl_conv t',
+ match t with
+ | none := () <$ replace_hyp h₁ e' pr'
+ | some t := do
+ t ← to_expr ``(%%t : Prop),
+ -- negation-normalize `t` to the expression `e` and get a proof `pr` of `t = e`
+ (e, pr) ← push_neg.normalize_negations t <|> refl_conv t,
+ unify e e',
+ () <$ (mk_eq_symm pr >>= mk_eq_trans pr' >>= replace_hyp h₁ t)
+ end
 
 add_tactic_doc
-{ name       := "by_contra'",
-  category   := doc_category.tactic,
-  decl_names := [`tactic.interactive.by_contra'],
-  tags       := ["logic"] }
+{ name := "by_contra'",
+ category := doc_category.tactic,
+ decl_names := [`tactic.interactive.by_contra'],
+ tags := ["logic"] }
 
 end interactive
 end tactic
+

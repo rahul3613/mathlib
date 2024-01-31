@@ -38,7 +38,7 @@ by field_simp
 Checking arithmetic expressions.
 -/
 example : (f - (e + c * -(a /ₚ u₁) * b + d) - g) =
-  (f * u₁ - (e * u₁ + c * (-a) * b + d * u₁) - g * u₁) /ₚ u₁ :=
+ (f * u₁ - (e * u₁ + c * (-a) * b + d * u₁) - g * u₁) /ₚ u₁ :=
 by field_simp
 
 /--
@@ -49,3 +49,4 @@ by field_simp
 
 example : a /ₚ u₁ /ₚ u₂ = a /ₚ (u₂ * u₁) :=
 by field_simp
+

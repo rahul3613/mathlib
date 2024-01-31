@@ -41,36 +41,37 @@ inductive finite_inter_closure : set (set α)
 
 lemma finite_inter_closure_has_finite_inter : has_finite_inter (finite_inter_closure S) :=
 { univ_mem := finite_inter_closure.univ,
-  inter_mem := λ _ h _, finite_inter_closure.inter h }
+ inter_mem := λ _ h _, finite_inter_closure.inter h }
 
 variable {S}
 lemma finite_inter_mem (cond : has_finite_inter S) (F : finset (set α)) :
-  ↑F ⊆ S → ⋂₀ (↑F : set (set α)) ∈ S :=
+ ↑F ⊆ S → ⋂₀ (↑F : set (set α)) ∈ S :=
 begin
-  classical,
-  refine finset.induction_on F (λ _, _) _,
-  { simp [cond.univ_mem] },
-  { intros a s h1 h2 h3,
-    suffices : a ∩ ⋂₀ ↑s ∈ S, by simpa,
-    exact cond.inter_mem (h3 (finset.mem_insert_self a s))
-                         (h2 $ λ x hx, h3 $ finset.mem_insert_of_mem hx) }
+ classical,
+ refine finset.induction_on F (λ _, _) _,
+ { simp [cond.univ_mem] },
+ { intros a s h1 h2 h3,
+ suffices : a ∩ ⋂₀ ↑s ∈ S, by simpa,
+ exact cond.inter_mem (h3 (finset.mem_insert_self a s))
+ (h2 $ λ x hx, h3 $ finset.mem_insert_of_mem hx) }
 end
 
 lemma finite_inter_closure_insert {A : set α} (cond : has_finite_inter S)
-  (P ∈ finite_inter_closure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q :=
+ (P ∈ finite_inter_closure (insert A S)) : P ∈ S ∨ ∃ Q ∈ S, P = A ∩ Q :=
 begin
-  induction H with S h T1 T2 _ _ h1 h2,
-  { cases h,
-    { exact or.inr ⟨set.univ, cond.univ_mem, by simpa⟩ },
-    { exact or.inl h } },
-  { exact or.inl cond.univ_mem },
-  { rcases h1 with (h | ⟨Q, hQ, rfl⟩); rcases h2 with (i | ⟨R, hR, rfl⟩),
-    { exact or.inl (cond.inter_mem h i) },
-    { exact or.inr ⟨T1 ∩ R, cond.inter_mem h hR,
-        by simp only [ ←set.inter_assoc, set.inter_comm _ A]⟩ },
-    { exact or.inr ⟨Q ∩ T2, cond.inter_mem hQ i, by simp only [set.inter_assoc]⟩ },
-    { exact or.inr ⟨Q ∩ R, cond.inter_mem hQ hR,
-        by { ext x, split; simp { contextual := tt} }⟩ } }
+ induction H with S h T1 T2 _ _ h1 h2,
+ { cases h,
+ { exact or.inr ⟨set.univ, cond.univ_mem, by simpa⟩ },
+ { exact or.inl h } },
+ { exact or.inl cond.univ_mem },
+ { rcases h1 with (h | ⟨Q, hQ, rfl⟩); rcases h2 with (i | ⟨R, hR, rfl⟩),
+ { exact or.inl (cond.inter_mem h i) },
+ { exact or.inr ⟨T1 ∩ R, cond.inter_mem h hR,
+ by simp only [ ←set.inter_assoc, set.inter_comm _ A]⟩ },
+ { exact or.inr ⟨Q ∩ T2, cond.inter_mem hQ i, by simp only [set.inter_assoc]⟩ },
+ { exact or.inr ⟨Q ∩ R, cond.inter_mem hQ hR,
+ by { ext x, split; simp { contextual := tt} }⟩ } }
 end
 
 end has_finite_inter
+

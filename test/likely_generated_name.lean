@@ -15,11 +15,12 @@ sure that should this change in the future,
 
 example : ℕ → ℕ → ℕ :=
 begin
-  intros,
-  guard_hyp ᾰ : ℕ,
-  guard_hyp ᾰ_1 : ℕ,
-  (do guard $ name.is_likely_generated_binder_name `ᾰ,
-      guard $ name.is_likely_generated_binder_name `ᾰ_1
-  ),
-  exact ᾰ
+ intros,
+ guard_hyp ᾰ : ℕ,
+ guard_hyp ᾰ_1 : ℕ,
+ (do guard $ name.is_likely_generated_binder_name `ᾰ,
+ guard $ name.is_likely_generated_binder_name `ᾰ_1
+ ),
+ exact ᾰ
 end
+

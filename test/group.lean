@@ -15,7 +15,7 @@ by group
 -- see e.g.
 -- https://en.wikipedia.org/wiki/Three_subgroups_lemma#Proof_and_the_Hall%E2%80%93Witt_identity
 example (g h k : G) :
-  g * ⁅⁅g⁻¹, h⁆, k⁆ * g⁻¹ * k * ⁅⁅k⁻¹, g⁆, h⁆ * k⁻¹ * h *⁅⁅h⁻¹, k⁆, g⁆ * h⁻¹ = 1 :=
+ g * ⁅⁅g⁻¹, h⁆, k⁆ * g⁻¹ * k * ⁅⁅k⁻¹, g⁆, h⁆ * k⁻¹ * h *⁅⁅h⁻¹, k⁆, g⁆ * h⁻¹ = 1 :=
 by group
 
 example (a : G) : a^2*a = a^3 :=
@@ -50,9 +50,9 @@ begin
 
 example (a b c d : G) (h : c = (a*b^2)*((b*b)⁻¹*a⁻¹)*d) : a*c*d⁻¹ = a :=
 begin
-  group at h,
-  rw h,
-  group,
+ group at h,
+ rw h,
+ group,
 end
 
 -- The next example can be expand to require an arbitrarily high number of alternation
@@ -68,6 +68,7 @@ by group
 
 example (x : G) (h : x = 1) : x = 1 :=
 begin
-  group,
-  exact h,
+ group,
+ exact h,
 end
+

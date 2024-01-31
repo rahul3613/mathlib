@@ -12,7 +12,7 @@ An example of a `linear_ordered_comm_monoid_with_zero` in which the product of t
 elements vanishes.
 
 This is the monoid with 3 elements `0, ε, 1` where `ε ^ 2 = 0` and everything else is forced.
-The order is `0 < ε < 1`.  Since `ε ^ 2 = 0`, the product of strictly positive elements can vanish.
+The order is `0 < ε < 1`. Since `ε ^ 2 = 0`, the product of strictly positive elements can vanish.
 
 Relevant Zulip chat:
 https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/mul_pos
@@ -23,7 +23,7 @@ https://leanprover.zulipchat.com/#narrow/stream/116395-maths/topic/mul_pos
 
 namespace counterexample
 
-/--  The three element monoid. -/
+/-- The three element monoid. -/
 @[derive [decidable_eq]]
 inductive foo
 | zero
@@ -63,28 +63,28 @@ def mul : foo → foo → foo
 
 instance : comm_monoid foo :=
 { mul := mul,
-  one := 1,
-  one_mul := by boom,
-  mul_one := by boom,
-  mul_comm := by boom,
-  mul_assoc := by boom }
+ one := 1,
+ one_mul := by boom,
+ mul_one := by boom,
+ mul_comm := by boom,
+ mul_assoc := by boom }
 
 instance : linear_ordered_comm_monoid_with_zero foo :=
 { zero := 0,
-  zero_mul := by boom,
-  mul_zero := by boom,
-  mul_le_mul_left := by { rintro ⟨⟩ ⟨⟩ h ⟨⟩; revert h; dec_trivial },
-  zero_le_one := dec_trivial,
-  .. foo.linear_order,
-  .. foo.comm_monoid }
+ zero_mul := by boom,
+ mul_zero := by boom,
+ mul_le_mul_left := by { rintro ⟨⟩ ⟨⟩ h ⟨⟩; revert h; dec_trivial },
+ zero_le_one := dec_trivial,
+ .. foo.linear_order,
+ .. foo.comm_monoid }
 
 lemma not_mul_pos : ¬ ∀ {M : Type} [linear_ordered_comm_monoid_with_zero M], by exactI ∀
-  (a b : M) (ha : 0 < a) (hb : 0 < b),
-  0 < a * b :=
+ (a b : M) (ha : 0 < a) (hb : 0 < b),
+ 0 < a * b :=
 begin
-  intros h,
-  specialize h ε ε (by boom) (by boom),
-  exact (lt_irrefl 0 (h.trans_le (by boom))).elim,
+ intros h,
+ specialize h ε ε (by boom) (by boom),
+ exact (lt_irrefl 0 (h.trans_le (by boom))).elim,
 end
 
 example : 0 < ε ∧ ε * ε = 0 := by boom
@@ -92,3 +92,4 @@ example : 0 < ε ∧ ε * ε = 0 := by boom
 end foo
 
 end counterexample
+

@@ -29,7 +29,7 @@ variables (R : Type*) [semiring R]
 
 /-- An additive functor `F` is `R`-linear provided `F.map` is an `R`-module morphism. -/
 class functor.linear {C D : Type*} [category C] [category D]
-  [preadditive C] [preadditive D] [linear R C] [linear R D] (F : C ⥤ D) [F.additive] : Prop :=
+ [preadditive C] [preadditive D] [linear R C] [linear R D] (F : C ⥤ D) [F.additive] : Prop :=
 (map_smul' : Π {X Y : C} {f : X ⟶ Y} {r : R}, F.map (r • f) = r • F.map f . obviously)
 
 section linear
@@ -38,8 +38,8 @@ namespace functor
 
 section
 variables {R} {C D : Type*} [category C] [category D]
-  [preadditive C] [preadditive D] [category_theory.linear R C] [category_theory.linear R D]
-  (F : C ⥤ D) [additive F] [linear R F]
+ [preadditive C] [preadditive D] [category_theory.linear R C] [category_theory.linear R D]
+ (F : C ⥤ D) [additive F] [linear R F]
 
 @[simp]
 lemma map_smul {X Y : C} (r : R) (f : X ⟶ Y) : F.map (r • f) = r • F.map f :=
@@ -49,8 +49,8 @@ instance : linear R (𝟭 C) :=
 {}
 
 instance {E : Type*} [category E] [preadditive E] [category_theory.linear R E]
-  (G : D ⥤ E) [additive G] [linear R G]:
-  linear R (F ⋙ G) :=
+ (G : D ⥤ E) [additive G] [linear R G]:
+ linear R (F ⋙ G) :=
 {}
 
 variables (R)
@@ -59,7 +59,7 @@ variables (R)
 @[simps]
 def map_linear_map {X Y : C} : (X ⟶ Y) →ₗ[R] (F.obj X ⟶ F.obj Y) :=
 { map_smul' := λ r f, F.map_smul r f,
-  ..F.map_add_hom }
+ ..F.map_add_hom }
 
 lemma coe_map_linear_map {X Y : C} : ⇑(F.map_linear_map R : (X ⟶ Y) →ₗ[R] _) = @map C _ D _ F X Y :=
 rfl
@@ -68,21 +68,21 @@ end
 
 section induced_category
 variables {C : Type*} {D : Type*} [category D] [preadditive D] [category_theory.linear R D]
-   (F : C → D)
+ (F : C → D)
 
 instance induced_functor_linear : functor.linear R (induced_functor F) := {}
 
 end induced_category
 
 instance full_subcategory_inclusion_linear
-  {C : Type*} [category C] [preadditive C] [category_theory.linear R C] (Z : C → Prop) :
-  (full_subcategory_inclusion Z).linear R := {}
+ {C : Type*} [category C] [preadditive C] [category_theory.linear R C] (Z : C → Prop) :
+ (full_subcategory_inclusion Z).linear R := {}
 
 section
 
 variables {R} {C D : Type*} [category C] [category D]
-  [preadditive C] [preadditive D]
-  (F : C ⥤ D) [additive F]
+ [preadditive C] [preadditive D]
+ (F : C ⥤ D) [additive F]
 
 instance nat_linear : F.linear ℕ :=
 { map_smul' := λ X Y f r, F.map_add_hom.map_nsmul f r, }
@@ -102,10 +102,10 @@ end functor
 namespace equivalence
 
 variables {C D : Type*} [category C] [category D]
-  [preadditive C] [linear R C] [preadditive D] [linear R D]
+ [preadditive C] [linear R C] [preadditive D] [linear R D]
 
 instance inverse_linear (e : C ≌ D) [e.functor.additive] [e.functor.linear R] :
-  e.inverse.linear R :=
+ e.inverse.linear R :=
 { map_smul' := λ X Y r f, by { apply e.functor.map_injective, simp, }, }
 
 end equivalence
@@ -113,3 +113,4 @@ end equivalence
 end linear
 
 end category_theory
+

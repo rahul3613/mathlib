@@ -28,25 +28,25 @@ variables [preadditive C]
 namespace injective
 
 lemma injective_iff_preserves_epimorphisms_preadditive_yoneda_obj (J : C) :
-  injective J ↔ (preadditive_yoneda.obj J).preserves_epimorphisms :=
+ injective J ↔ (preadditive_yoneda.obj J).preserves_epimorphisms :=
 begin
-  rw injective_iff_preserves_epimorphisms_yoneda_obj,
-  refine ⟨λ (h : (preadditive_yoneda.obj J ⋙ (forget _)).preserves_epimorphisms), _, _⟩,
-  { exactI functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda.obj J)
-      (forget _) },
-  { introI,
-    exact (infer_instance : (preadditive_yoneda.obj J ⋙ forget _).preserves_epimorphisms) }
+ rw injective_iff_preserves_epimorphisms_yoneda_obj,
+ refine ⟨λ (h : (preadditive_yoneda.obj J ⋙ (forget _)).preserves_epimorphisms), _, _⟩,
+ { exactI functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda.obj J)
+ (forget _) },
+ { introI,
+ exact (infer_instance : (preadditive_yoneda.obj J ⋙ forget _).preserves_epimorphisms) }
 end
 
 lemma injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' (J : C) :
-  injective J ↔ (preadditive_yoneda_obj J).preserves_epimorphisms :=
+ injective J ↔ (preadditive_yoneda_obj J).preserves_epimorphisms :=
 begin
-  rw injective_iff_preserves_epimorphisms_yoneda_obj,
-  refine ⟨λ (h : (preadditive_yoneda_obj J ⋙ (forget _)).preserves_epimorphisms), _, _⟩,
-  { exactI functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda_obj J)
-      (forget _) },
-  { introI,
-    exact (infer_instance : (preadditive_yoneda_obj J ⋙ forget _).preserves_epimorphisms) }
+ rw injective_iff_preserves_epimorphisms_yoneda_obj,
+ refine ⟨λ (h : (preadditive_yoneda_obj J ⋙ (forget _)).preserves_epimorphisms), _, _⟩,
+ { exactI functor.preserves_epimorphisms_of_preserves_of_reflects (preadditive_yoneda_obj J)
+ (forget _) },
+ { introI,
+ exact (infer_instance : (preadditive_yoneda_obj J ⋙ forget _).preserves_epimorphisms) }
 end
 
 end injective
@@ -54,3 +54,4 @@ end injective
 end preadditive
 
 end category_theory
+

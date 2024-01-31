@@ -16,9 +16,9 @@ subtypes `self_adjoint A` and `unitary A`.
 
 * Show that any exponential unitary is path-connected in `unitary A` to `1 : unitary A`.
 * Prove any unitary whose distance to `1 : unitary A` is less than `1` can be expressed as an
-  exponential unitary.
+ exponential unitary.
 * A unitary is in the path component of `1` if and only if it is a finite product of exponential
-  unitaries.
+ unitaries.
 -/
 
 section star
@@ -38,17 +38,18 @@ noncomputable def self_adjoint.exp_unitary (a : self_adjoint A) : unitary A :=
 open self_adjoint
 
 lemma commute.exp_unitary_add {a b : self_adjoint A} (h : commute (a : A) (b : A)) :
-  exp_unitary (a + b) = exp_unitary a * exp_unitary b :=
+ exp_unitary (a + b) = exp_unitary a * exp_unitary b :=
 begin
-  ext,
-  have hcomm : commute (I • (a : A)) (I • (b : A)),
-  calc _ = _ : by simp only [h.eq, algebra.smul_mul_assoc, algebra.mul_smul_comm],
-  simpa only [exp_unitary_coe, add_subgroup.coe_add, smul_add] using exp_add_of_commute hcomm,
+ ext,
+ have hcomm : commute (I • (a : A)) (I • (b : A)),
+ calc _ = _ : by simp only [h.eq, algebra.smul_mul_assoc, algebra.mul_smul_comm],
+ simpa only [exp_unitary_coe, add_subgroup.coe_add, smul_add] using exp_add_of_commute hcomm,
 end
 
 lemma commute.exp_unitary {a b : self_adjoint A} (h : commute (a : A) (b : A)) :
-  commute (exp_unitary a) (exp_unitary b) :=
+ commute (exp_unitary a) (exp_unitary b) :=
 calc (exp_unitary a) * (exp_unitary b) = (exp_unitary b) * (exp_unitary a)
-  : by rw [←h.exp_unitary_add, ←h.symm.exp_unitary_add, add_comm]
+ : by rw [←h.exp_unitary_add]; rw [ ←h.symm.exp_unitary_add]; rw [ add_comm]
 
 end star
+

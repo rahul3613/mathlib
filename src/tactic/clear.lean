@@ -12,11 +12,11 @@ import tactic.core
 We define two variants of the standard `clear` tactic:
 
 * `clear'` works like `clear` but the hypotheses that should be cleared can be
-  given in any order. In contrast, `clear` can fail if hypotheses that depend on
-  each other are given in the wrong order, even if all of them could be cleared.
+ given in any order. In contrast, `clear` can fail if hypotheses that depend on
+ each other are given in the wrong order, even if all of them could be cleared.
 
 * `clear_dependent` works like `clear'` but also clears any hypotheses that
-  depend on the given hypotheses.
+ depend on the given hypotheses.
 
 ## Implementation notes
 
@@ -40,17 +40,17 @@ tgt ← target,
 -- letting one of the later tactics fail) lets us give a much more informative
 -- error message.
 hyps.mmap' (λ h, do
-  dep ← kdepends_on tgt h,
-  when dep $ fail $
-    format!"Cannot clear hypothesis {h} since the target depends on it."),
+ dep ← kdepends_on tgt h,
+ when dep $ fail $
+ format!"Cannot clear hypothesis {h} since the target depends on it."),
 n ← revert_lst hyps,
 -- If revert_lst reverted more hypotheses than we wanted to clear, there must
 -- have been other hypotheses dependent on some of the hyps.
 when (! clear_dependent && (n ≠ hyps.length)) $ fail $ format.join
-  [ "Some of the following hypotheses cannot be cleared because other "
-  , "hypotheses depend on (some of) them:\n"
-  , format.intercalate ", " (hyps.map to_fmt)
-  ],
+ [ "Some of the following hypotheses cannot be cleared because other "
+ , "hypotheses depend on (some of) them:\n"
+ , format.intercalate ", " (hyps.map to_fmt)
+ ],
 v ← mk_meta_var tgt,
 intron n,
 exact v,
@@ -67,9 +67,9 @@ be cleared (if the type of `y` depends on `x`). `clear'` lifts this limitation.
 ```lean
 example {α} {β : α → Type} (a : α) (b : β a) : unit :=
 begin
-  try { clear a b }, -- fails since `b` depends on `a`
-  clear' a b,        -- succeeds
-  exact ()
+ try { clear a b }, -- fails since `b` depends on `a`
+ clear' a b, -- succeeds
+ exact ()
 end
 ```
 -/
@@ -84,9 +84,9 @@ other hypotheses depending on them.
 ```lean
 example {α} {β : α → Type} (a : α) (b : β a) : unit :=
 begin
-  try { clear' a },  -- fails since `b` depends on `a`
-  clear_dependent a, -- succeeds, clearing `a` and `b`
-  exact ()
+ try { clear' a }, -- fails since `b` depends on `a`
+ clear_dependent a, -- succeeds, clearing `a` and `b`
+ exact ()
 end
 ```
  -/
@@ -95,10 +95,11 @@ hyps ← p.mmap get_local,
 tactic.clear' true hyps
 
 add_tactic_doc
-{ name       := "clear'",
-  category   := doc_category.tactic,
-  decl_names := [`tactic.interactive.clear', `tactic.interactive.clear_dependent],
-  tags       := ["context management"],
-  inherit_description_from := `tactic.interactive.clear' }
+{ name := "clear'",
+ category := doc_category.tactic,
+ decl_names := [`tactic.interactive.clear', `tactic.interactive.clear_dependent],
+ tags := ["context management"],
+ inherit_description_from := `tactic.interactive.clear' }
 
 end tactic.interactive
+

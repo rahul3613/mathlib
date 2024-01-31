@@ -64,7 +64,7 @@ add_decl decl,
 skip
 
 /-! Test the namespace bug (#8733). This code should *not* generate a lemma
-  `add_some_def.in_namespace`. -/
+ `add_some_def.in_namespace`. -/
 def some_def.in_namespace : bool := ff
 
 def some_def {α : Type*} [has_mul α] (x : α) : α :=
@@ -72,11 +72,11 @@ if some_def.in_namespace then x * x else x
 
 -- cannot apply `@[to_additive]` to `some_def` if `some_def.in_namespace` doesn't have the attribute
 run_cmd do
-  dict ← to_additive.aux_attr.get_cache,
-  success_if_fail
-    (transform_decl_with_prefix_dict dict ff tt mk_name_map mk_name_map mk_name_map
-      `some_def `add_some_def []),
-  skip
+ dict ← to_additive.aux_attr.get_cache,
+ success_if_fail
+ (transform_decl_with_prefix_dict dict ff tt mk_name_map mk_name_map mk_name_map
+ `some_def `add_some_def []),
+ skip
 
 attribute [to_additive some_other_name] some_def.in_namespace
 attribute [to_additive add_some_def] some_def
@@ -84,7 +84,7 @@ attribute [to_additive add_some_def] some_def
 run_cmd success_if_fail (get_decl `add_some_def.in_namespace)
 
 example : (add_units.mk_of_add_eq_zero 0 0 (by simp) : ℕ)
-        = (add_units.mk_of_add_eq_zero 0 0 (by simp) : ℕ) :=
+ = (add_units.mk_of_add_eq_zero 0 0 (by simp) : ℕ) :=
 by norm_cast
 
 -- TODO test alias
@@ -93,7 +93,7 @@ by norm_cast
 
 -- first multiplicative argument: f
 def foo_mul {I J K : Type*} (n : ℕ) {f : I → Type*} (L : Type*) [∀ i (n : ℕ), bool → has_one (f i)]
-  [has_add I] [has_mul L] : true :=
+ [has_add I] [has_mul L] : true :=
 trivial
 
 @[to_additive]
@@ -101,10 +101,10 @@ instance pi.has_one {I : Type*} {f : I → Type*} [∀ i, has_one $ f i] : has_o
 ⟨λ _, 1⟩
 
 run_cmd do
-  n ← to_additive.first_multiplicative_arg `test.pi.has_one,
-  guard $ n = 2,
-  n ← to_additive.first_multiplicative_arg `test.foo_mul,
-  guard $ n = 5
+ n ← to_additive.first_multiplicative_arg `test.pi.has_one,
+ guard $ n = 2,
+ n ← to_additive.first_multiplicative_arg `test.foo_mul,
+ guard $ n = 5
 
 @[to_additive]
 def nat_pi_has_one {α : Type*} [has_one α] : has_one (Π x : ℕ, α) := by apply_instance
@@ -113,3 +113,4 @@ def nat_pi_has_one {α : Type*} [has_one α] : has_one (Π x : ℕ, α) := by ap
 def pi_nat_has_one {I : Type*} : has_one (Π x : I, ℕ) := by apply_instance
 
 end test
+

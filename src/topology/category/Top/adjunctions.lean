@@ -30,7 +30,7 @@ namespace Top
 def adj₁ : discrete ⊣ forget Top.{u} :=
 adjunction.mk_of_unit_counit
 { unit := { app := λ X, id },
-  counit := { app := λ X, ⟨id, continuous_bot⟩ } }
+ counit := { app := λ X, ⟨id, continuous_bot⟩ } }
 
 /-- Equipping a type with the trivial topology is right adjoint to the forgetful functor
 `Top ⥤ Type`. -/
@@ -38,9 +38,10 @@ adjunction.mk_of_unit_counit
 def adj₂ : forget Top.{u} ⊣ trivial :=
 adjunction.mk_of_unit_counit
 { unit := { app := λ X, ⟨id, continuous_top⟩ },
-  counit := { app := λ X, id } }
+ counit := { app := λ X, id } }
 
 instance : is_right_adjoint (forget Top.{u}) := ⟨_, adj₁⟩
 instance : is_left_adjoint (forget Top.{u}) := ⟨_, adj₂⟩
 
 end Top
+

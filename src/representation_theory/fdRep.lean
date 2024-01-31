@@ -28,7 +28,7 @@ We verify that `fdRep k G` is a `k`-linear monoidal category, and rigid when `G`
 ## TODO
 * `fdRep k G ≌ full_subcategory (finite_dimensional k)`
 * Upgrade the right rigid structure to a rigid structure
-  (this just needs to be done for `fgModule`).
+ (this just needs to be done for `fgModule`).
 * `fdRep k G` has all finite colimits.
 * `fdRep k G` is abelian.
 * `fdRep k G ≌ fgModule (monoid_algebra k G)`.
@@ -65,27 +65,27 @@ by { change finite_dimensional k ((forget₂ (fdRep k G) (fgModule k)).obj V).ob
 /-- All hom spaces are finite dimensional. -/
 instance (V W : fdRep k G) : finite_dimensional k (V ⟶ W) :=
 finite_dimensional.of_injective
-  ((forget₂ (fdRep k G) (fgModule k)).map_linear_map k) (functor.map_injective _)
+ ((forget₂ (fdRep k G) (fgModule k)).map_linear_map k) (functor.map_injective _)
 
 /-- The monoid homomorphism corresponding to the action of `G` onto `V : fdRep k G`. -/
 def ρ (V : fdRep k G) : G →* (V →ₗ[k] V) := V.ρ
 
 /-- The underlying `linear_equiv` of an isomorphism of representations. -/
 def iso_to_linear_equiv {V W : fdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
-  fgModule.iso_to_linear_equiv ((Action.forget (fgModule k) (Mon.of G)).map_iso i)
+ fgModule.iso_to_linear_equiv ((Action.forget (fgModule k) (Mon.of G)).map_iso i)
 
 lemma iso.conj_ρ {V W : fdRep k G} (i : V ≅ W) (g : G) :
-   W.ρ g = (fdRep.iso_to_linear_equiv i).conj (V.ρ g) :=
+ W.ρ g = (fdRep.iso_to_linear_equiv i).conj (V.ρ g) :=
 begin
-  rw [fdRep.iso_to_linear_equiv, ←fgModule.iso.conj_eq_conj, iso.conj_apply],
-  rw [iso.eq_inv_comp ((Action.forget (fgModule k) (Mon.of G)).map_iso i)],
-  exact (i.hom.comm g).symm,
+ rw [fdRep.iso_to_linear_equiv]; rw [ ←fgModule.iso.conj_eq_conj]; rw [ iso.conj_apply],
+ rw [iso.eq_inv_comp ((Action.forget (fgModule k) (Mon.of G)).map_iso i)],
+ exact (i.hom.comm g).symm,
 end
 
 /-- Lift an unbundled representation to `fdRep`. -/
 @[simps ρ]
 def of {V : Type u} [add_comm_group V] [module k V] [finite_dimensional k V]
-  (ρ : representation k G V) : fdRep k G :=
+ (ρ : representation k G V) : fdRep k G :=
 ⟨fgModule.of k V, ρ⟩
 
 instance : has_forget₂ (fdRep k G) (Rep k G) :=
@@ -108,19 +108,19 @@ instance : has_kernels (fdRep k G) := by apply_instance
 
 -- Verify that Schur's lemma applies out of the box.
 lemma finrank_hom_simple_simple [is_alg_closed k] (V W : fdRep k G) [simple V] [simple W] :
-  finrank k (V ⟶ W) = if nonempty (V ≅ W) then 1 else 0 :=
+ finrank k (V ⟶ W) = if nonempty (V ≅ W) then 1 else 0 :=
 category_theory.finrank_hom_simple_simple k V W
 
 /-- The forgetful functor to `Rep k G` preserves hom-sets and their vector space structure -/
 def forget₂_hom_linear_equiv (X Y : fdRep k G) :
-  (((forget₂ (fdRep k G) (Rep k G)).obj X) ⟶ ((forget₂ (fdRep k G) (Rep k G)).obj Y)) ≃ₗ[k]
-  (X ⟶ Y) :=
+ (((forget₂ (fdRep k G) (Rep k G)).obj X) ⟶ ((forget₂ (fdRep k G) (Rep k G)).obj Y)) ≃ₗ[k]
+ (X ⟶ Y) :=
 { to_fun := λ f, ⟨f.hom, f.comm⟩,
-  map_add' := λ _ _, rfl,
-  map_smul' := λ _ _, rfl,
-  inv_fun := λ f, ⟨(forget₂ (fgModule k) (Module k)).map f.hom, f.comm⟩,
-  left_inv := λ _, by { ext, refl },
-  right_inv := λ _, by { ext, refl } }
+ map_add' := λ _ _, rfl,
+ map_smul' := λ _ _, rfl,
+ inv_fun := λ f, ⟨(forget₂ (fgModule k) (Module k)).map f.hom, f.comm⟩,
+ left_inv := λ _, by { ext, refl },
+ right_inv := λ _, by { ext, refl } }
 
 end fdRep
 
@@ -150,19 +150,20 @@ variables (ρV : representation k G V) (W : fdRep k G)
 
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
 noncomputable def dual_tensor_iso_lin_hom_aux :
-  ((fdRep.of ρV.dual) ⊗ W).V ≅ (fdRep.of (lin_hom ρV W.ρ)).V :=
+ ((fdRep.of ρV.dual) ⊗ W).V ≅ (fdRep.of (lin_hom ρV W.ρ)).V :=
 (dual_tensor_hom_equiv k V W).to_fgModule_iso
 
 /-- When `V` and `W` are finite dimensional representations of a group `G`, the isomorphism
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
 noncomputable def dual_tensor_iso_lin_hom :
-  (fdRep.of ρV.dual) ⊗ W ≅ fdRep.of (lin_hom ρV W.ρ) :=
+ (fdRep.of ρV.dual) ⊗ W ≅ fdRep.of (lin_hom ρV W.ρ) :=
 begin
-  apply Action.mk_iso (dual_tensor_iso_lin_hom_aux ρV W),
-  convert (dual_tensor_hom_comm ρV W.ρ),
+ apply Action.mk_iso (dual_tensor_iso_lin_hom_aux ρV W),
+ convert (dual_tensor_hom_comm ρV W.ρ),
 end
 
 @[simp] lemma dual_tensor_iso_lin_hom_hom_hom :
-  (dual_tensor_iso_lin_hom ρV W).hom.hom = dual_tensor_hom k V W := rfl
+ (dual_tensor_iso_lin_hom ρV W).hom.hom = dual_tensor_hom k V W := rfl
 
 end fdRep
+

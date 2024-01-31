@@ -31,9 +31,9 @@ def cylinder₁ (X : Top) : X ⟶ cylinder X :=
 prod.lift (𝟙 X) (to_pt X ≫ I₁)
 
 -- The mapping cylinder is the pushout of the diagram
---    X
---   ↙ ↘
---  Y   (X x I)
+-- X
+-- ↙ ↘
+-- Y (X x I)
 -- (`pushout` is implemented just as a wrapper around `colimit`) is
 def mapping_cylinder {X Y : Top} (f : X ⟶ Y) : Top := pushout f (cylinder₁ X)
 
@@ -46,17 +46,17 @@ cylinder₀ X ≫ pushout.inr
 /--
 The mapping cone is defined as the pushout of
 ```
-         X
-        ↙ ↘
- (Cyl f)   pt
+ X
+ ↙ ↘
+ (Cyl f) pt
 ```
 (where the left arrow is `mapping_cylinder₀`).
 
 This makes it an iterated colimit; one could also define it in one step as the colimit of
 ```
---    X        X
---   ↙ ↘      ↙ ↘
---  Y   (X x I)  pt
+-- X X
+-- ↙ ↘ ↙ ↘
+-- Y (X x I) pt
 ```
 -/
 def mapping_cone {X Y : Top} (f : X ⟶ Y) : Top := pushout (mapping_cylinder₀ f) (to_pt X)
@@ -100,3 +100,4 @@ pi.lift (λ (n : ℕ), ⟨λ (_ : pt), (n + 1 : ℝ), by continuity⟩)
 -- with the corresponding limit cones. In this case, `Top.limit_cone`.
 
 end Products
+

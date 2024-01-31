@@ -35,11 +35,11 @@ instance : countable ℕ := ⟨⟨id, injective_id⟩⟩
 export countable (exists_injective_nat)
 
 protected lemma function.injective.countable [countable β] {f : α → β} (hf : injective f) :
-  countable α :=
+ countable α :=
 let ⟨g, hg⟩ := exists_injective_nat β in ⟨⟨g ∘ f, hg.comp hf⟩⟩
 
 protected lemma function.surjective.countable [countable α] {f : α → β} (hf : surjective f) :
-  countable β :=
+ countable β :=
 (injective_surj_inv hf).countable
 
 lemma exists_surjective_nat (α : Sort u) [nonempty α] [countable α] : ∃ f : ℕ → α, surjective f :=
@@ -93,3 +93,4 @@ instance Prop.countable' : countable Prop := countable.of_equiv bool equiv.Prop_
 (surjective_quot_mk r).countable
 
 @[priority 500] instance [countable α] {s : setoid α} : countable (quotient s) := quot.countable
+

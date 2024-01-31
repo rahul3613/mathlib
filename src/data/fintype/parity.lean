@@ -18,7 +18,7 @@ variables {α : Type*}
 namespace fintype
 
 instance is_square.decidable_pred [has_mul α] [fintype α] [decidable_eq α] :
-  decidable_pred (is_square : α → Prop) :=
+ decidable_pred (is_square : α → Prop) :=
 λ a, fintype.decidable_exists_fintype
 
 end fintype
@@ -27,3 +27,4 @@ end fintype
 This `fact` is needed as an instance by `matrix.special_linear_group.has_neg`. -/
 lemma fintype.card_fin_even {n : ℕ} : fact (even (fintype.card (fin (bit0 n)))) :=
 ⟨by { rw fintype.card_fin, exact even_bit0 _ }⟩
+

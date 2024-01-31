@@ -18,8 +18,8 @@ require more structure, such as a bottom element, a top element, or
 a join-semilattice structure.
 
 - `order.pfilter P`: The type of nonempty, downward directed, upward closed
-               subsets of `P`. This is dual to `order.ideal`, so it
-               simply wraps `order.ideal Pᵒᵈ`.
+ subsets of `P`. This is dual to `order.ideal`, so it
+ simply wraps `order.ideal Pᵒᵈ`.
 - `order.is_pfilter P`: a predicate for when a `set P` is a filter.
 
 
@@ -42,9 +42,9 @@ namespace order
 variables {P : Type*}
 
 /-- A filter on a preorder `P` is a subset of `P` that is
-  - nonempty
-  - downward directed
-  - upward closed. -/
+ - nonempty
+ - downward directed
+ - upward closed. -/
 structure pfilter (P) [preorder P] :=
 (dual : ideal Pᵒᵈ)
 
@@ -53,8 +53,8 @@ def is_pfilter [preorder P] (F : set P) : Prop :=
 @is_ideal Pᵒᵈ _ F
 
 lemma is_pfilter.of_def [preorder P] {F : set P} (nonempty : F.nonempty)
-  (directed : directed_on (≥) F) (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : is_pfilter F :=
-⟨λ _ _ _ _, mem_of_le ‹_› ‹_›,  nonempty, directed⟩
+ (directed : directed_on (≥) F) (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : is_pfilter F :=
+⟨λ _ _ _ _, mem_of_le ‹_› ‹_›, nonempty, directed⟩
 
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
 `order.is_pfilter`. -/
@@ -99,7 +99,7 @@ ideal.mem_of_mem_of_le
 def principal (p : P) : pfilter P := ⟨ideal.principal p⟩
 
 @[simp] lemma mem_def (x : P) (I : ideal Pᵒᵈ) :
-  x ∈ (⟨I⟩ : pfilter P) ↔ order_dual.to_dual x ∈ I :=
+ x ∈ (⟨I⟩ : pfilter P) ↔ order_dual.to_dual x ∈ I :=
 iff.rfl
 
 @[simp] lemma principal_le_iff {F : pfilter P} : principal x ≤ F ↔ x ∈ F :=
@@ -124,14 +124,14 @@ variables [preorder P] [order_top P] {F : pfilter P}
 /-- There is a bottom filter when `P` has a top element. -/
 instance : order_bot (pfilter P) :=
 { bot := ⟨⊥⟩,
-  bot_le := λ F, (bot_le : ⊥ ≤ F.dual) }
+ bot_le := λ F, (bot_le : ⊥ ≤ F.dual) }
 
 end order_top
 
 /-- There is a top filter when `P` has a bottom element. -/
 instance {P} [preorder P] [order_bot P] : order_top (pfilter P) :=
 { top := ⟨⊤⟩,
-  le_top := λ F, (le_top : F.dual ≤ ⊤) }
+ le_top := λ F, (le_top : F.dual ≤ ⊤) }
 
 section semilattice_inf
 variables [semilattice_inf P] {x y : P} {F : pfilter P}
@@ -149,19 +149,20 @@ section complete_semilattice_Inf
 variables [complete_semilattice_Inf P] {F : pfilter P}
 
 lemma Inf_gc : galois_connection (λ x, order_dual.to_dual (principal x))
-  (λ F, Inf (order_dual.of_dual F : pfilter P)) :=
+ (λ F, Inf (order_dual.of_dual F : pfilter P)) :=
 λ x F, by { simp, refl }
 
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def Inf_gi : galois_coinsertion (λ x, order_dual.to_dual (principal x))
-  (λ F, Inf (order_dual.of_dual F : pfilter P)) :=
+ (λ F, Inf (order_dual.of_dual F : pfilter P)) :=
 { choice := λ F _, Inf (id F : pfilter P),
-  gc := Inf_gc,
-  u_l_le := λ s, Inf_le $ mem_principal.2 $ le_refl s,
-  choice_eq := λ _ _, rfl }
+ gc := Inf_gc,
+ u_l_le := λ s, Inf_le $ mem_principal.2 $ le_refl s,
+ choice_eq := λ _ _, rfl }
 
 end complete_semilattice_Inf
 
 end pfilter
 
 end order
+

@@ -38,15 +38,15 @@ meta def binder_less_important (u v : binder_info) : bool :=
 component equal to `b'`. Returns the `γ` components of the selected elements under the image of `p`,
 and the elements of the original `list α` which were not selected. -/
 def select_for_which {α β γ : Type} (p : α → β × γ) [decidable_eq β] (b' : β) :
-  list α → list γ × list α
+ list α → list γ × list α
 | [] := ([], [])
 | (a :: rest) :=
-  let (cs, others) := select_for_which rest, (b, c) := p a in
-  if b = b' then (c :: cs, others) else (cs, a :: others)
+ let (cs, others) := select_for_which rest, (b, c) := p a in
+ if b = b' then (c :: cs, others) else (cs, a :: others)
 
 /-- Helper function for `collect_by`. -/
 private meta def collect_by_aux {α β γ : Type} (p : α → β × γ) [decidable_eq β] :
-  list β → list α → list (β × list γ)
+ list β → list α → list (β × list γ)
 | [] [] := []
 | [] _ := undefined_core "didn't find every key entry!"
 | (b :: rest) as := let (cs, as) := select_for_which p b as in (b, cs) :: collect_by_aux rest as
@@ -54,12 +54,12 @@ private meta def collect_by_aux {α β γ : Type} (p : α → β × γ) [decidab
 /-- Returns the elements of `l` under the image of `p`, collecting together elements with the same
 `β` component, deleting duplicates. -/
 meta def collect_by {α β γ : Type} (l : list α) (p : α → β × γ) [decidable_eq β] :
-  list (β × list γ) :=
+ list (β × list γ) :=
 collect_by_aux p (l.map $ prod.fst ∘ p).dedup l
 
 /-- Sort the variables by their priority as defined by `where.binder_priority`. -/
 meta def sort_variable_list (l : list (name × binder_info × expr)) :
-  list (expr × binder_info × list name) :=
+ list (expr × binder_info × list name) :=
 let l := collect_by l $ λ v, (v.2.2, (v.1, v.2.1)) in
 let l := l.map $ λ el, (el.1, collect_by el.2 $ λ v, (v.2, v.1)) in
 (list.join $ l.map $ λ e, prod.mk e.1 <$> e.2).qsort (λ v u, binder_less_important v.2.1 u.2.1)
@@ -74,13 +74,13 @@ if n.front = '_' then (ns, n :: ins) else (n :: ns, ins)
 /-- Format an individual variable definition for printing. -/
 meta def format_variable : expr × binder_info × list name → tactic string
 | (e, bi, ns) := do
-  let (l, r) := bi.brackets,
-  e ← pp e,
-  let (ns, ins) := collect_implicit_names ns,
-  let ns := " ".intercalate $ ns.map to_string,
-  let ns := if ns.length = 0 then [] else [sformat!"{l}{ns} : {e}{r}"],
-  let ins := ins.map $ λ _, sformat!"{l}{e}{r}",
-  return $ " ".intercalate $ ns ++ ins
+ let (l, r) := bi.brackets,
+ e ← pp e,
+ let (ns, ins) := collect_implicit_names ns,
+ let ns := " ".intercalate $ ns.map to_string,
+ let ns := if ns.length = 0 then [] else [sformat!"{l}{ns} : {e}{r}"],
+ let ins := ins.map $ λ _, sformat!"{l}{e}{r}",
+ return $ " ".intercalate $ ns ++ ins
 
 /-- Turn a list of triples of variable names, binder info, and types, into a pretty list. -/
 meta def compile_variable_list (l : list (name × binder_info × expr)) : tactic string :=
@@ -94,7 +94,7 @@ n.replace_prefix ns name.anonymous
 the namespace `ns` (which we do not include). -/
 meta def get_open_namespaces (ns : name) : tactic (list name) :=
 do opens ← list.dedup <$> tactic.open_namespaces,
-   return $ (opens.erase ns).map $ strip_namespace ns
+ return $ (opens.erase ns).map $ strip_namespace ns
 
 /-- Give a slightly friendlier name for `name.anonymous` in the context of your current namespace.
 -/
@@ -109,23 +109,23 @@ return sformat!"namespace {explain_anonymous_name ns}"
 /-- `#where` output helper which traces the open namespaces. -/
 meta def build_str_open_namespaces (ns : name) : tactic string :=
 do l ← get_open_namespaces ns,
-   let str := " ".intercalate $ l.map to_string,
-   if l.empty then return ""
-   else return sformat!"open {str}"
+ let str := " ".intercalate $ l.map to_string,
+ if l.empty then return ""
+ else return sformat!"open {str}"
 
 /-- `#where` output helper which traces the variables. -/
 meta def build_str_variables : lean.parser string :=
 do l ← get_variables,
-   str ← compile_variable_list l,
-   if l.empty then return ""
-   else return sformat!"variables {str}"
+ str ← compile_variable_list l,
+ if l.empty then return ""
+ else return sformat!"variables {str}"
 
 /-- `#where` output helper which traces the includes. -/
 meta def build_str_includes : lean.parser string :=
 do l ← get_included_variables,
-   let str := " ".intercalate $ l.map $ λ n, to_string n.1,
-   if l.empty then return ""
-   else return sformat!"include {str}"
+ let str := " ".intercalate $ l.map $ λ n, to_string n.1,
+ if l.empty then return ""
+ else return sformat!"include {str}"
 
 /-- `#where` output helper which traces the namespace end. -/
 meta def build_str_end (ns : name) : tactic string :=
@@ -138,20 +138,20 @@ return $ s ++ (list.as_string $ (list.range n).map $ λ _, '\n')
 /-- `#where` output helper which traces lines, adding a newline if nonempty. -/
 private meta def append_line (s : string) (t : lean.parser string) : lean.parser string :=
 do v ← t,
-   return $ s ++ v ++ (if v.length = 0 then "" else "\n")
+ return $ s ++ v ++ (if v.length = 0 then "" else "\n")
 
 /-- `#where` output main function. -/
 meta def build_msg : lean.parser string :=
 do let msg := "",
-   ns ← get_current_namespace,
-   msg ← append_line msg $ build_str_namespace ns,
-   msg ← append_nl   msg 1,
-   msg ← append_line msg $ build_str_open_namespaces ns,
-   msg ← append_line msg $ build_str_variables,
-   msg ← append_line msg $ build_str_includes,
-   msg ← append_nl   msg 3,
-   msg ← append_line msg $ build_str_end ns,
-   return msg
+ ns ← get_current_namespace,
+ msg ← append_line msg $ build_str_namespace ns,
+ msg ← append_nl msg 1,
+ msg ← append_line msg $ build_str_open_namespaces ns,
+ msg ← append_line msg $ build_str_variables,
+ msg ← append_line msg $ build_str_includes,
+ msg ← append_nl msg 3,
+ msg ← append_line msg $ build_str_end ns,
+ return msg
 
 open interactive
 
@@ -167,12 +167,13 @@ please file an issue on GitHub if you observe a failure.
 @[user_command]
 meta def where_cmd (_ : parse $ tk "#where") : lean.parser unit :=
 do msg ← build_msg,
-   trace msg
+ trace msg
 
 add_tactic_doc
-{ name                     := "#where",
-  category                 := doc_category.cmd,
-  decl_names               := [`where.where_cmd],
-  tags                     := ["environment"] }
+{ name := "#where",
+ category := doc_category.cmd,
+ decl_names := [`where.where_cmd],
+ tags := ["environment"] }
 
 end where
+

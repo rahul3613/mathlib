@@ -63,10 +63,10 @@ localized "notation e `[` x `]` := (e (multiplicative.of_add x) : ℂ)" in fouri
 namespace vector_fourier
 
 variables
-  {𝕜 : Type*} [comm_ring 𝕜]
-  {V : Type*} [add_comm_group V] [module 𝕜 V] [measurable_space V]
-  {W : Type*} [add_comm_group W] [module 𝕜 W]
-  {E : Type*} [normed_add_comm_group E] [normed_space ℂ E]
+ {𝕜 : Type*} [comm_ring 𝕜]
+ {V : Type*} [add_comm_group V] [module 𝕜 V] [measurable_space V]
+ {W : Type*} [add_comm_group W] [module 𝕜 W]
+ {E : Type*} [normed_add_comm_group E] [normed_space ℂ E]
 
 section defs
 
@@ -75,114 +75,111 @@ variables [complete_space E]
 /-- The Fourier transform integral for `f : V → E`, with respect to a bilinear form `L : V × W → 𝕜`
 and an additive character `e`. -/
 def fourier_integral
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V) (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜)
-  (f : V → E) (w : W) : E :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V) (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜)
+ (f : V → E) (w : W) : E :=
 ∫ v, e [-L v w] • f v ∂μ
 
 lemma fourier_integral_smul_const
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V) (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜)
-  (f : V → E) (r : ℂ) :
-  fourier_integral e μ L (r • f) = r • (fourier_integral e μ L f) :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V) (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜)
+ (f : V → E) (r : ℂ) :
+ fourier_integral e μ L (r • f) = r • (fourier_integral e μ L f) :=
 begin
-  ext1 w,
-  simp only [pi.smul_apply, fourier_integral, smul_comm _ r, integral_smul],
+ ext1 w,
+ simp only [pi.smul_apply, fourier_integral, smul_comm _ r, integral_smul],
 end
 
 /-- The uniform norm of the Fourier integral of `f` is bounded by the `L¹` norm of `f`. -/
 lemma norm_fourier_integral_le_integral_norm (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V)
-  (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (w : W) :
-  ‖fourier_integral e μ L f w‖ ≤ ∫ (v : V), ‖f v‖ ∂μ :=
+ (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (w : W) :
+ ‖fourier_integral e μ L f w‖ ≤ ∫ (v : V), ‖f v‖ ∂μ :=
 begin
-  refine (norm_integral_le_integral_norm _).trans (le_of_eq _),
-  simp_rw [norm_smul, complex.norm_eq_abs, abs_coe_circle, one_mul],
+ refine (norm_integral_le_integral_norm _).trans (le_of_eq _),
+ simp_rw [norm_smul, complex.norm_eq_abs, abs_coe_circle, one_mul],
 end
 
 /-- The Fourier integral converts right-translation into scalar multiplication by a phase factor.-/
 lemma fourier_integral_comp_add_right [has_measurable_add V]
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V) [μ.is_add_right_invariant]
-  (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (v₀ : V) :
-  fourier_integral e μ L (f ∘ (λ v, v + v₀)) = λ w, e [L v₀ w] • fourier_integral e μ L f w :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure V) [μ.is_add_right_invariant]
+ (L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜) (f : V → E) (v₀ : V) :
+ fourier_integral e μ L (f ∘ (λ v, v + v₀)) = λ w, e [L v₀ w] • fourier_integral e μ L f w :=
 begin
-  ext1 w,
-  dsimp only [fourier_integral, function.comp_apply],
-  conv in (L _) { rw ←add_sub_cancel v v₀ },
-  rw integral_add_right_eq_self (λ (v : V), e [-L (v - v₀) w] • f v),
-  swap, apply_instance,
-  dsimp only,
-  rw ←integral_smul,
-  congr' 1 with v,
-  rw [←smul_assoc, smul_eq_mul, ←submonoid.coe_mul, ←e.map_mul, ←of_add_add, ←linear_map.neg_apply,
-    ←sub_eq_add_neg, ←linear_map.sub_apply, linear_map.map_sub, neg_sub]
+ ext1 w,
+ dsimp only [fourier_integral, function.comp_apply],
+ conv in (L _) { rw ←add_sub_cancel v v₀ },
+ rw integral_add_right_eq_self (λ (v : V), e [-L (v - v₀) w] • f v),
+ swap, apply_instance,
+ dsimp only,
+ rw ←integral_smul,
+ congr' 1 with v,
+ rw [←smul_assoc]; rw [ smul_eq_mul]; rw [ ←submonoid.coe_mul]; rw [ ←e.map_mul]; rw [ ←of_add_add]; rw [ ←linear_map.neg_apply]; rw [ ←sub_eq_add_neg]; rw [ ←linear_map.sub_apply]; rw [ linear_map.map_sub]; rw [ neg_sub]
 end
 
 end defs
 
 section continuous
 /- In this section we assume 𝕜, V, W have topologies, and L, e are continuous (but f needn't be).
-   This is used to ensure that `e [-L v w]` is (ae strongly) measurable. We could get away with
-   imposing only a measurable-space structure on 𝕜 (it doesn't have to be the Borel sigma-algebra of
-   a topology); but it seems hard to imagine cases where this extra generality would be useful, and
-   allowing it would complicate matters in the most important use cases.
+ This is used to ensure that `e [-L v w]` is (ae strongly) measurable. We could get away with
+ imposing only a measurable-space structure on 𝕜 (it doesn't have to be the Borel sigma-algebra of
+ a topology); but it seems hard to imagine cases where this extra generality would be useful, and
+ allowing it would complicate matters in the most important use cases.
 -/
 
 variables [topological_space 𝕜] [topological_ring 𝕜] [topological_space V] [borel_space V]
-  [topological_space W] {e : (multiplicative 𝕜) →* 𝕊} {μ : measure V} {L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜}
+ [topological_space W] {e : (multiplicative 𝕜) →* 𝕊} {μ : measure V} {L : V →ₗ[𝕜] W →ₗ[𝕜] 𝕜}
 
 /-- For any `w`, the Fourier integral is convergent iff `f` is integrable. -/
 lemma fourier_integral_convergent_iff (he : continuous e) (hL : continuous (λ p : V × W, L p.1 p.2))
-  {f : V → E} (w : W) :
-  integrable f μ ↔ integrable (λ (v : V), (e [-L v w]) • f v) μ :=
+ {f : V → E} (w : W) :
+ integrable f μ ↔ integrable (λ (v : V), (e [-L v w]) • f v) μ :=
 begin
-  -- first prove one-way implication
-  have aux : ∀ {g : V → E} (hg : integrable g μ) (x : W),
-    integrable (λ (v : V), (e [-L v x]) • g v) μ,
-  { intros g hg x,
-    have c : continuous (λ v, e[-L v x]),
-    { refine (continuous_induced_rng.mp he).comp (continuous_of_add.comp (continuous.neg _)),
-      exact hL.comp (continuous_prod_mk.mpr ⟨continuous_id, continuous_const⟩) },
-    rw ←integrable_norm_iff (c.ae_strongly_measurable.smul hg.1),
-    convert hg.norm,
-    ext1 v,
-    rw [norm_smul, complex.norm_eq_abs, abs_coe_circle, one_mul] },
-  -- then use it for both directions
-  refine ⟨λ hf, aux hf w, λ hf, _⟩,
-  convert aux hf (-w),
-  ext1 v,
-  rw [←smul_assoc, smul_eq_mul, ←submonoid.coe_mul, ←monoid_hom.map_mul,
-    ←of_add_add, linear_map.map_neg, neg_neg, ←sub_eq_add_neg, sub_self, of_add_zero,
-    monoid_hom.map_one, submonoid.coe_one, one_smul],
+ -- first prove one-way implication
+ have aux : ∀ {g : V → E} (hg : integrable g μ) (x : W),
+ integrable (λ (v : V), (e [-L v x]) • g v) μ,
+ { intros g hg x,
+ have c : continuous (λ v, e[-L v x]),
+ { refine (continuous_induced_rng.mp he).comp (continuous_of_add.comp (continuous.neg _)),
+ exact hL.comp (continuous_prod_mk.mpr ⟨continuous_id, continuous_const⟩) },
+ rw ←integrable_norm_iff (c.ae_strongly_measurable.smul hg.1),
+ convert hg.norm,
+ ext1 v,
+ rw [norm_smul]; rw [ complex.norm_eq_abs]; rw [ abs_coe_circle]; rw [ one_mul] },
+ -- then use it for both directions
+ refine ⟨λ hf, aux hf w, λ hf, _⟩,
+ convert aux hf (-w),
+ ext1 v,
+ rw [←smul_assoc]; rw [ smul_eq_mul]; rw [ ←submonoid.coe_mul]; rw [ ←monoid_hom.map_mul]; rw [ ←of_add_add]; rw [ linear_map.map_neg]; rw [ neg_neg]; rw [ ←sub_eq_add_neg]; rw [ sub_self]; rw [ of_add_zero]; rw [ monoid_hom.map_one]; rw [ submonoid.coe_one]; rw [ one_smul],
 end
 
 variables [complete_space E]
 
 lemma fourier_integral_add
-  (he : continuous e) (hL : continuous (λ p : V × W, L p.1 p.2))
-  {f g : V → E} (hf : integrable f μ) (hg : integrable g μ) :
-  (fourier_integral e μ L f) + (fourier_integral e μ L g) = fourier_integral e μ L (f + g) :=
+ (he : continuous e) (hL : continuous (λ p : V × W, L p.1 p.2))
+ {f g : V → E} (hf : integrable f μ) (hg : integrable g μ) :
+ (fourier_integral e μ L f) + (fourier_integral e μ L g) = fourier_integral e μ L (f + g) :=
 begin
-  ext1 w,
-  dsimp only [pi.add_apply, fourier_integral],
-  simp_rw smul_add,
-  rw integral_add,
-  { exact (fourier_integral_convergent_iff he hL w).mp hf },
-  { exact (fourier_integral_convergent_iff he hL w).mp hg },
+ ext1 w,
+ dsimp only [pi.add_apply, fourier_integral],
+ simp_rw smul_add,
+ rw integral_add,
+ { exact (fourier_integral_convergent_iff he hL w).mp hf },
+ { exact (fourier_integral_convergent_iff he hL w).mp hg },
 end
 
 /-- The Fourier integral of an `L^1` function is a continuous function. -/
 lemma fourier_integral_continuous [topological_space.first_countable_topology W]
-  (he : continuous e) (hL : continuous (λ p : V × W, L p.1 p.2))
-  {f : V → E} (hf : integrable f μ) :
-  continuous (fourier_integral e μ L f) :=
+ (he : continuous e) (hL : continuous (λ p : V × W, L p.1 p.2))
+ {f : V → E} (hf : integrable f μ) :
+ continuous (fourier_integral e μ L f) :=
 begin
-  apply continuous_of_dominated,
-  { exact λ w, ((fourier_integral_convergent_iff he hL w).mp hf).1 },
-  { refine λ w, ae_of_all _ (λ v, _),
-    { exact λ v, ‖f v‖ },
-    { rw [norm_smul, complex.norm_eq_abs, abs_coe_circle, one_mul] } },
-  { exact hf.norm },
-  { rw continuous_induced_rng at he,
-    refine ae_of_all _ (λ v, (he.comp (continuous_of_add.comp _)).smul continuous_const),
-    refine (hL.comp (continuous_prod_mk.mpr ⟨continuous_const, continuous_id⟩)).neg }
+ apply continuous_of_dominated,
+ { exact λ w, ((fourier_integral_convergent_iff he hL w).mp hf).1 },
+ { refine λ w, ae_of_all _ (λ v, _),
+ { exact λ v, ‖f v‖ },
+ { rw [norm_smul]; rw [ complex.norm_eq_abs]; rw [ abs_coe_circle]; rw [ one_mul] } },
+ { exact hf.norm },
+ { rw continuous_induced_rng at he,
+ refine ae_of_all _ (λ v, (he.comp (continuous_of_add.comp _)).smul continuous_const),
+ refine (hL.comp (continuous_prod_mk.mpr ⟨continuous_const, continuous_id⟩)).neg }
 end
 
 end continuous
@@ -193,7 +190,7 @@ end vector_fourier
 namespace fourier
 
 variables {𝕜 : Type*} [comm_ring 𝕜] [measurable_space 𝕜]
-  {E : Type*} [normed_add_comm_group E] [normed_space ℂ E]
+ {E : Type*} [normed_add_comm_group E] [normed_space ℂ E]
 
 section defs
 
@@ -202,28 +199,28 @@ variables [complete_space E]
 /-- The Fourier transform integral for `f : 𝕜 → E`, with respect to the measure `μ` and additive
 character `e`. -/
 def fourier_integral
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (w : 𝕜) : E :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (w : 𝕜) : E :=
 vector_fourier.fourier_integral e μ (linear_map.mul 𝕜 𝕜) f w
 
 lemma fourier_integral_def (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (w : 𝕜) :
-  fourier_integral e μ f w = ∫ (v : 𝕜), e[-(v * w)] • f v ∂μ :=
+ fourier_integral e μ f w = ∫ (v : 𝕜), e[-(v * w)] • f v ∂μ :=
 rfl
 
 lemma fourier_integral_smul_const
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (r : ℂ) :
-  fourier_integral e μ (r • f) = r • (fourier_integral e μ f) :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (r : ℂ) :
+ fourier_integral e μ (r • f) = r • (fourier_integral e μ f) :=
 vector_fourier.fourier_integral_smul_const _ _ _ _ _
 
 /-- The uniform norm of the Fourier transform of `f` is bounded by the `L¹` norm of `f`. -/
 lemma norm_fourier_integral_le_integral_norm
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (w : 𝕜) :
-  ‖fourier_integral e μ f w‖ ≤ ∫ x : 𝕜, ‖f x‖ ∂μ :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) (f : 𝕜 → E) (w : 𝕜) :
+ ‖fourier_integral e μ f w‖ ≤ ∫ x : 𝕜, ‖f x‖ ∂μ :=
 vector_fourier.norm_fourier_integral_le_integral_norm _ _ _ _ _
 
 /-- The Fourier transform converts right-translation into scalar multiplication by a phase factor.-/
 lemma fourier_integral_comp_add_right [has_measurable_add 𝕜]
-  (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) [μ.is_add_right_invariant] (f : 𝕜 → E) (v₀ : 𝕜) :
-  fourier_integral e μ (f ∘ (λ v, v + v₀)) = λ w, e [v₀ * w] • fourier_integral e μ f w :=
+ (e : (multiplicative 𝕜) →* 𝕊) (μ : measure 𝕜) [μ.is_add_right_invariant] (f : 𝕜 → E) (v₀ : 𝕜) :
+ fourier_integral e μ (f ∘ (λ v, v + v₀)) = λ w, e [v₀ * w] • fourier_integral e μ f w :=
 vector_fourier.fourier_integral_comp_add_right _ _ _ _ _
 
 end defs
@@ -237,11 +234,11 @@ namespace real
 /-- The standard additive character of `ℝ`, given by `λ x, exp (2 * π * x * I)`. -/
 def fourier_char : (multiplicative ℝ) →* 𝕊 :=
 { to_fun := λ z, exp_map_circle (2 * π * z.to_add),
-  map_one' := by rw [to_add_one, mul_zero, exp_map_circle_zero],
-  map_mul' := λ x y, by rw [to_add_mul, mul_add, exp_map_circle_add] }
+ map_one' := by rw [to_add_one]; rw [ mul_zero]; rw [ exp_map_circle_zero],
+ map_mul' := λ x y, by rw [to_add_mul]; rw [ mul_add]; rw [ exp_map_circle_add] }
 
 lemma fourier_char_apply (x : ℝ) :
-  real.fourier_char [x] = complex.exp (↑(2 * π * x) * complex.I) :=
+ real.fourier_char [x] = complex.exp (↑(2 * π * x) * complex.I) :=
 by refl
 
 @[continuity]
@@ -251,11 +248,11 @@ lemma continuous_fourier_char : continuous real.fourier_char :=
 variables {E : Type*} [normed_add_comm_group E] [complete_space E] [normed_space ℂ E]
 
 lemma vector_fourier_integral_eq_integral_exp_smul
-  {V : Type*} [add_comm_group V] [module ℝ V] [measurable_space V]
-  {W : Type*} [add_comm_group W] [module ℝ W]
-  (L : V →ₗ[ℝ] W →ₗ[ℝ] ℝ) (μ : measure V) (f : V → E) (w : W) :
-  vector_fourier.fourier_integral fourier_char μ L f w
-  = ∫ (v : V), complex.exp (↑(-2 * π * L v w) * complex.I) • f v ∂μ :=
+ {V : Type*} [add_comm_group V] [module ℝ V] [measurable_space V]
+ {W : Type*} [add_comm_group W] [module ℝ W]
+ (L : V →ₗ[ℝ] W →ₗ[ℝ] ℝ) (μ : measure V) (f : V → E) (w : W) :
+ vector_fourier.fourier_integral fourier_char μ L f w
+ = ∫ (v : V), complex.exp (↑(-2 * π * L v w) * complex.I) • f v ∂μ :=
 by simp_rw [vector_fourier.fourier_integral, real.fourier_char_apply, mul_neg, neg_mul]
 
 /-- The Fourier integral for `f : ℝ → E`, with respect to the standard additive character and
@@ -263,15 +260,16 @@ measure on `ℝ`. -/
 def fourier_integral (f : ℝ → E) (w : ℝ) := fourier.fourier_integral fourier_char volume f w
 
 lemma fourier_integral_def (f : ℝ → E) (w : ℝ) :
-  fourier_integral f w = ∫ (v : ℝ), fourier_char [-(v * w)] • f v :=
+ fourier_integral f w = ∫ (v : ℝ), fourier_char [-(v * w)] • f v :=
 rfl
 
 localized "notation (name := fourier_integral) `𝓕` := real.fourier_integral" in fourier_transform
 
 lemma fourier_integral_eq_integral_exp_smul
-  {E : Type*} [normed_add_comm_group E] [complete_space E] [normed_space ℂ E]
-  (f : ℝ → E) (w : ℝ) :
-  𝓕 f w = ∫ (v : ℝ), complex.exp (↑(-2 * π * v * w) * complex.I) • f v :=
+ {E : Type*} [normed_add_comm_group E] [complete_space E] [normed_space ℂ E]
+ (f : ℝ → E) (w : ℝ) :
+ 𝓕 f w = ∫ (v : ℝ), complex.exp (↑(-2 * π * v * w) * complex.I) • f v :=
 by simp_rw [fourier_integral_def, real.fourier_char_apply, mul_neg, neg_mul, mul_assoc]
 
 end real
+

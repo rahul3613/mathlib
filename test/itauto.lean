@@ -46,8 +46,8 @@ example (p q r : Prop) [decidable p] : (p → (q ∨ r)) → ((p → q) ∨ (p �
 example (p q r : Prop) [decidable q] : (p → (q ∨ r)) → ((p → q) ∨ (p → r)) := by itauto [q]
 
 example (xl yl zl xr yr zr : Prop) :
-  (xl ∧ yl ∨ xr ∧ yr) ∧ zl ∨ (xl ∧ yr ∨ xr ∧ yl) ∧ zr ↔
-    xl ∧ (yl ∧ zl ∨ yr ∧ zr) ∨ xr ∧ (yl ∧ zr ∨ yr ∧ zl) :=
+ (xl ∧ yl ∨ xr ∧ yr) ∧ zl ∨ (xl ∧ yr ∨ xr ∧ yl) ∧ zr ↔
+ xl ∧ (yl ∧ zl ∨ yr ∧ zr) ∨ xr ∧ (yl ∧ zr ∨ yr ∧ zl) :=
 by itauto
 
 example : 0 < 1 ∨ ¬ 0 < 1 := by itauto*
@@ -60,10 +60,10 @@ example (p : Prop) : ¬ p ∨ p := by itauto!*
 -- failure tests
 example (p q r : Prop) : true :=
 begin
-  have : p ∨ ¬ p, {success_if_fail {itauto}, sorry}, clear this,
-  have : ¬ (p ↔ q) → ¬ p → q, {success_if_fail {itauto}, sorry}, clear this,
-  have : ¬ (p ↔ q) → (r ↔ q) → (p ↔ ¬ r), {success_if_fail {itauto}, sorry}, clear this,
-  trivial
+ have : p ∨ ¬ p, {success_if_fail {itauto}, sorry}, clear this,
+ have : ¬ (p ↔ q) → ¬ p → q, {success_if_fail {itauto}, sorry}, clear this,
+ have : ¬ (p ↔ q) → (r ↔ q) → (p ↔ ¬ r), {success_if_fail {itauto}, sorry}, clear this,
+ trivial
 end
 
 example (P : ℕ → Prop) (n : ℕ) (h : ¬ (n = 7 ∨ n = 0) ∧ P n) : ¬ (P n → n = 7 ∨ n = 0) :=
@@ -81,14 +81,15 @@ end modulo_symmetry
 
 end itauto₃
 example (p1 p2 p3 p4 p5 p6 f : Prop)
-  (h : (
-      (p1 ∧ p2 ∧ p3 ∧ p4 ∧ p5 ∧ p6 ∧ true) ∨
-      (((p1 → f) → f) → f) ∨
-      (p2 → f) ∨
-      (p3 → f) ∨
-      (p4 → f) ∨
-      (p5 → f) ∨
-      (p6 → f) ∨
-      false
-    ) → f) : f :=
+ (h : (
+ (p1 ∧ p2 ∧ p3 ∧ p4 ∧ p5 ∧ p6 ∧ true) ∨
+ (((p1 → f) → f) → f) ∨
+ (p2 → f) ∨
+ (p3 → f) ∨
+ (p4 → f) ∨
+ (p5 → f) ∨
+ (p6 → f) ∨
+ false
+ ) → f) : f :=
 by itauto
+

@@ -13,14 +13,15 @@ theorem inter_def {s₁ s₂ : set α} : s₁ ∩ s₂ = {a | a ∈ s₁ ∧ a �
 
 theorem union_subset {s t r : set α} (sr : s ⊆ r) (tr : t ⊆ r) : s ∪ t ⊆ r :=
 begin
-  dsimp [subset_def, union_def] at *,
-  intros x h,
-  cases h; back_chaining_using_hs
+ dsimp [subset_def, union_def] at *,
+ intros x h,
+ cases h; back_chaining_using_hs
 end
 
 theorem subset_inter {s t r : set α} (rs : r ⊆ s) (rt : r ⊆ t) : r ⊆ s ∩ t :=
 begin
-  dsimp [subset_def, inter_def] at *,
-  intros x h,
-  split; back_chaining_using_hs
+ dsimp [subset_def, inter_def] at *,
+ intros x h,
+ split; back_chaining_using_hs
 end
+

@@ -19,9 +19,9 @@ This file proves basic results about the sum type `α ⊕ β`.
 ## Main declarations
 
 * `sum.get_left`: Retrieves the left content of `x : α ⊕ β` or returns `none` if it's coming from
-  the right.
+ the right.
 * `sum.get_right`: Retrieves the right content of `x : α ⊕ β` or returns `none` if it's coming from
-  the left.
+ the left.
 * `sum.is_left`: Returns whether `x : α ⊕ β` comes from the left component or not.
 * `sum.is_right`: Returns whether `x : α ⊕ β` comes from the right component or not.
 * `sum.map`: Maps `α ⊕ β` to `γ ⊕ δ` component-wise.
@@ -120,27 +120,27 @@ theorem inr_ne_inl {a : α} {b : β} : inr b ≠ inl a.
 protected def elim {α β γ : Sort*} (f : α → γ) (g : β → γ) : α ⊕ β → γ := λ x, sum.rec_on x f g
 
 @[simp] lemma elim_inl {α β γ : Sort*} (f : α → γ) (g : β → γ) (x : α) :
-  sum.elim f g (inl x) = f x := rfl
+ sum.elim f g (inl x) = f x := rfl
 
 @[simp] lemma elim_inr {α β γ : Sort*} (f : α → γ) (g : β → γ) (x : β) :
-  sum.elim f g (inr x) = g x := rfl
+ sum.elim f g (inr x) = g x := rfl
 
 @[simp] lemma elim_comp_inl {α β γ : Sort*} (f : α → γ) (g : β → γ) :
-  sum.elim f g ∘ inl = f := rfl
+ sum.elim f g ∘ inl = f := rfl
 
 @[simp] lemma elim_comp_inr {α β γ : Sort*} (f : α → γ) (g : β → γ) :
-  sum.elim f g ∘ inr = g := rfl
+ sum.elim f g ∘ inr = g := rfl
 
 @[simp] lemma elim_inl_inr {α β : Sort*} :
-  @sum.elim α β _ inl inr = id :=
+ @sum.elim α β _ inl inr = id :=
 funext $ λ x, sum.cases_on x (λ _, rfl) (λ _, rfl)
 
 lemma comp_elim {α β γ δ : Sort*} (f : γ → δ) (g : α → γ) (h : β → γ):
-  f ∘ sum.elim g h = sum.elim (f ∘ g) (f ∘ h) :=
+ f ∘ sum.elim g h = sum.elim (f ∘ g) (f ∘ h) :=
 funext $ λ x, sum.cases_on x (λ _, rfl) (λ _, rfl)
 
 @[simp] lemma elim_comp_inl_inr {α β γ : Sort*} (f : α ⊕ β → γ) :
-  sum.elim (f ∘ inl) (f ∘ inr) = f :=
+ sum.elim (f ∘ inl) (f ∘ inr) = f :=
 funext $ λ x, sum.cases_on x (λ _, rfl) (λ _, rfl)
 
 /-- Map `α ⊕ β` to `α' ⊕ β'` sending `α` to `α'` and `β` to `β'`. -/
@@ -151,87 +151,87 @@ sum.elim (inl ∘ f) (inr ∘ g)
 @[simp] lemma map_inr (f : α → α') (g : β → β') (x : β) : (inr x).map f g = inr (g x) := rfl
 
 @[simp] lemma map_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
-  ∀ x : α ⊕ β, (x.map f g).map f' g' = x.map (f' ∘ f) (g' ∘ g)
+ ∀ x : α ⊕ β, (x.map f g).map f' g' = x.map (f' ∘ f) (g' ∘ g)
 | (inl a) := rfl
 | (inr b) := rfl
 
 @[simp] lemma map_comp_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
-  (sum.map f' g') ∘ (sum.map f g) = sum.map (f' ∘ f) (g' ∘ g) :=
+ (sum.map f' g') ∘ (sum.map f g) = sum.map (f' ∘ f) (g' ∘ g) :=
 funext $ map_map f' g' f g
 
 @[simp] lemma map_id_id (α β) : sum.map (@id α) (@id β) = id :=
 funext $ λ x, sum.rec_on x (λ _, rfl) (λ _, rfl)
 
 lemma elim_map {α β γ δ ε : Sort*} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} {x} :
-  sum.elim f₂ g₂ (sum.map f₁ g₁ x) = sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) x :=
+ sum.elim f₂ g₂ (sum.map f₁ g₁ x) = sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) x :=
 by cases x; refl
 
 lemma elim_comp_map {α β γ δ ε : Sort*} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} :
-  sum.elim f₂ g₂ ∘ sum.map f₁ g₁ = sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) :=
+ sum.elim f₂ g₂ ∘ sum.map f₁ g₁ = sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) :=
 funext $ λ _, elim_map
 
 @[simp] lemma is_left_map (f : α → β) (g : γ → δ) (x : α ⊕ γ) :
-  is_left (x.map f g) = is_left x :=
+ is_left (x.map f g) = is_left x :=
 by cases x; refl
 
 @[simp] lemma is_right_map (f : α → β) (g : γ → δ) (x : α ⊕ γ) :
-  is_right (x.map f g) = is_right x :=
+ is_right (x.map f g) = is_right x :=
 by cases x; refl
 
 @[simp] lemma get_left_map (f : α → β) (g : γ → δ) (x : α ⊕ γ) :
-  (x.map f g).get_left = x.get_left.map f :=
+ (x.map f g).get_left = x.get_left.map f :=
 by cases x; refl
 
 @[simp] lemma get_right_map (f : α → β) (g : γ → δ) (x : α ⊕ γ) :
-  (x.map f g).get_right = x.get_right.map g :=
+ (x.map f g).get_right = x.get_right.map g :=
 by cases x; refl
 
 open function (update update_eq_iff update_comp_eq_of_injective update_comp_eq_of_forall_ne)
 
 @[simp] lemma update_elim_inl [decidable_eq α] [decidable_eq (α ⊕ β)] {f : α → γ} {g : β → γ}
-  {i : α} {x : γ} :
-  update (sum.elim f g) (inl i) x = sum.elim (update f i x) g :=
+ {i : α} {x : γ} :
+ update (sum.elim f g) (inl i) x = sum.elim (update f i x) g :=
 update_eq_iff.2 ⟨by simp, by simp { contextual := tt }⟩
 
 @[simp] lemma update_elim_inr [decidable_eq β] [decidable_eq (α ⊕ β)] {f : α → γ} {g : β → γ}
-  {i : β} {x : γ} :
-  update (sum.elim f g) (inr i) x = sum.elim f (update g i x) :=
+ {i : β} {x : γ} :
+ update (sum.elim f g) (inr i) x = sum.elim f (update g i x) :=
 update_eq_iff.2 ⟨by simp, by simp { contextual := tt }⟩
 
 @[simp] lemma update_inl_comp_inl [decidable_eq α] [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ} {i : α}
-  {x : γ} :
-  update f (inl i) x ∘ inl = update (f ∘ inl) i x :=
+ {x : γ} :
+ update f (inl i) x ∘ inl = update (f ∘ inl) i x :=
 update_comp_eq_of_injective _ inl_injective _ _
 
 @[simp] lemma update_inl_apply_inl [decidable_eq α] [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ}
-  {i j : α} {x : γ} :
-  update f (inl i) x (inl j) = update (f ∘ inl) i x j :=
+ {i j : α} {x : γ} :
+ update f (inl i) x (inl j) = update (f ∘ inl) i x j :=
 by rw ← update_inl_comp_inl
 
 @[simp] lemma update_inl_comp_inr [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ} {i : α} {x : γ} :
-  update f (inl i) x ∘ inr = f ∘ inr :=
+ update f (inl i) x ∘ inr = f ∘ inr :=
 update_comp_eq_of_forall_ne _ _ $ λ _, inr_ne_inl
 
 @[simp] lemma update_inl_apply_inr [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ} {i : α} {j : β} {x : γ} :
-  update f (inl i) x (inr j) = f (inr j) :=
+ update f (inl i) x (inr j) = f (inr j) :=
 function.update_noteq inr_ne_inl _ _
 
 @[simp] lemma update_inr_comp_inl [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ} {i : β} {x : γ} :
-  update f (inr i) x ∘ inl = f ∘ inl :=
+ update f (inr i) x ∘ inl = f ∘ inl :=
 update_comp_eq_of_forall_ne _ _ $ λ _, inl_ne_inr
 
 @[simp] lemma update_inr_apply_inl [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ} {i : α} {j : β} {x : γ} :
-  update f (inr j) x (inl i) = f (inl i) :=
+ update f (inr j) x (inl i) = f (inl i) :=
 function.update_noteq inl_ne_inr _ _
 
 @[simp] lemma update_inr_comp_inr [decidable_eq β] [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ} {i : β}
-  {x : γ} :
-  update f (inr i) x ∘ inr = update (f ∘ inr) i x :=
+ {x : γ} :
+ update f (inr i) x ∘ inr = update (f ∘ inr) i x :=
 update_comp_eq_of_injective _ inr_injective _ _
 
 @[simp] lemma update_inr_apply_inr [decidable_eq β] [decidable_eq (α ⊕ β)] {f : α ⊕ β → γ}
-  {i j : β} {x : γ} :
-  update f (inr i) x (inr j) = update (f ∘ inr) i x j :=
+ {i j : β} {x : γ} :
+ update f (inr i) x (inr j) = update (f ∘ inr) i x j :=
 by rw ← update_inr_comp_inr
 
 /-- Swap the factors of a sum type -/
@@ -259,7 +259,7 @@ inductive lift_rel (r : α → γ → Prop) (s : β → δ → Prop) : α ⊕ β
 attribute [protected] lift_rel.inl lift_rel.inr
 
 variables {r r₁ r₂ : α → γ → Prop} {s s₁ s₂ : β → δ → Prop} {a : α} {b : β} {c : γ} {d : δ}
-  {x : α ⊕ β} {y : γ ⊕ δ}
+ {x : α ⊕ β} {y : γ ⊕ δ}
 
 @[simp] lemma lift_rel_inl_inl : lift_rel r s (inl a) (inl c) ↔ r a c :=
 ⟨λ h, by { cases h, assumption }, lift_rel.inl⟩
@@ -271,30 +271,30 @@ variables {r r₁ r₂ : α → γ → Prop} {s s₁ s₂ : β → δ → Prop} 
 ⟨λ h, by { cases h, assumption }, lift_rel.inr⟩
 
 instance [Π a c, decidable (r a c)] [Π b d, decidable (s b d)] :
-  Π (ab : α ⊕ β) (cd : γ ⊕ δ), decidable (lift_rel r s ab cd)
+ Π (ab : α ⊕ β) (cd : γ ⊕ δ), decidable (lift_rel r s ab cd)
 | (inl a) (inl c) := decidable_of_iff' _ lift_rel_inl_inl
 | (inl a) (inr d) := decidable.is_false not_lift_rel_inl_inr
 | (inr b) (inl c) := decidable.is_false not_lift_rel_inr_inl
 | (inr b) (inr d) := decidable_of_iff' _ lift_rel_inr_inr
 
 lemma lift_rel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b)
-  (h : lift_rel r₁ s₁ x y) :
-  lift_rel r₂ s₂ x y :=
+ (h : lift_rel r₁ s₁ x y) :
+ lift_rel r₂ s₂ x y :=
 by { cases h, exacts [lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)] }
 
 lemma lift_rel.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lift_rel r₁ s x y) :
-  lift_rel r₂ s x y :=
+ lift_rel r₂ s x y :=
 h.mono hr $ λ _ _, id
 
-lemma lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b)  (h : lift_rel r s₁ x y) :
-  lift_rel r s₂ x y :=
+lemma lift_rel.mono_right (hs : ∀ a b, s₁ a b → s₂ a b) (h : lift_rel r s₁ x y) :
+ lift_rel r s₂ x y :=
 h.mono (λ _ _, id) hs
 
 protected lemma lift_rel.swap (h : lift_rel r s x y) : lift_rel s r x.swap y.swap :=
 by { cases h, exacts [lift_rel.inr ‹_›, lift_rel.inl ‹_›] }
 
 @[simp] lemma lift_rel_swap_iff : lift_rel s r x.swap y.swap ↔ lift_rel r s x y :=
-⟨λ h, by { rw [←swap_swap x, ←swap_swap y], exact h.swap }, lift_rel.swap⟩
+⟨λ h, by { rw [←swap_swap x]; rw [ ←swap_swap y], exact h.swap }, lift_rel.swap⟩
 
 end lift_rel
 
@@ -311,7 +311,7 @@ attribute [protected] sum.lex.inl sum.lex.inr
 attribute [simp] lex.sep
 
 variables {r r₁ r₂ : α → α → Prop} {s s₁ s₂ : β → β → Prop} {a a₁ a₂ : α} {b b₁ b₂ : β}
-  {x y : α ⊕ β}
+ {x y : α ⊕ β}
 
 @[simp] lemma lex_inl_inl : lex r s (inl a₁) (inl a₂) ↔ r a₁ a₂ :=
 ⟨λ h, by { cases h, assumption }, lex.inl⟩
@@ -333,7 +333,7 @@ by { cases h, exacts [lex.inl ‹_›, lex.inr ‹_›] }
 lemma lift_rel_subrelation_lex : subrelation (lift_rel r s) (lex r s) := λ a b, lift_rel.lex
 
 lemma lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : lex r₁ s₁ x y) :
-  lex r₂ s₂ x y :=
+ lex r₂ s₂ x y :=
 by { cases h, exacts [lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _] }
 
 lemma lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) (h : lex r₁ s x y) : lex r₂ s x y :=
@@ -344,19 +344,19 @@ h.mono (λ _ _, id) hs
 
 lemma lex_acc_inl {a} (aca : acc r a) : acc (lex r s) (inl a) :=
 begin
-  induction aca with a H IH,
-  constructor, intros y h,
-  cases h with a' _ h',
-  exact IH _ h'
+ induction aca with a H IH,
+ constructor, intros y h,
+ cases h with a' _ h',
+ exact IH _ h'
 end
 
 lemma lex_acc_inr (aca : ∀ a, acc (lex r s) (inl a)) {b} (acb : acc s b) : acc (lex r s) (inr b) :=
 begin
-  induction acb with b H IH,
-  constructor, intros y h,
-  cases h with _ _ _ b' _ h' a,
-  { exact IH _ h' },
-  { exact aca _ }
+ induction acb with b H IH,
+ constructor, intros y h,
+ cases h with _ _ _ b' _ h' a,
+ { exact IH _ h' },
+ { exact aca _ }
 end
 
 lemma lex_wf (ha : well_founded r) (hb : well_founded s) : well_founded (lex r s) :=
@@ -371,25 +371,25 @@ open sum
 namespace function
 
 lemma injective.sum_elim {f : α → γ} {g : β → γ}
-  (hf : injective f) (hg : injective g) (hfg : ∀ a b, f a ≠ g b) :
-  injective (sum.elim f g)
+ (hf : injective f) (hg : injective g) (hfg : ∀ a b, f a ≠ g b) :
+ injective (sum.elim f g)
 | (inl x) (inl y) h := congr_arg inl $ hf h
 | (inl x) (inr y) h := (hfg x y h).elim
 | (inr x) (inl y) h := (hfg y x h.symm).elim
 | (inr x) (inr y) h := congr_arg inr $ hg h
 
 lemma injective.sum_map {f : α → β} {g : α' → β'} (hf : injective f) (hg : injective g) :
-  injective (sum.map f g)
+ injective (sum.map f g)
 | (inl x) (inl y) h := congr_arg inl $ hf $ inl.inj h
 | (inr x) (inr y) h := congr_arg inr $ hg $ inr.inj h
 
 lemma surjective.sum_map {f : α → β} {g : α' → β'} (hf : surjective f) (hg : surjective g) :
-  surjective (sum.map f g)
+ surjective (sum.map f g)
 | (inl y) := let ⟨x, hx⟩ := hf y in ⟨inl x, congr_arg inl hx⟩
 | (inr y) := let ⟨x, hx⟩ := hg y in ⟨inr x, congr_arg inr hx⟩
 
 lemma bijective.sum_map {f : α → β} {g : α' → β'} (hf : bijective f) (hg : bijective g) :
-  bijective (sum.map f g) :=
+ bijective (sum.map f g) :=
 ⟨hf.injective.sum_map hg.injective, hf.surjective.sum_map hg.surjective⟩
 
 end function
@@ -398,56 +398,56 @@ namespace sum
 open function
 
 @[simp] lemma map_injective {f : α → γ} {g : β → δ} :
-  injective (sum.map f g) ↔ injective f ∧ injective g :=
+ injective (sum.map f g) ↔ injective f ∧ injective g :=
 ⟨λ h, ⟨λ a₁ a₂ ha, inl_injective $ @h (inl a₁) (inl a₂) (congr_arg inl ha : _),
-      λ b₁ b₂ hb, inr_injective $ @h (inr b₁) (inr b₂) (congr_arg inr hb : _)⟩,
-  λ h, h.1.sum_map h.2⟩
+ λ b₁ b₂ hb, inr_injective $ @h (inr b₁) (inr b₂) (congr_arg inr hb : _)⟩,
+ λ h, h.1.sum_map h.2⟩
 
 @[simp] lemma map_surjective {f : α → γ} {g : β → δ} :
-  surjective (sum.map f g) ↔ surjective f ∧ surjective g :=
+ surjective (sum.map f g) ↔ surjective f ∧ surjective g :=
 ⟨λ h, ⟨λ c, begin
-  obtain ⟨a | b, h⟩ := h (inl c),
-  { exact ⟨a, inl_injective h⟩ },
-  { cases h },
+ obtain ⟨a | b, h⟩ := h (inl c),
+ { exact ⟨a, inl_injective h⟩ },
+ { cases h },
 end, λ d, begin
-  obtain ⟨a | b, h⟩ := h (inr d),
-  { cases h },
-  { exact ⟨b, inr_injective h⟩ },
+ obtain ⟨a | b, h⟩ := h (inr d),
+ { cases h },
+ { exact ⟨b, inr_injective h⟩ },
 end⟩, λ h, h.1.sum_map h.2⟩
 
 @[simp] lemma map_bijective {f : α → γ} {g : β → δ} :
-  bijective (sum.map f g) ↔ bijective f ∧ bijective g :=
+ bijective (sum.map f g) ↔ bijective f ∧ bijective g :=
 (map_injective.and map_surjective).trans $ and_and_and_comm _ _ _ _
 
 lemma elim_const_const (c : γ) :
-  sum.elim (const _ c : α → γ) (const _ c : β → γ) = const _ c :=
+ sum.elim (const _ c : α → γ) (const _ c : β → γ) = const _ c :=
 by { ext x, cases x; refl }
 
 @[simp]
 lemma elim_lam_const_lam_const (c : γ) :
-  sum.elim (λ (_ : α), c) (λ (_ : β), c) = λ _, c :=
+ sum.elim (λ (_ : α), c) (λ (_ : β), c) = λ _, c :=
 sum.elim_const_const c
 
 lemma elim_update_left [decidable_eq α] [decidable_eq β]
-    (f : α → γ) (g : β → γ) (i : α) (c : γ) :
-  sum.elim (function.update f i c) g = function.update (sum.elim f g) (inl i) c :=
+ (f : α → γ) (g : β → γ) (i : α) (c : γ) :
+ sum.elim (function.update f i c) g = function.update (sum.elim f g) (inl i) c :=
 begin
-  ext x, cases x,
-  { by_cases h : x = i,
-    { subst h, simp },
-    { simp [h] } },
-  { simp }
+ ext x, cases x,
+ { by_cases h : x = i,
+ { subst h, simp },
+ { simp [h] } },
+ { simp }
 end
 
 lemma elim_update_right [decidable_eq α] [decidable_eq β]
-    (f : α → γ) (g : β → γ) (i : β) (c : γ) :
-  sum.elim f (function.update g i c) = function.update (sum.elim f g) (inr i) c :=
+ (f : α → γ) (g : β → γ) (i : β) (c : γ) :
+ sum.elim f (function.update g i c) = function.update (sum.elim f g) (inr i) c :=
 begin
-  ext x, cases x,
-  { simp },
-  { by_cases h : x = i,
-    { subst h, simp },
-    { simp [h] } }
+ ext x, cases x,
+ { simp },
+ { by_cases h : x = i,
+ { subst h, simp },
+ { simp [h] } }
 end
 
 end sum
@@ -468,3 +468,4 @@ namespace sum3
 @[pattern, simp, reducible] def in₂ (c) : α ⊕ β ⊕ γ := inr $ inr c
 
 end sum3
+

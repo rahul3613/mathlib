@@ -31,11 +31,10 @@ kernel_fork.of_ι (as_hom f.ker.subtype) $ by tidy
 /-- The kernel of a linear map is a kernel in the categorical sense. -/
 def kernel_is_limit : is_limit (kernel_cone f) :=
 fork.is_limit.mk _
-  (λ s, linear_map.cod_restrict f.ker (fork.ι s) (λ c, linear_map.mem_ker.2 $
-    by { rw [←@function.comp_apply _ _ _ f (fork.ι s) c, ←coe_comp, fork.condition,
-      has_zero_morphisms.comp_zero (fork.ι s) N], refl }))
-  (λ s, linear_map.subtype_comp_cod_restrict _ _ _)
-  (λ s m h, linear_map.ext $ λ x, subtype.ext_iff_val.2 (by simpa [←h]))
+ (λ s, linear_map.cod_restrict f.ker (fork.ι s) (λ c, linear_map.mem_ker.2 $
+ by { rw [←@function.comp_apply _ _ _ f (fork.ι s) c]; rw [ ←coe_comp]; rw [ fork.condition]; rw [ has_zero_morphisms.comp_zero (fork.ι s) N], refl }))
+ (λ s, linear_map.subtype_comp_cod_restrict _ _ _)
+ (λ s m h, linear_map.ext $ λ x, subtype.ext_iff_val.2 (by simpa [←h]))
 
 /-- The cokernel cocone induced by the projection onto the quotient. -/
 def cokernel_cocone : cokernel_cofork f :=
@@ -44,15 +43,15 @@ cokernel_cofork.of_π (as_hom f.range.mkq) $ linear_map.range_mkq_comp _
 /-- The projection onto the quotient is a cokernel in the categorical sense. -/
 def cokernel_is_colimit : is_colimit (cokernel_cocone f) :=
 cofork.is_colimit.mk _
-  (λ s, f.range.liftq (cofork.π s) $ linear_map.range_le_ker_iff.2 $ cokernel_cofork.condition s)
-  (λ s, f.range.liftq_mkq (cofork.π s) _)
-  (λ s m h,
-  begin
-    haveI : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (submodule.range_mkq _),
-    apply (cancel_epi (as_hom f.range.mkq)).1,
-    convert h,
-    exact submodule.liftq_mkq _ _ _
-  end)
+ (λ s, f.range.liftq (cofork.π s) $ linear_map.range_le_ker_iff.2 $ cokernel_cofork.condition s)
+ (λ s, f.range.liftq_mkq (cofork.π s) _)
+ (λ s m h,
+ begin
+ haveI : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (submodule.range_mkq _),
+ apply (cancel_epi (as_hom f.range.mkq)).1,
+ convert h,
+ exact submodule.liftq_mkq _ _ _
+ end)
 end
 
 /-- The category of R-modules has kernels, given by the inclusion of the kernel submodule. -/
@@ -75,17 +74,17 @@ The categorical kernel of a morphism in `Module`
 agrees with the usual module-theoretical kernel.
 -/
 noncomputable def kernel_iso_ker {G H : Module.{v} R} (f : G ⟶ H) :
-  kernel f ≅ Module.of R (f.ker) :=
+ kernel f ≅ Module.of R (f.ker) :=
 limit.iso_limit_cone ⟨_, kernel_is_limit f⟩
 
 -- We now show this isomorphism commutes with the inclusion of the kernel into the source.
 
 @[simp, elementwise] lemma kernel_iso_ker_inv_kernel_ι :
-  (kernel_iso_ker f).inv ≫ kernel.ι f = f.ker.subtype :=
+ (kernel_iso_ker f).inv ≫ kernel.ι f = f.ker.subtype :=
 limit.iso_limit_cone_inv_π _ _
 
 @[simp, elementwise] lemma kernel_iso_ker_hom_ker_subtype :
-  (kernel_iso_ker f).hom ≫ f.ker.subtype = kernel.ι f :=
+ (kernel_iso_ker f).hom ≫ f.ker.subtype = kernel.ι f :=
 is_limit.cone_point_unique_up_to_iso_inv_comp _ (limit.is_limit _) walking_parallel_pair.zero
 
 /--
@@ -93,21 +92,22 @@ The categorical cokernel of a morphism in `Module`
 agrees with the usual module-theoretical quotient.
 -/
 noncomputable def cokernel_iso_range_quotient {G H : Module.{v} R} (f : G ⟶ H) :
-  cokernel f ≅ Module.of R (H ⧸ f.range) :=
+ cokernel f ≅ Module.of R (H ⧸ f.range) :=
 colimit.iso_colimit_cocone ⟨_, cokernel_is_colimit f⟩
 
 -- We now show this isomorphism commutes with the projection of target to the cokernel.
 
 @[simp, elementwise] lemma cokernel_π_cokernel_iso_range_quotient_hom :
-  cokernel.π f ≫ (cokernel_iso_range_quotient f).hom = f.range.mkq :=
+ cokernel.π f ≫ (cokernel_iso_range_quotient f).hom = f.range.mkq :=
 by { convert colimit.iso_colimit_cocone_ι_hom _ _; refl, }
 
 @[simp, elementwise] lemma range_mkq_cokernel_iso_range_quotient_inv :
-  ↿f.range.mkq ≫ (cokernel_iso_range_quotient f).inv = cokernel.π f :=
+ ↿f.range.mkq ≫ (cokernel_iso_range_quotient f).inv = cokernel.π f :=
 by { convert colimit.iso_colimit_cocone_ι_inv ⟨_, cokernel_is_colimit f⟩ _; refl, }
 
 lemma cokernel_π_ext {M N : Module.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
-  cokernel.π f x = cokernel.π f y :=
+ cokernel.π f x = cokernel.π f y :=
 by { subst w, simp, }
 
 end Module
+

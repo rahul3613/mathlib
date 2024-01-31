@@ -17,12 +17,12 @@ def TEST_NS_2 : name := `my_other_tactic
 -- Example "expensive" function
 meta def generate_some_data : tactic (list ℕ) :=
 do trace_cache_regenerating,
-   return [1, 2, 3, 4]
+ return [1, 2, 3, 4]
 
 meta def my_tactic : tactic unit :=
 do my_cached_data ← run_once TEST_NS_1 generate_some_data,
-   -- Do some stuff with `my_cached_data`
-   skip
+ -- Do some stuff with `my_cached_data`
+ skip
 
 meta def my_other_tactic : tactic unit :=
 run_once TEST_NS_2 (return [10, 20, 30, 40]) >> skip
@@ -36,15 +36,15 @@ section example_usage
 -- Note only a single cache regeneration (only a single trace message),
 -- even upon descent to a sub-tactic-block.
 lemma my_lemma : true := begin
-    my_tactic,
-    my_tactic,
-    my_tactic,
+ my_tactic,
+ my_tactic,
+ my_tactic,
 
-    have h : true,
-    { my_tactic,
-      trivial },
+ have h : true,
+ { my_tactic,
+ trivial },
 
-    trivial
+ trivial
 end
 
 end example_usage
@@ -53,7 +53,7 @@ section test
 
 meta def fail_if_cache_miss (ns : name) : tactic unit :=
 do p ← local_cache.present ns,
-   if p then skip else fail "cache miss"
+ if p then skip else fail "cache miss"
 
 meta def fail_if_cache_miss_1 : tactic unit :=
 fail_if_cache_miss TEST_NS_1
@@ -71,36 +71,36 @@ structure dummy :=
 
 def my_definition : dummy :=
  ⟨ begin
-     my_tactic,
-     fail_if_cache_miss_1,
-     exact 1
-   end,
-   begin
-     success_if_fail { fail_if_cache_miss_1 },
-     exact 1
-   end, ⟩
+ my_tactic,
+ fail_if_cache_miss_1,
+ exact 1
+ end,
+ begin
+ success_if_fail { fail_if_cache_miss_1 },
+ exact 1
+ end, ⟩
 
 def my_definition' : dummy :=
  ⟨ begin
-     success_if_fail { fail_if_cache_miss_1 },
-     exact 1
-   end,
-   begin
-     success_if_fail { fail_if_cache_miss_1 },
-     exact 1
-   end, ⟩
+ success_if_fail { fail_if_cache_miss_1 },
+ exact 1
+ end,
+ begin
+ success_if_fail { fail_if_cache_miss_1 },
+ exact 1
+ end, ⟩
 
 noncomputable
 lemma my_lemma' : dummy :=
  ⟨ begin
-     my_tactic,
-     fail_if_cache_miss_1,
-     exact 1
-   end,
-   begin
-     success_if_fail { fail_if_cache_miss_1 },
-     exact 1
-   end, ⟩
+ my_tactic,
+ fail_if_cache_miss_1,
+ exact 1
+ end,
+ begin
+ success_if_fail { fail_if_cache_miss_1 },
+ exact 1
+ end, ⟩
 
 end test_scope
 
@@ -110,23 +110,23 @@ end test_scope
 section test_persistence
 
 lemma my_test_ps : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
+ success_if_fail { fail_if_cache_miss_1 },
 
-  my_tactic,
+ my_tactic,
 
-  fail_if_cache_miss_1,
-  fail_if_cache_miss_1,
-  success_if_fail { fail_if_cache_miss_2 },
+ fail_if_cache_miss_1,
+ fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_2 },
 
-  have h : true,
-  { fail_if_cache_miss_1,
-    trivial },
+ have h : true,
+ { fail_if_cache_miss_1,
+ trivial },
 
-  -- Manually clear cache
-  local_cache.clear TEST_NS_1,
-  success_if_fail { fail_if_cache_miss_1 },
+ -- Manually clear cache
+ local_cache.clear TEST_NS_1,
+ success_if_fail { fail_if_cache_miss_1 },
 
-  trivial
+ trivial
 end
 
 end test_persistence
@@ -136,23 +136,23 @@ end test_persistence
 section test_ns_collison
 
 lemma my_test_ns : true := begin
-  my_tactic,
-  fail_if_cache_miss_1,
-  success_if_fail { fail_if_cache_miss_2 },
+ my_tactic,
+ fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_2 },
 
-  my_other_tactic,
-  fail_if_cache_miss_1,
-  fail_if_cache_miss_2,
+ my_other_tactic,
+ fail_if_cache_miss_1,
+ fail_if_cache_miss_2,
 
-  local_cache.clear TEST_NS_1,
-  success_if_fail { fail_if_cache_miss_1 },
-  fail_if_cache_miss_2,
+ local_cache.clear TEST_NS_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ fail_if_cache_miss_2,
 
-  my_other_tactic,
-  success_if_fail { fail_if_cache_miss_1 },
-  fail_if_cache_miss_2,
+ my_other_tactic,
+ success_if_fail { fail_if_cache_miss_1 },
+ fail_if_cache_miss_2,
 
-  trivial
+ trivial
 end
 
 end test_ns_collison
@@ -161,35 +161,35 @@ end test_ns_collison
 section test_locality
 
 def my_def_1 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 def my_def_2 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_1 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_2 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 end test_locality
@@ -199,18 +199,18 @@ section test_get
 
 meta def assert_equal {α : Type} [decidable_eq α] (a : α) (ta : tactic α) : tactic unit :=
 do a' ← ta,
-   if a = a' then skip
-             else fail "not equal!"
+ if a = a' then skip
+ else fail "not equal!"
 
 lemma my_lemma_3 : true := begin
-  assert_equal none (local_cache.get TEST_NS_1 (list ℕ)),
+ assert_equal none (local_cache.get TEST_NS_1 (list ℕ)),
 
-  my_tactic,
-  my_other_tactic,
-  assert_equal (some [1,2,3,4]) (local_cache.get TEST_NS_1 (list ℕ)),
-  assert_equal (some [10, 20, 30, 40]) (local_cache.get TEST_NS_2 (list ℕ)),
+ my_tactic,
+ my_other_tactic,
+ assert_equal (some [1,2,3,4]) (local_cache.get TEST_NS_1 (list ℕ)),
+ assert_equal (some [10, 20, 30, 40]) (local_cache.get TEST_NS_2 (list ℕ)),
 
-  trivial
+ trivial
 end
 
 end test_get
@@ -236,12 +236,12 @@ def TEST_NS_2 : name := `my_other_tactic
 -- Example "expensive" function
 meta def generate_some_data : tactic (list ℕ) :=
 do trace_cache_regenerating,
-   return [1, 2, 3, 4]
+ return [1, 2, 3, 4]
 
 meta def my_tactic : tactic unit :=
 do my_cached_data ← run_once TEST_NS_1 generate_some_data def_local,
-   -- Do some stuff with `my_cached_data`
-   skip
+ -- Do some stuff with `my_cached_data`
+ skip
 
 meta def my_other_tactic : tactic unit :=
 run_once TEST_NS_2 (return [10, 20, 30, 40]) def_local >> skip
@@ -255,15 +255,15 @@ section example_usage
 -- Note only a single cache regeneration (only a single trace message),
 -- even upon descent to a sub-tactic-block.
 lemma my_lemma : true := begin
-    my_tactic,
-    my_tactic,
-    my_tactic,
+ my_tactic,
+ my_tactic,
+ my_tactic,
 
-    have h : true,
-    { my_tactic,
-      trivial },
+ have h : true,
+ { my_tactic,
+ trivial },
 
-    trivial
+ trivial
 end
 
 end example_usage
@@ -272,7 +272,7 @@ section test
 
 meta def fail_if_cache_miss (ns : name) : tactic unit :=
 do p ← local_cache.present ns def_local,
-   if p then skip else fail "cache miss"
+ if p then skip else fail "cache miss"
 
 meta def fail_if_cache_miss_1 : tactic unit :=
 fail_if_cache_miss TEST_NS_1
@@ -290,36 +290,36 @@ structure dummy :=
 
 def my_definition : dummy :=
  ⟨ begin
-     my_tactic,
-     fail_if_cache_miss_1,
-     exact 1
-   end,
-   begin
-     fail_if_cache_miss_1,
-     exact 1
-   end, ⟩
+ my_tactic,
+ fail_if_cache_miss_1,
+ exact 1
+ end,
+ begin
+ fail_if_cache_miss_1,
+ exact 1
+ end, ⟩
 
 def my_definition' : dummy :=
  ⟨ begin
-     success_if_fail { fail_if_cache_miss_1 },
-     exact 1
-   end,
-   begin
-     success_if_fail { fail_if_cache_miss_1 },
-     exact 1
-   end, ⟩
+ success_if_fail { fail_if_cache_miss_1 },
+ exact 1
+ end,
+ begin
+ success_if_fail { fail_if_cache_miss_1 },
+ exact 1
+ end, ⟩
 
 noncomputable
 lemma my_lemma' : dummy :=
  ⟨ begin
-     my_tactic,
-     fail_if_cache_miss_1,
-     exact 1
-   end,
-   begin
-     fail_if_cache_miss_1,
-     exact 1
-   end, ⟩
+ my_tactic,
+ fail_if_cache_miss_1,
+ exact 1
+ end,
+ begin
+ fail_if_cache_miss_1,
+ exact 1
+ end, ⟩
 
 end test_scope
 
@@ -329,24 +329,24 @@ end test_scope
 section test_persistence
 
 lemma my_test_ps : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
+ success_if_fail { fail_if_cache_miss_1 },
 
-  my_tactic,
-  my_tactic,
+ my_tactic,
+ my_tactic,
 
-  fail_if_cache_miss_1,
-  fail_if_cache_miss_1,
-  success_if_fail { fail_if_cache_miss_2 },
+ fail_if_cache_miss_1,
+ fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_2 },
 
-  have h : true,
-  { fail_if_cache_miss_1,
-    trivial },
+ have h : true,
+ { fail_if_cache_miss_1,
+ trivial },
 
-  -- Manually clear cache
-  local_cache.clear TEST_NS_1 def_local,
-  success_if_fail { fail_if_cache_miss_1 },
+ -- Manually clear cache
+ local_cache.clear TEST_NS_1 def_local,
+ success_if_fail { fail_if_cache_miss_1 },
 
-  trivial
+ trivial
 end
 
 end test_persistence
@@ -356,23 +356,23 @@ end test_persistence
 section test_ns_collison
 
 lemma my_test_ns : true := begin
-  my_tactic,
-  fail_if_cache_miss_1,
-  success_if_fail { fail_if_cache_miss_2 },
+ my_tactic,
+ fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_2 },
 
-  my_other_tactic,
-  fail_if_cache_miss_1,
-  fail_if_cache_miss_2,
+ my_other_tactic,
+ fail_if_cache_miss_1,
+ fail_if_cache_miss_2,
 
-  local_cache.clear TEST_NS_1 def_local,
-  success_if_fail { fail_if_cache_miss_1 },
-  fail_if_cache_miss_2,
+ local_cache.clear TEST_NS_1 def_local,
+ success_if_fail { fail_if_cache_miss_1 },
+ fail_if_cache_miss_2,
 
-  my_other_tactic,
-  success_if_fail { fail_if_cache_miss_1 },
-  fail_if_cache_miss_2,
+ my_other_tactic,
+ success_if_fail { fail_if_cache_miss_1 },
+ fail_if_cache_miss_2,
 
-  trivial
+ trivial
 end
 
 end test_ns_collison
@@ -381,35 +381,35 @@ end test_ns_collison
 section test_locality
 
 def my_def_1 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 def my_def_2 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_1 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_2 : true := begin
-  success_if_fail { fail_if_cache_miss_1 },
-  my_tactic,
-  fail_if_cache_miss_1,
+ success_if_fail { fail_if_cache_miss_1 },
+ my_tactic,
+ fail_if_cache_miss_1,
 
-  trivial
+ trivial
 end
 
 end test_locality
@@ -419,18 +419,18 @@ section test_get
 
 meta def assert_equal {α : Type} [decidable_eq α] (a : α) (ta : tactic α) : tactic unit :=
 do a' ← ta,
-   if a = a' then skip
-             else fail "not equal!"
+ if a = a' then skip
+ else fail "not equal!"
 
 lemma my_lemma_3 : true := begin
-  assert_equal none (local_cache.get TEST_NS_1 (list ℕ)),
+ assert_equal none (local_cache.get TEST_NS_1 (list ℕ)),
 
-  my_tactic,
-  my_other_tactic,
-  assert_equal (some [1,2,3,4]) (local_cache.get TEST_NS_1 (list ℕ) def_local),
-  assert_equal (some [10, 20, 30, 40]) (local_cache.get TEST_NS_2 (list ℕ) def_local),
+ my_tactic,
+ my_other_tactic,
+ assert_equal (some [1,2,3,4]) (local_cache.get TEST_NS_1 (list ℕ) def_local),
+ assert_equal (some [10, 20, 30, 40]) (local_cache.get TEST_NS_2 (list ℕ) def_local),
 
-  trivial
+ trivial
 end
 
 end test_get
@@ -449,60 +449,61 @@ def TEST_NS : name := `my_tactic
 -- Example "expensive" function
 meta def generate_some_data : tactic (list ℕ) :=
 do trace_cache_regenerating,
-   return [1, 2, 3, 4]
+ return [1, 2, 3, 4]
 
 meta def tac_block : tactic unit :=
 do my_cached_data ← run_once TEST_NS generate_some_data block_local,
-   skip
+ skip
 
 meta def tac_def : tactic unit :=
 do my_cached_data ← run_once TEST_NS generate_some_data def_local,
-   skip
+ skip
 
 meta def fail_if_cache_miss_def : tactic unit :=
 do p ← local_cache.present TEST_NS def_local,
-   if p then skip else fail "cache miss"
+ if p then skip else fail "cache miss"
 
 meta def fail_if_cache_miss_block : tactic unit :=
 do p ← local_cache.present TEST_NS block_local,
-   if p then skip else fail "cache miss"
+ if p then skip else fail "cache miss"
 
 lemma my_lemma_1 : true := begin
-  tac_block,
-  fail_if_cache_miss_block,
-  success_if_fail { fail_if_cache_miss_def },
+ tac_block,
+ fail_if_cache_miss_block,
+ success_if_fail { fail_if_cache_miss_def },
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_2 : true := begin
-  tac_def,
-  fail_if_cache_miss_def,
-  success_if_fail { fail_if_cache_miss_block },
+ tac_def,
+ fail_if_cache_miss_def,
+ success_if_fail { fail_if_cache_miss_block },
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_3 : true := begin
-  tac_block,
-  tac_def,
+ tac_block,
+ tac_def,
 
-  local_cache.clear TEST_NS block_local,
-  fail_if_cache_miss_def,
-  success_if_fail { fail_if_cache_miss_block },
+ local_cache.clear TEST_NS block_local,
+ fail_if_cache_miss_def,
+ success_if_fail { fail_if_cache_miss_block },
 
-  trivial
+ trivial
 end
 
 lemma my_lemma_4 : true := begin
-  tac_block,
-  tac_def,
+ tac_block,
+ tac_def,
 
-  local_cache.clear TEST_NS def_local,
-  fail_if_cache_miss_block,
-  success_if_fail { fail_if_cache_miss_def },
+ local_cache.clear TEST_NS def_local,
+ fail_if_cache_miss_block,
+ success_if_fail { fail_if_cache_miss_def },
 
-  trivial
+ trivial
 end
 
 end collision
+

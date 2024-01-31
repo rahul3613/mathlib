@@ -4,10 +4,10 @@ import .mk_slim_check_test
 
 example : true :=
 begin
-  have : ∀ i j : ℕ, i < j → j < i,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
-  "
+ have : ∀ i j : ℕ, i < j → j < i,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
+ "
 ===================
 Found problems!
 
@@ -18,16 +18,16 @@ issue: 1 < 0 does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial
+ admit,
+ trivial
 end
 
 example : true :=
 begin
-  have : (∀ x : ℕ, 2 ∣ x → x < 100),
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
-  "
+ have : (∀ x : ℕ, 2 ∣ x → x < 100),
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
+ "
 ===================
 Found problems!
 
@@ -36,15 +36,15 @@ issue: 104 < 100 does not hold
 (2 shrinks)
 -------------------
 ",
-  admit,
-  trivial
+ admit,
+ trivial
 end
 
 example (xs : list ℕ) (w : ∃ x ∈ xs, x < 3) : true :=
 begin
-  have : ∀ y ∈ xs, y < 5,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : ∀ y ∈ xs, y < 5,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -56,15 +56,15 @@ issue: 5 < 5 does not hold
 (5 shrinks)
 -------------------
 ",
-  admit,
-  trivial
+ admit,
+ trivial
 end
 
 example (x : ℕ) (h : 2 ∣ x) : true :=
 begin
-  have : x < 100,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : x < 100,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -74,15 +74,15 @@ issue: 104 < 100 does not hold
 (2 shrinks)
 -------------------
 ",
-  admit,
-  trivial
+ admit,
+ trivial
 end
 
 example (α : Type) (xs ys : list α) : true :=
 begin
-  have : xs ++ ys = ys ++ xs,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : xs ++ ys = ys ++ xs,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -94,25 +94,25 @@ issue: [0, 1] = [1, 0] does not hold
 (4 shrinks)
 -------------------
 ",
-  admit,
-  trivial
+ admit,
+ trivial
 end
 
 example : true :=
 begin
-  have : ∀ x ∈ [1,2,3], x < 4,
-  slim_check { random_seed := some 257, quiet := tt },
-    -- success
-  trivial,
+ have : ∀ x ∈ [1,2,3], x < 4,
+ slim_check { random_seed := some 257, quiet := tt },
+ -- success
+ trivial,
 end
 
 open function slim_check
 
 example (f : ℤ → ℤ) (h : injective f) : true :=
 begin
-  have : monotone (f ∘ small.mk),
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : monotone (f ∘ small.mk),
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -125,15 +125,15 @@ issue: 9 ≤ 6 does not hold
 (5 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (f : ℤ → ℤ) (h : injective f) (g : ℤ → ℤ) (h : injective g) (i) : true :=
 begin
-  have : f i = g i,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : f i = g i,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -145,15 +145,15 @@ issue: 1 = 2 does not hold
 (5 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (f : ℤ → ℤ) (h : injective f) : true :=
 begin
-  have : monotone f,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : monotone f,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -166,15 +166,15 @@ issue: 9 ≤ 6 does not hold
 (5 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (f : ℤ → ℤ) : true :=
 begin
-  have : injective f,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : injective f,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -187,15 +187,15 @@ issue: 0 = -1 does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (f : ℤ → ℤ) : true :=
 begin
-  have : monotone f,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : monotone f,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -208,14 +208,14 @@ issue: 97 ≤ 4 does not hold
 (5 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 example (xs ys : list ℤ) (h : xs ~ ys) : true :=
 begin
-  have : list.qsort (λ x y, x ≠ y) xs = list.qsort (λ x y, x ≠ y) ys,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : list.qsort (λ x y, x ≠ y) xs = list.qsort (λ x y, x ≠ y) ys,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -227,15 +227,15 @@ issue: [0, 1] = [1, 0] does not hold
 (4 shrinks)
 -------------------
 ",
-  admit,
-  trivial
+ admit,
+ trivial
 end
 
 example (x y : ℕ) : true :=
 begin
-  have : y ≤ x → x + y < 100,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : y ≤ x → x + y < 100,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -247,15 +247,15 @@ issue: 100 < 100 does not hold
 (8 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x : ℤ) : true :=
 begin
-  have : x ≤ 3 → 3 ≤ x,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : x ≤ 3 → 3 ≤ x,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -266,15 +266,15 @@ issue: 3 ≤ 2 does not hold
 (1 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x y : ℤ) : true :=
 begin
-  have : y ≤ x → x + y < 100,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : y ≤ x → x + y < 100,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -286,15 +286,15 @@ issue: 104 < 100 does not hold
 (4 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x y : Prop) : true :=
 begin
-  have : x ∨ y → y ∧ x,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : x ∨ y → y ∧ x,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -306,15 +306,15 @@ issue: false does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x y : Prop) : true :=
 begin
-  have : (¬x ↔ y) → y ∧ x,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : (¬x ↔ y) → y ∧ x,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -326,16 +326,16 @@ issue: false does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x y : Prop) : true :=
 begin
-  -- deterministic
-  have : (x ↔ y) → y ∨ x,
-  success_if_fail_with_msg
-  { slim_check }
+ -- deterministic
+ have : (x ↔ y) → y ∨ x,
+ success_if_fail_with_msg
+ { slim_check }
 "
 ===================
 Found problems!
@@ -348,16 +348,16 @@ issue: false does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x y : Prop) : true :=
 begin
-  -- deterministic
-  have : y ∨ x,
-  success_if_fail_with_msg
-  { slim_check }
+ -- deterministic
+ have : y ∨ x,
+ success_if_fail_with_msg
+ { slim_check }
 "
 ===================
 Found problems!
@@ -369,15 +369,15 @@ issue: false does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (x y : Prop) : true :=
 begin
-  have : x ↔ y,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : x ↔ y,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -389,15 +389,15 @@ issue: ¬ true does not hold
 (0 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (f : ℕ →₀ ℕ) : true :=
 begin
-  have : f = 0,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : f = 0,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -407,15 +407,15 @@ issue: finsupp.single 0 1 = 0 does not hold
 (2 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
 
 example (f : Π₀ n : ℕ, ℕ) : true :=
 begin
-  have : f.update 0 0 = 0,
-  success_if_fail_with_msg
-  { slim_check { random_seed := some 257 } }
+ have : f.update 0 0 = 0,
+ success_if_fail_with_msg
+ { slim_check { random_seed := some 257 } }
 "
 ===================
 Found problems!
@@ -424,6 +424,7 @@ f := [1 ↦ 1, _ ↦ 0]
 (1 shrinks)
 -------------------
 ",
-  admit,
-  trivial,
+ admit,
+ trivial,
 end
+

@@ -20,3 +20,4 @@ example : cardinal.succ 0 = 1 := by norm_cast
 example : cardinal.succ 1 = 2 := by norm_cast
 example : cardinal.succ 2 = 3 := by norm_cast
 example : cardinal.succ 3 = 4 := by norm_cast
+

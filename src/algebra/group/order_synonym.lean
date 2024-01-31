@@ -139,3 +139,4 @@ lemma of_lex_pow [has_pow α β] (a : lex α) (b : β) : of_lex (a ^ b) = of_lex
 lemma pow_to_lex [has_pow α β] (a : α) (b : β) : a ^ to_lex b = a ^ b := rfl
 @[simp, to_additive of_lex_smul, to_additive_reorder 1 4]
 lemma pow_of_lex [has_pow α β] (a : α) (b : lex β) : a ^ of_lex b = a ^ b := rfl
+

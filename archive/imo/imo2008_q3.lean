@@ -34,52 +34,52 @@ open real
 namespace imo2008_q3
 
 lemma p_lemma (p : ℕ) (hpp : nat.prime p) (hp_mod_4_eq_1 : p ≡ 1 [MOD 4]) (hp_gt_20 : p > 20) :
-  ∃ n : ℕ, p ∣ n ^ 2 + 1 ∧ (p : ℝ) > 2 * n + sqrt(2 * n) :=
+ ∃ n : ℕ, p ∣ n ^ 2 + 1 ∧ (p : ℝ) > 2 * n + sqrt(2 * n) :=
 begin
-  haveI := fact.mk hpp,
-  have hp_mod_4_ne_3 : p % 4 ≠ 3, { linarith [(show p % 4 = 1, by exact hp_mod_4_eq_1)] },
-  obtain ⟨y, hy⟩ := zmod.exists_sq_eq_neg_one_iff.mpr hp_mod_4_ne_3,
+ haveI := fact.mk hpp,
+ have hp_mod_4_ne_3 : p % 4 ≠ 3, { linarith [(show p % 4 = 1, by exact hp_mod_4_eq_1)] },
+ obtain ⟨y, hy⟩ := zmod.exists_sq_eq_neg_one_iff.mpr hp_mod_4_ne_3,
 
-  let m := zmod.val_min_abs y,
-  let n := int.nat_abs m,
+ let m := zmod.val_min_abs y,
+ let n := int.nat_abs m,
 
-  have hnat₁ : p ∣ n ^ 2 + 1,
-  { refine int.coe_nat_dvd.mp _,
-    simp only [int.nat_abs_sq, int.coe_nat_pow, int.coe_nat_succ, int.coe_nat_dvd.mp],
-    refine (zmod.int_coe_zmod_eq_zero_iff_dvd (m ^ 2 + 1) p).mp _,
-    simp only [int.cast_pow, int.cast_add, int.cast_one, zmod.coe_val_min_abs],
-    rw [pow_two, ← hy], exact add_left_neg 1 },
+ have hnat₁ : p ∣ n ^ 2 + 1,
+ { refine int.coe_nat_dvd.mp _,
+ simp only [int.nat_abs_sq, int.coe_nat_pow, int.coe_nat_succ, int.coe_nat_dvd.mp],
+ refine (zmod.int_coe_zmod_eq_zero_iff_dvd (m ^ 2 + 1) p).mp _,
+ simp only [int.cast_pow, int.cast_add, int.cast_one, zmod.coe_val_min_abs],
+ rw [pow_two]; rw [ ← hy], exact add_left_neg 1 },
 
-  have hnat₂ : n ≤ p / 2 := zmod.nat_abs_val_min_abs_le y,
-  have hnat₃ : p ≥ 2 * n, { linarith [nat.div_mul_le_self p 2] },
+ have hnat₂ : n ≤ p / 2 := zmod.nat_abs_val_min_abs_le y,
+ have hnat₃ : p ≥ 2 * n, { linarith [nat.div_mul_le_self p 2] },
 
-  set k : ℕ := p - 2 * n with hnat₄,
+ set k : ℕ := p - 2 * n with hnat₄,
 
-  have hnat₅ : p ∣ k ^ 2 + 4,
-  { cases hnat₁ with x hx,
-    have : (p:ℤ) ∣ k ^ 2 + 4,
-    { use (p:ℤ) - 4 * n + 4 * x,
-      have hcast₁ : (k:ℤ) = p - 2 * n, { assumption_mod_cast },
-      have hcast₂ : (n:ℤ) ^ 2 + 1 = p * x, { assumption_mod_cast },
-      linear_combination ((k:ℤ) + p - 2 * n)*hcast₁ + 4*hcast₂ },
-    assumption_mod_cast },
+ have hnat₅ : p ∣ k ^ 2 + 4,
+ { cases hnat₁ with x hx,
+ have : (p:ℤ) ∣ k ^ 2 + 4,
+ { use (p:ℤ) - 4 * n + 4 * x,
+ have hcast₁ : (k:ℤ) = p - 2 * n, { assumption_mod_cast },
+ have hcast₂ : (n:ℤ) ^ 2 + 1 = p * x, { assumption_mod_cast },
+ linear_combination ((k:ℤ) + p - 2 * n)*hcast₁ + 4*hcast₂ },
+ assumption_mod_cast },
 
-  have hnat₆ : k ^ 2 + 4 ≥ p := nat.le_of_dvd (k ^ 2 + 3).succ_pos hnat₅,
+ have hnat₆ : k ^ 2 + 4 ≥ p := nat.le_of_dvd (k ^ 2 + 3).succ_pos hnat₅,
 
-  have hreal₁ : (k:ℝ) = p - 2 * n, { assumption_mod_cast },
-  have hreal₂ : (p:ℝ) > 20,        { assumption_mod_cast },
-  have hreal₃ : (k:ℝ) ^ 2 + 4 ≥ p, { assumption_mod_cast },
+ have hreal₁ : (k:ℝ) = p - 2 * n, { assumption_mod_cast },
+ have hreal₂ : (p:ℝ) > 20, { assumption_mod_cast },
+ have hreal₃ : (k:ℝ) ^ 2 + 4 ≥ p, { assumption_mod_cast },
 
-  have hreal₅ : (k:ℝ) > 4,
-  { refine lt_of_pow_lt_pow 2 k.cast_nonneg _,
-    linarith only [hreal₂, hreal₃] },
+ have hreal₅ : (k:ℝ) > 4,
+ { refine lt_of_pow_lt_pow 2 k.cast_nonneg _,
+ linarith only [hreal₂, hreal₃] },
 
-  have hreal₆ : (k:ℝ) > sqrt (2 * n),
-  { refine lt_of_pow_lt_pow 2 k.cast_nonneg _,
-    rw sq_sqrt (mul_nonneg zero_le_two n.cast_nonneg),
-    linarith only [hreal₁, hreal₃, hreal₅] },
+ have hreal₆ : (k:ℝ) > sqrt (2 * n),
+ { refine lt_of_pow_lt_pow 2 k.cast_nonneg _,
+ rw sq_sqrt (mul_nonneg zero_le_two n.cast_nonneg),
+ linarith only [hreal₁, hreal₃, hreal₅] },
 
-  exact ⟨n, hnat₁, by linarith only [hreal₆, hreal₁]⟩,
+ exact ⟨n, hnat₁, by linarith only [hreal₆, hreal₁]⟩,
 end
 
 end imo2008_q3
@@ -87,15 +87,16 @@ end imo2008_q3
 open imo2008_q3
 
 theorem imo2008_q3 : ∀ N : ℕ, ∃ n : ℕ, n ≥ N ∧
-  ∃ p : ℕ, nat.prime p ∧ p ∣ n ^ 2 + 1 ∧ (p : ℝ) > 2 * n + sqrt(2 * n) :=
+ ∃ p : ℕ, nat.prime p ∧ p ∣ n ^ 2 + 1 ∧ (p : ℝ) > 2 * n + sqrt(2 * n) :=
 begin
-  intro N,
-  obtain ⟨p, hpp, hineq₁, hpmod4⟩ := nat.exists_prime_gt_modeq_one (N ^ 2 + 20) four_ne_zero,
-  obtain ⟨n, hnat, hreal⟩ := p_lemma p hpp hpmod4 (by linarith [hineq₁, nat.zero_le (N ^ 2)]),
+ intro N,
+ obtain ⟨p, hpp, hineq₁, hpmod4⟩ := nat.exists_prime_gt_modeq_one (N ^ 2 + 20) four_ne_zero,
+ obtain ⟨n, hnat, hreal⟩ := p_lemma p hpp hpmod4 (by linarith [hineq₁, nat.zero_le (N ^ 2)]),
 
-  have hineq₂  : n ^ 2 + 1 ≥ p := nat.le_of_dvd (n ^ 2).succ_pos hnat,
-  have hineq₃  : n * n ≥ N * N, { linarith [hineq₁, hineq₂] },
-  have hn_ge_N : n ≥ N := nat.mul_self_le_mul_self_iff.mpr hineq₃,
+ have hineq₂ : n ^ 2 + 1 ≥ p := nat.le_of_dvd (n ^ 2).succ_pos hnat,
+ have hineq₃ : n * n ≥ N * N, { linarith [hineq₁, hineq₂] },
+ have hn_ge_N : n ≥ N := nat.mul_self_le_mul_self_iff.mpr hineq₃,
 
-  exact ⟨n, hn_ge_N, p, hpp, hnat, hreal⟩,
+ exact ⟨n, hn_ge_N, p, hpp, hnat, hreal⟩,
 end
+

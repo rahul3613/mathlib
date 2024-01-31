@@ -19,9 +19,9 @@ well-founded order.
 
 We can map our order into two well-orders:
 * the first map respects the order but isn't necessarily injective. Namely, this is the *rank*
-  function `rank : α → ordinal`.
+ function `rank : α → ordinal`.
 * the second map is injective but doesn't necessarily respect the order. This is an arbitrary
-  well-order on `α`.
+ well-order on `α`.
 
 Then their lexicographic product is a well-founded linear order which our original order injects in.
 -/
@@ -46,8 +46,8 @@ arbitrary well-order to serve as a tiebreak between two elements of same rank.
 -/
 noncomputable def well_order_extension : linear_order α :=
 let l : linear_order α := is_well_order.linear_order well_ordering_rel in by exactI
-  @linear_order.lift' α (ordinal ×ₗ α) _
-    (λ a : α, (well_founded.rank.{u} hwf a, a)) (λ _ _, congr_arg prod.snd)
+ @linear_order.lift' α (ordinal ×ₗ α) _
+ (λ a : α, (well_founded.rank.{u} hwf a, a)) (λ _ _, congr_arg prod.snd)
 
 instance well_order_extension.is_well_founded_lt : is_well_founded α hwf.well_order_extension.lt :=
 ⟨inv_image.wf _ $ prod.lex_wf ordinal.well_founded_lt.wf well_ordering_rel.is_well_order.wf⟩
@@ -70,9 +70,10 @@ noncomputable instance [has_lt α] [well_founded_lt α] : linear_order (well_ord
 (is_well_founded.wf : @well_founded α (<)).well_order_extension
 
 instance well_order_extension.well_founded_lt [has_lt α] [well_founded_lt α] :
-  well_founded_lt (well_order_extension α) :=
+ well_founded_lt (well_order_extension α) :=
 well_founded.well_order_extension.is_well_founded_lt _
 
 lemma to_well_order_extension_strict_mono [preorder α] [well_founded_lt α] :
-  strict_mono (to_well_order_extension : α → well_order_extension α) :=
+ strict_mono (to_well_order_extension : α → well_order_extension α) :=
 λ a b h, prod.lex.left _ _ $ well_founded.rank_lt_of_rel _ h
+

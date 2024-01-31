@@ -15,7 +15,7 @@ For instance, consider the following proof:
 ```
 example {α β} (x y z : α → β) (h₀ : x ≤ y) (h₁ : y ≤ z) : x ≤ z :=
 begin
-  apply le_trans,
+ apply le_trans,
 end
 ```
 
@@ -31,45 +31,45 @@ namespace tactic
 or leave them in place. The `bool` values in `gs` indicates whether the goal is dependent or not. -/
 def reorder_goals {α} (gs : list (bool × α)) : new_goals → list α
 | new_goals.non_dep_first :=
-  let ⟨dep,non_dep⟩ := gs.partition (coe ∘ prod.fst) in
-  non_dep.map prod.snd ++ dep.map prod.snd
+ let ⟨dep,non_dep⟩ := gs.partition (coe ∘ prod.fst) in
+ non_dep.map prod.snd ++ dep.map prod.snd
 | new_goals.non_dep_only := (gs.filter (coe ∘ bnot ∘ prod.fst)).map prod.snd
 | new_goals.all := gs.map prod.snd
 
 private meta def has_opt_auto_param_inst_for_apply (ms : list (name × expr)) : tactic bool :=
 ms.mfoldl
  (λ r m, do type ← infer_type m.2,
-            b ← is_class type,
-            return $ r || type.is_napp_of `opt_param 2 || type.is_napp_of `auto_param 2 || b)
+ b ← is_class type,
+ return $ r || type.is_napp_of `opt_param 2 || type.is_napp_of `auto_param 2 || b)
  ff
 
 private meta def try_apply_opt_auto_param_instance_for_apply (cfg : apply_cfg)
-  (ms : list (name × expr)) : tactic unit :=
+ (ms : list (name × expr)) : tactic unit :=
 mwhen (has_opt_auto_param_inst_for_apply ms) $ do
-  gs ← get_goals,
-  ms.mmap' (λ m, mwhen (bnot <$> (is_assigned m.2)) $
-                   set_goals [m.2] >>
-                   try apply_instance >>
-                   when cfg.opt_param (try apply_opt_param) >>
-                   when cfg.auto_param (try apply_auto_param)),
-  set_goals gs
+ gs ← get_goals,
+ ms.mmap' (λ m, mwhen (bnot <$> (is_assigned m.2)) $
+ set_goals [m.2] >>
+ try apply_instance >>
+ when cfg.opt_param (try apply_opt_param) >>
+ when cfg.auto_param (try apply_auto_param)),
+ set_goals gs
 
 private meta def retry_apply_aux :
-  Π (e : expr) (cfg : apply_cfg), list (bool × name ×  expr) → tactic (list (name × expr))
+ Π (e : expr) (cfg : apply_cfg), list (bool × name × expr) → tactic (list (name × expr))
 | e cfg gs :=
 focus1 (do
-   { tgt : expr ← target, t ← infer_type e,
-     unify t tgt,
-     exact e,
-     gs' ← get_goals,
-     let r := reorder_goals gs.reverse cfg.new_goals,
-     set_goals (gs' ++ r.map prod.snd),
-     return r }) <|>
+ { tgt : expr ← target, t ← infer_type e,
+ unify t tgt,
+ exact e,
+ gs' ← get_goals,
+ let r := reorder_goals gs.reverse cfg.new_goals,
+ set_goals (gs' ++ r.map prod.snd),
+ return r }) <|>
 do (expr.pi n bi d b) ← infer_type e >>= whnf | apply_core e cfg,
-   v ← mk_meta_var d,
-   let b := b.has_var,
-   e ← head_beta $ e v,
-   retry_apply_aux e cfg ((b, n, v) :: gs)
+ v ← mk_meta_var d,
+ let b := b.has_var,
+ e ← head_beta $ e v,
+ retry_apply_aux e cfg ((b, n, v) :: gs)
 
 private meta def retry_apply (e : expr) (cfg : apply_cfg) : tactic (list (name × expr)) :=
 apply_core e cfg <|> retry_apply_aux e cfg []
@@ -82,8 +82,8 @@ become new goals depending on the `cfg.new_goals` policy.
 `apply'` also finds instances and applies opt_params and auto_params. -/
 meta def apply' (e : expr) (cfg : apply_cfg := {}) : tactic (list (name × expr)) :=
 do r ← retry_apply e cfg,
-   try_apply_opt_auto_param_instance_for_apply cfg r,
-   return r
+ try_apply_opt_auto_param_instance_for_apply cfg r,
+ return r
 
 /-- Same as `apply'` but __all__ arguments that weren't inferred are added to goal list. -/
 meta def fapply' (e : expr) : tactic (list (name × expr)) :=
@@ -95,17 +95,17 @@ apply' e {new_goals := new_goals.non_dep_only}
 /-- `relation_tactic` finds a proof rule for the relation found in the goal and uses `apply'`
 to make one proof step. -/
 private meta def relation_tactic (md : transparency) (op_for : environment → name → option name)
-  (tac_name : string) : tactic unit :=
-do tgt   ← target >>= instantiate_mvars,
-   env   ← get_env,
-   let r := expr.get_app_fn tgt,
-   match op_for env (expr.const_name r) with
-   | (some refl) := do r ← mk_const refl,
-                       retry_apply r {md := md, new_goals := new_goals.non_dep_only },
-                       return ()
-   | none        := fail $ tac_name ++
-     " tactic failed, target is not a relation application with the expected property."
-   end
+ (tac_name : string) : tactic unit :=
+do tgt ← target >>= instantiate_mvars,
+ env ← get_env,
+ let r := expr.get_app_fn tgt,
+ match op_for env (expr.const_name r) with
+ | (some refl) := do r ← mk_const refl,
+ retry_apply r {md := md, new_goals := new_goals.non_dep_only },
+ return ()
+ | none := fail $ tac_name ++
+ " tactic failed, target is not a relation application with the expected property."
+ end
 
 /-- Similar to `reflexivity` with the difference that `apply'` is used instead of `apply` -/
 meta def reflexivity' (md := semireducible) : tactic unit :=
@@ -192,11 +192,12 @@ meta def transitivity' (q : parse texpr?) : tactic unit :=
 tactic.transitivity' >> match q with
 | none := skip
 | some q :=
-  do (r, lhs, rhs) ← target_lhs_rhs,
-     t ← infer_type lhs,
-     i_to_expr ``(%%q : %%t) >>= unify rhs
+ do (r, lhs, rhs) ← target_lhs_rhs,
+ t ← infer_type lhs,
+ i_to_expr ``(%%q : %%t) >>= unify rhs
 end
 
 end interactive
 
 end tactic
+

@@ -73,7 +73,7 @@ protected def rec {F : Π (X : αᵐᵒᵖ), Sort v} (h : Π X, F (op X)) : Π X
 
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/
 @[to_additive "The canonical bijection between `α` and `αᵃᵒᵖ`.",
-  simps apply symm_apply { fully_applied := ff }]
+ simps apply symm_apply { fully_applied := ff }]
 def op_equiv : α ≃ αᵐᵒᵖ := ⟨op, unop, unop_op, op_unop⟩
 
 @[to_additive] lemma op_bijective : bijective (op : α → αᵐᵒᵖ) := op_equiv.bijective
@@ -109,7 +109,7 @@ instance [has_neg α] : has_neg αᵐᵒᵖ :=
 
 instance [has_involutive_neg α] : has_involutive_neg αᵐᵒᵖ :=
 { neg_neg := λ a, unop_injective $ neg_neg _,
-  ..mul_opposite.has_neg α }
+ ..mul_opposite.has_neg α }
 
 @[to_additive] instance [has_mul α] : has_mul αᵐᵒᵖ :=
 { mul := λ x y, op (unop y * unop x) }
@@ -119,7 +119,7 @@ instance [has_involutive_neg α] : has_involutive_neg αᵐᵒᵖ :=
 
 @[to_additive] instance [has_involutive_inv α] : has_involutive_inv αᵐᵒᵖ :=
 { inv_inv := λ a, unop_injective $ inv_inv _,
-  ..mul_opposite.has_inv α }
+ ..mul_opposite.has_inv α }
 
 @[to_additive] instance (R : Type*) [has_smul R α] : has_smul R αᵐᵒᵖ :=
 { smul := λ c x, op (c • unop x) }
@@ -151,10 +151,10 @@ variable {α}
 @[simp] lemma unop_sub [has_sub α] (x y : αᵐᵒᵖ) : unop (x - y) = unop x - unop y := rfl
 
 @[simp, to_additive] lemma op_smul {R : Type*} [has_smul R α] (c : R) (a : α) :
-  op (c • a) = c • op a := rfl
+ op (c • a) = c • op a := rfl
 
 @[simp, to_additive] lemma unop_smul {R : Type*} [has_smul R α] (c : R) (a : αᵐᵒᵖ) :
-  unop (c • a) = c • unop a := rfl
+ unop (c • a) = c • unop a := rfl
 
 end
 
@@ -201,7 +201,7 @@ instance [has_inv α] : has_inv αᵃᵒᵖ := { inv := λ a, op (unop a)⁻¹ }
 
 instance [has_involutive_inv α] : has_involutive_inv αᵃᵒᵖ :=
 { inv_inv := λ a, unop_injective $ inv_inv _,
-  ..add_opposite.has_inv }
+ ..add_opposite.has_inv }
 
 @[simp] lemma op_inv [has_inv α] (a : α) : op a⁻¹ = (op a)⁻¹ := rfl
 @[simp] lemma unop_inv [has_inv α] (a : αᵃᵒᵖ) : unop a⁻¹ = (unop a)⁻¹ := rfl
@@ -212,3 +212,4 @@ instance [has_div α] : has_div αᵃᵒᵖ := { div := λ a b, op (unop a / uno
 @[simp] lemma unop_div [has_div α] (a b : αᵃᵒᵖ) : unop (a / b) = unop a / unop b := rfl
 
 end add_opposite
+

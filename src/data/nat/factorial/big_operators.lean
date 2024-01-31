@@ -30,12 +30,13 @@ finset.prod_pos (λ i _, factorial_pos (f i))
 
 lemma prod_factorial_dvd_factorial_sum : (∏ i in s, (f i)!) ∣ (∑ i in s, f i)! :=
 begin
-  classical,
-  induction s using finset.induction with a' s' has ih,
-  { simp only [finset.sum_empty, finset.prod_empty, factorial], },
-  { simp only [finset.prod_insert has, finset.sum_insert has],
-    refine dvd_trans (mul_dvd_mul_left ((f a')!) ih) _,
-    apply nat.factorial_mul_factorial_dvd_factorial_add, },
+ classical,
+ induction s using finset.induction with a' s' has ih,
+ { simp only [finset.sum_empty, finset.prod_empty, factorial], },
+ { simp only [finset.prod_insert has, finset.sum_insert has],
+ refine dvd_trans (mul_dvd_mul_left ((f a')!) ih) _,
+ apply nat.factorial_mul_factorial_dvd_factorial_add, },
 end
 
 end nat
+

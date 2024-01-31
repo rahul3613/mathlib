@@ -5,8 +5,8 @@ Authors: Robert Y. Lewis, Gabriel Ebner
 -/
 
 import tactic.lint
-import system.io  -- these are required
-import all   -- then import everything, to parse the library for failing linters
+import system.io -- these are required
+import all -- then import everything, to parse the library for failing linters
 
 /-!
 # lint_mathlib
@@ -34,12 +34,12 @@ open native tactic
 Returns the contents of the `nolints.txt` file.
 -/
 meta def mk_nolint_file (env : environment) (mathlib_path_len : ℕ)
-  (results : list (name × linter × rb_map name string)) : format := do
+ (results : list (name × linter × rb_map name string)) : format := do
 let failed_decls_by_file := rb_lmap.of_list (do
-  (linter_name, _, decls) ← results,
-  (decl_name, _) ← decls.to_list,
-  let file_name := (env.decl_olean decl_name).get_or_else "",
-  pure (file_name.popn mathlib_path_len, decl_name.to_string, linter_name.last)),
+ (linter_name, _, decls) ← results,
+ (decl_name, _) ← decls.to_list,
+ let file_name := (env.decl_olean decl_name).get_or_else "",
+ pure (file_name.popn mathlib_path_len, decl_name.to_string, linter_name.last)),
 format.intercalate format.line $
 "import .all" ::
 "run_cmd tactic.skip" :: do
@@ -91,10 +91,11 @@ let non_auto_decls := decls.filter (λ d, ¬ d.is_auto_or_internal env),
 results₀ ← lint_core decls non_auto_decls linters,
 nolint_file ← read_nolints_file,
 let results := (do
-  (linter_name, linter, decls) ← results₀,
-  [(linter_name, linter, (nolint_file.find linter_name).foldl rb_map.erase decls)]),
+ (linter_name, linter, decls) ← results₀,
+ [(linter_name, linter, (nolint_file.find linter_name).foldl rb_map.erase decls)]),
 let emit_workflow_commands : bool := "--github" ∈ args,
 io.print $ to_string $ format_linter_results env results decls non_auto_decls
-  mathlib_path.length "in mathlib" tt lint_verbosity.medium linters.length emit_workflow_commands,
+ mathlib_path.length "in mathlib" tt lint_verbosity.medium linters.length emit_workflow_commands,
 io.write_file "nolints.txt" $ to_string $ mk_nolint_file env mathlib_path.length results₀,
 if results.all (λ r, r.2.2.empty) then pure () else io.fail ""
+

@@ -15,8 +15,8 @@ namespace test.library_search
 -- Check that `library_search` fails if there are no goals.
 example : true :=
 begin
-  trivial,
-  success_if_fail { library_search },
+ trivial,
+ success_if_fail { library_search },
 end
 
 -- Verify that `library_search` solves goals via `solve_by_elim` when the library isn't
@@ -117,9 +117,9 @@ def map_from_sum {A B C : Type} (f : A → C) (g : B → C) : (A ⊕ B) → C :=
 -- to change how aggressively we unfold definitions while trying to apply lemmas.
 lemma bind_singleton {α β} (x : α) (f : α → list β) : list.bind [x] f = f x :=
 begin
-  success_if_fail {
-    library_search { md := tactic.transparency.reducible }, },
-  library_search!,
+ success_if_fail {
+ library_search { md := tactic.transparency.reducible }, },
+ library_search!,
 end
 
 constant f : ℕ → ℕ
@@ -129,7 +129,7 @@ example (a b : ℕ) (h : a ≤ b) : f a ≤ f b := by library_search
 
 -- Test #3432
 theorem nonzero_gt_one (n : ℕ) : ¬ n = 0 → n ≥ 1 :=
-by library_search!   -- `exact nat.pos_of_ne_zero`
+by library_search! -- `exact nat.pos_of_ne_zero`
 
 example (L : list (list ℕ)) : list ℕ :=
 by library_search using L
@@ -146,8 +146,8 @@ by library_search using P Q
 -- Make sure `library_search` finds nothing when we list too many hypotheses after `using`.
 example (P Q R S T : list ℕ) : list ℕ :=
 begin
-  success_if_fail { library_search using P Q R S T, },
-  exact []
+ success_if_fail { library_search using P Q R S T, },
+ exact []
 end
 
 -- Tests for #3428
@@ -165,3 +165,4 @@ example (hq : k.a ≠ 0) : k.b ≠ 0 := by library_search
 example (hq : l.a ≠ 0) : ¬ l.b = 0 := by library_search
 
 end test.library_search
+

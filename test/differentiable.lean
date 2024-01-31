@@ -21,7 +21,7 @@ by { simp, ring }
 example (x : ℝ) : differentiable_at ℝ (λ x, (cos x, x)) x := by simp
 
 example (x : ℝ) (h : 1 + sin x ≠ 0) : deriv (λ x, exp (cos x) / (1 + sin x)) x =
-  (-(exp (cos x) * sin x * (1 + sin x)) - exp (cos x) * cos x) / (1 + sin x) ^ 2 :=
+ (-(exp (cos x) * sin x * (1 + sin x)) - exp (cos x) * cos x) / (1 + sin x) ^ 2 :=
 by simp [h]
 
 example (x : ℝ) : differentiable_at ℝ (λ x, (sin x) / (exp x)) x :=
@@ -37,7 +37,7 @@ end real
 
 namespace complex
 
-example : differentiable ℂ  (λ (x : ℂ), exp x) :=
+example : differentiable ℂ (λ (x : ℂ), exp x) :=
 by simp
 
 example : differentiable ℂ (λ (x : ℂ), exp ((sin x)^2) - exp (exp (cos (x - 3)))) :=
@@ -52,7 +52,7 @@ by { simp, ring }
 example (x : ℂ) : differentiable_at ℂ (λ x, (cos x, x)) x := by simp
 
 example (x : ℂ) (h : 1 + sin x ≠ 0) : deriv (λ x, exp (cos x) / (1 + sin x)) x =
-  (-(exp (cos x) * sin x * (1 + sin x)) - exp (cos x) * cos x) / (1 + sin x) ^ 2 :=
+ (-(exp (cos x) * sin x * (1 + sin x)) - exp (cos x) * cos x) / (1 + sin x) ^ 2 :=
 by simp [h]
 
 example (x : ℂ) : differentiable_at ℂ (λ x, (sin x) / (exp x)) x :=
@@ -84,3 +84,4 @@ example : ((C 2 * X ^ 3).derivative : R[X]) = 6 * X ^ 2 :=
 by conv_lhs { simp, ring_nf, }
 
 end polynomial
+

@@ -16,7 +16,7 @@ import tactic.group
 
 This file defines racks and quandles, algebraic structures for sets
 that bijectively act on themselves with a self-distributivity
-property.  If `R` is a rack and `act : R → (R ≃ R)` is the self-action,
+property. If `R` is a rack and `act : R → (R ≃ R)` is the self-action,
 then the self-distributivity is, equivalently, that
 ```
 act (act x y) = act x * act y * (act x)⁻¹
@@ -28,13 +28,13 @@ One example of a quandle (not yet in mathlib) is the action of a Lie
 algebra on itself, defined by `act x y = Ad (exp x) y`.
 
 Quandles and racks were independently developed by multiple
-mathematicians.  David Joyce introduced quandles in his thesis
+mathematicians. David Joyce introduced quandles in his thesis
 [Joyce1982] to define an algebraic invariant of knot and link
 complements that is analogous to the fundamental group of the
 exterior, and he showed that the quandle associated to an oriented
-knot is invariant up to orientation-reversed mirror image.  Racks were
+knot is invariant up to orientation-reversed mirror image. Racks were
 used by Fenn and Rourke for framed codimension-2 knots and
-links in [FennRourke1992].  Unital shelves are discussed in [crans2017].
+links in [FennRourke1992]. Unital shelves are discussed in [crans2017].
 
 The name "rack" came from wordplay by Conway and Wraith for the "wrack
 and ruin" of forgetting everything but the conjugation operation for a
@@ -53,7 +53,7 @@ group.
 
 ## Main statements
 * `rack.envel_group` is left adjoint to `quandle.conj` (`to_envel_group.map`).
-  The universality statements are `to_envel_group.univ` and `to_envel_group.univ_uniq`.
+ The universality statements are `to_envel_group.univ` and `to_envel_group.univ_uniq`.
 
 ## Implementation notes
 
@@ -74,13 +74,13 @@ Use `open_locale quandles` to use these.
 
 * If `g` is the Lie algebra of a Lie group `G`, then `(x ◃ y) = Ad (exp x) x` forms a quandle.
 * If `X` is a symmetric space, then each point has a corresponding involution that acts on `X`,
-  forming a quandle.
+ forming a quandle.
 * Alexander quandle with `a ◃ b = t * b + (1 - t) * b`, with `a` and `b` elements
-  of a module over `Z[t,t⁻¹]`.
+ of a module over `Z[t,t⁻¹]`.
 * If `G` is a group, `H` a subgroup, and `z` in `H`, then there is a quandle `(G/H;z)` defined by
-  `yH ◃ xH = yzy⁻¹xH`.  Every homogeneous quandle (i.e., a quandle `Q` whose automorphism group acts
-  transitively on `Q` as a set) is isomorphic to such a quandle.
-  There is a generalization to this arbitrary quandles in [Joyce's paper (Theorem 7.2)][Joyce1982].
+ `yH ◃ xH = yzy⁻¹xH`. Every homogeneous quandle (i.e., a quandle `Q` whose automorphism group acts
+ transitively on `Q` as a set) is isomorphic to such a quandle.
+ There is a generalization to this arbitrary quandles in [Joyce's paper (Theorem 7.2)][Joyce1982].
 
 ## Tags
 
@@ -117,7 +117,7 @@ structure shelf_hom (S₁ : Type*) (S₂ : Type*) [shelf S₁] [shelf S₂] :=
 
 /--
 A *rack* is an automorphic set (a set with an action on itself by
-bijections) that is self-distributive.  It is a shelf such that each
+bijections) that is self-distributive. It is a shelf such that each
 element's action is invertible.
 
 The notations `x ◃ y` and `x ◃⁻¹ y` denote the action and the
@@ -141,28 +141,28 @@ variables {S : Type*} [unital_shelf S]
 
 /--
 A monoid is *graphic* if, for all `x` and `y`, the *graphic identity*
-`(x * y) * x = x * y` holds.  For a unital shelf, this graphic
+`(x * y) * x = x * y` holds. For a unital shelf, this graphic
 identity holds.
 -/
 lemma act_act_self_eq (x y : S) : (x ◃ y) ◃ x = x ◃ y :=
 begin
-  have h : (x ◃ y) ◃ x = (x ◃ y) ◃ (x ◃ 1) := by rw act_one,
-  rw [h, ←shelf.self_distrib, act_one],
+ have h : (x ◃ y) ◃ x = (x ◃ y) ◃ (x ◃ 1) := by rw act_one,
+ rw [h]; rw [ ←shelf.self_distrib]; rw [ act_one],
 end
 
-lemma act_idem (x : S) : (x ◃ x) = x := by rw [←act_one x, ←shelf.self_distrib, act_one, act_one]
+lemma act_idem (x : S) : (x ◃ x) = x := by rw [←act_one x]; rw [ ←shelf.self_distrib]; rw [ act_one]; rw [ act_one]
 
 lemma act_self_act_eq (x y : S) : x ◃ (x ◃ y) = x ◃ y :=
 begin
-  have h : x ◃ (x ◃ y) = (x ◃ 1) ◃ (x ◃ y) := by rw act_one,
-  rw [h, ←shelf.self_distrib, one_act],
+ have h : x ◃ (x ◃ y) = (x ◃ 1) ◃ (x ◃ y) := by rw act_one,
+ rw [h]; rw [ ←shelf.self_distrib]; rw [ one_act],
 end
 
 /--
 The associativity of a unital shelf comes for free.
 -/
 lemma assoc (x y z : S) : (x ◃ y) ◃ z = x ◃ y ◃ z :=
-by rw [self_distrib, self_distrib, act_act_self_eq, act_self_act_eq]
+by rw [self_distrib]; rw [ self_distrib]; rw [ act_act_self_eq]; rw [ act_self_act_eq]
 
 end unital_shelf
 
@@ -177,9 +177,9 @@ A rack acts on itself by equivalences.
 -/
 def act (x : R) : R ≃ R :=
 { to_fun := shelf.act x,
-  inv_fun := inv_act x,
-  left_inv := left_inv x,
-  right_inv := right_inv x }
+ inv_fun := inv_act x,
+ left_inv := left_inv x,
+ right_inv := right_inv x }
 
 @[simp] lemma act_apply (x y : R) : act x y = x ◃ y := rfl
 @[simp] lemma act_symm_apply (x y : R) : (act x).symm y = x ◃⁻¹ y := rfl
@@ -196,8 +196,8 @@ by { split, apply (act x).symm.injective, rintro rfl, refl }
 
 lemma self_distrib_inv {x y z : R} : x ◃⁻¹ y ◃⁻¹ z = (x ◃⁻¹ y) ◃⁻¹ (x ◃⁻¹ z) :=
 begin
-  rw [←left_cancel (x ◃⁻¹ y), right_inv, ←left_cancel x, right_inv, self_distrib],
-  repeat {rw right_inv },
+ rw [←left_cancel (x ◃⁻¹ y)]; rw [ right_inv]; rw [ ←left_cancel x]; rw [ right_inv]; rw [ self_distrib],
+ repeat {rw right_inv },
 end
 
 /--
@@ -209,10 +209,10 @@ This is used in the natural rack homomorphism `to_conj` from `R` to
 `conj (R ≃ R)` defined by `op'`.
 -/
 lemma ad_conj {R : Type*} [rack R] (x y : R) :
-  act (x ◃ y) = act x * act y * (act x)⁻¹ :=
+ act (x ◃ y) = act x * act y * (act x)⁻¹ :=
 begin
-  rw [eq_mul_inv_iff_mul_eq], ext z,
-  apply self_distrib.symm,
+ rw [eq_mul_inv_iff_mul_eq], ext z,
+ apply self_distrib.symm,
 end
 
 /--
@@ -220,20 +220,20 @@ The opposite rack, swapping the roles of `◃` and `◃⁻¹`.
 -/
 instance opposite_rack : rack Rᵐᵒᵖ :=
 { act := λ x y, op (inv_act (unop x) (unop y)),
-  self_distrib := mul_opposite.rec $ λ x, mul_opposite.rec $ λ y, mul_opposite.rec $ λ z, begin
-    simp only [unop_op, op_inj],
-    exact self_distrib_inv,
-  end,
-  inv_act := λ x y, op (shelf.act (unop x) (unop y)),
-  left_inv := mul_opposite.rec $ λ x, mul_opposite.rec $ λ y, by simp,
-  right_inv := mul_opposite.rec $ λ x, mul_opposite.rec $ λ y, by simp }
+ self_distrib := mul_opposite.rec $ λ x, mul_opposite.rec $ λ y, mul_opposite.rec $ λ z, begin
+ simp only [unop_op, op_inj],
+ exact self_distrib_inv,
+ end,
+ inv_act := λ x y, op (shelf.act (unop x) (unop y)),
+ left_inv := mul_opposite.rec $ λ x, mul_opposite.rec $ λ y, by simp,
+ right_inv := mul_opposite.rec $ λ x, mul_opposite.rec $ λ y, by simp }
 
 @[simp] lemma op_act_op_eq {x y : R} : (op x) ◃ (op y) = op (x ◃⁻¹ y) := rfl
 @[simp] lemma op_inv_act_op_eq {x y : R} : (op x) ◃⁻¹ (op y) = op (x ◃ y) := rfl
 
 @[simp]
 lemma self_act_act_eq {x y : R} : (x ◃ x) ◃ y = x ◃ y :=
-by { rw [←right_inv x y, ←self_distrib] }
+by { rw [←right_inv x y]; rw [ ←self_distrib] }
 
 @[simp]
 lemma self_inv_act_inv_act_eq {x y : R} : (x ◃⁻¹ x) ◃⁻¹ y = x ◃⁻¹ y :=
@@ -249,25 +249,25 @@ by { have h := @self_act_inv_act_eq _ _ (op x) (op y), simpa using h }
 
 lemma self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y :=
 begin
-  split, swap, rintro rfl, refl,
-  intro h,
-  transitivity (x ◃ x) ◃⁻¹ (x ◃ x),
-  rw [←left_cancel (x ◃ x), right_inv, self_act_act_eq],
-  rw [h, ←left_cancel (y ◃ y), right_inv, self_act_act_eq],
+ split, swap, rintro rfl, refl,
+ intro h,
+ transitivity (x ◃ x) ◃⁻¹ (x ◃ x),
+ rw [←left_cancel (x ◃ x)]; rw [ right_inv]; rw [ self_act_act_eq],
+ rw [h]; rw [ ←left_cancel (y ◃ y)]; rw [ right_inv]; rw [ self_act_act_eq],
 end
 
 lemma self_inv_act_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y :=
 by { have h := @self_act_eq_iff_eq _ _ (op x) (op y), simpa using h }
 
 /--
-The map `x ↦ x ◃ x` is a bijection.  (This has applications for the
+The map `x ↦ x ◃ x` is a bijection. (This has applications for the
 regular isotopy version of the Reidemeister I move for knot diagrams.)
 -/
 def self_apply_equiv (R : Type*) [rack R] : R ≃ R :=
 { to_fun := λ x, x ◃ x,
-  inv_fun := λ x, x ◃⁻¹ x,
-  left_inv := λ x, by simp,
-  right_inv := λ x, by simp }
+ inv_fun := λ x, x ◃⁻¹ x,
+ left_inv := λ x, by simp,
+ right_inv := λ x, by simp }
 
 /--
 An involutory rack is one for which `rack.op R x` is an involution for every x.
@@ -275,10 +275,10 @@ An involutory rack is one for which `rack.op R x` is an involution for every x.
 def is_involutory (R : Type*) [rack R] : Prop := ∀ x : R, function.involutive (shelf.act x)
 
 lemma involutory_inv_act_eq_act {R : Type*} [rack R] (h : is_involutory R) (x y : R) :
-  x ◃⁻¹ y = x ◃ y :=
+ x ◃⁻¹ y = x ◃ y :=
 begin
-  rw [←left_cancel x, right_inv],
-  exact ((h x).left_inverse y).symm,
+ rw [←left_cancel x]; rw [ right_inv],
+ exact ((h x).left_inverse y).symm,
 end
 
 /--
@@ -291,7 +291,7 @@ def is_abelian (R : Type*) [rack R] : Prop :=
 Associative racks are uninteresting.
 -/
 lemma assoc_iff_id {R : Type*} [rack R] {x y z : R} :
-  x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z :=
+ x ◃ y ◃ z = (x ◃ y) ◃ z ↔ x ◃ z = z :=
 by { rw self_distrib, rw left_cancel }
 
 end rack
@@ -308,7 +308,7 @@ instance : has_coe_to_fun (S₁ →◃ S₂) (λ _, S₁ → S₂) := ⟨shelf_h
 /-- The identity homomorphism -/
 def id (S : Type*) [shelf S] : S →◃ S :=
 { to_fun := id,
-  map_act' := by simp }
+ map_act' := by simp }
 
 instance inhabited (S : Type*) [shelf S] : inhabited (S →◃ S) :=
 ⟨id S⟩
@@ -316,11 +316,11 @@ instance inhabited (S : Type*) [shelf S] : inhabited (S →◃ S) :=
 /-- The composition of shelf homomorphisms -/
 def comp (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) : S₁ →◃ S₃ :=
 { to_fun := g.to_fun ∘ f.to_fun,
-  map_act' := by simp }
+ map_act' := by simp }
 
 @[simp]
 lemma comp_apply (g : S₂ →◃ S₃) (f : S₁ →◃ S₂) (x : S₁) :
-  (g.comp f) x = g (f x) := rfl
+ (g.comp f) x = g (f x) := rfl
 
 end shelf_hom
 
@@ -344,7 +344,7 @@ instance opposite_quandle : quandle Qᵐᵒᵖ :=
 { fix := λ x, by { induction x using mul_opposite.rec, simp } }
 
 /--
-The conjugation quandle of a group.  Each element of the group acts by
+The conjugation quandle of a group. Each element of the group acts by
 the corresponding inner automorphism.
 -/
 @[nolint has_nonempty_instance]
@@ -352,24 +352,24 @@ def conj (G : Type*) := G
 
 instance conj.quandle (G : Type*) [group G] : quandle (conj G) :=
 { act := (λ x, @mul_aut.conj G _ x),
-  self_distrib := λ x y z, begin
-    dsimp only [mul_equiv.coe_to_equiv, mul_aut.conj_apply, conj],
-    group,
-  end,
-  inv_act := (λ x, (@mul_aut.conj G _ x).symm),
-  left_inv := λ x y, by { dsimp [act, conj], group },
-  right_inv := λ x y, by { dsimp [act, conj], group },
-  fix := λ x, by simp }
+ self_distrib := λ x y z, begin
+ dsimp only [mul_equiv.coe_to_equiv, mul_aut.conj_apply, conj],
+ group,
+ end,
+ inv_act := (λ x, (@mul_aut.conj G _ x).symm),
+ left_inv := λ x y, by { dsimp [act, conj], group },
+ right_inv := λ x y, by { dsimp [act, conj], group },
+ fix := λ x, by simp }
 
 @[simp]
 lemma conj_act_eq_conj {G : Type*} [group G] (x y : conj G) :
-  x ◃ y = ((x : G) * (y : G) * (x : G)⁻¹ : G) := rfl
+ x ◃ y = ((x : G) * (y : G) * (x : G)⁻¹ : G) := rfl
 
 lemma conj_swap {G : Type*} [group G] (x y : conj G) :
-  x ◃ y = y ↔ y ◃ x = x :=
+ x ◃ y = y ↔ y ◃ x = x :=
 begin
-  dsimp [conj] at *, split,
-  repeat { intro h, conv_rhs { rw eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h) }, simp, },
+ dsimp [conj] at *, split,
+ repeat { intro h, conv_rhs { rw eq_mul_inv_of_mul_eq (eq_mul_inv_of_mul_eq h) }, simp, },
 end
 
 /--
@@ -377,7 +377,7 @@ end
 -/
 def conj.map {G : Type*} {H : Type*} [group G] [group H] (f : G →* H) : conj G →◃ conj H :=
 { to_fun := f,
-  map_act' := by simp }
+ map_act' := by simp }
 
 instance {G : Type*} {H : Type*} [group G] [group H] : has_lift (G →* H) (conj G →◃ conj H) :=
 { lift := conj.map }
@@ -391,7 +391,7 @@ Used for Fox n-colorings of knots.
 def dihedral (n : ℕ) := zmod n
 
 /--
-The operation for the dihedral quandle.  It does not need to be an equivalence
+The operation for the dihedral quandle. It does not need to be an equivalence
 because it is an involution (see `dihedral_act.inv`).
 -/
 def dihedral_act (n : ℕ) (a : zmod n) : zmod n → zmod n :=
@@ -402,15 +402,15 @@ by { intro b, dsimp [dihedral_act], ring }
 
 instance (n : ℕ) : quandle (dihedral n) :=
 { act := dihedral_act n,
-  self_distrib := λ x y z, begin
-    dsimp [dihedral_act], ring,
-  end,
-  inv_act := dihedral_act n,
-  left_inv := λ x, (dihedral_act.inv n x).left_inverse,
-  right_inv := λ x, (dihedral_act.inv n x).right_inverse,
-  fix := λ x, begin
-    dsimp [dihedral_act], ring,
-  end }
+ self_distrib := λ x y z, begin
+ dsimp [dihedral_act], ring,
+ end,
+ inv_act := dihedral_act n,
+ left_inv := λ x, (dihedral_act.inv n x).left_inverse,
+ right_inv := λ x, (dihedral_act.inv n x).right_inverse,
+ fix := λ x, begin
+ dsimp [dihedral_act], ring,
+ end }
 
 end quandle
 
@@ -422,7 +422,7 @@ that acts on the rack.
 -/
 def to_conj (R : Type*) [rack R] : R →◃ quandle.conj (R ≃ R) :=
 { to_fun := act,
-  map_act' := ad_conj }
+ map_act' := ad_conj }
 
 section envel_group
 
@@ -437,15 +437,15 @@ For quandles, Joyce called this group `AdConj R`.
 The `envel_group` functor is left adjoint to the `conj` forgetful
 functor, and the way we construct the enveloping group is via a
 technique that should work for left adjoints of forgetful functors in
-general.  It involves thinking a little about 2-categories, but the
+general. It involves thinking a little about 2-categories, but the
 payoff is that the map `envel_group R →* G` has a nice description.
 
-Let's think of a group as being a one-object category.  The first step
+Let's think of a group as being a one-object category. The first step
 is to define `pre_envel_group`, which gives formal expressions for all
 the 1-morphisms and includes the unit element, elements of `R`,
-multiplication, and inverses.  To introduce relations, the second step
+multiplication, and inverses. To introduce relations, the second step
 is to define `pre_envel_group_rel'`, which gives formal expressions
-for all 2-morphisms between the 1-morphisms.  The 2-morphisms include
+for all 2-morphisms between the 1-morphisms. The 2-morphisms include
 associativity, multiplication by the unit, multiplication by inverses,
 compatibility with multiplication and inverses (`congr_mul` and
 `congr_inv`), the axioms for an equivalence relation, and,
@@ -453,10 +453,10 @@ importantly, the relationship between conjugation and the rack action
 (see `rack.ad_conj`).
 
 None of this forms a 2-category yet, for example due to lack of
-associativity of `trans`.  The `pre_envel_group_rel` relation is a
+associativity of `trans`. The `pre_envel_group_rel` relation is a
 `Prop`-valued version of `pre_envel_group_rel'`, and making it
 `Prop`-valued essentially introduces enough 3-isomorphisms so that
-every pair of compatible 2-morphisms is isomorphic.  Now, while
+every pair of compatible 2-morphisms is isomorphic. Now, while
 composition in `pre_envel_group` does not strictly satisfy the category
 axioms, `pre_envel_group` and `pre_envel_group_rel'` do form a weak
 2-category.
@@ -466,20 +466,20 @@ Since we just want a 1-category, the last step is to quotient
 group `envel_group`.
 
 For a homomorphism `f : R →◃ conj G`, how does
-`envel_group.map f : envel_group R →* G` work?  Let's think of `G` as
+`envel_group.map f : envel_group R →* G` work? Let's think of `G` as
 being a 2-category with one object, a 1-morphism per element of `G`,
-and a single 2-morphism called `eq.refl` for each 1-morphism.  We
+and a single 2-morphism called `eq.refl` for each 1-morphism. We
 define the map using a "higher `quotient.lift`" -- not only do we
 evaluate elements of `pre_envel_group` as expressions in `G` (this is
 `to_envel_group.map_aux`), but we evaluate elements of
 `pre_envel_group'` as expressions of 2-morphisms of `G` (this is
-`to_envel_group.map_aux.well_def`).  That is to say,
+`to_envel_group.map_aux.well_def`). That is to say,
 `to_envel_group.map_aux.well_def` recursively evaluates formal
-expressions of 2-morphisms as equality proofs in `G`.  Now that all
+expressions of 2-morphisms as equality proofs in `G`. Now that all
 morphisms are accounted for, the map descends to a homomorphism
 `envel_group R →* G`.
 
-Note: `Type`-valued relations are not common.  The fact it is
+Note: `Type`-valued relations are not common. The fact it is
 `Type`-valued is what makes `to_envel_group.map_aux.well_def` have
 well-founded recursion.
 -/
@@ -501,33 +501,33 @@ open pre_envel_group
 /--
 Relations for the enveloping group. This is a type-valued relation because
 `to_envel_group.map_aux.well_def` inducts on it to show `to_envel_group.map`
-is well-defined.  The relation `pre_envel_group_rel` is the `Prop`-valued version,
+is well-defined. The relation `pre_envel_group_rel` is the `Prop`-valued version,
 which is used to define `envel_group` itself.
 -/
 inductive pre_envel_group_rel' (R : Type u) [rack R] :
-  pre_envel_group R → pre_envel_group R → Type u
+ pre_envel_group R → pre_envel_group R → Type u
 | refl {a : pre_envel_group R} : pre_envel_group_rel' a a
 | symm {a b : pre_envel_group R} (hab : pre_envel_group_rel' a b) : pre_envel_group_rel' b a
 | trans {a b c : pre_envel_group R}
-  (hab : pre_envel_group_rel' a b) (hbc : pre_envel_group_rel' b c) : pre_envel_group_rel' a c
+ (hab : pre_envel_group_rel' a b) (hbc : pre_envel_group_rel' b c) : pre_envel_group_rel' a c
 | congr_mul {a b a' b' : pre_envel_group R}
-  (ha : pre_envel_group_rel' a a') (hb : pre_envel_group_rel' b b') :
-  pre_envel_group_rel' (mul a b) (mul a' b')
+ (ha : pre_envel_group_rel' a a') (hb : pre_envel_group_rel' b b') :
+ pre_envel_group_rel' (mul a b) (mul a' b')
 | congr_inv {a a' : pre_envel_group R} (ha : pre_envel_group_rel' a a') :
-  pre_envel_group_rel' (inv a) (inv a')
+ pre_envel_group_rel' (inv a) (inv a')
 | assoc (a b c : pre_envel_group R) : pre_envel_group_rel' (mul (mul a b) c) (mul a (mul b c))
 | one_mul (a : pre_envel_group R) : pre_envel_group_rel' (mul unit a) a
 | mul_one (a : pre_envel_group R) : pre_envel_group_rel' (mul a unit) a
 | mul_left_inv (a : pre_envel_group R) : pre_envel_group_rel' (mul (inv a) a) unit
 | act_incl (x y : R) :
-  pre_envel_group_rel' (mul (mul (incl x) (incl y)) (inv (incl x))) (incl (x ◃ y))
+ pre_envel_group_rel' (mul (mul (incl x) (incl y)) (inv (incl x))) (incl (x ◃ y))
 
 instance pre_envel_group_rel'.inhabited (R : Type u) [rack R] :
-  inhabited (pre_envel_group_rel' R unit unit) :=
+ inhabited (pre_envel_group_rel' R unit unit) :=
 ⟨pre_envel_group_rel'.refl⟩
 
 /--
-The `pre_envel_group_rel` relation as a `Prop`.  Used as the relation for `pre_envel_group.setoid`.
+The `pre_envel_group_rel` relation as a `Prop`. Used as the relation for `pre_envel_group.setoid`.
 -/
 inductive pre_envel_group_rel (R : Type u) [rack R] : pre_envel_group R → pre_envel_group R → Prop
 | rel {a b : pre_envel_group R} (r : pre_envel_group_rel' R a b) : pre_envel_group_rel a b
@@ -536,31 +536,31 @@ inductive pre_envel_group_rel (R : Type u) [rack R] : pre_envel_group R → pre_
 A quick way to convert a `pre_envel_group_rel'` to a `pre_envel_group_rel`.
 -/
 lemma pre_envel_group_rel'.rel {R : Type u} [rack R] {a b : pre_envel_group R} :
-  pre_envel_group_rel' R a b → pre_envel_group_rel R a b :=
+ pre_envel_group_rel' R a b → pre_envel_group_rel R a b :=
 pre_envel_group_rel.rel
 
 @[refl]
 lemma pre_envel_group_rel.refl {R : Type u} [rack R] {a : pre_envel_group R} :
-  pre_envel_group_rel R a a :=
+ pre_envel_group_rel R a a :=
 pre_envel_group_rel.rel pre_envel_group_rel'.refl
 
 @[symm]
 lemma pre_envel_group_rel.symm {R : Type u} [rack R] {a b : pre_envel_group R} :
-  pre_envel_group_rel R a b → pre_envel_group_rel R b a
+ pre_envel_group_rel R a b → pre_envel_group_rel R b a
 | ⟨r⟩ := r.symm.rel
 
 @[trans]
 lemma pre_envel_group_rel.trans {R : Type u} [rack R] {a b c : pre_envel_group R} :
-  pre_envel_group_rel R a b → pre_envel_group_rel R b c → pre_envel_group_rel R a c
+ pre_envel_group_rel R a b → pre_envel_group_rel R b c → pre_envel_group_rel R a c
 | ⟨rab⟩ ⟨rbc⟩ := (rab.trans rbc).rel
 
 instance pre_envel_group.setoid (R : Type*) [rack R] : setoid (pre_envel_group R) :=
 { r := pre_envel_group_rel R,
-  iseqv := begin
-    split, apply pre_envel_group_rel.refl,
-    split, apply pre_envel_group_rel.symm,
-    apply pre_envel_group_rel.trans
-  end }
+ iseqv := begin
+ split, apply pre_envel_group_rel.refl,
+ split, apply pre_envel_group_rel.symm,
+ apply pre_envel_group_rel.trans
+ end }
 
 /--
 The universal enveloping group for the rack R.
@@ -571,25 +571,25 @@ def envel_group (R : Type*) [rack R] := quotient (pre_envel_group.setoid R)
 -- TODO: is there a non-invasive way of defining the instance directly?
 instance (R : Type*) [rack R] : div_inv_monoid (envel_group R) :=
 { mul := λ a b, quotient.lift_on₂ a b
-                  (λ a b, ⟦pre_envel_group.mul a b⟧)
-                  (λ a b a' b' ⟨ha⟩ ⟨hb⟩,
-                    quotient.sound (pre_envel_group_rel'.congr_mul ha hb).rel),
-  one := ⟦unit⟧,
-  inv := λ a, quotient.lift_on a
-                (λ a, ⟦pre_envel_group.inv a⟧)
-                (λ a a' ⟨ha⟩,
-                  quotient.sound (pre_envel_group_rel'.congr_inv ha).rel),
-  mul_assoc := λ a b c,
-    quotient.induction_on₃ a b c (λ a b c, quotient.sound (pre_envel_group_rel'.assoc a b c).rel),
-  one_mul := λ a,
-    quotient.induction_on a (λ a, quotient.sound (pre_envel_group_rel'.one_mul a).rel),
-  mul_one := λ a,
-    quotient.induction_on a (λ a, quotient.sound (pre_envel_group_rel'.mul_one a).rel),}
+ (λ a b, ⟦pre_envel_group.mul a b⟧)
+ (λ a b a' b' ⟨ha⟩ ⟨hb⟩,
+ quotient.sound (pre_envel_group_rel'.congr_mul ha hb).rel),
+ one := ⟦unit⟧,
+ inv := λ a, quotient.lift_on a
+ (λ a, ⟦pre_envel_group.inv a⟧)
+ (λ a a' ⟨ha⟩,
+ quotient.sound (pre_envel_group_rel'.congr_inv ha).rel),
+ mul_assoc := λ a b c,
+ quotient.induction_on₃ a b c (λ a b c, quotient.sound (pre_envel_group_rel'.assoc a b c).rel),
+ one_mul := λ a,
+ quotient.induction_on a (λ a, quotient.sound (pre_envel_group_rel'.one_mul a).rel),
+ mul_one := λ a,
+ quotient.induction_on a (λ a, quotient.sound (pre_envel_group_rel'.mul_one a).rel),}
 
 instance (R : Type*) [rack R] : group (envel_group R) :=
 { mul_left_inv := λ a,
-    quotient.induction_on a (λ a, quotient.sound (pre_envel_group_rel'.mul_left_inv a).rel),
-  .. envel_group.div_inv_monoid _ }
+ quotient.induction_on a (λ a, quotient.sound (pre_envel_group_rel'.mul_left_inv a).rel),
+ .. envel_group.div_inv_monoid _ }
 
 instance envel_group.inhabited (R : Type*) [rack R] : inhabited (envel_group R) := ⟨1⟩
 
@@ -599,14 +599,14 @@ Satisfies universal properties given by `to_envel_group.map` and `to_envel_group
 -/
 def to_envel_group (R : Type*) [rack R] : R →◃ quandle.conj (envel_group R) :=
 { to_fun := λ x, ⟦incl x⟧,
-  map_act' := λ x y, quotient.sound (pre_envel_group_rel'.act_incl x y).symm.rel }
+ map_act' := λ x y, quotient.sound (pre_envel_group_rel'.act_incl x y).symm.rel }
 
 /--
 The preliminary definition of the induced map from the enveloping group.
 See `to_envel_group.map`.
 -/
 def to_envel_group.map_aux {R : Type*} [rack R] {G : Type*} [group G]
-  (f : R →◃ quandle.conj G) : pre_envel_group R → G
+ (f : R →◃ quandle.conj G) : pre_envel_group R → G
 | unit := 1
 | (incl x) := f x
 | (mul a b) := to_envel_group.map_aux a * to_envel_group.map_aux b
@@ -619,8 +619,8 @@ open pre_envel_group_rel'
 Show that `to_envel_group.map_aux` sends equivalent expressions to equal terms.
 -/
 lemma well_def {R : Type*} [rack R] {G : Type*} [group G] (f : R →◃ quandle.conj G) :
-  Π {a b : pre_envel_group R}, pre_envel_group_rel' R a b →
-  to_envel_group.map_aux f a = to_envel_group.map_aux f b
+ Π {a b : pre_envel_group R}, pre_envel_group_rel' R a b →
+ to_envel_group.map_aux f a = to_envel_group.map_aux f b
 | a b refl := rfl
 | a b (symm h) := (well_def h).symm
 | a b (trans hac hcb) := eq.trans (well_def hac) (well_def hcb)
@@ -639,36 +639,36 @@ Given a map from a rack to a group, lift it to being a map from the enveloping g
 More precisely, the `envel_group` functor is left adjoint to `quandle.conj`.
 -/
 def to_envel_group.map {R : Type*} [rack R] {G : Type*} [group G] :
-  (R →◃ quandle.conj G) ≃ (envel_group R →* G) :=
+ (R →◃ quandle.conj G) ≃ (envel_group R →* G) :=
 { to_fun := λ f,
-  { to_fun := λ x, quotient.lift_on x (to_envel_group.map_aux f)
-                    (λ a b ⟨hab⟩, to_envel_group.map_aux.well_def f hab),
-    map_one' := begin
-      change quotient.lift_on ⟦rack.pre_envel_group.unit⟧ (to_envel_group.map_aux f) _ = 1,
-      simp [to_envel_group.map_aux],
-    end,
-    map_mul' := λ x y, quotient.induction_on₂ x y (λ x y, begin
-      change quotient.lift_on ⟦mul x y⟧ (to_envel_group.map_aux f) _ = _,
-      simp [to_envel_group.map_aux],
-    end) },
-  inv_fun := λ F, (quandle.conj.map F).comp (to_envel_group R),
-  left_inv := λ f, by { ext, refl },
-  right_inv := λ F, monoid_hom.ext $ λ x, quotient.induction_on x $ λ x, begin
-    induction x,
-    { exact F.map_one.symm, },
-    { refl, },
-    { have hm : ⟦x_a.mul x_b⟧ = @has_mul.mul (envel_group R) _ ⟦x_a⟧ ⟦x_b⟧ := rfl,
-      rw [hm, F.map_mul, monoid_hom.map_mul, ←x_ih_a, ←x_ih_b] },
-    { have hm : ⟦x_a.inv⟧ = @has_inv.inv (envel_group R) _ ⟦x_a⟧ := rfl,
-      rw [hm, F.map_inv, monoid_hom.map_inv, x_ih], }
-  end, }
+ { to_fun := λ x, quotient.lift_on x (to_envel_group.map_aux f)
+ (λ a b ⟨hab⟩, to_envel_group.map_aux.well_def f hab),
+ map_one' := begin
+ change quotient.lift_on ⟦rack.pre_envel_group.unit⟧ (to_envel_group.map_aux f) _ = 1,
+ simp [to_envel_group.map_aux],
+ end,
+ map_mul' := λ x y, quotient.induction_on₂ x y (λ x y, begin
+ change quotient.lift_on ⟦mul x y⟧ (to_envel_group.map_aux f) _ = _,
+ simp [to_envel_group.map_aux],
+ end) },
+ inv_fun := λ F, (quandle.conj.map F).comp (to_envel_group R),
+ left_inv := λ f, by { ext, refl },
+ right_inv := λ F, monoid_hom.ext $ λ x, quotient.induction_on x $ λ x, begin
+ induction x,
+ { exact F.map_one.symm, },
+ { refl, },
+ { have hm : ⟦x_a.mul x_b⟧ = @has_mul.mul (envel_group R) _ ⟦x_a⟧ ⟦x_b⟧ := rfl,
+ rw [hm]; rw [ F.map_mul]; rw [ monoid_hom.map_mul]; rw [ ←x_ih_a]; rw [ ←x_ih_b] },
+ { have hm : ⟦x_a.inv⟧ = @has_inv.inv (envel_group R) _ ⟦x_a⟧ := rfl,
+ rw [hm]; rw [ F.map_inv]; rw [ monoid_hom.map_inv]; rw [ x_ih], }
+ end, }
 
 /--
 Given a homomorphism from a rack to a group, it factors through the enveloping group.
 -/
 lemma to_envel_group.univ (R : Type*) [rack R] (G : Type*) [group G]
-  (f : R →◃ quandle.conj G) :
-  (quandle.conj.map (to_envel_group.map f)).comp (to_envel_group R) = f :=
+ (f : R →◃ quandle.conj G) :
+ (quandle.conj.map (to_envel_group.map f)).comp (to_envel_group R) = f :=
 to_envel_group.map.symm_apply_apply f
 
 /--
@@ -676,9 +676,9 @@ The homomorphism `to_envel_group.map f` is the unique map that fits into the com
 triangle in `to_envel_group.univ`.
 -/
 lemma to_envel_group.univ_uniq (R : Type*) [rack R] (G : Type*) [group G]
-  (f : R →◃ quandle.conj G)
-  (g : envel_group R →* G) (h : f = (quandle.conj.map g).comp (to_envel_group R)) :
-  g = to_envel_group.map f :=
+ (f : R →◃ quandle.conj G)
+ (g : envel_group R →* G) (h : f = (quandle.conj.map g).comp (to_envel_group R)) :
+ g = to_envel_group.map f :=
 h.symm ▸ (to_envel_group.map.apply_symm_apply g).symm
 
 /--
@@ -692,8 +692,9 @@ to_envel_group.map (to_conj R)
 
 @[simp]
 lemma envel_action_prop {R : Type*} [rack R] (x y : R) :
-  envel_action (to_envel_group R x) y = x ◃ y := rfl
+ envel_action (to_envel_group R x) y = x ◃ y := rfl
 
 end envel_group
 
 end rack
+

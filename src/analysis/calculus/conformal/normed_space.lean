@@ -26,7 +26,7 @@ if it is real differentiable at that point and its differential `is_conformal_li
 
 ## Main results
 * The conformality of the composition of two conformal maps, the identity map
-  and multiplications by nonzero constants
+ and multiplications by nonzero constants
 * `conformal_at_iff_is_conformal_map_fderiv`: an equivalent definition of the conformality of a map
 
 In `analysis.calculus.conformal.inner_product`:
@@ -34,7 +34,7 @@ In `analysis.calculus.conformal.inner_product`:
 
 In `geometry.euclidean.angle.unoriented.conformal`:
 * `conformal_at.preserves_angle`: if a map is conformal at `x`, then its differential
-                                  preserves all angles at `x`
+ preserves all angles at `x`
 
 ## Tags
 
@@ -49,7 +49,7 @@ Maps such as the complex conjugate are considered to be conformal.
 noncomputable theory
 
 variables {X Y Z : Type*} [normed_add_comm_group X] [normed_add_comm_group Y]
-  [normed_add_comm_group Z] [normed_space ℝ X] [normed_space ℝ Y] [normed_space ℝ Z]
+ [normed_add_comm_group Z] [normed_space ℝ X] [normed_space ℝ Y] [normed_space ℝ Z]
 
 section loc_conformality
 
@@ -63,50 +63,50 @@ lemma conformal_at_id (x : X) : conformal_at id x :=
 ⟨id ℝ X, has_fderiv_at_id _, is_conformal_map_id⟩
 
 lemma conformal_at_const_smul {c : ℝ} (h : c ≠ 0) (x : X) :
-  conformal_at (λ (x': X), c • x') x :=
+ conformal_at (λ (x': X), c • x') x :=
 ⟨c • continuous_linear_map.id ℝ X,
-  (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
+ (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
 
 @[nontriviality] lemma subsingleton.conformal_at [subsingleton X] (f : X → Y) (x : X) :
-  conformal_at f x :=
+ conformal_at f x :=
 ⟨0, has_fderiv_at_of_subsingleton _ _, is_conformal_map_of_subsingleton _⟩
 
 /-- A function is a conformal map if and only if its differential is a conformal linear map-/
 lemma conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
-  conformal_at f x ↔ is_conformal_map (fderiv ℝ f x) :=
+ conformal_at f x ↔ is_conformal_map (fderiv ℝ f x) :=
 begin
-  split,
-  { rintros ⟨f', hf, hf'⟩,
-    rwa hf.fderiv },
-  { intros H,
-    by_cases h : differentiable_at ℝ f x,
-    { exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩, },
-    { nontriviality X,
-      exact absurd (fderiv_zero_of_not_differentiable_at h) H.ne_zero } },
+ split,
+ { rintros ⟨f', hf, hf'⟩,
+ rwa hf.fderiv },
+ { intros H,
+ by_cases h : differentiable_at ℝ f x,
+ { exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩, },
+ { nontriviality X,
+ exact absurd (fderiv_zero_of_not_differentiable_at h) H.ne_zero } },
 end
 
 namespace conformal_at
 
 lemma differentiable_at {f : X → Y} {x : X} (h : conformal_at f x) :
-  differentiable_at ℝ f x :=
+ differentiable_at ℝ f x :=
 let ⟨_, h₁, _⟩ := h in h₁.differentiable_at
 
 lemma congr {f g : X → Y} {x : X} {u : set X} (hx : x ∈ u) (hu : is_open u)
-  (hf : conformal_at f x) (h : ∀ (x : X), x ∈ u → g x = f x) :
-  conformal_at g x :=
+ (hf : conformal_at f x) (h : ∀ (x : X), x ∈ u → g x = f x) :
+ conformal_at g x :=
 let ⟨f', hfderiv, hf'⟩ := hf in
-  ⟨f', hfderiv.congr_of_eventually_eq ((hu.eventually_mem hx).mono h), hf'⟩
+ ⟨f', hfderiv.congr_of_eventually_eq ((hu.eventually_mem hx).mono h), hf'⟩
 
 lemma comp {f : X → Y} {g : Y → Z} (x : X)
-  (hg : conformal_at g (f x)) (hf : conformal_at f x) : conformal_at (g ∘ f) x :=
+ (hg : conformal_at g (f x)) (hf : conformal_at f x) : conformal_at (g ∘ f) x :=
 begin
-  rcases hf with ⟨f', hf₁, cf⟩,
-  rcases hg with ⟨g', hg₁, cg⟩,
-  exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩,
+ rcases hf with ⟨f', hf₁, cf⟩,
+ rcases hg with ⟨g', hg₁, cg⟩,
+ exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩,
 end
 
 lemma const_smul {f : X → Y} {x : X} {c : ℝ} (hc : c ≠ 0) (hf : conformal_at f x) :
-  conformal_at (c • f) x :=
+ conformal_at (c • f) x :=
 (conformal_at_const_smul hc $ f x).comp x hf
 
 end conformal_at
@@ -140,3 +140,4 @@ lemma const_smul {f : X → Y} (hf : conformal f) {c : ℝ} (hc : c ≠ 0) : con
 end conformal
 
 end global_conformality
+

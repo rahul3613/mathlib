@@ -35,3 +35,4 @@ idempotents.functor_category_is_idempotent_complete _ _
 end idempotents
 
 end category_theory
+

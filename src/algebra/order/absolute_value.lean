@@ -21,14 +21,14 @@ This file defines a bundled type of absolute values `absolute_value R S`.
  * `absolute_value R S` is the type of absolute values on `R` mapping to `S`.
  * `absolute_value.abs` is the "standard" absolute value on `S`, mapping negative `x` to `-x`.
  * `absolute_value.to_monoid_with_zero_hom`: absolute values mapping to a
-   linear ordered field preserve `0`, `*` and `1`
+ linear ordered field preserve `0`, `*` and `1`
  * `is_absolute_value`: a type class stating that `f : β → α` satisfies the axioms of an abs val
 -/
 
 /-- `absolute_value R S` is the type of absolute values on `R` mapping to `S`:
 the maps that preserve `*`, are nonnegative, positive definite and satisfy the triangle equality. -/
 structure absolute_value (R S : Type*) [semiring R] [ordered_semiring S]
-  extends R →ₙ* S :=
+ extends R →ₙ* S :=
 (nonneg' : ∀ x, 0 ≤ to_fun x)
 (eq_zero' : ∀ x, to_fun x = 0 ↔ x = 0)
 (add_le' : ∀ x y, to_fun (x + y) ≤ to_fun x + to_fun y)
@@ -45,20 +45,20 @@ variables {R S : Type*} [semiring R] [ordered_semiring S] (abv : absolute_value 
 
 instance zero_hom_class : zero_hom_class (absolute_value R S) R S :=
 { coe := λ f, f.to_fun,
-  coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
-  map_zero := λ f, (f.eq_zero' _).2 rfl }
+ coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
+ map_zero := λ f, (f.eq_zero' _).2 rfl }
 
 instance mul_hom_class : mul_hom_class (absolute_value R S) R S :=
 { map_mul := λ f, f.map_mul'
-  ..absolute_value.zero_hom_class }
+ ..absolute_value.zero_hom_class }
 
 instance nonneg_hom_class : nonneg_hom_class (absolute_value R S) R S :=
 { map_nonneg := λ f, f.nonneg',
-  ..absolute_value.zero_hom_class }
+ ..absolute_value.zero_hom_class }
 
 instance subadditive_hom_class : subadditive_hom_class (absolute_value R S) R S :=
 { map_add_le_add := λ f, f.add_le',
-  ..absolute_value.zero_hom_class }
+ ..absolute_value.zero_hom_class }
 
 @[simp] lemma coe_mk (f : R →ₙ* S) {h₁ h₂ h₃} : ((absolute_value.mk f h₁ h₂ h₃) : R → S) = f := rfl
 
@@ -127,8 +127,8 @@ abv.map_one_of_is_regular ((is_regular_of_ne_zero $ abv.ne_zero one_ne_zero).lef
 
 instance : monoid_with_zero_hom_class (absolute_value R S) R S :=
 { map_zero := λ f, f.map_zero,
-  map_one := λ f, f.map_one,
-  ..absolute_value.mul_hom_class }
+ map_one := λ f, f.map_one,
+ ..absolute_value.mul_hom_class }
 
 /-- Absolute values from a nontrivial `R` to a linear ordered ring preserve `*`, `0` and `1`. -/
 def to_monoid_with_zero_hom : R →*₀ S := abv
@@ -165,22 +165,22 @@ variables [no_zero_divisors S]
 
 @[simp] protected theorem map_neg (a : R) : abv (-a) = abv a :=
 begin
-  by_cases ha : a = 0, { simp [ha] },
-  refine (mul_self_eq_mul_self_iff.mp
-    (by rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right _,
-  exact ((neg_lt_zero.mpr (abv.pos ha)).trans (abv.pos (neg_ne_zero.mpr ha))).ne'
+ by_cases ha : a = 0, { simp [ha] },
+ refine (mul_self_eq_mul_self_iff.mp
+ (by rw [← abv.map_mul]; rw [ neg_mul_neg]; rw [ abv.map_mul])).resolve_right _,
+ exact ((neg_lt_zero.mpr (abv.pos ha)).trans (abv.pos (neg_ne_zero.mpr ha))).ne'
 end
 
 protected theorem map_sub (a b : R) : abv (a - b) = abv (b - a) :=
-by rw [← neg_sub, abv.map_neg]
+by rw [← neg_sub]; rw [ abv.map_neg]
 
 end ordered_comm_ring
 
 instance {R S : Type*} [ring R] [ordered_comm_ring S] [nontrivial R] [is_domain S] :
-  mul_ring_norm_class (absolute_value R S) R S :=
+ mul_ring_norm_class (absolute_value R S) R S :=
 { map_neg_eq_map := λ f, f.map_neg,
-  eq_zero_of_map_eq_zero := λ f a, f.eq_zero.1,
-  ..absolute_value.subadditive_hom_class, ..absolute_value.monoid_with_zero_hom_class }
+ eq_zero_of_map_eq_zero := λ f a, f.eq_zero.1,
+ ..absolute_value.subadditive_hom_class, ..absolute_value.monoid_with_zero_hom_class }
 
 section linear_ordered_ring
 
@@ -190,10 +190,10 @@ variables {R S : Type*} [semiring R] [linear_ordered_ring S] (abv : absolute_val
 @[simps]
 protected def abs : absolute_value S S :=
 { to_fun := abs,
-  nonneg' := abs_nonneg,
-  eq_zero' := λ _, abs_eq_zero,
-  add_le' := abs_add,
-  map_mul' := abs_mul }
+ nonneg' := abs_nonneg,
+ eq_zero' := λ _, abs_eq_zero,
+ add_le' := abs_add,
+ map_mul' := abs_mul }
 
 instance : inhabited (absolute_value S S) := ⟨absolute_value.abs⟩
 
@@ -204,7 +204,7 @@ section linear_ordered_comm_ring
 variables {R S : Type*} [ring R] [linear_ordered_comm_ring S] (abv : absolute_value R S)
 
 lemma abs_abv_sub_le_abv_sub (a b : R) :
-  abs (abv a - abv b) ≤ abv (a - b) :=
+ abs (abv a - abv b) ≤ abv (a - b) :=
 abs_sub_le_iff.2 ⟨abv.le_sub _ _, by rw abv.map_sub; apply abv.le_sub⟩
 
 end linear_ordered_comm_ring
@@ -217,7 +217,7 @@ multiplicative.
 See also the type `absolute_value` which represents a bundled version of absolute values.
 -/
 class is_absolute_value {S} [ordered_semiring S]
-  {R} [semiring R] (f : R → S) : Prop :=
+ {R} [semiring R] (f : R → S) : Prop :=
 (abv_nonneg [] : ∀ x, 0 ≤ f x)
 (abv_eq_zero [] : ∀ {x}, f x = 0 ↔ x = 0)
 (abv_add [] : ∀ x y, f (x + y) ≤ f x + f y)
@@ -232,20 +232,20 @@ variables {R : Type*} [semiring R] (abv : R → S) [is_absolute_value abv]
 
 /-- A bundled absolute value is an absolute value. -/
 instance _root_.absolute_value.is_absolute_value
-  (abv : absolute_value R S) : is_absolute_value abv :=
+ (abv : absolute_value R S) : is_absolute_value abv :=
 { abv_nonneg := abv.nonneg,
-  abv_eq_zero := λ _, abv.eq_zero,
-  abv_add := abv.add_le,
-  abv_mul := abv.map_mul }
+ abv_eq_zero := λ _, abv.eq_zero,
+ abv_add := abv.add_le,
+ abv_mul := abv.map_mul }
 
 /-- Convert an unbundled `is_absolute_value` to a bundled `absolute_value`. -/
 @[simps]
 def to_absolute_value : absolute_value R S :=
 { to_fun := abv,
-  add_le' := abv_add abv,
-  eq_zero' := λ _, abv_eq_zero abv,
-  nonneg' := abv_nonneg abv,
-  map_mul' := abv_mul abv }
+ add_le' := abv_add abv,
+ eq_zero' := λ _, abv_eq_zero abv,
+ nonneg' := abv_nonneg abv,
+ map_mul' := abv_mul abv }
 
 theorem abv_zero : abv 0 = 0 := (to_absolute_value abv).map_zero
 
@@ -258,7 +258,7 @@ section linear_ordered_ring
 variables {S : Type*} [linear_ordered_ring S]
 
 instance abs_is_absolute_value : is_absolute_value (abs : S → S) :=
-  absolute_value.abs.is_absolute_value
+ absolute_value.abs.is_absolute_value
 
 end linear_ordered_ring
 
@@ -278,7 +278,7 @@ theorem abv_one [nontrivial R] : abv 1 = 1 := (to_absolute_value abv).map_one
 def abv_hom [nontrivial R] : R →*₀ S := (to_absolute_value abv).to_monoid_with_zero_hom
 
 lemma abv_pow [nontrivial R] (abv : R → S) [is_absolute_value abv]
-  (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
+ (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
 (to_absolute_value abv).map_pow a n
 
 end semiring
@@ -326,7 +326,7 @@ section ring
 variables {R : Type*} [ring R] (abv : R → S) [is_absolute_value abv]
 
 lemma abs_abv_sub_le_abv_sub (a b : R) :
-  abs (abv a - abv b) ≤ abv (a - b) :=
+ abs (abv a - abv b) ≤ abv (a - b) :=
 (to_absolute_value abv).abs_abv_sub_le_abv_sub a b
 
 end ring
@@ -343,7 +343,7 @@ variables {R : Type*} [semiring R] [nontrivial R] (abv : R → S) [is_absolute_v
 
 lemma abv_one' : abv 1 = 1 :=
 (to_absolute_value abv).map_one_of_is_regular
-  $ (is_regular_of_ne_zero $ (to_absolute_value abv).ne_zero one_ne_zero).left
+ $ (is_regular_of_ne_zero $ (to_absolute_value abv).ne_zero one_ne_zero).left
 
 /-- An absolute value as a monoid with zero homomorphism, assuming the target is a semifield. -/
 def abv_hom' : R →*₀ S := ⟨abv, abv_zero abv, abv_one' abv, abv_mul abv⟩
@@ -362,3 +362,4 @@ end division_semiring
 end linear_ordered_field
 
 end is_absolute_value
+

@@ -27,9 +27,10 @@ Restriction of scalars for linear maps between modules over a `k`-algebra is its
 @[simps]
 def restrict_scalars_linear_map : (M →ₗ[A] N) →ₗ[k] (M →ₗ[k] N) :=
 { to_fun := linear_map.restrict_scalars k,
-  map_add' := by tidy,
-  map_smul' := by tidy, }
+ map_add' := by tidy,
+ map_smul' := by tidy, }
 
 end restrict_scalars
 
 end linear_map
+

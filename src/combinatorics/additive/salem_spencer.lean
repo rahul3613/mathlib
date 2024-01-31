@@ -29,7 +29,7 @@ the size of the biggest Salem-Spencer subset of `{0, ..., n - 1}`.
 * `mul_roth_number`: The multiplicative Roth number of a finset.
 * `add_roth_number`: The additive Roth number of a finset.
 * `roth_number_nat`: The Roth number of a natural. This corresponds to
-  `add_roth_number (finset.range n)`.
+ `add_roth_number (finset.range n)`.
 
 ## TODO
 
@@ -62,9 +62,9 @@ def mul_salem_spencer : Prop := ∀ ⦃a b c⦄, a ∈ s → b ∈ s → c ∈ s
 /-- Whether a given finset is Salem-Spencer is decidable. -/
 @[to_additive "Whether a given finset is Salem-Spencer is decidable."]
 instance {α : Type*} [decidable_eq α] [monoid α] {s : finset α} :
-  decidable (mul_salem_spencer (s : set α)) :=
+ decidable (mul_salem_spencer (s : set α)) :=
 decidable_of_iff (∀ a ∈ s, ∀ b ∈ s, ∀ c ∈ s, a * b = c * c → a = b)
-  ⟨λ h a b c ha hb hc, h a ha b hb c hc, λ h a ha b hb c hc, h ha hb hc⟩
+ ⟨λ h a b c ha hb hc, h a ha b hb c hc, λ h a ha b hb c hc, h ha hb hc⟩
 
 variables {s t}
 
@@ -85,14 +85,14 @@ subsingleton_singleton.mul_salem_spencer
 
 @[to_additive add_salem_spencer.prod]
 lemma mul_salem_spencer.prod {t : set β} (hs : mul_salem_spencer s) (ht : mul_salem_spencer t) :
-  mul_salem_spencer (s ×ˢ t) :=
+ mul_salem_spencer (s ×ˢ t) :=
 λ a b c ha hb hc h,
-  prod.ext (hs ha.1 hb.1 hc.1 (prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (prod.ext_iff.1 h).2)
+ prod.ext (hs ha.1 hb.1 hc.1 (prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (prod.ext_iff.1 h).2)
 
 @[to_additive]
 lemma mul_salem_spencer_pi {ι : Type*} {α : ι → Type*} [Π i, monoid (α i)] {s : Π i, set (α i)}
-  (hs : ∀ i, mul_salem_spencer (s i)) :
-  mul_salem_spencer ((univ : set ι).pi s) :=
+ (hs : ∀ i, mul_salem_spencer (s i)) :
+ mul_salem_spencer ((univ : set ι).pi s) :=
 λ a b c ha hb hc h, funext $ λ i, hs i (ha i trivial) (hb i trivial) (hc i trivial) $ congr_fun h i
 
 end monoid
@@ -102,19 +102,19 @@ variables [comm_monoid α] [comm_monoid β] {s : set α} {a : α}
 
 @[to_additive]
 lemma mul_salem_spencer.of_image [fun_like F α (λ _, β)] [freiman_hom_class F s β 2] (f : F)
-  (hf : s.inj_on f) (h : mul_salem_spencer (f '' s)) :
-  mul_salem_spencer s :=
+ (hf : s.inj_on f) (h : mul_salem_spencer (f '' s)) :
+ mul_salem_spencer s :=
 λ a b c ha hb hc habc, hf ha hb $ h (mem_image_of_mem _ ha) (mem_image_of_mem _ hb)
-  (mem_image_of_mem _ hc) $ map_mul_map_eq_map_mul_map f ha hb hc hc habc
+ (mem_image_of_mem _ hc) $ map_mul_map_eq_map_mul_map f ha hb hc hc habc
 
 -- TODO: Generalize to Freiman homs
 @[to_additive]
 lemma mul_salem_spencer.image [mul_hom_class F α β] (f : F) (hf : (s * s).inj_on f)
-  (h : mul_salem_spencer s) :
-  mul_salem_spencer (f '' s) :=
+ (h : mul_salem_spencer s) :
+ mul_salem_spencer (f '' s) :=
 begin
-  rintro _ _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ habc,
-  rw h ha hb hc (hf (mul_mem_mul ha hb) (mul_mem_mul hc hc) $ by rwa [map_mul, map_mul]),
+ rintro _ _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ habc,
+ rw h ha hb hc (hf (mul_mem_mul ha hb) (mul_mem_mul hc hc) $ by rwa [map_mul]; rwa [ map_mul]),
 end
 
 end comm_monoid
@@ -124,66 +124,66 @@ variables [cancel_comm_monoid α] {s : set α} {a : α}
 
 @[to_additive]
 lemma mul_salem_spencer_insert :
-  mul_salem_spencer (insert a s) ↔ mul_salem_spencer s ∧
-    (∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b) ∧
-    ∀ ⦃b c⦄, b ∈ s → c ∈ s → b * c = a * a → b = c :=
+ mul_salem_spencer (insert a s) ↔ mul_salem_spencer s ∧
+ (∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b) ∧
+ ∀ ⦃b c⦄, b ∈ s → c ∈ s → b * c = a * a → b = c :=
 begin
-  refine ⟨λ hs, ⟨hs.mono (subset_insert _ _),
-    λ b c hb hc, hs (or.inl rfl) (or.inr hb) (or.inr hc),
-    λ b c hb hc, hs (or.inr hb) (or.inr hc) (or.inl rfl)⟩, _⟩,
-  rintro ⟨hs, ha, ha'⟩ b c d hb hc hd h,
-  rw mem_insert_iff at hb hc hd,
-  obtain rfl | hb := hb;
-  obtain rfl | hc := hc,
-  { refl },
-  all_goals { obtain rfl | hd := hd },
-  { exact (mul_left_cancel h).symm },
-  { exact ha hc hd h },
-  { exact mul_right_cancel h },
-  { exact (ha hb hd $ (mul_comm _ _).trans h).symm },
-  { exact ha' hb hc h },
-  { exact hs hb hc hd h }
+ refine ⟨λ hs, ⟨hs.mono (subset_insert _ _),
+ λ b c hb hc, hs (or.inl rfl) (or.inr hb) (or.inr hc),
+ λ b c hb hc, hs (or.inr hb) (or.inr hc) (or.inl rfl)⟩, _⟩,
+ rintro ⟨hs, ha, ha'⟩ b c d hb hc hd h,
+ rw mem_insert_iff at hb hc hd,
+ obtain rfl | hb := hb;
+ obtain rfl | hc := hc,
+ { refl },
+ all_goals { obtain rfl | hd := hd },
+ { exact (mul_left_cancel h).symm },
+ { exact ha hc hd h },
+ { exact mul_right_cancel h },
+ { exact (ha hb hd $ (mul_comm _ _).trans h).symm },
+ { exact ha' hb hc h },
+ { exact hs hb hc hd h }
 end
 
 @[simp, to_additive]
 lemma mul_salem_spencer_pair (a b : α) : mul_salem_spencer ({a, b} : set α) :=
 begin
-  rw mul_salem_spencer_insert,
-  refine ⟨mul_salem_spencer_singleton _, _, _⟩,
-  { rintro c d (rfl : c = b) (rfl : d = c),
-    exact mul_right_cancel },
-  { rintro c d (rfl : c = b) (rfl : d = c) _,
-    refl }
+ rw mul_salem_spencer_insert,
+ refine ⟨mul_salem_spencer_singleton _, _, _⟩,
+ { rintro c d (rfl : c = b) (rfl : d = c),
+ exact mul_right_cancel },
+ { rintro c d (rfl : c = b) (rfl : d = c) _,
+ refl }
 end
 
 @[to_additive]
 lemma mul_salem_spencer.mul_left (hs : mul_salem_spencer s) : mul_salem_spencer ((*) a '' s) :=
 begin
-  rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
-  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h,
-  rw hs hb hc hd (mul_left_cancel h),
+ rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
+ rw [mul_mul_mul_comm] at h; rw [ mul_mul_mul_comm a d] at h,
+ rw hs hb hc hd (mul_left_cancel h),
 end
 
 @[to_additive]
 lemma mul_salem_spencer.mul_right (hs : mul_salem_spencer s) : mul_salem_spencer ((* a) '' s) :=
 begin
-  rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
-  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h,
-  rw hs hb hc hd (mul_right_cancel h),
+ rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
+ rw [mul_mul_mul_comm] at h; rw [ mul_mul_mul_comm d] at h,
+ rw hs hb hc hd (mul_right_cancel h),
 end
 
 @[to_additive]
 lemma mul_salem_spencer_mul_left_iff : mul_salem_spencer ((*) a '' s) ↔ mul_salem_spencer s :=
 ⟨λ hs b c d hb hc hd h, mul_left_cancel (hs (mem_image_of_mem _ hb) (mem_image_of_mem _ hc)
-  (mem_image_of_mem _ hd) $ by rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
-  mul_salem_spencer.mul_left⟩
+ (mem_image_of_mem _ hd) $ by rw [mul_mul_mul_comm]; rw [ h]; rw [ mul_mul_mul_comm]),
+ mul_salem_spencer.mul_left⟩
 
 @[to_additive]
 lemma mul_salem_spencer_mul_right_iff :
-  mul_salem_spencer ((* a) '' s) ↔ mul_salem_spencer s :=
+ mul_salem_spencer ((* a) '' s) ↔ mul_salem_spencer s :=
 ⟨λ hs b c d hb hc hd h, mul_right_cancel (hs (set.mem_image_of_mem _ hb) (set.mem_image_of_mem _ hc)
-  (set.mem_image_of_mem _ hd) $ by rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
-  mul_salem_spencer.mul_right⟩
+ (set.mem_image_of_mem _ hd) $ by rw [mul_mul_mul_comm]; rw [ h]; rw [ mul_mul_mul_comm]),
+ mul_salem_spencer.mul_right⟩
 
 end cancel_comm_monoid
 
@@ -192,12 +192,12 @@ variables [ordered_cancel_comm_monoid α] {s : set α} {a : α}
 
 @[to_additive]
 lemma mul_salem_spencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
-  mul_salem_spencer (insert a s) ↔ mul_salem_spencer s ∧
-    ∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b :=
+ mul_salem_spencer (insert a s) ↔ mul_salem_spencer s ∧
+ ∀ ⦃b c⦄, b ∈ s → c ∈ s → a * b = c * c → a = b :=
 begin
-  refine mul_salem_spencer_insert.trans _,
-  rw ←and_assoc,
-  exact and_iff_left (λ b c hb hc h, ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).ne h).elim),
+ refine mul_salem_spencer_insert.trans _,
+ rw ←and_assoc,
+ exact and_iff_left (λ b c hb hc h, ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).ne h).elim),
 end
 
 end ordered_cancel_comm_monoid
@@ -206,48 +206,48 @@ section cancel_comm_monoid_with_zero
 variables [cancel_comm_monoid_with_zero α] [no_zero_divisors α] {s : set α} {a : α}
 
 lemma mul_salem_spencer.mul_left₀ (hs : mul_salem_spencer s) (ha : a ≠ 0) :
-  mul_salem_spencer ((*) a '' s) :=
+ mul_salem_spencer ((*) a '' s) :=
 begin
-  rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
-  rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h,
-  rw hs hb hc hd (mul_left_cancel₀ (mul_ne_zero ha ha) h),
+ rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
+ rw [mul_mul_mul_comm] at h; rw [ mul_mul_mul_comm a d] at h,
+ rw hs hb hc hd (mul_left_cancel₀ (mul_ne_zero ha ha) h),
 end
 
 lemma mul_salem_spencer.mul_right₀ (hs : mul_salem_spencer s) (ha : a ≠ 0) :
-  mul_salem_spencer ((* a) '' s) :=
+ mul_salem_spencer ((* a) '' s) :=
 begin
-  rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
-  rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h,
-  rw hs hb hc hd (mul_right_cancel₀ (mul_ne_zero ha ha) h),
+ rintro _ _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ ⟨d, hd, rfl⟩ h,
+ rw [mul_mul_mul_comm] at h; rw [ mul_mul_mul_comm d] at h,
+ rw hs hb hc hd (mul_right_cancel₀ (mul_ne_zero ha ha) h),
 end
 
 lemma mul_salem_spencer_mul_left_iff₀ (ha : a ≠ 0) :
-  mul_salem_spencer ((*) a '' s) ↔ mul_salem_spencer s :=
+ mul_salem_spencer ((*) a '' s) ↔ mul_salem_spencer s :=
 ⟨λ hs b c d hb hc hd h, mul_left_cancel₀ ha
-  (hs (set.mem_image_of_mem _ hb) (set.mem_image_of_mem _ hc) (set.mem_image_of_mem _ hd) $
-  by rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
-  λ hs, hs.mul_left₀ ha⟩
+ (hs (set.mem_image_of_mem _ hb) (set.mem_image_of_mem _ hc) (set.mem_image_of_mem _ hd) $
+ by rw [mul_mul_mul_comm]; rw [ h]; rw [ mul_mul_mul_comm]),
+ λ hs, hs.mul_left₀ ha⟩
 
 lemma mul_salem_spencer_mul_right_iff₀ (ha : a ≠ 0) :
-  mul_salem_spencer ((* a) '' s) ↔ mul_salem_spencer s :=
+ mul_salem_spencer ((* a) '' s) ↔ mul_salem_spencer s :=
 ⟨λ hs b c d hb hc hd h, mul_right_cancel₀ ha
-  (hs (set.mem_image_of_mem _ hb) (set.mem_image_of_mem _ hc) (set.mem_image_of_mem _ hd) $
-  by rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
-  λ hs, hs.mul_right₀ ha⟩
+ (hs (set.mem_image_of_mem _ hb) (set.mem_image_of_mem _ hc) (set.mem_image_of_mem _ hd) $
+ by rw [mul_mul_mul_comm]; rw [ h]; rw [ mul_mul_mul_comm]),
+ λ hs, hs.mul_right₀ ha⟩
 
 end cancel_comm_monoid_with_zero
 
 section nat
 
 lemma add_salem_spencer_iff_eq_right {s : set ℕ} :
-  add_salem_spencer s ↔ ∀ ⦃a b c⦄, a ∈ s → b ∈ s → c ∈ s → a + b = c + c → a = c :=
+ add_salem_spencer s ↔ ∀ ⦃a b c⦄, a ∈ s → b ∈ s → c ∈ s → a + b = c + c → a = c :=
 begin
-  refine forall₄_congr (λ a b c _, forall₃_congr $ λ _ _ habc, ⟨_, _⟩),
-  { rintro rfl,
-    simp_rw ←two_mul at habc,
-    exact mul_left_cancel₀ two_ne_zero habc },
-  { rintro rfl,
-    exact (add_left_cancel habc).symm }
+ refine forall₄_congr (λ a b c _, forall₃_congr $ λ _ _ habc, ⟨_, _⟩),
+ { rintro rfl,
+ simp_rw ←two_mul at habc,
+ exact mul_left_cancel₀ two_ne_zero habc },
+ { rintro rfl,
+ exact (add_left_cancel habc).symm }
 end
 
 end nat
@@ -256,24 +256,24 @@ end nat
 The idea is that an arithmetic progression is contained on a line and the frontier of a strictly
 convex set does not contain lines. -/
 lemma add_salem_spencer_frontier [linear_ordered_field 𝕜] [topological_space E] [add_comm_monoid E]
-  [module 𝕜 E] {s : set E} (hs₀ : is_closed s) (hs₁ : strict_convex 𝕜 s) :
-  add_salem_spencer (frontier s) :=
+ [module 𝕜 E] {s : set E} (hs₀ : is_closed s) (hs₁ : strict_convex 𝕜 s) :
+ add_salem_spencer (frontier s) :=
 begin
-  intros a b c ha hb hc habc,
-  obtain rfl : (1 / 2 : 𝕜) • a + (1 / 2 : 𝕜) • b = c,
-  { rwa [←smul_add, one_div, inv_smul_eq_iff₀ (show (2 : 𝕜) ≠ 0, by norm_num), two_smul] },
-  exact hs₁.eq (hs₀.frontier_subset ha) (hs₀.frontier_subset hb) one_half_pos one_half_pos
-    (add_halves _) hc.2,
+ intros a b c ha hb hc habc,
+ obtain rfl : (1 / 2 : 𝕜) • a + (1 / 2 : 𝕜) • b = c,
+ { rwa [←smul_add]; rwa [ one_div]; rwa [ inv_smul_eq_iff₀ (show (2 : 𝕜) ≠ 0, by norm_num)]; rwa [ two_smul] },
+ exact hs₁.eq (hs₀.frontier_subset ha) (hs₀.frontier_subset hb) one_half_pos one_half_pos
+ (add_halves _) hc.2,
 end
 
 lemma add_salem_spencer_sphere [normed_add_comm_group E] [normed_space ℝ E]
-  [strict_convex_space ℝ E] (x : E) (r : ℝ) : add_salem_spencer (sphere x r) :=
+ [strict_convex_space ℝ E] (x : E) (r : ℝ) : add_salem_spencer (sphere x r) :=
 begin
-  obtain rfl | hr := eq_or_ne r 0,
-  { rw sphere_zero,
-    exact add_salem_spencer_singleton _ },
-  { convert add_salem_spencer_frontier is_closed_ball (strict_convex_closed_ball ℝ x r),
-    exact (frontier_closed_ball _ hr).symm }
+ obtain rfl | hr := eq_or_ne r 0,
+ { rw sphere_zero,
+ exact add_salem_spencer_singleton _ },
+ { convert add_salem_spencer_frontier is_closed_ball (strict_convex_closed_ball ℝ x r),
+ exact (frontier_closed_ball _ hr).symm }
 end
 
 end salem_spencer
@@ -294,10 +294,10 @@ Salem-Spencer subset. The usual Roth number corresponds to `add_roth_number (fin
 def mul_roth_number : finset α →o ℕ :=
 ⟨λ s, nat.find_greatest (λ m, ∃ t ⊆ s, t.card = m ∧ mul_salem_spencer (t : set α)) s.card,
 begin
-  rintro t u htu,
-  refine nat.find_greatest_mono (λ m, _) (card_le_of_subset htu),
-  rintro ⟨v, hvt, hv⟩,
-  exact ⟨v, hvt.trans htu, hv⟩,
+ rintro t u htu,
+ refine nat.find_greatest_mono (λ m, _) (card_le_of_subset htu),
+ rintro ⟨v, hvt, hv⟩,
+ exact ⟨v, hvt.trans htu, hv⟩,
 end⟩
 
 @[to_additive]
@@ -306,18 +306,18 @@ lemma mul_roth_number_le : mul_roth_number s ≤ s.card := by convert nat.find_g
 @[to_additive]
 lemma mul_roth_number_spec : ∃ t ⊆ s, t.card = mul_roth_number s ∧ mul_salem_spencer (t : set α) :=
 @nat.find_greatest_spec _ _ (λ m, ∃ t ⊆ s, t.card = m ∧ mul_salem_spencer (t : set α)) _
-  (nat.zero_le _) ⟨∅, empty_subset _, card_empty, mul_salem_spencer_empty⟩
+ (nat.zero_le _) ⟨∅, empty_subset _, card_empty, mul_salem_spencer_empty⟩
 
 variables {s t} {n : ℕ}
 
 @[to_additive]
 lemma mul_salem_spencer.le_mul_roth_number (hs : mul_salem_spencer (s : set α)) (h : s ⊆ t) :
-  s.card ≤ mul_roth_number t :=
+ s.card ≤ mul_roth_number t :=
 le_find_greatest (card_le_of_subset h) ⟨s, h, rfl, hs⟩
 
 @[to_additive]
 lemma mul_salem_spencer.roth_number_eq (hs : mul_salem_spencer (s : set α)) :
-  mul_roth_number s = s.card :=
+ mul_roth_number s = s.card :=
 (mul_roth_number_le _).antisymm $ hs.le_mul_roth_number $ subset.refl _
 
 @[simp, to_additive]
@@ -327,47 +327,47 @@ nat.eq_zero_of_le_zero $ (mul_roth_number_le _).trans card_empty.le
 @[simp, to_additive]
 lemma mul_roth_number_singleton (a : α) : mul_roth_number ({a} : finset α) = 1 :=
 begin
-  convert mul_salem_spencer.roth_number_eq _,
-  rw coe_singleton,
-  exact mul_salem_spencer_singleton a,
+ convert mul_salem_spencer.roth_number_eq _,
+ rw coe_singleton,
+ exact mul_salem_spencer_singleton a,
 end
 
 @[to_additive]
 lemma mul_roth_number_union_le (s t : finset α) :
-  mul_roth_number (s ∪ t) ≤ mul_roth_number s + mul_roth_number t :=
+ mul_roth_number (s ∪ t) ≤ mul_roth_number s + mul_roth_number t :=
 let ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec (s ∪ t) in
 calc
-  mul_roth_number (s ∪ t)
-      = u.card : hcard.symm
-  ... = (u ∩ s ∪ u ∩ t).card
-      : by rw [←inter_distrib_left, (inter_eq_left_iff_subset _ _).2 hus]
-  ... ≤ (u ∩ s).card + (u ∩ t).card : card_union_le _ _
-  ... ≤ mul_roth_number s + mul_roth_number t
-      : add_le_add ((hu.mono $ inter_subset_left _ _).le_mul_roth_number $ inter_subset_right _ _)
-          ((hu.mono $ inter_subset_left _ _).le_mul_roth_number $ inter_subset_right _ _)
+ mul_roth_number (s ∪ t)
+ = u.card : hcard.symm
+ ... = (u ∩ s ∪ u ∩ t).card
+ : by rw [←inter_distrib_left]; rw [ (inter_eq_left_iff_subset _ _).2 hus]
+ ... ≤ (u ∩ s).card + (u ∩ t).card : card_union_le _ _
+ ... ≤ mul_roth_number s + mul_roth_number t
+ : add_le_add ((hu.mono $ inter_subset_left _ _).le_mul_roth_number $ inter_subset_right _ _)
+ ((hu.mono $ inter_subset_left _ _).le_mul_roth_number $ inter_subset_right _ _)
 
 @[to_additive]
 lemma le_mul_roth_number_product (s : finset α) (t : finset β) :
-  mul_roth_number s * mul_roth_number t ≤ mul_roth_number (s ×ˢ t) :=
+ mul_roth_number s * mul_roth_number t ≤ mul_roth_number (s ×ˢ t) :=
 begin
-  obtain ⟨u, hus, hucard, hu⟩ := mul_roth_number_spec s,
-  obtain ⟨v, hvt, hvcard, hv⟩ := mul_roth_number_spec t,
-  rw [←hucard, ←hvcard, ←card_product],
-  refine mul_salem_spencer.le_mul_roth_number _ (product_subset_product hus hvt),
-  rw coe_product,
-  exact hu.prod hv,
+ obtain ⟨u, hus, hucard, hu⟩ := mul_roth_number_spec s,
+ obtain ⟨v, hvt, hvcard, hv⟩ := mul_roth_number_spec t,
+ rw [←hucard]; rw [ ←hvcard]; rw [ ←card_product],
+ refine mul_salem_spencer.le_mul_roth_number _ (product_subset_product hus hvt),
+ rw coe_product,
+ exact hu.prod hv,
 end
 
 @[to_additive]
 lemma mul_roth_number_lt_of_forall_not_mul_salem_spencer
-  (h : ∀ t ∈ powerset_len n s, ¬mul_salem_spencer ((t : finset α) : set α)) :
-  mul_roth_number s < n :=
+ (h : ∀ t ∈ powerset_len n s, ¬mul_salem_spencer ((t : finset α) : set α)) :
+ mul_roth_number s < n :=
 begin
-  obtain ⟨t, hts, hcard, ht⟩ := mul_roth_number_spec s,
-  rw [←hcard, ←not_le],
-  intro hn,
-  obtain ⟨u, hut, rfl⟩ := exists_smaller_set t n hn,
-  exact h _ (mem_powerset_len.2 ⟨hut.trans hts, rfl⟩) (ht.mono hut),
+ obtain ⟨t, hts, hcard, ht⟩ := mul_roth_number_spec s,
+ rw [←hcard]; rw [ ←not_le],
+ intro hn,
+ obtain ⟨u, hut, rfl⟩ := exists_smaller_set t n hn,
+ exact h _ (mem_powerset_len.2 ⟨hut.trans hts, rfl⟩) (ht.mono hut),
 end
 
 end monoid
@@ -376,26 +376,26 @@ section cancel_comm_monoid
 variables [cancel_comm_monoid α] (s : finset α) (a : α)
 
 @[simp, to_additive] lemma mul_roth_number_map_mul_left :
-  mul_roth_number (s.map $ mul_left_embedding a) = mul_roth_number s :=
+ mul_roth_number (s.map $ mul_left_embedding a) = mul_roth_number s :=
 begin
-  refine le_antisymm _ _,
-  { obtain ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec (s.map $ mul_left_embedding a),
-    rw subset_map_iff at hus,
-    obtain ⟨u, hus, rfl⟩ := hus,
-    rw coe_map at hu,
-    rw [←hcard, card_map],
-    exact (mul_salem_spencer_mul_left_iff.1 hu).le_mul_roth_number hus },
-  { obtain ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec s,
-    have h : mul_salem_spencer (u.map $ mul_left_embedding a : set α),
-    { rw coe_map,
-      exact hu.mul_left },
-    convert h.le_mul_roth_number (map_subset_map.2 hus),
-    rw [card_map, hcard] }
+ refine le_antisymm _ _,
+ { obtain ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec (s.map $ mul_left_embedding a),
+ rw subset_map_iff at hus,
+ obtain ⟨u, hus, rfl⟩ := hus,
+ rw coe_map at hu,
+ rw [←hcard]; rw [ card_map],
+ exact (mul_salem_spencer_mul_left_iff.1 hu).le_mul_roth_number hus },
+ { obtain ⟨u, hus, hcard, hu⟩ := mul_roth_number_spec s,
+ have h : mul_salem_spencer (u.map $ mul_left_embedding a : set α),
+ { rw coe_map,
+ exact hu.mul_left },
+ convert h.le_mul_roth_number (map_subset_map.2 hus),
+ rw [card_map]; rw [ hcard] }
 end
 
 @[simp, to_additive] lemma mul_roth_number_map_mul_right :
-  mul_roth_number (s.map $ mul_right_embedding a) = mul_roth_number s :=
-by rw [←mul_left_embedding_eq_mul_right_embedding, mul_roth_number_map_mul_left s a]
+ mul_roth_number (s.map $ mul_right_embedding a) = mul_roth_number s :=
+by rw [←mul_left_embedding_eq_mul_right_embedding]; rw [ mul_roth_number_map_mul_left s a]
 
 end cancel_comm_monoid
 end roth_number
@@ -419,43 +419,43 @@ lemma roth_number_nat_le (N : ℕ) : roth_number_nat N ≤ N :=
 (add_roth_number_le _).trans (card_range _).le
 
 lemma roth_number_nat_spec (n : ℕ) :
-  ∃ t ⊆ range n, t.card = roth_number_nat n ∧ add_salem_spencer (t : set ℕ) :=
+ ∃ t ⊆ range n, t.card = roth_number_nat n ∧ add_salem_spencer (t : set ℕ) :=
 add_roth_number_spec _
 
 /-- A verbose specialization of `add_salem_spencer.le_add_roth_number`, sometimes convenient in
 practice. -/
 lemma add_salem_spencer.le_roth_number_nat (s : finset ℕ) (hs : add_salem_spencer (s : set ℕ))
-  (hsn : ∀ x ∈ s, x < n) (hsk : s.card = k) :
-  k ≤ roth_number_nat n :=
+ (hsn : ∀ x ∈ s, x < n) (hsk : s.card = k) :
+ k ≤ roth_number_nat n :=
 hsk.ge.trans $ hs.le_add_roth_number $ λ x hx, mem_range.2 $ hsn x hx
 
 /-- The Roth number is a subadditive function. Note that by Fekete's lemma this shows that
 the limit `roth_number_nat N / N` exists, but Roth's theorem gives the stronger result that this
 limit is actually `0`. -/
 lemma roth_number_nat_add_le (M N : ℕ) :
-  roth_number_nat (M + N) ≤ roth_number_nat M + roth_number_nat N :=
+ roth_number_nat (M + N) ≤ roth_number_nat M + roth_number_nat N :=
 begin
-  simp_rw roth_number_nat_def,
-  rw [range_add_eq_union, ←add_roth_number_map_add_left (range N) M],
-  exact add_roth_number_union_le _ _,
+ simp_rw roth_number_nat_def,
+ rw [range_add_eq_union]; rw [ ←add_roth_number_map_add_left (range N) M],
+ exact add_roth_number_union_le _ _,
 end
 
 @[simp] lemma roth_number_nat_zero : roth_number_nat 0 = 0 := rfl
 
 lemma add_roth_number_Ico (a b : ℕ) : add_roth_number (Ico a b) = roth_number_nat (b - a) :=
 begin
-  obtain h | h := le_total b a,
-  { rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, roth_number_nat_zero, add_roth_number_empty] },
-  convert add_roth_number_map_add_left _ a,
-  rw [range_eq_Ico, map_eq_image],
-  convert (image_add_left_Ico 0 (b - a) _).symm,
-  exact (add_tsub_cancel_of_le h).symm,
+ obtain h | h := le_total b a,
+ { rw [tsub_eq_zero_of_le h]; rw [ Ico_eq_empty_of_le h]; rw [ roth_number_nat_zero]; rw [ add_roth_number_empty] },
+ convert add_roth_number_map_add_left _ a,
+ rw [range_eq_Ico]; rw [ map_eq_image],
+ convert (image_add_left_Ico 0 (b - a) _).symm,
+ exact (add_tsub_cancel_of_le h).symm,
 end
 
 open asymptotics filter
 
 lemma roth_number_nat_is_O_with_id :
-  is_O_with 1 at_top (λ N, (roth_number_nat N : ℝ)) (λ N, (N : ℝ)) :=
+ is_O_with 1 at_top (λ N, (roth_number_nat N : ℝ)) (λ N, (N : ℝ)) :=
 is_O_with_of_le _ $ by simpa only [real.norm_coe_nat, nat.cast_le] using roth_number_nat_le
 
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
@@ -463,3 +463,4 @@ lemma roth_number_nat_is_O_id : (λ N, (roth_number_nat N : ℝ)) =O[at_top] (λ
 roth_number_nat_is_O_with_id.is_O
 
 end roth_number_nat
+

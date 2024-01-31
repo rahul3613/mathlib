@@ -21,9 +21,9 @@ or parser from a given character or character range.
 ## Main definitions
 
 * `parser.numeral` : The parser which uses `nat.cast`
-  to map the result of `parser.nat` to the desired `α`
-* `parser.numeral.of_fintype` :  The parser which `guard`s to make sure the parsed
-  numeral is within the cardinality of the target `fintype` type `α`.
+ to map the result of `parser.nat` to the desired `α`
+* `parser.numeral.of_fintype` : The parser which `guard`s to make sure the parsed
+ numeral is within the cardinality of the target `fintype` type `α`.
 
 ## Implementation details
 
@@ -59,10 +59,10 @@ is within the cardinality of the type `α`.
 @[derive [mono, bounded, prog]]
 def numeral.of_fintype [fintype α] : parser α :=
 do
-  c ← nat,
-  decorate_error (sformat!"<numeral less than {to_string (fintype.card α)}>")
-    (guard (c < fintype.card α)),
-  pure $ nat.bin_cast c
+ c ← nat,
+ decorate_error (sformat!"<numeral less than {to_string (fintype.card α)}>")
+ (guard (c < fintype.card α)),
+ pure $ nat.bin_cast c
 
 /--
 Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
@@ -71,10 +71,10 @@ at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser cau
 @[derive [mono, bounded, prog]]
 def numeral.from_one : parser α :=
 do
-  c ← nat,
-  decorate_error ("<positive numeral>")
-    (guard (0 < c)),
-  pure $ nat.bin_cast (c - 1)
+ c ← nat,
+ decorate_error ("<positive numeral>")
+ (guard (0 < c)),
+ pure $ nat.bin_cast (c - 1)
 
 /--
 Parse a string of digits as a numeral while casting it to target type `α`,
@@ -85,10 +85,10 @@ at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser cau
 @[derive [mono, bounded, prog]]
 def numeral.from_one.of_fintype [fintype α] : parser α :=
 do
-  c ← nat,
-  decorate_error (sformat!"<positive numeral less than or equal to {to_string (fintype.card α)}>")
-    (guard (0 < c ∧ c ≤ fintype.card α)),
-  pure $ nat.bin_cast (c - 1)
+ c ← nat,
+ decorate_error (sformat!"<positive numeral less than or equal to {to_string (fintype.card α)}>")
+ (guard (0 < c ∧ c ≤ fintype.card α)),
+ pure $ nat.bin_cast (c - 1)
 
 /--
 Parse a character as a numeral while casting it to target type `α`,
@@ -98,10 +98,10 @@ and subtracts the value of `fromc` from the parsed in character.
 @[derive [mono, bounded, err_static, step]]
 def numeral.char (fromc toc : char) : parser α :=
 do
-  c ← decorate_error
-    (sformat!"<char between '{fromc.to_string}' to '{toc.to_string}' inclusively>")
-    (sat (λ c, fromc ≤ c ∧ c ≤ toc)),
-  pure $ nat.bin_cast (c.to_nat - fromc.to_nat)
+ c ← decorate_error
+ (sformat!"<char between '{fromc.to_string}' to '{toc.to_string}' inclusively>")
+ (sat (λ c, fromc ≤ c ∧ c ≤ toc)),
+ pure $ nat.bin_cast (c.to_nat - fromc.to_nat)
 
 /--
 Parse a character as a numeral while casting it to target type `α`,
@@ -113,11 +113,11 @@ that the resulting value is within the cardinality of the type `α`.
 @[derive [mono, bounded, err_static, step]]
 def numeral.char.of_fintype [fintype α] (fromc : char) : parser α :=
 do
-  c ← decorate_error
-    (sformat!"<char from '{fromc.to_string}' to '
-    { (char.of_nat (fromc.to_nat + fintype.card α - 1)).to_string}' inclusively>")
-    (sat (λ c, fromc ≤ c ∧ c.to_nat - fintype.card α < fromc.to_nat)),
-  pure $ nat.bin_cast (c.to_nat - fromc.to_nat)
+ c ← decorate_error
+ (sformat!"<char from '{fromc.to_string}' to '
+ { (char.of_nat (fromc.to_nat + fintype.card α - 1)).to_string}' inclusively>")
+ (sat (λ c, fromc ≤ c ∧ c.to_nat - fintype.card α < fromc.to_nat)),
+ pure $ nat.bin_cast (c.to_nat - fromc.to_nat)
 
 /-! ## Specific numeral types -/
 
@@ -138,3 +138,4 @@ def rat : parser rat :=
 (λ x y, ↑x / ↑y) <$> int <*> (ch '/' >> nat)
 
 end parser
+

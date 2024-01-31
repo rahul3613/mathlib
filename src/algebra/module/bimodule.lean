@@ -77,45 +77,45 @@ individually, rather than jointly via their tensor product.
 Note that `R` plays no role but it is convenient to make this generalisation to support the cases
 `R = ℕ` and `R = ℤ` which both show up naturally. See also `base_change`. -/
 @[simps] def mk (p : add_submonoid M)
-  (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p)
-  (hB : ∀ (b : B) {m : M}, m ∈ p → b • m ∈ p) : submodule (A ⊗[R] B) M :=
+ (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p)
+ (hB : ∀ (b : B) {m : M}, m ∈ p → b • m ∈ p) : submodule (A ⊗[R] B) M :=
 { carrier := p,
-  smul_mem' := λ ab m, tensor_product.induction_on ab
-   (λ hm, by simpa only [zero_smul] using p.zero_mem)
-   (λ a b hm, by simpa only [tensor_product.algebra.smul_def] using hA a (hB b hm))
-   (λ z w hz hw hm, by simpa only [add_smul] using p.add_mem (hz hm) (hw hm)),
-  .. p }
+ smul_mem' := λ ab m, tensor_product.induction_on ab
+ (λ hm, by simpa only [zero_smul] using p.zero_mem)
+ (λ a b hm, by simpa only [tensor_product.algebra.smul_def] using hA a (hB b hm))
+ (λ z w hz hw hm, by simpa only [add_smul] using p.add_mem (hz hm) (hw hm)),
+ .. p }
 
 lemma smul_mem (p : submodule (A ⊗[R] B) M) (a : A) {m : M} (hm : m ∈ p) : a • m ∈ p :=
 begin
-  suffices : a • m = a ⊗ₜ[R] (1 : B) • m, { exact this.symm ▸ p.smul_mem _ hm, },
-  simp [tensor_product.algebra.smul_def],
+ suffices : a • m = a ⊗ₜ[R] (1 : B) • m, { exact this.symm ▸ p.smul_mem _ hm, },
+ simp [tensor_product.algebra.smul_def],
 end
 
 lemma smul_mem' (p : submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) : b • m ∈ p :=
 begin
-  suffices : b • m = (1 : A) ⊗ₜ[R] b • m, { exact this.symm ▸ p.smul_mem _ hm, },
-  simp [tensor_product.algebra.smul_def],
+ suffices : b • m = (1 : A) ⊗ₜ[R] b • m, { exact this.symm ▸ p.smul_mem _ hm, },
+ simp [tensor_product.algebra.smul_def],
 end
 
 /-- If `A` and `B` are also `algebra`s over yet another set of scalars `S` then we may "base change"
 from `R` to `S`. -/
 @[simps] def base_change (S : Type*) [comm_semiring S] [module S M] [algebra S A] [algebra S B]
-  [is_scalar_tower S A M] [is_scalar_tower S B M] (p : submodule (A ⊗[R] B) M) :
-  submodule (A ⊗[S] B) M :=
+ [is_scalar_tower S A M] [is_scalar_tower S B M] (p : submodule (A ⊗[R] B) M) :
+ submodule (A ⊗[S] B) M :=
 mk p.to_add_submonoid (smul_mem p) (smul_mem' p)
 
 /-- Forgetting the `B` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `A`. -/
 @[simps] def to_submodule (p : submodule (A ⊗[R] B) M) : submodule A M :=
 { carrier := p,
-  smul_mem' := smul_mem p,
-  .. p }
+ smul_mem' := smul_mem p,
+ .. p }
 
 /-- Forgetting the `A` action, a `submodule` over `A ⊗[R] B` is just a `submodule` over `B`. -/
 @[simps] def to_submodule' (p : submodule (A ⊗[R] B) M) : submodule B M :=
 { carrier := p,
-  smul_mem' := smul_mem' p,
-  .. p }
+ smul_mem' := smul_mem' p,
+ .. p }
 
 end algebra
 
@@ -137,3 +137,4 @@ base_change ℕ p
 end ring
 
 end subbimodule
+

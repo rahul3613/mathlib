@@ -68,13 +68,13 @@ open subobject
 variables [has_zero_morphisms C] [has_zero_object C]
 
 lemma exists_simple_subobject {X : C} [artinian_object X] (h : ¬ is_zero X) :
-  ∃ (Y : subobject X), simple (Y : C) :=
+ ∃ (Y : subobject X), simple (Y : C) :=
 begin
-  haveI : nontrivial (subobject X) := nontrivial_of_not_is_zero h,
-  haveI := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X),
-  have := is_atomic.eq_bot_or_exists_atom_le (⊤ : subobject X),
-  obtain ⟨Y, s⟩ := (is_atomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot,
-  exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩,
+ haveI : nontrivial (subobject X) := nontrivial_of_not_is_zero h,
+ haveI := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X),
+ have := is_atomic.eq_bot_or_exists_atom_le (⊤ : subobject X),
+ obtain ⟨Y, s⟩ := (is_atomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot,
+ exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩,
 end
 
 /-- Choose an arbitrary simple subobject of a non-zero artinian object. -/
@@ -84,10 +84,11 @@ noncomputable def simple_subobject {X : C} [artinian_object X] (h : ¬ is_zero X
 /-- The monomorphism from the arbitrary simple subobject of a non-zero artinian object. -/
 @[derive mono]
 noncomputable def simple_subobject_arrow {X : C} [artinian_object X] (h : ¬ is_zero X) :
-  simple_subobject h ⟶ X :=
+ simple_subobject h ⟶ X :=
 (exists_simple_subobject h).some.arrow
 
 instance {X : C} [artinian_object X] (h : ¬ is_zero X) : simple (simple_subobject h) :=
 (exists_simple_subobject h).some_spec
 
 end category_theory
+

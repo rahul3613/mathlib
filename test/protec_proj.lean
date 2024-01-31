@@ -25,3 +25,4 @@ open X
 run_cmd resolve_name `X.i
 run_cmd resolve_name `X.n
 run_cmd success_if_fail $ resolve_name `n
+

@@ -26,9 +26,9 @@ rfl
 
 theorem all_iff_forall {p : α → bool} : all l p ↔ ∀ a ∈ l, p a :=
 begin
-  induction l with a l ih,
-  { exact iff_of_true rfl (forall_mem_nil _) },
-  simp only [all_cons, band_coe_iff, ih, forall_mem_cons]
+ induction l with a l ih,
+ { exact iff_of_true rfl (forall_mem_nil _) },
+ simp only [all_cons, band_coe_iff, ih, forall_mem_cons]
 end
 
 theorem all_iff_forall_prop : all l (λ a, p a) ↔ ∀ a ∈ l, p a :=
@@ -41,9 +41,9 @@ rfl
 
 theorem any_iff_exists {p : α → bool} : any l p ↔ ∃ a ∈ l, p a :=
 begin
-  induction l with a l ih,
-  { exact iff_of_false bool.not_ff (not_exists_mem_nil _) },
-  simp only [any_cons, bor_coe_iff, ih, exists_mem_cons_iff]
+ induction l with a l ih,
+ { exact iff_of_false bool.not_ff (not_exists_mem_nil _) },
+ simp only [any_cons, bor_coe_iff, ih, exists_mem_cons_iff]
 end
 
 theorem any_iff_exists_prop : any l (λ a, p a) ↔ ∃ a ∈ l, p a := by simp [any_iff_exists]
@@ -51,3 +51,4 @@ theorem any_iff_exists_prop : any l (λ a, p a) ↔ ∃ a ∈ l, p a := by simp 
 theorem any_of_mem {p : α → bool} (h₁ : a ∈ l) (h₂ : p a) : any l p := any_iff_exists.2 ⟨_, h₁, h₂⟩
 
 end list
+

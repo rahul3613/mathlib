@@ -7,3 +7,4 @@ assert_not_exists rat
 
 assert_instance ring ℤ
 assert_no_instance ordered_ring ℤ
+

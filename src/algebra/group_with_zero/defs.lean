@@ -83,26 +83,26 @@ end is_right_cancel_mul_zero
 
 /-- A mixin for cancellative multiplication by nonzero elements. -/
 @[protect_proj] class is_cancel_mul_zero (M₀ : Type u) [has_mul M₀] [has_zero M₀]
-  extends is_left_cancel_mul_zero M₀, is_right_cancel_mul_zero M₀ : Prop
+ extends is_left_cancel_mul_zero M₀, is_right_cancel_mul_zero M₀ : Prop
 
 section comm_semigroup_with_zero
 
 variables [comm_semigroup M₀] [has_zero M₀]
 
 lemma is_left_cancel_mul_zero.to_is_right_cancel_mul_zero [is_left_cancel_mul_zero M₀] :
-  is_right_cancel_mul_zero M₀ :=
+ is_right_cancel_mul_zero M₀ :=
 ⟨λ a b c ha h, mul_left_cancel₀ ha $ (mul_comm _ _).trans $ (h.trans (mul_comm _ _))⟩
 
 lemma is_right_cancel_mul_zero.to_is_left_cancel_mul_zero [is_right_cancel_mul_zero M₀] :
-  is_left_cancel_mul_zero M₀ :=
+ is_left_cancel_mul_zero M₀ :=
 ⟨λ a b c ha h, mul_right_cancel₀ ha $ (mul_comm _ _).trans $ (h.trans (mul_comm _ _))⟩
 
 lemma is_left_cancel_mul_zero.to_is_cancel_mul_zero [is_left_cancel_mul_zero M₀] :
-  is_cancel_mul_zero M₀ :=
+ is_cancel_mul_zero M₀ :=
 { .. ‹is_left_cancel_mul_zero M₀›, .. is_left_cancel_mul_zero.to_is_right_cancel_mul_zero }
 
 lemma is_right_cancel_mul_zero.to_is_cancel_mul_zero [is_right_cancel_mul_zero M₀] :
-  is_cancel_mul_zero M₀ :=
+ is_cancel_mul_zero M₀ :=
 { .. ‹is_right_cancel_mul_zero M₀›, .. is_right_cancel_mul_zero.to_is_left_cancel_mul_zero }
 
 end comm_semigroup_with_zero
@@ -132,7 +132,7 @@ class monoid_with_zero (M₀ : Type*) extends monoid M₀, mul_zero_one_class M�
 
 @[priority 100] -- see Note [lower instance priority]
 instance monoid_with_zero.to_semigroup_with_zero (M₀ : Type*) [monoid_with_zero M₀] :
-  semigroup_with_zero M₀ :=
+ semigroup_with_zero M₀ :=
 { ..‹monoid_with_zero M₀› }
 
 /-- A type `M` is a `cancel_monoid_with_zero` if it is a monoid with zero element, `0` is left
@@ -145,7 +145,7 @@ class cancel_monoid_with_zero (M₀ : Type*) extends monoid_with_zero M₀ :=
 /-- A `cancel_monoid_with_zero` satisfies `is_cancel_mul_zero`. -/
 @[priority 100]
 instance cancel_monoid_with_zero.to_is_cancel_mul_zero [cancel_monoid_with_zero M₀] :
-  is_cancel_mul_zero M₀ :=
+ is_cancel_mul_zero M₀ :=
 { .. ‹cancel_monoid_with_zero M₀› }
 
 /-- A type `M` is a commutative “monoid with zero” if it is a commutative monoid with zero
@@ -155,14 +155,14 @@ class comm_monoid_with_zero (M₀ : Type*) extends comm_monoid M₀, monoid_with
 
 /-- A type `M` is a `cancel_comm_monoid_with_zero` if it is a commutative monoid with zero element,
  `0` is left and right absorbing,
-  and left/right multiplication by a non-zero element is injective. -/
+ and left/right multiplication by a non-zero element is injective. -/
 @[protect_proj, ancestor comm_monoid_with_zero cancel_monoid_with_zero]
 class cancel_comm_monoid_with_zero (M₀ : Type*) extends comm_monoid_with_zero M₀ :=
 (mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c)
 
 @[priority 100]
 instance cancel_comm_monoid_with_zero.to_cancel_monoid_with_zero
-  [h : cancel_comm_monoid_with_zero M₀] : cancel_monoid_with_zero M₀ :=
+ [h : cancel_comm_monoid_with_zero M₀] : cancel_monoid_with_zero M₀ :=
 { .. h, .. @is_left_cancel_mul_zero.to_is_right_cancel_mul_zero M₀ _ _ { .. h } }
 
 /-- A type `G₀` is a “group with zero” if it is a monoid with zero element (distinct from `1`)
@@ -173,7 +173,7 @@ Examples include division rings and the ordered monoids that are the
 target of valuations in general valuation theory.-/
 @[protect_proj, ancestor monoid_with_zero div_inv_monoid nontrivial]
 class group_with_zero (G₀ : Type u) extends
-  monoid_with_zero G₀, div_inv_monoid G₀, nontrivial G₀ :=
+ monoid_with_zero G₀, div_inv_monoid G₀, nontrivial G₀ :=
 (inv_zero : (0 : G₀)⁻¹ = 0)
 (mul_inv_cancel : ∀ a:G₀, a ≠ 0 → a * a⁻¹ = 1)
 
@@ -207,21 +207,21 @@ variable (M₀)
 /-- In a nontrivial monoid with zero, zero and one are different. -/
 instance ne_zero.one : ne_zero (1 : M₀) :=
 ⟨begin
-  assume h,
-  rcases exists_pair_ne M₀ with ⟨x, y, hx⟩,
-  apply hx,
-  calc x = 1 * x : by rw [one_mul]
-  ... = 0 : by rw [h, zero_mul]
-  ... = 1 * y : by rw [h, zero_mul]
-  ... = y : by rw [one_mul]
+ assume h,
+ rcases exists_pair_ne M₀ with ⟨x, y, hx⟩,
+ apply hx,
+ calc x = 1 * x : by rw [one_mul]
+ ... = 0 : by rw [h]; rw [ zero_mul]
+ ... = 1 * y : by rw [h]; rw [ zero_mul]
+ ... = y : by rw [one_mul]
 end⟩
 
 variable {M₀}
 
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 lemma pullback_nonzero [has_zero M₀'] [has_one M₀']
-  (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) : nontrivial M₀' :=
-⟨⟨0, 1, mt (congr_arg f) $ by { rw [zero, one], exact zero_ne_one }⟩⟩
+ (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) : nontrivial M₀' :=
+⟨⟨0, 1, mt (congr_arg f) $ by { rw [zero]; rw [ one], exact zero_ne_one }⟩⟩
 
 end ne_zero
 
@@ -239,12 +239,12 @@ variables [no_zero_divisors M₀] {a b : M₀}
 equals zero. -/
 @[simp] theorem mul_eq_zero : a * b = 0 ↔ a = 0 ∨ b = 0 :=
 ⟨eq_zero_or_eq_zero_of_mul_eq_zero,
-  λo, o.elim (λ h, mul_eq_zero_of_left h b) (mul_eq_zero_of_right a)⟩
+ λo, o.elim (λ h, mul_eq_zero_of_left h b) (mul_eq_zero_of_right a)⟩
 
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp] theorem zero_eq_mul : 0 = a * b ↔ a = 0 ∨ b = 0 :=
-by rw [eq_comm, mul_eq_zero]
+by rw [eq_comm]; rw [ mul_eq_zero]
 
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
@@ -267,3 +267,4 @@ lemma mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 := mul_self_eq_zero.not
 lemma zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 := zero_eq_mul_self.not
 
 end mul_zero_class
+

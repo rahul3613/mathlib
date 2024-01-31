@@ -70,7 +70,7 @@ you should parametrize over `(F : Type*) [order_add_monoid_hom_class F α β] (f
 
 When you extend this structure, make sure to extend `order_add_monoid_hom_class`. -/
 structure order_add_monoid_hom (α β : Type*) [preorder α] [preorder β] [add_zero_class α]
-  [add_zero_class β] extends α →+ β :=
+ [add_zero_class β] extends α →+ β :=
 (monotone' : monotone to_fun)
 
 infixr ` →+o `:25 := order_add_monoid_hom
@@ -83,8 +83,8 @@ set_option old_structure_cmd true
 You should also extend this typeclass when you extend `order_add_monoid_hom`. -/
 @[ancestor add_monoid_hom_class]
 class order_add_monoid_hom_class (F : Type*) (α β : out_param $ Type*) [preorder α] [preorder β]
-  [add_zero_class α] [add_zero_class β]
-  extends add_monoid_hom_class F α β :=
+ [add_zero_class α] [add_zero_class β]
+ extends add_monoid_hom_class F α β :=
 (monotone (f : F) : monotone f)
 
 end
@@ -106,8 +106,8 @@ you should parametrize over `(F : Type*) [order_monoid_hom_class F α β] (f : F
 When you extend this structure, make sure to extend `order_monoid_hom_class`. -/
 @[to_additive]
 structure order_monoid_hom (α β : Type*) [preorder α] [preorder β] [mul_one_class α]
-  [mul_one_class β]
-  extends α →* β :=
+ [mul_one_class β]
+ extends α →* β :=
 (monotone' : monotone to_fun)
 
 infixr ` →*o `:25 := order_monoid_hom
@@ -120,22 +120,22 @@ set_option old_structure_cmd true
 You should also extend this typeclass when you extend `order_monoid_hom`. -/
 @[ancestor monoid_hom_class, to_additive]
 class order_monoid_hom_class (F : Type*) (α β : out_param $ Type*)
-  [preorder α] [preorder β] [mul_one_class α] [mul_one_class β]
-  extends monoid_hom_class F α β :=
+ [preorder α] [preorder β] [mul_one_class α] [mul_one_class β]
+ extends monoid_hom_class F α β :=
 (monotone (f : F) : monotone f)
 
 end
 
 @[priority 100, to_additive] -- See note [lower instance priority]
 instance order_monoid_hom_class.to_order_hom_class [order_monoid_hom_class F α β] :
-  order_hom_class F α β :=
+ order_hom_class F α β :=
 { map_rel := order_monoid_hom_class.monotone,
-  .. ‹order_monoid_hom_class F α β› }
+ .. ‹order_monoid_hom_class F α β› }
 
 @[to_additive]
 instance [order_monoid_hom_class F α β] : has_coe_t F (α →*o β) :=
 ⟨λ f, { to_fun := f, map_one' := map_one f, map_mul' := map_mul f,
-  monotone' := order_monoid_hom_class.monotone _ }⟩
+ monotone' := order_monoid_hom_class.monotone _ }⟩
 
 end monoid
 
@@ -152,8 +152,8 @@ you should parametrize over `(F : Type*) [order_monoid_with_zero_hom_class F α 
 
 When you extend this structure, make sure to extend `order_monoid_with_zero_hom_class`. -/
 structure order_monoid_with_zero_hom (α β : Type*) [preorder α] [preorder β]
-  [mul_zero_one_class α] [mul_zero_one_class β]
-  extends α →*₀ β :=
+ [mul_zero_one_class α] [mul_zero_one_class β]
+ extends α →*₀ β :=
 (monotone' : monotone to_fun)
 
 infixr ` →*₀o `:25 := order_monoid_with_zero_hom
@@ -166,26 +166,26 @@ ordered monoid with zero homomorphisms.
 
 You should also extend this typeclass when you extend `order_monoid_with_zero_hom`. -/
 class order_monoid_with_zero_hom_class (F : Type*) (α β : out_param $ Type*)
-  [preorder α] [preorder β] [mul_zero_one_class α] [mul_zero_one_class β]
-  extends monoid_with_zero_hom_class F α β :=
+ [preorder α] [preorder β] [mul_zero_one_class α] [mul_zero_one_class β]
+ extends monoid_with_zero_hom_class F α β :=
 (monotone (f : F) : monotone f)
 
 end
 
 @[priority 100] -- See note [lower instance priority]
 instance order_monoid_with_zero_hom_class.to_order_monoid_hom_class
-  [order_monoid_with_zero_hom_class F α β] : order_monoid_hom_class F α β :=
+ [order_monoid_with_zero_hom_class F α β] : order_monoid_hom_class F α β :=
 { .. ‹order_monoid_with_zero_hom_class F α β› }
 
 instance [order_monoid_with_zero_hom_class F α β] : has_coe_t F (α →*₀o β) :=
 ⟨λ f, { to_fun := f, map_one' := map_one f, map_zero' := map_zero f, map_mul' := map_mul f,
-  monotone' := order_monoid_with_zero_hom_class.monotone _ }⟩
+ monotone' := order_monoid_with_zero_hom_class.monotone _ }⟩
 
 end monoid_with_zero
 
 section ordered_add_comm_monoid
 variables [ordered_add_comm_monoid α] [ordered_add_comm_monoid β] [order_add_monoid_hom_class F α β]
-  (f : F) {a : α}
+ (f : F) {a : α}
 include β
 
 lemma map_nonneg (ha : 0 ≤ a) : 0 ≤ f a := by { rw ←map_zero f, exact order_hom_class.mono _ ha }
@@ -196,11 +196,11 @@ end ordered_add_comm_monoid
 section ordered_add_comm_group
 
 variables [ordered_add_comm_group α]
-  [ordered_add_comm_monoid β] [add_monoid_hom_class F α β] (f : F)
+ [ordered_add_comm_monoid β] [add_monoid_hom_class F α β] (f : F)
 
 lemma monotone_iff_map_nonneg : monotone (f : α → β) ↔ ∀ a, 0 ≤ a → 0 ≤ f a :=
 ⟨λ h a, by { rw ←map_zero f, apply h }, λ h a b hl,
-  by { rw [←sub_add_cancel b a, map_add f], exact le_add_of_nonneg_left (h _ $ sub_nonneg.2 hl) }⟩
+ by { rw [←sub_add_cancel b a]; rw [ map_add f], exact le_add_of_nonneg_left (h _ $ sub_nonneg.2 hl) }⟩
 
 lemma antitone_iff_map_nonpos : antitone (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
 monotone_to_dual_comp_iff.symm.trans $ monotone_iff_map_nonneg _
@@ -213,7 +213,7 @@ variable [covariant_class β β (+) (<)]
 
 lemma strict_mono_iff_map_pos : strict_mono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a :=
 ⟨λ h a, by { rw ←map_zero f, apply h }, λ h a b hl,
-  by { rw [←sub_add_cancel b a, map_add f], exact lt_add_of_pos_left _ (h _ $ sub_pos.2 hl) }⟩
+ by { rw [←sub_add_cancel b a]; rw [ map_add f], exact lt_add_of_pos_left _ (h _ $ sub_pos.2 hl) }⟩
 
 lemma strict_anti_iff_map_neg : strict_anti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
 strict_mono_to_dual_comp_iff.symm.trans $ strict_mono_iff_map_pos _
@@ -227,15 +227,15 @@ end ordered_add_comm_group
 namespace order_monoid_hom
 section preorder
 variables [preorder α] [preorder β] [preorder γ] [preorder δ] [mul_one_class α]
-  [mul_one_class β] [mul_one_class γ] [mul_one_class δ] {f g : α →*o β}
+ [mul_one_class β] [mul_one_class γ] [mul_one_class δ] {f g : α →*o β}
 
 @[to_additive]
 instance : order_monoid_hom_class (α →*o β) α β :=
 { coe := λ f, f.to_fun,
-  coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
-  map_mul := λ f, f.map_mul',
-  map_one := λ f, f.map_one',
-  monotone := λ f, f.monotone' }
+ coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
+ map_mul := λ f, f.map_mul',
+ map_one := λ f, f.map_one',
+ monotone := λ f, f.monotone' }
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -247,7 +247,7 @@ instance : has_coe_to_fun (α →*o β) (λ _, α → β) := fun_like.has_coe_to
 @[ext, to_additive] lemma ext (h : ∀ a, f a = g a) : f = g := fun_like.ext f g h
 @[to_additive] lemma to_fun_eq_coe (f : α →*o β) : f.to_fun = (f : α → β) := rfl
 @[simp, to_additive] lemma coe_mk (f : α →* β) (h) : (order_monoid_hom.mk f h : α → β) = f := rfl
-@[simp, to_additive] lemma mk_coe (f : α →*o β) (h) : order_monoid_hom.mk (f :  α →* β) h = f :=
+@[simp, to_additive] lemma mk_coe (f : α →*o β) (h) : order_monoid_hom.mk (f : α →* β) h = f :=
 by { ext, refl }
 
 /-- Reinterpret an ordered monoid homomorphism as an order homomorphism. -/
@@ -269,15 +269,15 @@ definitional equalities. -/
 definitional equalities."]
 protected def copy (f : α →*o β) (f' : α → β) (h : f' = f) : α →*o β :=
 { to_fun := f',
-  monotone' := h.symm.subst f.monotone',
-  ..f.to_monoid_hom.copy f' h }
+ monotone' := h.symm.subst f.monotone',
+ ..f.to_monoid_hom.copy f' h }
 
 @[simp, to_additive] lemma coe_copy (f : α →*o β) (f' : α → β) (h : f' = f) :
-  ⇑(f.copy f' h) = f' :=
+ ⇑(f.copy f' h) = f' :=
 rfl
 
 @[to_additive] lemma copy_eq (f : α →*o β) (f' : α → β) (h : f' = f) :
-  f.copy f' h = f :=
+ f.copy f' h = f :=
 fun_like.ext' h
 
 variables (α)
@@ -299,13 +299,13 @@ def comp (f : β →*o γ) (g : α →*o β) : α →*o γ :=
 
 @[simp, to_additive] lemma coe_comp (f : β →*o γ) (g : α →*o β) : (f.comp g : α → γ) = f ∘ g := rfl
 @[simp, to_additive] lemma comp_apply (f : β →*o γ) (g : α →*o β) (a : α) :
-  (f.comp g) a = f (g a) := rfl
+ (f.comp g) a = f (g a) := rfl
 @[simp, to_additive] lemma coe_comp_monoid_hom (f : β →*o γ) (g : α →*o β) :
-  (f.comp g : α →* γ) = (f : β →* γ).comp g := rfl
+ (f.comp g : α →* γ) = (f : β →* γ).comp g := rfl
 @[simp, to_additive] lemma coe_comp_order_hom (f : β →*o γ) (g : α →*o β) :
-  (f.comp g : α →o γ) = (f : β →o γ).comp g := rfl
+ (f.comp g : α →o γ) = (f : β →o γ).comp g := rfl
 @[simp, to_additive] lemma comp_assoc (f : γ →*o δ) (g : β →*o γ) (h : α →*o β) :
-  (f.comp g).comp h = f.comp (g.comp h) := rfl
+ (f.comp g).comp h = f.comp (g.comp h) := rfl
 @[simp, to_additive] lemma comp_id (f : α →*o β) : f.comp (order_monoid_hom.id α) = f :=
 ext $ λ a, rfl
 @[simp, to_additive] lemma id_comp (f : α →*o β) : (order_monoid_hom.id β).comp f = f :=
@@ -313,13 +313,13 @@ ext $ λ a, rfl
 
 @[to_additive]
 lemma cancel_right {g₁ g₂ : β →*o γ} {f : α →*o β} (hf : function.surjective f) :
-  g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+ g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
 ⟨λ h, ext $ hf.forall.2 $ fun_like.ext_iff.1 h, congr_arg _⟩
 
 @[to_additive]
 lemma cancel_left {g : β →*o γ} {f₁ f₂ : α →*o β} (hg : function.injective g) :
-  g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-⟨λ h, ext $ λ a, hg $ by rw [←comp_apply, h, comp_apply], congr_arg _⟩
+ g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+⟨λ h, ext $ λ a, hg $ by rw [←comp_apply]; rw [ h]; rw [ comp_apply], congr_arg _⟩
 
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive "`1` is the homomorphism sending all elements to `1`."]
@@ -349,9 +349,9 @@ instance : has_mul (α →*o β) :=
 @[simp, to_additive] lemma mul_apply (f g : α →*o β) (a : α) : (f * g) a = f a * g a := rfl
 
 @[to_additive] lemma mul_comp (g₁ g₂ : β →*o γ) (f : α →*o β) :
-  (g₁ * g₂).comp f = g₁.comp f * g₂.comp f := rfl
+ (g₁ * g₂).comp f = g₁.comp f * g₂.comp f := rfl
 @[to_additive] lemma comp_mul (g : β →*o γ) (f₁ f₂ : α →*o β) :
-  g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by { ext, exact map_mul g _ _ }
+ g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by { ext, exact map_mul g _ _ }
 
 end mul
 
@@ -372,10 +372,10 @@ include hα hβ
 /-- Makes an ordered group homomorphism from a proof that the map preserves multiplication. -/
 @[to_additive "Makes an ordered additive group homomorphism from a proof that the map preserves
 addition.",
-  simps {fully_applied := ff}]
+ simps {fully_applied := ff}]
 def mk' (f : α → β) (hf : monotone f) (map_mul : ∀ a b : α, f (a * b) = f a * f b) : α →*o β :=
 { monotone' := hf,
-  ..monoid_hom.mk' f map_mul }
+ ..monoid_hom.mk' f map_mul }
 
 end ordered_comm_group
 end order_monoid_hom
@@ -383,15 +383,15 @@ end order_monoid_hom
 namespace order_monoid_with_zero_hom
 section preorder
 variables [preorder α] [preorder β] [preorder γ] [preorder δ] [mul_zero_one_class α]
-  [mul_zero_one_class β] [mul_zero_one_class γ] [mul_zero_one_class δ] {f g : α →*₀o β}
+ [mul_zero_one_class β] [mul_zero_one_class γ] [mul_zero_one_class δ] {f g : α →*₀o β}
 
 instance : order_monoid_with_zero_hom_class (α →*₀o β) α β :=
 { coe := λ f, f.to_fun,
-  coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
-  map_mul := λ f, f.map_mul',
-  map_one := λ f, f.map_one',
-  map_zero := λ f, f.map_zero',
-  monotone := λ f, f.monotone' }
+ coe_injective' := λ f g h, by { obtain ⟨⟨_, _⟩, _⟩ := f, obtain ⟨⟨_, _⟩, _⟩ := g, congr' },
+ map_mul := λ f, f.map_mul',
+ map_one := λ f, f.map_one',
+ map_zero := λ f, f.map_zero',
+ monotone := λ f, f.monotone' }
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -401,7 +401,7 @@ instance : has_coe_to_fun (α →*₀o β) (λ _, α → β) := fun_like.has_coe
 @[ext] lemma ext (h : ∀ a, f a = g a) : f = g := fun_like.ext f g h
 lemma to_fun_eq_coe (f : α →*₀o β) : f.to_fun = (f : α → β) := rfl
 @[simp] lemma coe_mk (f : α →*₀ β) (h) : (order_monoid_with_zero_hom.mk f h : α → β) = f := rfl
-@[simp] lemma mk_coe (f : α →*₀o β) (h) : order_monoid_with_zero_hom.mk (f :  α →*₀ β) h = f :=
+@[simp] lemma mk_coe (f : α →*₀o β) (h) : order_monoid_with_zero_hom.mk (f : α →*₀ β) h = f :=
 by { ext, refl }
 
 /-- Reinterpret an ordered monoid with zero homomorphism as an order monoid homomorphism. -/
@@ -420,7 +420,7 @@ lemma to_monoid_with_zero_hom_injective : injective (to_monoid_with_zero_hom : _
 definitional equalities. -/
 protected def copy (f : α →*₀o β) (f' : α → β) (h : f' = f) : α →*o β :=
 { to_fun := f',
-  .. f.to_order_monoid_hom.copy f' h, .. f.to_monoid_with_zero_hom.copy f' h }
+ .. f.to_order_monoid_hom.copy f' h, .. f.to_monoid_with_zero_hom.copy f' h }
 
 @[simp] lemma coe_copy (f : α →*₀o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' := rfl
 lemma copy_eq (f : α →*₀o β) (f' : α → β) (h : f' = f) : f.copy f' h = f := fun_like.ext' h
@@ -443,29 +443,29 @@ def comp (f : β →*₀o γ) (g : α →*₀o β) : α →*₀o γ :=
 @[simp] lemma coe_comp (f : β →*₀o γ) (g : α →*₀o β) : (f.comp g : α → γ) = f ∘ g := rfl
 @[simp] lemma comp_apply (f : β →*₀o γ) (g : α →*₀o β) (a : α) : (f.comp g) a = f (g a) := rfl
 @[simp] lemma coe_comp_monoid_with_zero_hom (f : β →*₀o γ) (g : α →*₀o β) :
-  (f.comp g : α →*₀ γ) = (f : β →*₀ γ).comp g := rfl
+ (f.comp g : α →*₀ γ) = (f : β →*₀ γ).comp g := rfl
 @[simp] lemma coe_comp_order_monoid_hom (f : β →*₀o γ) (g : α →*₀o β) :
-  (f.comp g : α →*o γ) = (f : β →*o γ).comp g := rfl
+ (f.comp g : α →*o γ) = (f : β →*o γ).comp g := rfl
 @[simp] lemma comp_assoc (f : γ →*₀o δ) (g : β →*₀o γ) (h : α →*₀o β) :
-  (f.comp g).comp h = f.comp (g.comp h) := rfl
+ (f.comp g).comp h = f.comp (g.comp h) := rfl
 @[simp] lemma comp_id (f : α →*₀o β) : f.comp (order_monoid_with_zero_hom.id α) = f :=
 ext $ λ a, rfl
 @[simp] lemma id_comp (f : α →*₀o β) : (order_monoid_with_zero_hom.id β).comp f = f :=
 ext $ λ a, rfl
 
 lemma cancel_right {g₁ g₂ : β →*₀o γ} {f : α →*₀o β} (hf : function.surjective f) :
-  g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+ g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
 ⟨λ h, ext $ hf.forall.2 $ fun_like.ext_iff.1 h, congr_arg _⟩
 
 lemma cancel_left {g : β →*₀o γ} {f₁ f₂ : α →*₀o β} (hg : function.injective g) :
-  g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-⟨λ h, ext $ λ a, hg $ by rw [←comp_apply, h, comp_apply], congr_arg _⟩
+ g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+⟨λ h, ext $ λ a, hg $ by rw [←comp_apply]; rw [ h]; rw [ comp_apply], congr_arg _⟩
 
 end preorder
 
 section mul
 variables [linear_ordered_comm_monoid_with_zero α] [linear_ordered_comm_monoid_with_zero β]
-  [linear_ordered_comm_monoid_with_zero γ]
+ [linear_ordered_comm_monoid_with_zero γ]
 
 /-- For two ordered monoid morphisms `f` and `g`, their product is the ordered monoid morphism
 sending `a` to `f a * g a`. -/
@@ -483,7 +483,7 @@ end mul
 
 section linear_ordered_comm_monoid_with_zero
 variables {hα : preorder α} {hα' : mul_zero_one_class α} {hβ : preorder β}
-  {hβ' : mul_zero_one_class β}
+ {hβ' : mul_zero_one_class β}
 include hα hα' hβ hβ'
 
 @[simp] lemma to_monoid_with_zero_hom_eq_coe (f : α →*₀o β) : f.to_monoid_with_zero_hom = f :=
@@ -492,3 +492,4 @@ by { ext, refl }
 
 end linear_ordered_comm_monoid_with_zero
 end order_monoid_with_zero_hom
+

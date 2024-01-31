@@ -19,11 +19,11 @@ a graph `G`, with vertices `V`, is a set `P` of disjoint nonempty subsets of `V`
 
 * Each element of `P` is an independent set. (Each subset contains no pair of adjacent vertices.)
 
-Graph partitions are graph colorings that do not name their colors.  They are adjoint in the
+Graph partitions are graph colorings that do not name their colors. They are adjoint in the
 following sense. Given a graph coloring, there is an associated partition from the set of color
 classes, and given a partition, there is an associated graph coloring from using the partition's
-subsets as colors.  Going from graph colorings to partitions and back makes a coloring "canonical":
-all colors are given a canonical name and unused colors are removed.  Going from partitions to
+subsets as colors. Going from graph colorings to partitions and back makes a coloring "canonical":
+all colors are given a canonical name and unused colors are removed. Going from partitions to
 graph colorings and back is the identity.
 
 ## Main definitions
@@ -31,7 +31,7 @@ graph colorings and back is the identity.
 * `simple_graph.partition` is a structure to represent a partition of a simple graph
 
 * `simple_graph.partition.parts_card_le` is whether a given partition is an `n`-partition.
-  (a partition with at most `n` parts).
+ (a partition with at most `n` parts).
 
 * `simple_graph.partitionable n` is whether a given graph is `n`-partite
 
@@ -42,7 +42,7 @@ graph colorings and back is the identity.
 ## Main statements
 
 * `simple_graph.partitionable_iff_colorable` is that `n`-partitionability and
-  `n`-colorability are equivalent.
+ `n`-colorability are equivalent.
 
 -/
 
@@ -86,19 +86,19 @@ lemma mem_part_of_vertex (v : V) : v ∈ P.part_of_vertex v :=
 by { obtain ⟨⟨h1, h2⟩, h3⟩ := (P.is_partition.2 v).some_spec, exact h2.1 }
 
 lemma part_of_vertex_ne_of_adj {v w : V} (h : G.adj v w) :
-  P.part_of_vertex v ≠ P.part_of_vertex w :=
+ P.part_of_vertex v ≠ P.part_of_vertex w :=
 begin
-  intro hn,
-  have hw := P.mem_part_of_vertex w,
-  rw ←hn at hw,
-  exact P.independent _ (P.part_of_vertex_mem v) (P.mem_part_of_vertex v) hw (G.ne_of_adj h) h,
+ intro hn,
+ have hw := P.mem_part_of_vertex w,
+ rw ←hn at hw,
+ exact P.independent _ (P.part_of_vertex_mem v) (P.mem_part_of_vertex v) hw (G.ne_of_adj h) h,
 end
 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
 def to_coloring : G.coloring P.parts :=
 coloring.mk (λ v, ⟨P.part_of_vertex v, P.part_of_vertex_mem v⟩) $ λ _ _ hvw,
-by { rw [ne.def, subtype.mk_eq_mk], exact P.part_of_vertex_ne_of_adj hvw }
+by { rw [ne.def]; rw [ subtype.mk_eq_mk], exact P.part_of_vertex_ne_of_adj hvw }
 
 /-- Like `simple_graph.partition.to_coloring` but uses `set V` as the coloring type. -/
 def to_coloring' : G.coloring (set V) :=
@@ -115,29 +115,30 @@ variables {G}
 @[simps]
 def coloring.to_partition {α : Type v} (C : G.coloring α) : G.partition :=
 { parts := C.color_classes,
-  is_partition := C.color_classes_is_partition,
-  independent := begin
-    rintros s ⟨c, rfl⟩,
-    apply C.color_classes_independent,
-  end }
+ is_partition := C.color_classes_is_partition,
+ independent := begin
+ rintros s ⟨c, rfl⟩,
+ apply C.color_classes_independent,
+ end }
 
 /-- The partition where every vertex is in its own part. -/
 @[simps] instance : inhabited (partition G) := ⟨G.self_coloring.to_partition⟩
 
 lemma partitionable_iff_colorable {n : ℕ} :
-  G.partitionable n ↔ G.colorable n :=
+ G.partitionable n ↔ G.colorable n :=
 begin
-  split,
-  { rintro ⟨P, hf, h⟩,
-    haveI : fintype P.parts := hf.fintype,
-    rw set.finite.card_to_finset at h,
-    apply P.to_colorable.mono h, },
-  { rintro ⟨C⟩,
-    refine ⟨C.to_partition, C.color_classes_finite, le_trans _ (fintype.card_fin n).le⟩,
-    generalize_proofs h,
-    haveI : fintype C.color_classes := C.color_classes_finite.fintype,
-    rw h.card_to_finset,
-    exact C.card_color_classes_le },
+ split,
+ { rintro ⟨P, hf, h⟩,
+ haveI : fintype P.parts := hf.fintype,
+ rw set.finite.card_to_finset at h,
+ apply P.to_colorable.mono h, },
+ { rintro ⟨C⟩,
+ refine ⟨C.to_partition, C.color_classes_finite, le_trans _ (fintype.card_fin n).le⟩,
+ generalize_proofs h,
+ haveI : fintype C.color_classes := C.color_classes_finite.fintype,
+ rw h.card_to_finset,
+ exact C.card_color_classes_le },
 end
 
 end simple_graph
+

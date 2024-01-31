@@ -61,56 +61,56 @@ one should attempt to add the following constructions and results,
 when applicable:
 
 * Instances transferred elementwise to products, like `prod.monoid`.
-  See `algebra.group.prod` for more examples.
-  ```
-  instance prod.Z [Z M] [Z N] : Z (M × N) := ...
-  ```
+ See `algebra.group.prod` for more examples.
+ ```
+ instance prod.Z [Z M] [Z N] : Z (M × N) := ...
+ ```
 * Instances transferred elementwise to pi types, like `pi.monoid`.
-  See `algebra.group.pi` for more examples.
-  ```
-  instance pi.Z [∀ i, Z $ f i] : Z (Π i : I, f i) := ...
-  ```
+ See `algebra.group.pi` for more examples.
+ ```
+ instance pi.Z [∀ i, Z $ f i] : Z (Π i : I, f i) := ...
+ ```
 * Instances transferred to `mul_opposite M`, like `mul_opposite.monoid`.
-  See `algebra.opposites` for more examples.
-  ```
-  instance mul_opposite.Z [Z M] : Z (mul_opposite M) := ...
-  ```
+ See `algebra.opposites` for more examples.
+ ```
+ instance mul_opposite.Z [Z M] : Z (mul_opposite M) := ...
+ ```
 * Instances transferred to `ulift M`, like `ulift.monoid`.
-  See `algebra.group.ulift` for more examples.
-  ```
-  instance ulift.Z [Z M] : Z (ulift M) := ...
-  ```
+ See `algebra.group.ulift` for more examples.
+ ```
+ instance ulift.Z [Z M] : Z (ulift M) := ...
+ ```
 * Definitions for transferring the proof fields of instances along
-  injective or surjective functions that agree on the data fields,
-  like `function.injective.monoid` and `function.surjective.monoid`.
-  We make these definitions `@[reducible]`, see note [reducible non-instances].
-  See `algebra.group.inj_surj` for more examples.
-  ```
-  @[reducible]
-  def function.injective.Z [Z M₂] (f : M₁ → M₂) (hf : injective f)
-    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : Z M₁ := ...
+ injective or surjective functions that agree on the data fields,
+ like `function.injective.monoid` and `function.surjective.monoid`.
+ We make these definitions `@[reducible]`, see note [reducible non-instances].
+ See `algebra.group.inj_surj` for more examples.
+ ```
+ @[reducible]
+ def function.injective.Z [Z M₂] (f : M₁ → M₂) (hf : injective f)
+ (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : Z M₁ := ...
 
-  @[reducible]
-  def function.surjective.Z [Z M₁] (f : M₁ → M₂) (hf : surjective f)
-    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : Z M₂ := ...
-  ```
+ @[reducible]
+ def function.surjective.Z [Z M₁] (f : M₁ → M₂) (hf : surjective f)
+ (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : Z M₂ := ...
+ ```
 * Instances transferred elementwise to `finsupp`s, like `finsupp.semigroup`.
-  See `data.finsupp.pointwise` for more examples.
-  ```
-  instance finsupp.Z [Z β] : Z (α →₀ β) := ...
-  ```
+ See `data.finsupp.pointwise` for more examples.
+ ```
+ instance finsupp.Z [Z β] : Z (α →₀ β) := ...
+ ```
 * Instances transferred elementwise to `set`s, like `set.monoid`.
-  See `algebra.pointwise` for more examples.
-  ```
-  instance set.Z [Z α] : Z (set α) := ...
-  ```
+ See `algebra.pointwise` for more examples.
+ ```
+ instance set.Z [Z α] : Z (set α) := ...
+ ```
 * Definitions for transferring the entire structure across an equivalence, like `equiv.monoid`.
-  See `data.equiv.transfer_instance` for more examples. See also the `transport` tactic.
-  ```
-  def equiv.Z (e : α ≃ β) [Z β] : Z α := ...
-  /- When there is a new notion of `Z`-equiv: -/
-  def equiv.Z_equiv (e : α ≃ β) [Z β] : by { letI := equiv.Z e, exact α ≃Z β } := ...
-  ```
+ See `data.equiv.transfer_instance` for more examples. See also the `transport` tactic.
+ ```
+ def equiv.Z (e : α ≃ β) [Z β] : Z α := ...
+ /- When there is a new notion of `Z`-equiv: -/
+ def equiv.Z_equiv (e : α ≃ β) [Z β] : by { letI := equiv.Z e, exact α ≃Z β } := ...
+ ```
 
 ## Subobjects
 
@@ -149,9 +149,9 @@ These bundled versions have many appealing features:
 * a uniform notation (and definition) for isomorphisms `X ≅ Y`
 * a uniform API for subobjects, via the partial order `subobject X`
 * interoperability with unbundled structures, via coercions to `Type`
-  (so if `G : AddCommGroup`, you can treat `G` as a type,
-  and it automatically has an `add_comm_group` instance)
-  and lifting maps `AddCommGroup.of G`, when `G` is a type with an `add_comm_group` instance.
+ (so if `G : AddCommGroup`, you can treat `G` as a type,
+ and it automatically has an `add_comm_group` instance)
+ and lifting maps `AddCommGroup.of G`, when `G` is a type with an `add_comm_group` instance.
 
 If, for example you do the work of proving that a typeclass `Z` has a good notion of tensor product,
 you are strongly encouraged to provide the corresponding `monoidal_category` instance
@@ -171,9 +171,9 @@ With so many moving parts, how do you actually go about changing the algebraic h
 We're still evolving how to handle this, but the current suggestion is:
 
 * If you're adding a new "leaf" class, the requirements are lower,
-  and an initial PR can just add whatever is immediately needed.
+ and an initial PR can just add whatever is immediately needed.
 * A new "intermediate" class, especially low down in the hierarchy,
-  needs to be careful about leaving gaps.
+ needs to be careful about leaving gaps.
 
 In a perfect world, there would be a group of simultaneous PRs that basically cover everything!
 (Or at least an expectation that PRs may not be merged immediately while waiting on other
@@ -207,3 +207,4 @@ sometimes comes from `units.preorder` and sometimes from `units.partial_order`.
 Therefore, `preorder.lift` and `partial_order.lift` are marked `@[reducible]`.
 -/
 library_note "reducible non-instances"
+

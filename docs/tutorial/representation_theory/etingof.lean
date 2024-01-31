@@ -155,7 +155,7 @@ is_iso_of_hom_simple w
 -- Corollary 2.3.10 (Schur's lemma over an algebraically closed field)
 -- Unfortunately these can't be global instances
 example [is_alg_closed k] (V : Module.{u} A) [simple V] [finite_dimensional k V] (f : V ⟶ V) :
-  ∃ φ : k, φ • 𝟙 V = f :=
+ ∃ φ : k, φ • 𝟙 V = f :=
 endomorphism_simple_eq_smul_id k f
 -- Note that some magic is going on behind the scenes in this proof.
 -- We're using a version of Schur's lemma that applies to any `k`-linear category,
@@ -167,15 +167,15 @@ endomorphism_simple_eq_smul_id k f
 example : simple (Module.of ℂ ℂ) := simple_of_finrank_eq_one (finrank_self ℂ)
 example : finite_dimensional ℝ (Module.of ℂ ℂ) := by { dsimp, apply_instance, }
 example :
-  let V := Module.of ℂ ℂ in
-  ∃ (f : V ⟶ V), ∀ φ : ℝ, (φ : ℂ) • 𝟙 V ≠ f :=
+ let V := Module.of ℂ ℂ in
+ ∃ (f : V ⟶ V), ∀ φ : ℝ, (φ : ℂ) • 𝟙 V ≠ f :=
 ⟨algebra.lsmul ℂ ℂ complex.I,
-  λ φ w, by simpa using congr_arg complex.im (linear_map.congr_fun w (1 : ℂ))⟩
+ λ φ w, by simpa using congr_arg complex.im (linear_map.congr_fun w (1 : ℂ))⟩
 
 -- Corollary 2.3.12
 -- Every irreducible finite dimensional representation of a commutative algebra is 1-dimensional
 example (A : Type*) [comm_ring A] [algebra k A] (V : Module A) [finite_dimensional k V] [simple V] :
-  finrank k V = 1 :=
+ finrank k V = 1 :=
 skipped
 
 -- Remark 2.3.13: Every 1-dimensional representation is irreducible
@@ -189,3 +189,4 @@ simple_of_finrank_eq_one h
 -/
 
 -- To be continued...
+

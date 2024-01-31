@@ -26,18 +26,18 @@ namespace multiset
 namespace nat
 
 /-- The antidiagonal of a natural number `n` is
-    the multiset of pairs `(i, j)` such that `i + j = n`. -/
+ the multiset of pairs `(i, j)` such that `i + j = n`. -/
 def antidiagonal (n : ℕ) : multiset (ℕ × ℕ) :=
 list.nat.antidiagonal n
 
 /-- A pair (i, j) is contained in the antidiagonal of `n` if and only if `i + j = n`. -/
 @[simp] lemma mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} :
-  x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
-by rw [antidiagonal, mem_coe, list.nat.mem_antidiagonal]
+ x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
+by rw [antidiagonal]; rw [ mem_coe]; rw [ list.nat.mem_antidiagonal]
 
 /-- The cardinality of the antidiagonal of `n` is `n+1`. -/
 @[simp] lemma card_antidiagonal (n : ℕ) : (antidiagonal n).card = n+1 :=
-by rw [antidiagonal, coe_card, list.nat.length_antidiagonal]
+by rw [antidiagonal]; rw [ coe_card]; rw [ list.nat.length_antidiagonal]
 
 /-- The antidiagonal of `0` is the list `[(0, 0)]` -/
 @[simp] lemma antidiagonal_zero : antidiagonal 0 = {(0, 0)} :=
@@ -48,22 +48,22 @@ rfl
 coe_nodup.2 $ list.nat.nodup_antidiagonal n
 
 @[simp] lemma antidiagonal_succ {n : ℕ} :
-  antidiagonal (n + 1) = (0, n + 1) ::ₘ ((antidiagonal n).map (prod.map nat.succ id)) :=
+ antidiagonal (n + 1) = (0, n + 1) ::ₘ ((antidiagonal n).map (prod.map nat.succ id)) :=
 by simp only [antidiagonal, list.nat.antidiagonal_succ, coe_map, cons_coe]
 
 lemma antidiagonal_succ' {n : ℕ} :
-  antidiagonal (n + 1) = (n + 1, 0) ::ₘ ((antidiagonal n).map (prod.map id nat.succ)) :=
-by rw [antidiagonal, list.nat.antidiagonal_succ', ← coe_add, add_comm, antidiagonal, coe_map,
-  coe_add, list.singleton_append, cons_coe]
+ antidiagonal (n + 1) = (n + 1, 0) ::ₘ ((antidiagonal n).map (prod.map id nat.succ)) :=
+by rw [antidiagonal]; rw [ list.nat.antidiagonal_succ']; rw [ ← coe_add]; rw [ add_comm]; rw [ antidiagonal]; rw [ coe_map]; rw [ coe_add]; rw [ list.singleton_append]; rw [ cons_coe]
 
 lemma antidiagonal_succ_succ' {n : ℕ} :
-  antidiagonal (n + 2) =
-  (0, n + 2) ::ₘ (n + 2, 0) ::ₘ ((antidiagonal n).map (prod.map nat.succ nat.succ)) :=
-by { rw [antidiagonal_succ, antidiagonal_succ', map_cons, map_map, prod_map], refl }
+ antidiagonal (n + 2) =
+ (0, n + 2) ::ₘ (n + 2, 0) ::ₘ ((antidiagonal n).map (prod.map nat.succ nat.succ)) :=
+by { rw [antidiagonal_succ]; rw [ antidiagonal_succ']; rw [ map_cons]; rw [ map_map]; rw [ prod_map], refl }
 
 lemma map_swap_antidiagonal {n : ℕ} :
-  (antidiagonal n).map prod.swap = antidiagonal n :=
-by rw [antidiagonal, coe_map, list.nat.map_swap_antidiagonal, coe_reverse]
+ (antidiagonal n).map prod.swap = antidiagonal n :=
+by rw [antidiagonal]; rw [ coe_map]; rw [ list.nat.map_swap_antidiagonal]; rw [ coe_reverse]
 
 end nat
 end multiset
+

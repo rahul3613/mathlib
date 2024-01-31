@@ -2,30 +2,30 @@ import tactic.linarith
 
 example : ∀ (y : ℕ), y ≤ 37 → y < 40 :=
 begin
-  refine λ y hy, _,
-  -- The type of `hy` is a (solved but not instantiated) metavariable
-  do { tactic.get_local `hy >>= tactic.infer_type >>= guardb ∘ expr.is_mvar },
-  -- But linarith should still work
-  linarith
+ refine λ y hy, _,
+ -- The type of `hy` is a (solved but not instantiated) metavariable
+ do { tactic.get_local `hy >>= tactic.infer_type >>= guardb ∘ expr.is_mvar },
+ -- But linarith should still work
+ linarith
 end
 
 example {α : Type} (_inst : Π (a : Prop), decidable a)
-  [linear_ordered_field α]
-  {a b c : α}
-  (ha : a < 0)
-  (hb : ¬b = 0)
-  (hc' : c = 0)
-  (h : (1 - a) * (b * b) ≤ 0)
-  (hc : 0 ≤ 0)
-  (this : -(a * -b * -b + b * -b + 0) = (1 - a) * (b * b))
-  (h : (1 - a) * (b * b) ≤ 0) :
-  0 < 1 - a :=
+ [linear_ordered_field α]
+ {a b c : α}
+ (ha : a < 0)
+ (hb : ¬b = 0)
+ (hc' : c = 0)
+ (h : (1 - a) * (b * b) ≤ 0)
+ (hc : 0 ≤ 0)
+ (this : -(a * -b * -b + b * -b + 0) = (1 - a) * (b * b))
+ (h : (1 - a) * (b * b) ≤ 0) :
+ 0 < 1 - a :=
 begin
-  linarith
+ linarith
 end
 
 example (e b c a v0 v1 : ℚ) (h1 : v0 = 5*a) (h2 : v1 = 3*b) (h3 : v0 + v1 + c = 10) :
-  v0 + 5 + (v1 - 3) + (c - 2) = 10 :=
+ v0 + 5 + (v1 - 3) + (c - 2) = 10 :=
 by linarith
 
 example (u v r s t : ℚ) (h : 0 < u*(t*v + t*r + s)) : 0 < (t*(r + v) + s)*3*u :=
@@ -33,29 +33,29 @@ by linarith
 
 example (A B : ℚ) (h : 0 < A * B) : 0 < 8*A*B :=
 begin
-  linarith
+ linarith
 end
 
 example (A B : ℚ) (h : 0 < A * B) : 0 < A*8*B :=
 begin
-  linarith
+ linarith
 end
 
 example (A B : ℚ) (h : 0 < A * B) : 0 < A*B/8 :=
 begin
-  linarith
+ linarith
 end
 
 example (A B : ℚ) (h : 0 < A * B) : 0 < A/8*B :=
 begin
-  linarith
+ linarith
 end
 
 example (ε : ℚ) (h1 : ε > 0) : ε / 2 + ε / 3 + ε / 7 < ε :=
  by linarith
 
-example (x y z : ℚ) (h1 : 2*x  < 3*y) (h2 : -4*x + z/2 < 0)
-        (h3 : 12*y - z < 0)  : false :=
+example (x y z : ℚ) (h1 : 2*x < 3*y) (h2 : -4*x + z/2 < 0)
+ (h3 : 12*y - z < 0) : false :=
 by linarith
 
 example (ε : ℚ) (h1 : ε > 0) : ε / 2 < ε :=
@@ -64,54 +64,54 @@ by linarith
 example (ε : ℚ) (h1 : ε > 0) : ε / 3 + ε / 3 + ε / 3 = ε :=
 by linarith
 
-example (a b c : ℚ)  (h2 : b + 2 > 3 + b) : false :=
+example (a b c : ℚ) (h2 : b + 2 > 3 + b) : false :=
 by linarith {discharger := `[ring]}
 
-example (a b c : ℚ)  (h2 : b + 2 > 3 + b) : false :=
+example (a b c : ℚ) (h2 : b + 2 > 3 + b) : false :=
 by linarith
 
 example (a b c : ℚ) (x y : ℤ) (h1 : x ≤ 3*y) (h2 : b + 2 > 3 + b) : false :=
 by linarith {restrict_type := ℚ}
 
 example (g v V c h : ℚ) (h1 : h = 0) (h2 : v = V) (h3 : V > 0) (h4 : g > 0)
-        (h5 : 0 ≤ c) (h6 : c < 1) :
-  v ≤ V :=
+ (h5 : 0 ≤ c) (h6 : c < 1) :
+ v ≤ V :=
 by linarith
 
 constant nat.prime : ℕ → Prop
 
 example (x y z : ℚ) (h1 : 2*x + ((-3)*y) < 0) (h2 : (-4)*x + 2*z < 0)
-       (h3 : 12*y + (-4)* z < 0) (h4 : nat.prime 7) : false :=
+ (h3 : 12*y + (-4)* z < 0) (h4 : nat.prime 7) : false :=
 by linarith
 
 example (x y z : ℚ) (h1 : 2*1*x + (3)*(y*(-1)) < 0) (h2 : (-2)*x*2 < -(z + z))
-       (h3 : 12*y + (-4)* z < 0) (h4 : nat.prime 7) : false :=
+ (h3 : 12*y + (-4)* z < 0) (h4 : nat.prime 7) : false :=
 by linarith
 
-example (x y z : ℤ) (h1 : 2*x  < 3*y) (h2 : -4*x + 2*z < 0)
-        (h3 : 12*y - 4* z < 0)  : false :=
+example (x y z : ℤ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0)
+ (h3 : 12*y - 4* z < 0) : false :=
 by linarith
 
-example (x y z : ℤ) (h1 : 2*x  < 3*y) (h2 : -4*x + 2*z < 0) (h3 : x*y < 5)
-        (h3 : 12*y - 4* z < 0)  : false :=
+example (x y z : ℤ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0) (h3 : x*y < 5)
+ (h3 : 12*y - 4* z < 0) : false :=
 by linarith
 
-example (x y z : ℤ) (h1 : 2*x  < 3*y) (h2 : -4*x + 2*z < 0) (h3 : x*y < 5) :
-        ¬ 12*y - 4* z < 0 :=
+example (x y z : ℤ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0) (h3 : x*y < 5) :
+ ¬ 12*y - 4* z < 0 :=
 by linarith
 
 example (w x y z : ℤ) (h1 : 4*x + (-3)*y + 6*w ≤ 0) (h2 : (-1)*x < 0)
-        (h3 : y < 0) (h4 : w ≥ 0) (h5 : nat.prime x.nat_abs) : false :=
+ (h3 : y < 0) (h4 : w ≥ 0) (h5 : nat.prime x.nat_abs) : false :=
 by linarith
 
 example (a b c : ℚ) (h1 : a > 0) (h2 : b > 5) (h3 : c < -10)
-        (h4 : a + b - c < 3)  : false :=
+ (h4 : a + b - c < 3) : false :=
 by linarith
 
 example (a b c : ℚ) (h2 : b > 0) (h3 : ¬ b ≥ 0) : false :=
 by linarith
 
-example (a b c : ℚ) (h2 : (2 : ℚ) > 3)  : a + b - c ≥ 3 :=
+example (a b c : ℚ) (h2 : (2 : ℚ) > 3) : a + b - c ≥ 3 :=
 by linarith {exfalso := ff}
 
 example (x : ℚ) (hx : x > 0) (h : x.num < 0) : false :=
@@ -142,14 +142,14 @@ example (a b c : ℕ) : ¬ a + b < a :=
 by linarith
 
 example (x y : ℚ) (h : 6 + ((x + 4) * x + (6 + 3 * y) * y) = 3) (h' : (x + 4) * x ≥ 0)
-  (h'' : (6 + 3 * y) * y ≥ 0)  : false :=
+ (h'' : (6 + 3 * y) * y ≥ 0) : false :=
 by linarith
 
 example (x y : ℚ)
-  (h : 6 + ((x + 4) * x + (6 + 3 * y) * y) = 3 ∧ (x + 4) * x ≥ 0 ∧ (6 + 3 * y) * y ≥ 0) : false :=
+ (h : 6 + ((x + 4) * x + (6 + 3 * y) * y) = 3 ∧ (x + 4) * x ≥ 0 ∧ (6 + 3 * y) * y ≥ 0) : false :=
 by linarith
 
-example (a b i : ℕ) (h1 :  ¬ a < i) (h2 : b < i) (h3 : a ≤ b) : false :=
+example (a b i : ℕ) (h1 : ¬ a < i) (h2 : b < i) (h3 : a ≤ b) : false :=
 by linarith
 
 example (n : ℕ) (h1 : n ≤ 3) (h2 : n > 2) : n = 3 := by linarith
@@ -166,14 +166,14 @@ by linarith
 example
 (N : ℕ) (n : ℕ) (Hirrelevant : n > N)
 (A : ℚ) (l : ℚ) (h : A - l ≤ -(A - l)) (h_1 : ¬A ≤ -A) (h_2 : ¬l ≤ -l)
-(h_3 : -(A - l) < 1) :  A < l + 1 := by linarith
+(h_3 : -(A - l) < 1) : A < l + 1 := by linarith
 
 example (d : ℚ) (q n : ℕ) (h1 : ((q : ℚ) - 1)*n ≥ 0) (h2 : d = 2/3*(((q : ℚ) - 1)*n)) :
-  d ≤ ((q : ℚ) - 1)*n :=
+ d ≤ ((q : ℚ) - 1)*n :=
 by linarith
 
 example (d : ℚ) (q n : ℕ) (h1 : ((q : ℚ) - 1)*n ≥ 0) (h2 : d = 2/3*(((q : ℚ) - 1)*n)) :
-  ((q : ℚ) - 1)*n - d = 1/3 * (((q : ℚ) - 1)*n) :=
+ ((q : ℚ) - 1)*n - d = 1/3 * (((q : ℚ) - 1)*n) :=
 by linarith
 
 example (a : ℚ) (ha : 0 ≤ a) : 0 * 0 ≤ 2 * a :=
@@ -211,8 +211,8 @@ example (u v x y A B : ℚ) : (0 < A) → (A ≤ 1) → (1 ≤ B)
 → (u < A) → ( v < A)
 → (u * y + v * x + u * v < 3 * A * B) :=
 begin
-  intros,
-  nlinarith
+ intros,
+ nlinarith
 end
 
 example (a b c z : ℚ) (_ : a ≤ z) (E0 : b ≤ c) (E1 : c ≤ a) (E2 : 0 ≤ c) : b ≤ a + c := by linarith
@@ -230,8 +230,8 @@ example (u v x y A B : ℚ)
 → (0 ≤ u * (A - v))
 → u * y + v * x + u * v < 3 * A * B :=
 begin
-  intros,
-  linarith
+ intros,
+ linarith
 end
 
 example (u v x y A B : ℚ)
@@ -326,15 +326,15 @@ example (u v x y A B : ℚ)
 -> (0 < (A - v) * (A - u))
 -> (0 < (A - v) * (A - v))
 ->
-  u * y + v * x + u * v < 3 * A * B :=
+ u * y + v * x + u * v < 3 * A * B :=
 begin
-  intros,
-  linarith
+ intros,
+ linarith
 end
 
 example (A B : ℚ) : (0 < A) → (1 ≤ B) → (0 < A / 8 * B) :=
 begin
-  intros, nlinarith
+ intros, nlinarith
 end
 
 example (x y : ℚ) : 0 ≤ x ^2 + y ^2 :=
@@ -348,9 +348,9 @@ by intros; nlinarith
 
 lemma norm_eq_zero_iff {x y : ℚ} : x * x + y * y = 0 ↔ x = 0 ∧ y = 0 :=
 begin
-  split,
-  { intro, split; nlinarith },
-  { intro, nlinarith }
+ split,
+ { intro, split; nlinarith },
+ { intro, nlinarith }
 end
 
 lemma norm_nonpos_right {x y : ℚ} (h1 : x * x + y * y ≤ 0) : y = 0 :=
@@ -361,7 +361,7 @@ by nlinarith
 
 variables {E : Type*} [add_group E]
 example (f : ℤ → E) (h : 0 = f 0) : 1 ≤ 2 := by nlinarith
-example (a : E) (h : a = a) : 1 ≤ 2  := by nlinarith
+example (a : E) (h : a = a) : 1 ≤ 2 := by nlinarith
 
 -- test that the apply bug doesn't affect linarith preprocessing
 
@@ -376,7 +376,7 @@ example (a : α) (ha : a < 2) : a ≤ a :=
 by linarith
 
 example (p q r s t u v w : ℕ) (h1 : p + u = q + t) (h2 : r + w = s + v) :
-  p * r + q * s + (t * w + u * v) = p * s + q * r + (t * v + u * w) :=
+ p * r + q * s + (t * w + u * v) = p * s + q * r + (t * v + u * w) :=
 by nlinarith
 
 -- Tests involving a norm, including that squares in a type where `sq_nonneg` does not apply
@@ -388,7 +388,7 @@ lemma abs_nonneg' : ∀ r, 0 ≤ abs r := (fact.out false).elim
 example (t : R) (a b : ℚ) (h : a ≤ b) : abs (t^2) * a ≤ abs (t^2) * b :=
 by nlinarith [abs_nonneg' abs (t^2)]
 
-example (t : R)  (a b : ℚ) (h : a ≤ b) : a ≤ abs (t^2) + b :=
+example (t : R) (a b : ℚ) (h : a ≤ b) : a ≤ abs (t^2) + b :=
 by linarith [abs_nonneg' abs (t^2)]
 
 example (t : R) (a b : ℚ) (h : a ≤ b) : abs t * a ≤ abs t * b :=
@@ -405,7 +405,7 @@ lemma zero_lt_one : (0 : T) < 1 := (fact.out false).elim
 
 lemma works {a b : ℕ} (hab : a ≤ b) (h : b < a) : false :=
 begin
-  linarith,
+ linarith,
 end
 
 end T
@@ -426,5 +426,6 @@ lemma bar (x y: int)(h : 0 ≤ y ∧ 1 ≤ x) : 1 ≤ y + x*x := by linarith [fo
 -- issue #9822
 lemma mytest (j : ℕ) (h : 0 < j) : j-1 < j:=
 begin
-  linarith,
+ linarith,
 end
+

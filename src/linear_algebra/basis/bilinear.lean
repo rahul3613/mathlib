@@ -32,33 +32,32 @@ variables (b₁ : basis ι₁ R M) (b₂ : basis ι₂ S N) (b₁' : basis ι₁
 
 /-- Two bilinear maps are equal when they are equal on all basis vectors. -/
 lemma ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P}
-  (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) : B = B' :=
+ (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) : B = B' :=
 b₁.ext $ λ i, b₂.ext $ λ j, h i j
 
 /-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis.
 
 Version for semi-bilinear maps, see `sum_repr_mul_repr_mul` for the bilinear version. -/
 lemma sum_repr_mul_repr_mulₛₗ {B : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (x y) :
-  (b₁.repr x).sum (λ i xi, (b₂.repr y).sum (λ j yj, (ρ₁₂ xi) • (σ₁₂ yj) • B (b₁ i) (b₂ j))) =
-  B x y :=
+ (b₁.repr x).sum (λ i xi, (b₂.repr y).sum (λ j yj, (ρ₁₂ xi) • (σ₁₂ yj) • B (b₁ i) (b₂ j))) =
+ B x y :=
 begin
-  conv_rhs { rw [← b₁.total_repr x, ← b₂.total_repr y] },
-  simp_rw [finsupp.total_apply, finsupp.sum, map_sum₂, map_sum,
-    linear_map.map_smulₛₗ₂, linear_map.map_smulₛₗ],
+ conv_rhs { rw [← b₁.total_repr x]; rw [ ← b₂.total_repr y] },
+ simp_rw [finsupp.total_apply, finsupp.sum, map_sum₂, map_sum, linear_map.map_smulₛₗ₂, linear_map.map_smulₛₗ],
 end
 
 /-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis.
 
 Version for bilinear maps, see `sum_repr_mul_repr_mulₛₗ` for the semi-bilinear version. -/
 lemma sum_repr_mul_repr_mul {B : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} (x y) :
-  (b₁'.repr x).sum (λ i xi, (b₂'.repr y).sum (λ j yj, xi • yj • B (b₁' i) (b₂' j))) =
-  B x y :=
+ (b₁'.repr x).sum (λ i xi, (b₂'.repr y).sum (λ j yj, xi • yj • B (b₁' i) (b₂' j))) =
+ B x y :=
 begin
-  conv_rhs { rw [← b₁'.total_repr x, ← b₂'.total_repr y] },
-  simp_rw [finsupp.total_apply, finsupp.sum, map_sum₂, map_sum,
-    linear_map.map_smul₂, linear_map.map_smul],
+ conv_rhs { rw [← b₁'.total_repr x]; rw [ ← b₂'.total_repr y] },
+ simp_rw [finsupp.total_apply, finsupp.sum, map_sum₂, map_sum, linear_map.map_smul₂, linear_map.map_smul],
 end
 
 end add_comm_monoid
 
 end linear_map
+

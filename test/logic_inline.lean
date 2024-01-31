@@ -13,3 +13,4 @@ open tactic
 
 run_cmd do e ← to_expr ```(examine (ff ∧ (error_msg "and"))) >>= eval_expr bool, guard (e = ff)
 run_cmd do e ← to_expr ```(examine (tt ∨ (error_msg "or"))) >>= eval_expr bool, guard (e = tt)
+

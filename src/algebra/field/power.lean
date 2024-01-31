@@ -24,11 +24,12 @@ section division_ring
 variables [division_ring α] {n : ℤ}
 
 @[simp] lemma zpow_bit1_neg (a : α) (n : ℤ) : (-a) ^ bit1 n = - a ^ bit1 n :=
-by rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
+by rw [zpow_bit1']; rw [ zpow_bit1']; rw [ neg_mul_neg]; rw [ neg_mul_eq_mul_neg]
 
 lemma odd.neg_zpow (h : odd n) (a : α) : (-a) ^ n = - a ^ n :=
 by { obtain ⟨k, rfl⟩ := h.exists_bit1, exact zpow_bit1_neg _ _ }
 
-lemma odd.neg_one_zpow (h : odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_zpow, one_zpow]
+lemma odd.neg_one_zpow (h : odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_zpow]; rw [ one_zpow]
 
 end division_ring
+

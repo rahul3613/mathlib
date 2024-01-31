@@ -22,9 +22,9 @@ This file defines the basics of the divisibility relation in the context of `(co
 ## Implementation notes
 
 The divisibility relation is defined for all monoids, and as such, depends on the order of
-  multiplication if the monoid is not commutative. There are two possible conventions for
-  divisibility in the noncommutative context, and this relation follows the convention for ordinals,
-  so `a | b` is defined as `∃ c, b = a * c`.
+ multiplication if the monoid is not commutative. There are two possible conventions for
+ divisibility in the noncommutative context, and this relation follows the convention for ordinals,
+ so `a | b` is defined as `∃ c, b = a * c`.
 
 ## Tags
 
@@ -38,13 +38,13 @@ section semigroup
 variables [semigroup α] {a b c : α}
 
 /-- There are two possible conventions for divisibility, which coincide in a `comm_monoid`.
-    This matches the convention for ordinals. -/
+ This matches the convention for ordinals. -/
 @[priority 100]
 instance semigroup_has_dvd : has_dvd α :=
 has_dvd.mk (λ a b, ∃ c, b = a * c)
 
 -- TODO: this used to not have `c` explicit, but that seems to be important
---       for use with tactics, similar to `exists.intro`
+-- for use with tactics, similar to `exists.intro`
 theorem dvd.intro (c : α) (h : a * c = b) : a ∣ b :=
 exists.intro c h^.symm
 
@@ -151,7 +151,8 @@ theorem mul_dvd_mul_right (h : a ∣ b) (c : α) : a * c ∣ b * c :=
 mul_dvd_mul h (dvd_refl c)
 
 theorem pow_dvd_pow_of_dvd {a b : α} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
-| 0     := by rw [pow_zero, pow_zero]
-| (n+1) := by { rw [pow_succ, pow_succ], exact mul_dvd_mul h (pow_dvd_pow_of_dvd n) }
+| 0 := by rw [pow_zero]; rw [ pow_zero]
+| (n+1) := by { rw [pow_succ]; rw [ pow_succ], exact mul_dvd_mul h (pow_dvd_pow_of_dvd n) }
 
 end comm_monoid
+

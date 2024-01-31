@@ -51,7 +51,7 @@ open nat
 
 example (x y : ℕ) : succ x = succ y → x = y ∨ x = succ y := by finish
 example (x y z : ℕ) : succ (succ x) = succ y ∧ y = succ z →
-  y = succ x ∧ succ x = succ z :=
+ y = succ x ∧ succ x = succ z :=
 by finish
 
 end
@@ -93,7 +93,7 @@ by finish
 end
 
 /-
-  more examples
+ more examples
 -/
 
 
@@ -111,7 +111,7 @@ example : a ∨ b → b ∨ a := by finish
 
 example : ¬ (a ↔ ¬ a) :=
 begin
-  finish
+ finish
 end
 
 /- examples of tactics that leave goals -/
@@ -119,20 +119,20 @@ end
 /-
 example : a ∨ b ∨ foo → b ∨ a :=
 begin
-  clarify,
-  admit
+ clarify,
+ admit
 end
 
 example : a ∨ b ∨ foo ∨ foo → b ∨ a :=
 begin
-  safe,
-  admit
+ safe,
+ admit
 end
 
 example : a ∨ b ∨ c → ¬ a → ¬ b → d :=
 begin
-  safe,
-  admit
+ safe,
+ admit
 end
 -/
 
@@ -142,7 +142,7 @@ section
 
 variables (a b c : ℕ) (p q : ℕ → Prop) (r : ℕ → ℕ → Prop)
 variables (P Q R : Prop)
-variable  (g : bool → nat)
+variable (g : bool → nat)
 
 example (h₁ : ∀ x, p x → q x) (h₂ : ∀ x, p x) : q a :=
 by finish
@@ -156,10 +156,10 @@ by finish
 example (h : ∃ x, p x ∧ r x x) (h' : ∀ x, r x x → q x) : ∃ x, p x ∧ q x :=
 by finish
 
-example (h : ∃ x, q x ∧ p x)  : ∃ x, p x ∧ q x :=
+example (h : ∃ x, q x ∧ p x) : ∃ x, p x ∧ q x :=
 by finish
 
-example (h₁ : ∀ x, q x → p x) (h₃ : q a)  : ∃ x, p x :=
+example (h₁ : ∀ x, q x → p x) (h₃ : q a) : ∃ x, p x :=
 by finish
 
 example (h₁ : ∀ x, p x → q x → false) (h₂ : p a) (h₃ : p b) (h₄ : q b) : false :=
@@ -182,18 +182,19 @@ by finish
 end
 
 section
-  variables a b c d : Prop
-  variables (p q : ℕ → Prop) (r : ℕ → ℕ → Prop)
+ variables a b c d : Prop
+ variables (p q : ℕ → Prop) (r : ℕ → ℕ → Prop)
 
-  example (h : ¬ ∀ x, (∃ y, r x y) → p x) : true :=
-  begin
-    normalize_hyps {},
-    trivial
-  end
+ example (h : ¬ ∀ x, (∃ y, r x y) → p x) : true :=
+ begin
+ normalize_hyps {},
+ trivial
+ end
 
-  example (h₁ : a → b ∨ c) (h₂ : ¬ b) : a → c :=
-  begin
-    simp * at *,
-    assumption
-  end
+ example (h₁ : a → b ∨ c) (h₂ : ¬ b) : a → c :=
+ begin
+ simp * at *,
+ assumption
+ end
 end
+

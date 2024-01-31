@@ -28,3 +28,4 @@ instance {A B : Type*} [finite B] [set_like A B] : finite A :=
 finite.of_injective coe set_like.coe_injective
 
 end set_like
+

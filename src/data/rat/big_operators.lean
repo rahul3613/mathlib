@@ -28,7 +28,7 @@ map_list_sum (rat.cast_hom α) _
 map_multiset_sum (rat.cast_hom α) _
 
 @[simp, norm_cast] lemma cast_sum (s : finset ι) (f : ι → ℚ) :
-  (↑(∑ i in s, f i) : α) = ∑ i in s, f i :=
+ (↑(∑ i in s, f i) : α) = ∑ i in s, f i :=
 map_sum (rat.cast_hom α) _ _
 
 @[simp, norm_cast] lemma cast_list_prod (s : list ℚ) : (↑(s.prod) : α) = (s.map coe).prod :=
@@ -43,9 +43,10 @@ variables [field α] [char_zero α]
 map_multiset_prod (rat.cast_hom α) _
 
 @[simp, norm_cast] lemma cast_prod (s : finset ι) (f : ι → ℚ) :
-  (↑(∏ i in s, f i) : α) = ∏ i in s, f i :=
+ (↑(∏ i in s, f i) : α) = ∏ i in s, f i :=
 map_prod (rat.cast_hom α) _ _
 
 end field
 
 end rat
+

@@ -35,7 +35,7 @@ namespace algebraic_geometry
 noncomputable
 def Spec_Z_is_terminal : is_terminal (Scheme.Spec.obj (op $ CommRing.of ℤ)) :=
 @@is_terminal.is_terminal_obj _ _ Scheme.Spec _ infer_instance
-  (terminal_op_of_initial CommRing.Z_is_initial)
+ (terminal_op_of_initial CommRing.Z_is_initial)
 
 instance : has_terminal Scheme := has_terminal_of_has_terminal_of_preserves_limit Scheme.Spec
 
@@ -51,7 +51,7 @@ section initial
 @[simps]
 def Scheme.empty_to (X : Scheme.{u}) : ∅ ⟶ X :=
 ⟨{ base := ⟨λ x, pempty.elim x, by continuity⟩,
-    c := { app := λ U, CommRing.punit_is_terminal.from _ } }, λ x, pempty.elim x⟩
+ c := { app := λ U, CommRing.punit_is_terminal.from _ } }, λ x, pempty.elim x⟩
 
 @[ext]
 lemma Scheme.empty_ext {X : Scheme.{u}} (f g : ∅ ⟶ X) : f = g :=
@@ -78,24 +78,24 @@ instance Spec_punit_is_empty : is_empty (Scheme.Spec.obj (op $ CommRing.of punit
 
 @[priority 100]
 instance is_open_immersion_of_is_empty {X Y : Scheme} (f : X ⟶ Y) [is_empty X.carrier] :
-  is_open_immersion f :=
+ is_open_immersion f :=
 begin
-  apply_with is_open_immersion.of_stalk_iso { instances := ff },
-  { apply open_embedding_of_continuous_injective_open,
-    { continuity },
-    { rintro (i : X.carrier), exact is_empty_elim i },
-    { intros U hU, convert is_open_empty, ext, apply (iff_false _).mpr,
-      exact λ x, is_empty_elim (show X.carrier, from x.some) } },
-  { rintro (i : X.carrier), exact is_empty_elim i }
+ apply_with is_open_immersion.of_stalk_iso { instances := ff },
+ { apply open_embedding_of_continuous_injective_open,
+ { continuity },
+ { rintro (i : X.carrier), exact is_empty_elim i },
+ { intros U hU, convert is_open_empty, ext, apply (iff_false _).mpr,
+ exact λ x, is_empty_elim (show X.carrier, from x.some) } },
+ { rintro (i : X.carrier), exact is_empty_elim i }
 end
 
 @[priority 100]
 instance is_iso_of_is_empty {X Y : Scheme} (f : X ⟶ Y) [is_empty Y.carrier] : is_iso f :=
 begin
-  haveI : is_empty X.carrier := ⟨λ x, is_empty_elim (show Y.carrier, from f.1.base x)⟩,
-  haveI : epi f.1.base,
-  { rw Top.epi_iff_surjective, rintro (x : Y.carrier), exact is_empty_elim x },
-  apply is_open_immersion.to_iso
+ haveI : is_empty X.carrier := ⟨λ x, is_empty_elim (show Y.carrier, from f.1.base x)⟩,
+ haveI : epi f.1.base,
+ { rw Top.epi_iff_surjective, rintro (x : Y.carrier), exact is_empty_elim x },
+ apply is_open_immersion.to_iso
 end
 
 /-- A scheme is initial if its underlying space is empty . -/
@@ -111,7 +111,7 @@ empty_is_initial.of_iso (as_iso $ empty_is_initial.to _)
 @[priority 100]
 instance is_affine_of_is_empty {X : Scheme} [is_empty X.carrier] : is_affine X :=
 is_affine_of_iso (inv (empty_is_initial.to X) ≫
-  empty_is_initial.to (Scheme.Spec.obj (op $ CommRing.of punit)))
+ empty_is_initial.to (Scheme.Spec.obj (op $ CommRing.of punit)))
 
 instance : has_initial Scheme :=
 has_initial_of_unique Scheme.empty
@@ -121,9 +121,9 @@ instance initial_is_empty : is_empty (⊥_ Scheme).carrier :=
 
 lemma bot_is_affine_open (X : Scheme) : is_affine_open (⊥ : opens X.carrier) :=
 begin
-  convert range_is_affine_open_of_open_immersion (initial.to X),
-  ext,
-  exact (false_iff _).mpr (λ x, is_empty_elim (show (⊥_ Scheme).carrier, from x.some)),
+ convert range_is_affine_open_of_open_immersion (initial.to X),
+ ext,
+ exact (false_iff _).mpr (λ x, is_empty_elim (show (⊥_ Scheme).carrier, from x.some)),
 end
 
 instance : has_strict_initial_objects Scheme :=
@@ -132,3 +132,4 @@ has_strict_initial_objects_of_initial_is_strict (λ A f, by apply_instance)
 end initial
 
 end algebraic_geometry
+

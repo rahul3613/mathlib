@@ -24,8 +24,9 @@ instance types_symmetric : symmetric_category.{u} (Type u) :=
 symmetric_of_chosen_finite_products (types.terminal_limit_cone) (types.binary_product_limit_cone)
 
 @[simp] lemma braiding_hom_apply {X Y : Type u} {x : X} {y : Y} :
-  ((β_ X Y).hom : X ⊗ Y → Y ⊗ X) (x, y) = (y, x) := rfl
+ ((β_ X Y).hom : X ⊗ Y → Y ⊗ X) (x, y) = (y, x) := rfl
 @[simp] lemma braiding_inv_apply {X Y : Type u} {x : X} {y : Y} :
-  ((β_ X Y).inv : Y ⊗ X → X ⊗ Y) (y, x) = (x, y) := rfl
+ ((β_ X Y).inv : Y ⊗ X → X ⊗ Y) (y, x) = (x, y) := rfl
 
 end category_theory
+

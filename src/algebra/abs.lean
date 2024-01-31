@@ -52,3 +52,4 @@ class has_neg_part (α : Type*) := (neg : α → α)
 notation `|`a`|` := abs a
 postfix `⁺`:1000 := has_pos_part.pos
 postfix `⁻`:1000 := has_neg_part.neg
+

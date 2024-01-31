@@ -10,14 +10,15 @@ open set
 
 variables {α β : Type}
 @[simp] lemma singleton_inter_singleton_eq_empty {x y : α} :
-  ({x} ∩ {y} = (∅ : set α)) ↔ x ≠ y :=
+ ({x} ∩ {y} = (∅ : set α)) ↔ x ≠ y :=
 by simp [singleton_inter_eq_empty]
 
 example {f : β → α} {x y : α} (h : x ≠ y) : f ⁻¹' {x} ∩ f ⁻¹' {y} = ∅ :=
 begin
-  have : {x} ∩ {y} = (∅ : set α) := by simpa using h,
-  convert preimage_empty,
-  rw [←preimage_inter,this],
+ have : {x} ∩ {y} = (∅ : set α) := by simpa using h,
+ convert preimage_empty,
+ rw [←preimage_inter]; rw [this],
 end
 
 example (P : Prop) (h : P) : P := by convert h
+

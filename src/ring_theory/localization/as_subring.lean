@@ -29,44 +29,44 @@ lemma map_is_unit_of_le (hS : S ≤ A⁰) (s : S) : is_unit (algebra_map A K s) 
 by apply is_localization.map_units K (⟨s.1, hS s.2⟩ : A⁰)
 
 /-- The canonical map from a localization of `A` at `S` to the fraction ring
-  of `A`, given that `S ≤ A⁰`. -/
+ of `A`, given that `S ≤ A⁰`. -/
 noncomputable
 def map_to_fraction_ring (B : Type*) [comm_ring B] [algebra A B]
-  [is_localization S B] (hS : S ≤ A⁰) :
-  B →ₐ[A] K :=
+ [is_localization S B] (hS : S ≤ A⁰) :
+ B →ₐ[A] K :=
 { commutes' := λ a, by simp,
-  ..is_localization.lift (map_is_unit_of_le K S hS) }
+ ..is_localization.lift (map_is_unit_of_le K S hS) }
 
 @[simp]
 lemma map_to_fraction_ring_apply {B : Type*} [comm_ring B] [algebra A B]
-  [is_localization S B] (hS : S ≤ A⁰) (b : B) :
-  map_to_fraction_ring K S B hS b = is_localization.lift (map_is_unit_of_le K S hS) b := rfl
+ [is_localization S B] (hS : S ≤ A⁰) (b : B) :
+ map_to_fraction_ring K S B hS b = is_localization.lift (map_is_unit_of_le K S hS) b := rfl
 
 lemma mem_range_map_to_fraction_ring_iff (B : Type*) [comm_ring B] [algebra A B]
-  [is_localization S B] (hS : S ≤ A⁰) (x : K) :
-  x ∈ (map_to_fraction_ring K S B hS).range ↔
-  ∃ (a s : A) (hs : s ∈ S), x = is_localization.mk' K a ⟨s, hS hs⟩ :=
+ [is_localization S B] (hS : S ≤ A⁰) (x : K) :
+ x ∈ (map_to_fraction_ring K S B hS).range ↔
+ ∃ (a s : A) (hs : s ∈ S), x = is_localization.mk' K a ⟨s, hS hs⟩ :=
 ⟨ by { rintro ⟨x,rfl⟩, obtain ⟨a,s,rfl⟩ := is_localization.mk'_surjective S x,
-    use [a, s, s.2], apply is_localization.lift_mk' },
-  by { rintro ⟨a,s,hs,rfl⟩, use is_localization.mk' _ a ⟨s,hs⟩,
-    apply is_localization.lift_mk' } ⟩
+ use [a, s, s.2], apply is_localization.lift_mk' },
+ by { rintro ⟨a,s,hs,rfl⟩, use is_localization.mk' _ a ⟨s,hs⟩,
+ apply is_localization.lift_mk' } ⟩
 
 instance is_localization_range_map_to_fraction_ring (B : Type*) [comm_ring B] [algebra A B]
-  [is_localization S B] (hS : S ≤ A⁰) :
-  is_localization S (map_to_fraction_ring K S B hS).range :=
+ [is_localization S B] (hS : S ≤ A⁰) :
+ is_localization S (map_to_fraction_ring K S B hS).range :=
 is_localization.is_localization_of_alg_equiv S $ show B ≃ₐ[A] _, from alg_equiv.of_bijective
 (map_to_fraction_ring K S B hS).range_restrict
 begin
-  refine ⟨λ a b h, _, set.surjective_onto_range⟩,
-  refine (is_localization.lift_injective_iff _).2 (λ a b, _) (subtype.ext_iff.1 h),
-  exact ⟨λ h, congr_arg _ (is_localization.injective _ hS h),
-         λ h, congr_arg _ (is_fraction_ring.injective A K h)⟩,
+ refine ⟨λ a b h, _, set.surjective_onto_range⟩,
+ refine (is_localization.lift_injective_iff _).2 (λ a b, _) (subtype.ext_iff.1 h),
+ exact ⟨λ h, congr_arg _ (is_localization.injective _ hS h),
+ λ h, congr_arg _ (is_fraction_ring.injective A K h)⟩,
 end
 
 instance is_fraction_ring_range_map_to_fraction_ring
-  (B : Type*) [comm_ring B] [algebra A B]
-  [is_localization S B] (hS : S ≤ A⁰) :
-  is_fraction_ring (map_to_fraction_ring K S B hS).range K :=
+ (B : Type*) [comm_ring B] [algebra A B]
+ [is_localization S B] (hS : S ≤ A⁰) :
+ is_fraction_ring (map_to_fraction_ring K S B hS).range K :=
 is_fraction_ring.is_fraction_ring_of_is_localization S _ _ hS
 
 /--
@@ -86,7 +86,7 @@ by { ext, symmetry, apply mem_range_map_to_fraction_ring_iff }
 namespace subalgebra
 
 instance is_localization_subalgebra :
-  is_localization S (subalgebra K S hS) :=
+ is_localization S (subalgebra K S hS) :=
 by { dunfold localization.subalgebra, rw subalgebra.copy_eq, apply_instance }
 
 instance is_fraction_ring : is_fraction_ring (subalgebra K S hS) K :=
@@ -100,12 +100,12 @@ variables [field K] [algebra A K] [is_fraction_ring A K]
 namespace subalgebra
 
 lemma mem_range_map_to_fraction_ring_iff_of_field
-  (B : Type*) [comm_ring B] [algebra A B] [is_localization S B] (x : K) :
-  x ∈ (map_to_fraction_ring K S B hS).range ↔
-  ∃ (a s : A) (hs : s ∈ S), x = algebra_map A K a * (algebra_map A K s)⁻¹ :=
+ (B : Type*) [comm_ring B] [algebra A B] [is_localization S B] (x : K) :
+ x ∈ (map_to_fraction_ring K S B hS).range ↔
+ ∃ (a s : A) (hs : s ∈ S), x = algebra_map A K a * (algebra_map A K s)⁻¹ :=
 begin
-  rw mem_range_map_to_fraction_ring_iff,
-  iterate 3 { congr' with }, convert iff.rfl, rw units.coe_inv, refl,
+ rw mem_range_map_to_fraction_ring_iff,
+ iterate 3 { congr' with }, convert iff.rfl, rw units.coe_inv, refl,
 end
 
 /--
@@ -123,7 +123,7 @@ def of_field : _root_.subalgebra A K :=
 by { ext, symmetry, apply mem_range_map_to_fraction_ring_iff_of_field }
 
 instance is_localization_of_field :
-  is_localization S (subalgebra.of_field K S hS) :=
+ is_localization S (subalgebra.of_field K S hS) :=
 by { dunfold localization.subalgebra.of_field, rw subalgebra.copy_eq, apply_instance }
 
 instance is_fraction_ring_of_field : is_fraction_ring (subalgebra.of_field K S hS) K :=
@@ -133,3 +133,4 @@ end subalgebra
 end field
 
 end localization
+

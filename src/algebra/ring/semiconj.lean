@@ -28,13 +28,13 @@ open function
 namespace semiconj_by
 
 @[simp] lemma add_right [distrib R] {a x y x' y' : R}
-  (h : semiconj_by a x y) (h' : semiconj_by a x' y') :
-  semiconj_by a (x + x') (y + y') :=
+ (h : semiconj_by a x y) (h' : semiconj_by a x' y') :
+ semiconj_by a (x + x') (y + y') :=
 by simp only [semiconj_by, left_distrib, right_distrib, h.eq, h'.eq]
 
 @[simp] lemma add_left [distrib R] {a b x y : R}
-  (ha : semiconj_by a x y) (hb : semiconj_by b x y) :
-  semiconj_by (a + b) x y :=
+ (ha : semiconj_by a x y) (hb : semiconj_by b x y) :
+ semiconj_by (a + b) x y :=
 by simp only [semiconj_by, left_distrib, right_distrib, ha.eq, hb.eq]
 
 section
@@ -69,13 +69,14 @@ section
 variables [non_unital_non_assoc_ring R] {a b x y x' y' : R}
 
 @[simp] lemma sub_right (h : semiconj_by a x y) (h' : semiconj_by a x' y') :
-  semiconj_by a (x - x') (y - y') :=
+ semiconj_by a (x - x') (y - y') :=
 by simpa only [sub_eq_add_neg] using h.add_right h'.neg_right
 
 @[simp] lemma sub_left (ha : semiconj_by a x y) (hb : semiconj_by b x y) :
-  semiconj_by (a - b) x y :=
+ semiconj_by (a - b) x y :=
 by simpa only [sub_eq_add_neg] using ha.add_left hb.neg_left
 
 end
 
 end semiconj_by
+

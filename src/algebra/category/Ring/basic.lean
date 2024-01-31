@@ -52,7 +52,7 @@ def of (R : Type u) [semiring R] : SemiRing := bundled.of R
 def of_hom {R S : Type u} [semiring R] [semiring S] (f : R →+* S) : of R ⟶ of S := f
 
 @[simp] lemma of_hom_apply {R S : Type u} [semiring R] [semiring S] (f : R →+* S) (x : R) :
-  of_hom f x = f x := rfl
+ of_hom f x = f x := rfl
 
 instance : inhabited SemiRing := ⟨of punit⟩
 
@@ -62,14 +62,14 @@ instance (R : SemiRing) : semiring R := R.str
 
 instance has_forget_to_Mon : has_forget₂ SemiRing Mon :=
 bundled_hom.mk_has_forget₂
-  (λ R hR, @monoid_with_zero.to_monoid R (@semiring.to_monoid_with_zero R hR))
-  (λ R₁ R₂, ring_hom.to_monoid_hom) (λ _ _ _, rfl)
+ (λ R hR, @monoid_with_zero.to_monoid R (@semiring.to_monoid_with_zero R hR))
+ (λ R₁ R₂, ring_hom.to_monoid_hom) (λ _ _ _, rfl)
 
 instance has_forget_to_AddCommMon : has_forget₂ SemiRing AddCommMon :=
 -- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
 { forget₂ :=
-  { obj := λ R, AddCommMon.of R,
-    map := λ R₁ R₂ f, ring_hom.to_add_monoid_hom f } }
+ { obj := λ R, AddCommMon.of R,
+ map := λ R₁ R₂ f, ring_hom.to_add_monoid_hom f } }
 
 end SemiRing
 
@@ -89,7 +89,7 @@ def of (R : Type u) [ring R] : Ring := bundled.of R
 def of_hom {R S : Type u} [ring R] [ring S] (f : R →+* S) : of R ⟶ of S := f
 
 @[simp] lemma of_hom_apply {R S : Type u} [ring R] [ring S] (f : R →+* S) (x : R) :
-  of_hom f x = f x := rfl
+ of_hom f x = f x := rfl
 
 instance : inhabited Ring := ⟨of punit⟩
 
@@ -101,8 +101,8 @@ instance has_forget_to_SemiRing : has_forget₂ Ring SemiRing := bundled_hom.for
 instance has_forget_to_AddCommGroup : has_forget₂ Ring AddCommGroup :=
 -- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
 { forget₂ :=
-  { obj := λ R, AddCommGroup.of R,
-    map := λ R₁ R₂ f, ring_hom.to_add_monoid_hom f } }
+ { obj := λ R, AddCommGroup.of R,
+ map := λ R₁ R₂ f, ring_hom.to_add_monoid_hom f } }
 
 end Ring
 
@@ -125,7 +125,7 @@ def of_hom {R S : Type u} [comm_semiring R] [comm_semiring S] (f : R →+* S) : 
 
 @[simp]
 lemma of_hom_apply {R S : Type u} [comm_semiring R] [comm_semiring S] (f : R →+* S) (x : R) :
-  of_hom f x = f x := rfl
+ of_hom f x = f x := rfl
 
 instance : inhabited CommSemiRing := ⟨of punit⟩
 
@@ -138,8 +138,8 @@ instance has_forget_to_SemiRing : has_forget₂ CommSemiRing SemiRing := bundled
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance has_forget_to_CommMon : has_forget₂ CommSemiRing CommMon :=
 has_forget₂.mk'
-  (λ R : CommSemiRing, CommMon.of R) (λ R, rfl)
-  (λ R₁ R₂ f, f.to_monoid_hom) (by tidy)
+ (λ R : CommSemiRing, CommMon.of R) (λ R, rfl)
+ (λ R₁ R₂ f, f.to_monoid_hom) (by tidy)
 
 end CommSemiRing
 
@@ -161,7 +161,7 @@ def of (R : Type u) [comm_ring R] : CommRing := bundled.of R
 def of_hom {R S : Type u} [comm_ring R] [comm_ring S] (f : R →+* S) : of R ⟶ of S := f
 
 @[simp] lemma of_hom_apply {R S : Type u} [comm_ring R] [comm_ring S] (f : R →+* S) (x : R) :
-  of_hom f x = f x := rfl
+ of_hom f x = f x := rfl
 
 instance : inhabited CommRing := ⟨of punit⟩
 
@@ -194,13 +194,13 @@ variables {X Y : Type u}
 /-- Build an isomorphism in the category `Ring` from a `ring_equiv` between `ring`s. -/
 @[simps] def to_Ring_iso [ring X] [ring Y] (e : X ≃+* Y) : Ring.of X ≅ Ring.of Y :=
 { hom := e.to_ring_hom,
-  inv := e.symm.to_ring_hom }
+ inv := e.symm.to_ring_hom }
 
 /-- Build an isomorphism in the category `CommRing` from a `ring_equiv` between `comm_ring`s. -/
 @[simps] def to_CommRing_iso [comm_ring X] [comm_ring Y] (e : X ≃+* Y) :
-  CommRing.of X ≅ CommRing.of Y :=
+ CommRing.of X ≅ CommRing.of Y :=
 { hom := e.to_ring_hom,
-  inv := e.symm.to_ring_hom }
+ inv := e.symm.to_ring_hom }
 
 end ring_equiv
 
@@ -208,69 +208,69 @@ namespace category_theory.iso
 
 /-- Build a `ring_equiv` from an isomorphism in the category `Ring`. -/
 def Ring_iso_to_ring_equiv {X Y : Ring} (i : X ≅ Y) : X ≃+* Y :=
-{ to_fun    := i.hom,
-  inv_fun   := i.inv,
-  left_inv  := by tidy,
-  right_inv := by tidy,
-  map_add'  := by tidy,
-  map_mul'  := by tidy }.
+{ to_fun := i.hom,
+ inv_fun := i.inv,
+ left_inv := by tidy,
+ right_inv := by tidy,
+ map_add' := by tidy,
+ map_mul' := by tidy }.
 
 /-- Build a `ring_equiv` from an isomorphism in the category `CommRing`. -/
 def CommRing_iso_to_ring_equiv {X Y : CommRing} (i : X ≅ Y) : X ≃+* Y :=
-{ to_fun    := i.hom,
-  inv_fun   := i.inv,
-  left_inv  := by tidy,
-  right_inv := by tidy,
-  map_add'  := by tidy,
-  map_mul'  := by tidy }.
+{ to_fun := i.hom,
+ inv_fun := i.inv,
+ left_inv := by tidy,
+ right_inv := by tidy,
+ map_add' := by tidy,
+ map_mul' := by tidy }.
 
 @[simp]
 lemma CommRing_iso_to_ring_equiv_to_ring_hom {X Y : CommRing} (i : X ≅ Y) :
-  i.CommRing_iso_to_ring_equiv.to_ring_hom = i.hom := by { ext, refl }
+ i.CommRing_iso_to_ring_equiv.to_ring_hom = i.hom := by { ext, refl }
 
 @[simp]
 lemma CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRing} (i : X ≅ Y) :
-  i.CommRing_iso_to_ring_equiv.symm.to_ring_hom = i.inv := by { ext, refl }
+ i.CommRing_iso_to_ring_equiv.symm.to_ring_hom = i.inv := by { ext, refl }
 
 end category_theory.iso
 
 /-- Ring equivalences between `ring`s are the same as (isomorphic to) isomorphisms in `Ring`. -/
 def ring_equiv_iso_Ring_iso {X Y : Type u} [ring X] [ring Y] :
-  (X ≃+* Y) ≅ (Ring.of X ≅ Ring.of Y) :=
+ (X ≃+* Y) ≅ (Ring.of X ≅ Ring.of Y) :=
 { hom := λ e, e.to_Ring_iso,
-  inv := λ i, i.Ring_iso_to_ring_equiv, }
+ inv := λ i, i.Ring_iso_to_ring_equiv, }
 
 /-- Ring equivalences between `comm_ring`s are the same as (isomorphic to) isomorphisms
 in `CommRing`. -/
 def ring_equiv_iso_CommRing_iso {X Y : Type u} [comm_ring X] [comm_ring Y] :
-  (X ≃+* Y) ≅ (CommRing.of X ≅ CommRing.of Y) :=
+ (X ≃+* Y) ≅ (CommRing.of X ≅ CommRing.of Y) :=
 { hom := λ e, e.to_CommRing_iso,
-  inv := λ i, i.CommRing_iso_to_ring_equiv, }
+ inv := λ i, i.CommRing_iso_to_ring_equiv, }
 
 instance Ring.forget_reflects_isos : reflects_isomorphisms (forget Ring.{u}) :=
 { reflects := λ X Y f _,
-  begin
-    resetI,
-    let i := as_iso ((forget Ring).map f),
-    let e : X ≃+* Y := { ..f, ..i.to_equiv },
-    exact ⟨(is_iso.of_iso e.to_Ring_iso).1⟩,
-  end }
+ begin
+ resetI,
+ let i := as_iso ((forget Ring).map f),
+ let e : X ≃+* Y := { ..f, ..i.to_equiv },
+ exact ⟨(is_iso.of_iso e.to_Ring_iso).1⟩,
+ end }
 
 instance CommRing.forget_reflects_isos : reflects_isomorphisms (forget CommRing.{u}) :=
 { reflects := λ X Y f _,
-  begin
-    resetI,
-    let i := as_iso ((forget CommRing).map f),
-    let e : X ≃+* Y := { ..f, ..i.to_equiv },
-    exact ⟨(is_iso.of_iso e.to_CommRing_iso).1⟩,
-  end }
+ begin
+ resetI,
+ let i := as_iso ((forget CommRing).map f),
+ let e : X ≃+* Y := { ..f, ..i.to_equiv },
+ exact ⟨(is_iso.of_iso e.to_CommRing_iso).1⟩,
+ end }
 
 lemma CommRing.comp_eq_ring_hom_comp {R S T : CommRing} (f : R ⟶ S) (g : S ⟶ T) :
-  f ≫ g = g.comp f := rfl
+ f ≫ g = g.comp f := rfl
 
 lemma CommRing.ring_hom_comp_eq_comp {R S T : Type*} [comm_ring R] [comm_ring S]
-  [comm_ring T] (f : R →+* S) (g : S →+* T) :
-  g.comp f = CommRing.of_hom f ≫ CommRing.of_hom g := rfl
+ [comm_ring T] (f : R →+* S) (g : S →+* T) :
+ g.comp f = CommRing.of_hom f ≫ CommRing.of_hom g := rfl
 
 -- It would be nice if we could have the following,
 -- but it requires making `reflects_isomorphisms_forget₂` an instance,
@@ -278,3 +278,4 @@ lemma CommRing.ring_hom_comp_eq_comp {R S T : Type*} [comm_ring R] [comm_ring S]
 
 local attribute [priority 50,instance] reflects_isomorphisms_forget₂
 example : reflects_isomorphisms (forget₂ Ring AddCommGroup) := by apply_instance
+

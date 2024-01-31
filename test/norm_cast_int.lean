@@ -16,3 +16,4 @@ run_cmd norm_cast.coe_to_numeral `((2 : ℕ) : ℤ)
 run_cmd norm_cast.coe_to_numeral `((3 : ℕ) : ℤ)
 
 example : ((42 : ℕ) : ℤ) = 42 := by norm_cast
+

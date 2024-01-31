@@ -21,3 +21,4 @@ example (G H : Ab) (f : G ⟶ H) [epi f] : kernel (cokernel.π f) ≅ H :=
 as_iso (kernel.ι (cokernel.π f))
 
 -- TODO no images yet...
+

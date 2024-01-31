@@ -21,16 +21,16 @@ that the monomials form a basis.
 ## Main definitions
 
 * `restrict_total_degree σ R m`: the subspace of multivariate polynomials indexed by `σ` over the
-  commutative ring `R` of total degree at most `m`.
+ commutative ring `R` of total degree at most `m`.
 * `restrict_degree σ R m`: the subspace of multivariate polynomials indexed by `σ` over the
-  commutative ring `R` such that the degree in each individual variable is at most `m`.
+ commutative ring `R` such that the degree in each individual variable is at most `m`.
 
 ## Main statements
 
 * The multivariate polynomial ring over a commutative ring of positive characteristic has positive
-  characteristic.
+ characteristic.
 * `basis_monomials`: shows that the monomials form a basis of the vector space of multivariate
-  polynomials.
+ polynomials.
 
 ## TODO
 
@@ -50,22 +50,21 @@ namespace mv_polynomial
 section char_p
 
 instance [char_p R p] : char_p (mv_polynomial σ R) p :=
-{ cast_eq_zero_iff := λ n, by rw [← C_eq_coe_nat, ← C_0, C_inj, char_p.cast_eq_zero_iff R p] }
+{ cast_eq_zero_iff := λ n, by rw [← C_eq_coe_nat]; rw [ ← C_0]; rw [ C_inj]; rw [ char_p.cast_eq_zero_iff R p] }
 
 end char_p
 
 section homomorphism
 
 lemma map_range_eq_map {R S : Type*} [comm_ring R] [comm_ring S] (p : mv_polynomial σ R)
-  (f : R →+* S) :
-  finsupp.map_range f f.map_zero p = map f p :=
+ (f : R →+* S) :
+ finsupp.map_range f f.map_zero p = map f p :=
 begin
-  -- `finsupp.map_range_finset_sum` expects `f : R →+ S`
-  change finsupp.map_range (f : R →+ S) (f : R →+ S).map_zero p = map f p,
-  rw [p.as_sum, finsupp.map_range_finset_sum, (map f).map_sum],
-  refine finset.sum_congr rfl (assume n _, _),
-  rw [map_monomial, ← single_eq_monomial, finsupp.map_range_single, single_eq_monomial,
-    f.coe_add_monoid_hom],
+ -- `finsupp.map_range_finset_sum` expects `f : R →+ S`
+ change finsupp.map_range (f : R →+ S) (f : R →+ S).map_zero p = map f p,
+ rw [p.as_sum]; rw [ finsupp.map_range_finset_sum]; rw [ (map f).map_sum],
+ refine finset.sum_congr rfl (assume n _, _),
+ rw [map_monomial]; rw [ ← single_eq_monomial]; rw [ finsupp.map_range_single]; rw [ single_eq_monomial]; rw [ f.coe_add_monoid_hom],
 end
 
 end homomorphism
@@ -84,25 +83,25 @@ finsupp.supported _ _ {n | ∀i, n i ≤ m }
 variable {R}
 
 lemma mem_restrict_total_degree (p : mv_polynomial σ R) :
-  p ∈ restrict_total_degree σ R m ↔ p.total_degree ≤ m :=
+ p ∈ restrict_total_degree σ R m ↔ p.total_degree ≤ m :=
 begin
-  rw [total_degree, finset.sup_le_iff],
-  refl
+ rw [total_degree]; rw [ finset.sup_le_iff],
+ refl
 end
 
 lemma mem_restrict_degree (p : mv_polynomial σ R) (n : ℕ) :
-  p ∈ restrict_degree σ R n ↔ (∀s ∈ p.support, ∀i, (s : σ →₀ ℕ) i ≤ n) :=
+ p ∈ restrict_degree σ R n ↔ (∀s ∈ p.support, ∀i, (s : σ →₀ ℕ) i ≤ n) :=
 begin
-  rw [restrict_degree, finsupp.mem_supported],
-  refl
+ rw [restrict_degree]; rw [ finsupp.mem_supported],
+ refl
 end
 
 lemma mem_restrict_degree_iff_sup [decidable_eq σ] (p : mv_polynomial σ R) (n : ℕ) :
-  p ∈ restrict_degree σ R n ↔ ∀i, p.degrees.count i ≤ n :=
+ p ∈ restrict_degree σ R n ↔ ∀i, p.degrees.count i ≤ n :=
 begin
-  simp only [mem_restrict_degree, degrees_def, multiset.count_finset_sup, finsupp.count_to_multiset,
-    finset.sup_le_iff],
-  exact ⟨assume h n s hs, h s hs n, assume h s hs n, h n s hs⟩
+ simp only [mem_restrict_degree, degrees_def, multiset.count_finset_sup, finsupp.count_to_multiset,
+ finset.sup_le_iff],
+ exact ⟨assume h n s hs, h s hs n, assume h s hs n, h n s hs⟩
 end
 
 variables (σ R)
@@ -111,12 +110,12 @@ variables (σ R)
 def basis_monomials : basis (σ →₀ ℕ) R (mv_polynomial σ R) := finsupp.basis_single_one
 
 @[simp] lemma coe_basis_monomials :
-  (basis_monomials σ R : (σ →₀ ℕ) → mv_polynomial σ R) = λ s, monomial s 1 :=
+ (basis_monomials σ R : (σ →₀ ℕ) → mv_polynomial σ R) = λ s, monomial s 1 :=
 rfl
 
 lemma linear_independent_X : linear_independent R (X : σ → mv_polynomial σ R) :=
 (basis_monomials σ R).linear_independent.comp
-  (λ s : σ, finsupp.single s 1) (finsupp.single_left_injective one_ne_zero)
+ (λ s : σ, finsupp.single s 1) (finsupp.single_left_injective one_ne_zero)
 
 end degree
 
@@ -131,7 +130,8 @@ noncomputable def basis_monomials : basis ℕ R R[X] :=
 basis.of_repr (to_finsupp_iso_alg R).to_linear_equiv
 
 @[simp] lemma coe_basis_monomials :
-  (basis_monomials R : ℕ → R[X]) = λ s, monomial s 1 :=
+ (basis_monomials R : ℕ → R[X]) = λ s, monomial s 1 :=
 _root_.funext $ λ n, of_finsupp_single _ _
 
 end polynomial
+

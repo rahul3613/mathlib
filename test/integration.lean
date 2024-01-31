@@ -60,22 +60,22 @@ example (ω φ : ℝ) : ω * ∫ θ in 0..π, sin (ω*θ + φ) = cos φ - cos (�
 /- some examples may require a bit of algebraic massaging -/
 example {L : ℝ} (h : L ≠ 0) : ∫ x in 0..2/L*π, sin (L/2 * x) = 4 / L :=
 begin
-  norm_num [div_ne_zero h, ← mul_assoc],
-  field_simp [h, mul_div_cancel],
-  norm_num,
+ norm_num [div_ne_zero h, ← mul_assoc],
+ field_simp [h, mul_div_cancel],
+ norm_num,
 end
 
 /- you may need to provide `norm_num` with the composition lemma you are invoking if it has a
-  difficult time recognizing the function you are trying to integrate -/
+ difficult time recognizing the function you are trying to integrate -/
 example : ∫ x : ℝ in 0..2, 3 * (x + 1) ^ 2 = 26 :=
-  by norm_num [integral_comp_add_right (λ x, x ^ 2)]
+ by norm_num [integral_comp_add_right (λ x, x ^ 2)]
 example : ∫ x : ℝ in -1..0, (1 + (x + 1) ^ 2)⁻¹ = π / 4 :=
-  by simp [integral_comp_add_right (λ x, (1 + x ^ 2)⁻¹)]
+ by simp [integral_comp_add_right (λ x, (1 + x ^ 2)⁻¹)]
 
 /-! ### Compositions of functions (aka "change of variables" or "integration by substitution") -/
 
 /- `interval_integral.integral_comp_mul_deriv` can be used to simplify integrals of the form
-  `∫ x in a..b, (g ∘ f) x * f' x`, where `f'` is the derivative of `f`, to `∫ x in f a..f b, g x` -/
+ `∫ x in a..b, (g ∘ f) x * f' x`, where `f'` is the derivative of `f`, to `∫ x in f a..f b, g x` -/
 example {a b : ℝ} : ∫ x in a..b, exp (exp x) * exp x = ∫ x in exp a..exp b, exp x :=
 integral_comp_mul_deriv (λ x hx, has_deriv_at_exp x) continuous_on_exp continuous_exp
 
@@ -85,20 +85,21 @@ by rw integral_comp_mul_deriv (λ x hx, has_deriv_at_exp x) continuous_on_exp co
 
 /- a more detailed example -/
 example : ∫ x in 0..2, exp (x ^ 2) * (2 * x) = exp 4 - 1 :=
-begin                                                    -- let g := exp x, f := x ^ 2, f' := 2 * x
-  rw integral_comp_mul_deriv (λ x hx, _),                -- simplify to ∫ x in f 0..f 2, g x
-  { norm_num },                                          -- compute the integral
-  { exact continuous_on_const.mul continuous_on_id },    -- show that f' is continuous on [0, 2]
-  { exact continuous_exp },                              -- show that g is continuous
-  { simpa using has_deriv_at_pow 2 x },                  -- show that f' = derivative of f on [0, 2]
+begin -- let g := exp x, f := x ^ 2, f' := 2 * x
+ rw integral_comp_mul_deriv (λ x hx, _), -- simplify to ∫ x in f 0..f 2, g x
+ { norm_num }, -- compute the integral
+ { exact continuous_on_const.mul continuous_on_id }, -- show that f' is continuous on [0, 2]
+ { exact continuous_exp }, -- show that g is continuous
+ { simpa using has_deriv_at_pow 2 x }, -- show that f' = derivative of f on [0, 2]
 end
 
 /- alternatively, `interval_integral.integral_deriv_comp_mul_deriv` can be used to compute integrals
-  of this same form, provided that you also know that `g` is the derivative of some function -/
+ of this same form, provided that you also know that `g` is the derivative of some function -/
 example : ∫ x : ℝ in 0..1, exp (x ^ 2) * (2 * x) = exp 1 - 1 :=
 begin
-  rw integral_deriv_comp_mul_deriv (λ x hx, _) (λ x hx, has_deriv_at_exp (x^2)) _ continuous_exp,
-  { simp },
-  { simpa using has_deriv_at_pow 2 x },
-  { exact continuous_on_const.mul continuous_on_id },
+ rw integral_deriv_comp_mul_deriv (λ x hx, _) (λ x hx, has_deriv_at_exp (x^2)) _ continuous_exp,
+ { simp },
+ { simpa using has_deriv_at_pow 2 x },
+ { exact continuous_on_const.mul continuous_on_id },
 end
+

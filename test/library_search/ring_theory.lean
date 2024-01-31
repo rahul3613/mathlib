@@ -19,3 +19,4 @@ variables {I : ideal R[X]}
 
 example {m n : ℕ} (H : m ≤ n) : I.leading_coeff_nth m ≤ I.leading_coeff_nth n :=
 by library_search -- exact ideal.leading_coeff_nth_mono I H
+

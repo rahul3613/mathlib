@@ -29,7 +29,7 @@ instance [group G] [mul_action G β] : has_smul G (α ↪ β) :=
 
 @[to_additive]
 lemma smul_def [group G] [mul_action G β] (g : G) (f : α ↪ β) :
-  g • f = f.trans (mul_action.to_perm g).to_embedding := rfl
+ g • f = f.trans (mul_action.to_perm g).to_embedding := rfl
 @[simp, to_additive]
 lemma smul_apply [group G] [mul_action G β] (g : G) (f : α ↪ β) (a : α) : (g • f) a = g • f a :=
 rfl
@@ -37,16 +37,16 @@ rfl
 lemma coe_smul [group G] [mul_action G β] (g : G) (f : α ↪ β) : ⇑(g • f) = g • f := rfl
 
 instance [group G] [group G'] [has_smul G G'] [mul_action G β] [mul_action G' β]
-  [is_scalar_tower G G' β] : is_scalar_tower G G' (α ↪ β) :=
+ [is_scalar_tower G G' β] : is_scalar_tower G G' (α ↪ β) :=
 ⟨λ x y z, function.embedding.ext $ λ i, smul_assoc x y (z i)⟩
 
 @[to_additive]
 instance [group G] [group G'] [mul_action G β] [mul_action G' β] [smul_comm_class G G' β] :
-  smul_comm_class G G' (α ↪ β) :=
+ smul_comm_class G G' (α ↪ β) :=
 ⟨λ x y z, function.embedding.ext $ λ i, smul_comm x y (z i)⟩
 
 instance [group G] [mul_action G β] [mul_action Gᵐᵒᵖ β] [is_central_scalar G β] :
-  is_central_scalar G (α ↪ β) :=
+ is_central_scalar G (α ↪ β) :=
 ⟨λ r m, function.embedding.ext $ λ i, op_smul_eq_smul _ _⟩
 
 @[to_additive]
@@ -54,3 +54,4 @@ instance [group G] [mul_action G β] : mul_action G (α ↪ β) :=
 fun_like.coe_injective.mul_action _ coe_smul
 
 end function.embedding
+

@@ -51,13 +51,14 @@ loc_path_connected_of_is_open $ is_open_lt continuous_const complex.continuous_i
 
 instance : noncompact_space ℍ :=
 begin
-  refine ⟨λ h, _⟩,
-  have : is_compact (complex.im ⁻¹' Ioi 0), from is_compact_iff_is_compact_univ.2 h,
-  replace := this.is_closed.closure_eq,
-  rw [closure_preimage_im, closure_Ioi, set.ext_iff] at this,
-  exact absurd ((this 0).1 left_mem_Ici) (lt_irrefl _)
+ refine ⟨λ h, _⟩,
+ have : is_compact (complex.im ⁻¹' Ioi 0), from is_compact_iff_is_compact_univ.2 h,
+ replace := this.is_closed.closure_eq,
+ rw [closure_preimage_im] at this; rw [ closure_Ioi] at this; rw [ set.ext_iff] at this,
+ exact absurd ((this 0).1 left_mem_Ici) (lt_irrefl _)
 end
 
 instance : locally_compact_space ℍ := open_embedding_coe.locally_compact_space
 
 end upper_half_plane
+

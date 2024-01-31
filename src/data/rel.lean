@@ -21,13 +21,13 @@ Relations are also known as set-valued functions, or partial multifunctions.
 * `rel.inv`: `r.inv` is the `rel β α` obtained by swapping the arguments of `r`.
 * `rel.dom`: Domain of a relation. `x ∈ r.dom` iff there exists `y` such that `r x y`.
 * `rel.codom`: Codomain, aka range, of a relation. `y ∈ r.codom` iff there exists `x` such that
-  `r x y`.
+ `r x y`.
 * `rel.comp`: Relation composition. Note that the arguments order follows the `category_theory/`
-  one, so `r.comp s x z ↔ ∃ y, r x y ∧ s y z`.
+ one, so `r.comp s x z ↔ ∃ y, r x y ∧ s y z`.
 * `rel.image`: Image of a set under a relation. `r.image s` is the set of `f x` over all `x ∈ s`.
 * `rel.preimage`: Preimage of a set under a relation. Note that `r.preimage = r.inv.image`.
 * `rel.core`: Core of a set. For `s : set β`, `r.core s` is the set of `x : α` such that all `y`
-  related to `x` are in `s`.
+ related to `x` are in `s`.
 * `rel.restrict_domain`: Domain-restriction of a relation to a subtype.
 * `function.graph`: Graph of a function as a relation.
 -/
@@ -69,11 +69,11 @@ def comp (r : rel α β) (s : rel β γ) : rel α γ :=
 local infixr (name := rel.comp) ` ∘ ` := rel.comp
 
 lemma comp_assoc (r : rel α β) (s : rel β γ) (t : rel γ δ) :
-  (r ∘ s) ∘ t = r ∘ s ∘ t :=
+ (r ∘ s) ∘ t = r ∘ s ∘ t :=
 begin
-  unfold comp, ext x w, split,
-  { rintros ⟨z, ⟨y, rxy, syz⟩, tzw⟩, exact ⟨y, rxy, z, syz, tzw⟩ },
-  rintros ⟨y, rxy, z, syz, tzw⟩, exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
+ unfold comp, ext x w, split,
+ { rintros ⟨z, ⟨y, rxy, syz⟩, tzw⟩, exact ⟨y, rxy, z, syz, tzw⟩ },
+ rintros ⟨y, rxy, z, syz, tzw⟩, exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
 end
 
 @[simp]
@@ -106,8 +106,8 @@ r.image_mono.map_inf_le s t
 
 lemma image_union (s t : set α) : r.image (s ∪ t) = r.image s ∪ r.image t :=
 le_antisymm
-  (λ y ⟨x, xst, rxy⟩, xst.elim (λ xs, or.inl ⟨x, ⟨xs, rxy⟩⟩) (λ xt, or.inr ⟨x, ⟨xt, rxy⟩⟩))
-  (r.image_mono.le_map_sup s t)
+ (λ y ⟨x, xst, rxy⟩, xst.elim (λ xs, or.inl ⟨x, ⟨xs, rxy⟩⟩) (λ xt, or.inr ⟨x, ⟨xt, rxy⟩⟩))
+ (r.image_mono.le_map_sup s t)
 
 @[simp]
 lemma image_id (s : set α) : image (@eq α) s = s :=
@@ -115,9 +115,9 @@ by { ext x, simp [mem_image] }
 
 lemma image_comp (s : rel β γ) (t : set α) : image (r ∘ s) t = image s (image r t) :=
 begin
-  ext z, simp only [mem_image], split,
-  { rintros ⟨x, xt, y, rxy, syz⟩, exact ⟨y, ⟨x, xt, rxy⟩, syz⟩ },
-  rintros ⟨y, ⟨x, xt, rxy⟩, syz⟩, exact ⟨x, xt, y, rxy, syz⟩
+ ext z, simp only [mem_image], split,
+ { rintros ⟨x, xt, y, rxy, syz⟩, exact ⟨y, ⟨x, xt, rxy⟩, syz⟩ },
+ rintros ⟨y, ⟨x, xt, rxy⟩, syz⟩, exact ⟨x, xt, y, rxy, syz⟩
 end
 
 lemma image_univ : r.image set.univ = r.codom := by { ext y, simp [mem_image, codom] }
@@ -144,11 +144,11 @@ lemma preimage_id (s : set α) : preimage (@eq α) s = s :=
 by simp only [preimage, inv_id, image_id]
 
 lemma preimage_comp (s : rel β γ) (t : set γ) :
-  preimage (r ∘ s) t = preimage r (preimage s t) :=
+ preimage (r ∘ s) t = preimage r (preimage s t) :=
 by simp only [preimage, inv_comp, image_comp]
 
 lemma preimage_univ : r.preimage set.univ = r.dom :=
-by { rw [preimage, image_univ, codom_inv] }
+by { rw [preimage]; rw [ image_univ]; rw [ codom_inv] }
 
 /-- Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
 to elements of `s`. Other generalization of `function.preimage`. -/
@@ -174,11 +174,11 @@ lemma core_id (s : set α) : core (@eq α) s = s :=
 by simp [core]
 
 lemma core_comp (s : rel β γ) (t : set γ) :
-  core (r ∘ s) t = core r (core s t) :=
+ core (r ∘ s) t = core r (core s t) :=
 begin
-  ext x, simp [core, comp], split,
-  { exact λ h y rxy z, h z y rxy },
-  { exact λ h z y rzy, h y rzy z }
+ ext x, simp [core, comp], split,
+ { exact λ h y rxy z, h z y rxy },
+ { exact λ h z y rzy, h y rzy z }
 end
 
 /-- Restrict the domain of a relation to a subtype. -/
@@ -187,8 +187,8 @@ def restrict_domain (s : set α) : rel {x // x ∈ s} β :=
 
 theorem image_subset_iff (s : set α) (t : set β) : image r s ⊆ t ↔ s ⊆ core r t :=
 iff.intro
-  (λ h x xs y rxy, h ⟨x, xs, rxy⟩)
-  (λ h y ⟨x, xs, rxy⟩, h xs y rxy)
+ (λ h x xs y rxy, h ⟨x, xs, rxy⟩)
+ (λ h y ⟨x, xs, rxy⟩, h xs y rxy)
 
 theorem image_core_gc : galois_connection r.image r.core :=
 image_subset_iff _
@@ -211,11 +211,12 @@ lemma image_eq (f : α → β) (s : set α) : f '' s = (function.graph f).image 
 by simp [set.image, function.graph, rel.image]
 
 lemma preimage_eq (f : α → β) (s : set β) :
-  f ⁻¹' s = (function.graph f).preimage s :=
+ f ⁻¹' s = (function.graph f).preimage s :=
 by simp [set.preimage, function.graph, rel.preimage, rel.inv, flip, rel.image]
 
 lemma preimage_eq_core (f : α → β) (s : set β) :
-  f ⁻¹' s = (function.graph f).core s :=
+ f ⁻¹' s = (function.graph f).core s :=
  by simp [set.preimage, function.graph, rel.core]
 
 end set
+

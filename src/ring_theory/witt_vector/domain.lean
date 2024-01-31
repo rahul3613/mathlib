@@ -63,38 +63,38 @@ variables [hp : fact p.prime] [comm_ring R]
 include hp
 
 lemma verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k+1, x.coeff i = 0) :
-  verschiebung (x.shift k.succ) = x.shift k :=
+ verschiebung (x.shift k.succ) = x.shift k :=
 begin
-  ext ⟨j⟩,
-  { rw [verschiebung_coeff_zero, shift_coeff, h],
-    apply nat.lt_succ_self },
-  { simp only [verschiebung_coeff_succ, shift],
-    congr' 1,
-    rw [nat.add_succ, add_comm, nat.add_succ, add_comm] }
+ ext ⟨j⟩,
+ { rw [verschiebung_coeff_zero]; rw [ shift_coeff]; rw [ h],
+ apply nat.lt_succ_self },
+ { simp only [verschiebung_coeff_succ, shift],
+ congr' 1,
+ rw [nat.add_succ]; rw [ add_comm]; rw [ nat.add_succ]; rw [ add_comm] }
 end
 
 lemma eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i = 0) :
-  x = (verschiebung^[n] (x.shift n)) :=
+ x = (verschiebung^[n] (x.shift n)) :=
 begin
-  induction n with k ih,
-  { cases x; simp [shift] },
-  { dsimp, rw verschiebung_shift,
-    { exact ih (λ i hi, h _ (hi.trans (nat.lt_succ_self _))), },
-    { exact h } }
+ induction n with k ih,
+ { cases x; simp [shift] },
+ { dsimp, rw verschiebung_shift,
+ { exact ih (λ i hi, h _ (hi.trans (nat.lt_succ_self _))), },
+ { exact h } }
 end
 
 lemma verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) :
-  ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n] x') :=
+ ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n] x') :=
 begin
-  have hex : ∃ k : ℕ, x.coeff k ≠ 0,
-  { by_contra' hall,
-    apply hx,
-    ext i,
-    simp only [hall, zero_coeff] },
-  let n := nat.find hex,
-  use [n, x.shift n],
-  refine ⟨nat.find_spec hex, eq_iterate_verschiebung (λ i hi, not_not.mp _)⟩,
-  exact nat.find_min hex hi,
+ have hex : ∃ k : ℕ, x.coeff k ≠ 0,
+ { by_contra' hall,
+ apply hx,
+ ext i,
+ simp only [hall, zero_coeff] },
+ let n := nat.find hex,
+ use [n, x.shift n],
+ refine ⟨nat.find_spec hex, eq_iterate_verschiebung (λ i hi, not_not.mp _)⟩,
+ exact nat.find_min hex hi,
 end
 
 /-!
@@ -107,16 +107,17 @@ This argument is adapted from
 
 instance [char_p R p] [no_zero_divisors R] : no_zero_divisors (𝕎 R) :=
 ⟨λ x y, begin
-  contrapose!,
-  rintros ⟨ha, hb⟩,
-  rcases verschiebung_nonzero ha with ⟨na, wa, hwa0, rfl⟩,
-  rcases verschiebung_nonzero hb with ⟨nb, wb, hwb0, rfl⟩,
-  refine ne_of_apply_ne (λ x, x.coeff (na + nb)) _,
-  rw [iterate_verschiebung_mul_coeff, zero_coeff],
-  refine mul_ne_zero (pow_ne_zero _ hwa0) (pow_ne_zero _ hwb0),
+ contrapose!,
+ rintros ⟨ha, hb⟩,
+ rcases verschiebung_nonzero ha with ⟨na, wa, hwa0, rfl⟩,
+ rcases verschiebung_nonzero hb with ⟨nb, wb, hwb0, rfl⟩,
+ refine ne_of_apply_ne (λ x, x.coeff (na + nb)) _,
+ rw [iterate_verschiebung_mul_coeff]; rw [ zero_coeff],
+ refine mul_ne_zero (pow_ne_zero _ hwa0) (pow_ne_zero _ hwb0),
 end⟩
 
 instance [char_p R p] [is_domain R] : is_domain (𝕎 R) :=
 no_zero_divisors.to_is_domain _
 
 end witt_vector
+

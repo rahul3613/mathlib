@@ -16,3 +16,4 @@ This instance is not in `data.enat.basic` to avoid dependency on `finset`s.
 -/
 
 attribute [derive complete_linear_order] enat
+

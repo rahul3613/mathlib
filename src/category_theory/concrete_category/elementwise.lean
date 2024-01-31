@@ -19,6 +19,7 @@ In this file we provide various simp lemmas in its elementwise form via `tactic.
 open category_theory category_theory.limits
 
 attribute [elementwise]
-  cone.w limit.lift_π limit.w cocone.w colimit.ι_desc colimit.w
-  kernel.lift_ι cokernel.π_desc
-  kernel.condition cokernel.condition
+ cone.w limit.lift_π limit.w cocone.w colimit.ι_desc colimit.w
+ kernel.lift_ι cokernel.π_desc
+ kernel.condition cokernel.condition
+

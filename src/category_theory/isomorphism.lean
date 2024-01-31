@@ -17,8 +17,8 @@ This file defines isomorphisms between objects of a category.
 
 - `structure iso` : a bundled isomorphism between two objects of a category;
 - `class is_iso` : an unbundled version of `iso`;
-  note that `is_iso f` is a `Prop`, and only asserts the existence of an inverse.
-  Of course, this inverse is unique, so it doesn't cost us much to use choice to retrieve it.
+ note that `is_iso f` is a `Prop`, and only asserts the existence of an inverse.
+ Of course, this inverse is unique, so it doesn't cost us much to use choice to retrieve it.
 - `inv f`, for the inverse of a morphism with `[is_iso f]`
 - `as_iso` : convert from `is_iso` to `iso` (noncomputable);
 - `of_iso` : convert from `iso` to `is_iso`;
@@ -58,7 +58,7 @@ restate_axiom iso.hom_inv_id'
 restate_axiom iso.inv_hom_id'
 attribute [simp, reassoc] iso.hom_inv_id iso.inv_hom_id
 
-infixr ` ≅ `:10  := iso             -- type as \cong or \iso
+infixr ` ≅ `:10 := iso -- type as \cong or \iso
 
 variables {C : Type u} [category.{v} C]
 variables {X Y Z : C}
@@ -68,23 +68,23 @@ namespace iso
 @[ext] lemma ext ⦃α β : X ≅ Y⦄ (w : α.hom = β.hom) : α = β :=
 suffices α.inv = β.inv, by cases α; cases β; cc,
 calc α.inv
-    = α.inv ≫ (β.hom ≫ β.inv) : by rw [iso.hom_inv_id, category.comp_id]
-... = (α.inv ≫ α.hom) ≫ β.inv : by rw [category.assoc, ←w]
-... = β.inv                   : by rw [iso.inv_hom_id, category.id_comp]
+ = α.inv ≫ (β.hom ≫ β.inv) : by rw [iso.hom_inv_id]; rw [ category.comp_id]
+... = (α.inv ≫ α.hom) ≫ β.inv : by rw [category.assoc]; rw [ ←w]
+... = β.inv : by rw [iso.inv_hom_id]; rw [ category.id_comp]
 
 /-- Inverse isomorphism. -/
 @[symm] def symm (I : X ≅ Y) : Y ≅ X :=
 { hom := I.inv,
-  inv := I.hom,
-  hom_inv_id' := I.inv_hom_id',
-  inv_hom_id' := I.hom_inv_id' }
+ inv := I.hom,
+ hom_inv_id' := I.inv_hom_id',
+ inv_hom_id' := I.hom_inv_id' }
 
 @[simp] lemma symm_hom (α : X ≅ Y) : α.symm.hom = α.inv := rfl
 @[simp] lemma symm_inv (α : X ≅ Y) : α.symm.inv = α.hom := rfl
 
 @[simp] lemma symm_mk {X Y : C} (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id) :
-  iso.symm {hom := hom, inv := inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id} =
-    {hom := inv, inv := hom, hom_inv_id' := inv_hom_id, inv_hom_id' := hom_inv_id} := rfl
+ iso.symm {hom := hom, inv := inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id} =
+ {hom := inv, inv := hom, hom_inv_id' := inv_hom_id, inv_hom_id' := hom_inv_id} := rfl
 
 @[simp] lemma symm_symm_eq {X Y : C} (α : X ≅ Y) : α.symm.symm = α :=
 by cases α; refl
@@ -98,7 +98,7 @@ lemma nonempty_iso_symm (X Y : C) : nonempty (X ≅ Y) ↔ nonempty (Y ≅ X) :=
 /-- Identity isomorphism. -/
 @[refl, simps] def refl (X : C) : X ≅ X :=
 { hom := 𝟙 X,
-  inv := 𝟙 X }
+ inv := 𝟙 X }
 
 instance : inhabited (X ≅ X) := ⟨iso.refl X⟩
 
@@ -107,23 +107,23 @@ instance : inhabited (X ≅ X) := ⟨iso.refl X⟩
 /-- Composition of two isomorphisms -/
 @[trans, simps] def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z :=
 { hom := α.hom ≫ β.hom,
-  inv := β.inv ≫ α.inv }
+ inv := β.inv ≫ α.inv }
 
 infixr ` ≪≫ `:80 := iso.trans -- type as `\ll \gg`.
 
 @[simp] lemma trans_mk {X Y Z : C}
-  (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id)
-  (hom' : Y ⟶ Z) (inv' : Z ⟶ Y) (hom_inv_id') (inv_hom_id') (hom_inv_id'') (inv_hom_id'') :
-  iso.trans
-    {hom := hom, inv := inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id}
-    {hom := hom', inv := inv', hom_inv_id' := hom_inv_id', inv_hom_id' := inv_hom_id'} =
-  { hom := hom ≫ hom', inv := inv' ≫ inv, hom_inv_id' := hom_inv_id'',
-    inv_hom_id' := inv_hom_id''} :=
+ (hom : X ⟶ Y) (inv : Y ⟶ X) (hom_inv_id) (inv_hom_id)
+ (hom' : Y ⟶ Z) (inv' : Z ⟶ Y) (hom_inv_id') (inv_hom_id') (hom_inv_id'') (inv_hom_id'') :
+ iso.trans
+ {hom := hom, inv := inv, hom_inv_id' := hom_inv_id, inv_hom_id' := inv_hom_id}
+ {hom := hom', inv := inv', hom_inv_id' := hom_inv_id', inv_hom_id' := inv_hom_id'} =
+ { hom := hom ≫ hom', inv := inv' ≫ inv, hom_inv_id' := hom_inv_id'',
+ inv_hom_id' := inv_hom_id''} :=
 rfl
 
 @[simp] lemma trans_symm (α : X ≅ Y) (β : Y ≅ Z) : (α ≪≫ β).symm = β.symm ≪≫ α.symm := rfl
 @[simp] lemma trans_assoc {Z' : C} (α : X ≅ Y) (β : Y ≅ Z) (γ : Z ≅ Z') :
-  (α ≪≫ β) ≪≫ γ = α ≪≫ β ≪≫ γ :=
+ (α ≪≫ β) ≪≫ γ = α ≪≫ β ≪≫ γ :=
 by ext; simp only [trans_hom, category.assoc]
 
 @[simp] lemma refl_trans (α : X ≅ Y) : (iso.refl X) ≪≫ α = α := by ext; apply category.id_comp
@@ -133,10 +133,10 @@ by ext; simp only [trans_hom, category.assoc]
 @[simp] lemma self_symm_id (α : X ≅ Y) : α ≪≫ α.symm = iso.refl X := ext α.hom_inv_id
 
 @[simp] lemma symm_self_id_assoc (α : X ≅ Y) (β : Y ≅ Z) : α.symm ≪≫ α ≪≫ β = β :=
-by rw [← trans_assoc, symm_self_id, refl_trans]
+by rw [← trans_assoc]; rw [ symm_self_id]; rw [ refl_trans]
 
 @[simp] lemma self_symm_id_assoc (α : X ≅ Y) (β : X ≅ Z) : α ≪≫ α.symm ≪≫ β = β :=
-by rw [← trans_assoc, self_symm_id, refl_trans]
+by rw [← trans_assoc]; rw [ self_symm_id]; rw [ refl_trans]
 
 lemma inv_comp_eq (α : X ≅ Y) {f : X ⟶ Z} {g : Y ⟶ Z} : α.inv ≫ f = g ↔ f = α.hom ≫ g :=
 ⟨λ H, by simp [H.symm], λ H, by simp [H]⟩
@@ -155,10 +155,10 @@ have ∀{X Y : C} (f g : X ≅ Y), f.hom = g.hom → f.inv = g.inv, from λ X Y 
 ⟨this f.symm g.symm, this f g⟩
 
 lemma hom_comp_eq_id (α : X ≅ Y) {f : Y ⟶ X} : α.hom ≫ f = 𝟙 X ↔ f = α.inv :=
-by rw [←eq_inv_comp, comp_id]
+by rw [←eq_inv_comp]; rw [ comp_id]
 
 lemma comp_hom_eq_id (α : X ≅ Y) {f : Y ⟶ X} : f ≫ α.hom = 𝟙 Y ↔ f = α.inv :=
-by rw [←eq_comp_inv, id_comp]
+by rw [←eq_comp_inv]; rw [ id_comp]
 
 lemma inv_comp_eq_id (α : X ≅ Y) {f : X ⟶ Y} : α.inv ≫ f = 𝟙 Y ↔ f = α.hom :=
 hom_comp_eq_id α.symm
@@ -167,7 +167,7 @@ lemma comp_inv_eq_id (α : X ≅ Y) {f : X ⟶ Y} : f ≫ α.inv = 𝟙 X ↔ f 
 comp_hom_eq_id α.symm
 
 lemma hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.hom = β.inv ↔ β.hom = α.inv :=
-by { erw [inv_eq_inv α.symm β, eq_comm], refl }
+by { erw [inv_eq_inv α.symm β]; erw [ eq_comm], refl }
 
 end iso
 
@@ -201,36 +201,35 @@ def as_iso (f : X ⟶ Y) [h : is_iso f] : X ≅ Y := ⟨f, inv f, hom_inv_id f, 
 namespace is_iso
 
 @[priority 100] -- see Note [lower instance priority]
-instance epi_of_iso (f : X ⟶ Y) [is_iso f] : epi f  :=
+instance epi_of_iso (f : X ⟶ Y) [is_iso f] : epi f :=
 { left_cancellation := λ Z g h w,
-  -- This is an interesting test case for better rewrite automation.
-  by rw [← is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h] }
+ -- This is an interesting test case for better rewrite automation.
+ by rw [← is_iso.inv_hom_id_assoc f g]; rw [ w]; rw [ is_iso.inv_hom_id_assoc f h] }
 @[priority 100] -- see Note [lower instance priority]
 instance mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f :=
 { right_cancellation := λ Z g h w,
-  by rw [← category.comp_id g, ← category.comp_id h, ← is_iso.hom_inv_id f, ← category.assoc, w,
-    ← category.assoc] }
+ by rw [← category.comp_id g]; rw [ ← category.comp_id h]; rw [ ← is_iso.hom_inv_id f]; rw [ ← category.assoc]; rw [ w]; rw [ ← category.assoc] }
 
 @[ext] lemma inv_eq_of_hom_inv_id {f : X ⟶ Y} [is_iso f] {g : Y ⟶ X}
-  (hom_inv_id : f ≫ g = 𝟙 X) : inv f = g :=
+ (hom_inv_id : f ≫ g = 𝟙 X) : inv f = g :=
 begin
-  apply (cancel_epi f).mp,
-  simp [hom_inv_id],
+ apply (cancel_epi f).mp,
+ simp [hom_inv_id],
 end
 
 lemma inv_eq_of_inv_hom_id {f : X ⟶ Y} [is_iso f] {g : Y ⟶ X}
-  (inv_hom_id : g ≫ f = 𝟙 Y) : inv f = g :=
+ (inv_hom_id : g ≫ f = 𝟙 Y) : inv f = g :=
 begin
-  apply (cancel_mono f).mp,
-  simp [inv_hom_id],
+ apply (cancel_mono f).mp,
+ simp [inv_hom_id],
 end
 
 @[ext] lemma eq_inv_of_hom_inv_id {f : X ⟶ Y} [is_iso f] {g : Y ⟶ X}
-  (hom_inv_id : f ≫ g = 𝟙 X) : g = inv f :=
+ (hom_inv_id : f ≫ g = 𝟙 X) : g = inv f :=
 (inv_eq_of_hom_inv_id hom_inv_id).symm
 
 lemma eq_inv_of_inv_hom_id {f : X ⟶ Y} [is_iso f] {g : Y ⟶ X}
-  (inv_hom_id : g ≫ f = 𝟙 Y) : g = inv f :=
+ (inv_hom_id : g ≫ f = 𝟙 Y) : g = inv f :=
 (inv_eq_of_inv_hom_id inv_hom_id).symm
 
 
@@ -279,19 +278,19 @@ lemma eq_comp_inv (α : X ⟶ Y) [is_iso α] {f : Z ⟶ Y} {g : Z ⟶ X} : g = f
 (as_iso α).eq_comp_inv
 
 lemma of_is_iso_comp_left {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z)
-  [is_iso f] [is_iso (f ≫ g)] : is_iso g :=
-by { rw [← id_comp g, ← inv_hom_id f, assoc], apply_instance, }
+ [is_iso f] [is_iso (f ≫ g)] : is_iso g :=
+by { rw [← id_comp g]; rw [ ← inv_hom_id f]; rw [ assoc], apply_instance, }
 
 lemma of_is_iso_comp_right {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z)
-  [is_iso g] [is_iso (f ≫ g)] : is_iso f :=
-by { rw [← comp_id f, ← hom_inv_id g, ← assoc], apply_instance, }
+ [is_iso g] [is_iso (f ≫ g)] : is_iso f :=
+by { rw [← comp_id f]; rw [ ← hom_inv_id g]; rw [ ← assoc], apply_instance, }
 
 lemma of_is_iso_fac_left {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z}
-  [is_iso f] [hh : is_iso h] (w : f ≫ g = h) : is_iso g :=
+ [is_iso f] [hh : is_iso h] (w : f ≫ g = h) : is_iso g :=
 by { rw ← w at hh, haveI := hh, exact of_is_iso_comp_left f g, }
 
 lemma of_is_iso_fac_right {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z}
-  [is_iso g] [hh : is_iso h] (w : f ≫ g = h) : is_iso f :=
+ [is_iso g] [hh : is_iso h] (w : f ≫ g = h) : is_iso f :=
 by { rw ← w at hh, haveI := hh, exact of_is_iso_comp_right f g, }
 
 end is_iso
@@ -300,8 +299,8 @@ open is_iso
 
 lemma eq_of_inv_eq_inv {f g : X ⟶ Y} [is_iso f] [is_iso g] (p : inv f = inv g) : f = g :=
 begin
-  apply (cancel_epi (inv f)).1,
-  erw [inv_hom_id, p, inv_hom_id],
+ apply (cancel_epi (inv f)).1,
+ erw [inv_hom_id]; erw [ p]; erw [ inv_hom_id],
 end
 
 lemma is_iso.inv_eq_inv {f g : X ⟶ Y} [is_iso f] [is_iso g] : inv f = inv g ↔ f = g :=
@@ -328,11 +327,11 @@ by { rw [(comp_hom_eq_id _).mp h], apply_instance }
 namespace iso
 
 @[ext] lemma inv_ext {f : X ≅ Y} {g : Y ⟶ X}
-  (hom_inv_id : f.hom ≫ g = 𝟙 X) : f.inv = g :=
+ (hom_inv_id : f.hom ≫ g = 𝟙 X) : f.inv = g :=
 ((hom_comp_eq_id f).1 hom_inv_id).symm
 
 @[ext] lemma inv_ext' {f : X ≅ Y} {g : Y ⟶ X}
-  (hom_inv_id : f.hom ≫ g = 𝟙 X) : g = f.inv :=
+ (hom_inv_id : f.hom ≫ g = 𝟙 X) : g = f.inv :=
 (hom_comp_eq_id f).1 hom_inv_id
 
 /-!
@@ -349,19 +348,19 @@ Presumably we could write `X ↪ Y` and `X ↠ Y`.
 -/
 
 @[simp] lemma cancel_iso_hom_left {X Y Z : C} (f : X ≅ Y) (g g' : Y ⟶ Z) :
-  f.hom ≫ g = f.hom ≫ g' ↔ g = g' :=
+ f.hom ≫ g = f.hom ≫ g' ↔ g = g' :=
 by simp only [cancel_epi]
 
 @[simp] lemma cancel_iso_inv_left {X Y Z : C} (f : Y ≅ X) (g g' : Y ⟶ Z) :
-  f.inv ≫ g = f.inv ≫ g' ↔ g = g' :=
+ f.inv ≫ g = f.inv ≫ g' ↔ g = g' :=
 by simp only [cancel_epi]
 
 @[simp] lemma cancel_iso_hom_right {X Y Z : C} (f f' : X ⟶ Y) (g : Y ≅ Z) :
-  f ≫ g.hom = f' ≫ g.hom ↔ f = f' :=
+ f ≫ g.hom = f' ≫ g.hom ↔ f = f' :=
 by simp only [cancel_mono]
 
 @[simp] lemma cancel_iso_inv_right {X Y Z : C} (f f' : X ⟶ Y) (g : Z ≅ Y) :
-  f ≫ g.inv = f' ≫ g.inv ↔ f = f' :=
+ f ≫ g.inv = f' ≫ g.inv ↔ f = f' :=
 by simp only [cancel_mono]
 
 /-
@@ -373,15 +372,15 @@ but then stop.
 -/
 
 @[simp] lemma cancel_iso_hom_right_assoc {W X X' Y Z : C}
-  (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y)
-  (h : Y ≅ Z) :
-  f ≫ g ≫ h.hom = f' ≫ g' ≫ h.hom ↔ f ≫ g = f' ≫ g' :=
+ (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y)
+ (h : Y ≅ Z) :
+ f ≫ g ≫ h.hom = f' ≫ g' ≫ h.hom ↔ f ≫ g = f' ≫ g' :=
 by simp only [←category.assoc, cancel_mono]
 
 @[simp] lemma cancel_iso_inv_right_assoc {W X X' Y Z : C}
-  (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y)
-  (h : Z ≅ Y) :
-  f ≫ g ≫ h.inv = f' ≫ g' ≫ h.inv ↔ f ≫ g = f' ≫ g' :=
+ (f : W ⟶ X) (g : X ⟶ Y) (f' : W ⟶ X') (g' : X' ⟶ Y)
+ (h : Z ≅ Y) :
+ f ≫ g ≫ h.inv = f' ≫ g' ≫ h.inv ↔ f ≫ g = f' ≫ g' :=
 by simp only [←category.assoc, cancel_mono]
 
 end iso
@@ -397,16 +396,16 @@ variables [category.{v₂} D]
 @[simps]
 def map_iso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y :=
 { hom := F.map i.hom,
-  inv := F.map i.inv,
-  hom_inv_id' := by rw [←map_comp, iso.hom_inv_id, ←map_id],
-  inv_hom_id' := by rw [←map_comp, iso.inv_hom_id, ←map_id] }
+ inv := F.map i.inv,
+ hom_inv_id' := by rw [←map_comp]; rw [ iso.hom_inv_id]; rw [ ←map_id],
+ inv_hom_id' := by rw [←map_comp]; rw [ iso.inv_hom_id]; rw [ ←map_id] }
 
 @[simp] lemma map_iso_symm (F : C ⥤ D) {X Y : C} (i : X ≅ Y) :
-  F.map_iso i.symm = (F.map_iso i).symm :=
+ F.map_iso i.symm = (F.map_iso i).symm :=
 rfl
 
 @[simp] lemma map_iso_trans (F : C ⥤ D) {X Y Z : C} (i : X ≅ Y) (j : Y ≅ Z) :
-  F.map_iso (i ≪≫ j) = (F.map_iso i) ≪≫ (F.map_iso j) :=
+ F.map_iso (i ≪≫ j) = (F.map_iso i) ≪≫ (F.map_iso j) :=
 by ext; apply functor.map_comp
 
 @[simp] lemma map_iso_refl (F : C ⥤ D) (X : C) : F.map_iso (iso.refl X) = iso.refl (F.obj X) :=
@@ -416,17 +415,18 @@ instance map_is_iso (F : C ⥤ D) (f : X ⟶ Y) [is_iso f] : is_iso (F.map f) :=
 is_iso.of_iso $ F.map_iso (as_iso f)
 
 @[simp] lemma map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [is_iso f] :
-  F.map (inv f) = inv (F.map f) :=
+ F.map (inv f) = inv (F.map f) :=
 by { ext, simp [←F.map_comp], }
 
 lemma map_hom_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [is_iso f] :
-  F.map f ≫ F.map (inv f) = 𝟙 (F.obj X) :=
+ F.map f ≫ F.map (inv f) = 𝟙 (F.obj X) :=
 by simp
 
 lemma map_inv_hom (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [is_iso f] :
-  F.map (inv f) ≫ F.map f = 𝟙 (F.obj Y) :=
+ F.map (inv f) ≫ F.map f = 𝟙 (F.obj Y) :=
 by simp
 
 end functor
 
 end category_theory
+

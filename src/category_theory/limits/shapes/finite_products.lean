@@ -37,15 +37,15 @@ class has_finite_products : Prop :=
 /-- If `C` has finite limits then it has finite products. -/
 @[priority 10]
 instance has_finite_products_of_has_finite_limits [has_finite_limits C] :
-  has_finite_products C :=
+ has_finite_products C :=
 ⟨λ n, infer_instance⟩
 
 instance has_limits_of_shape_discrete [has_finite_products C] (ι : Type w) [finite ι] :
-  has_limits_of_shape (discrete ι) C :=
+ has_limits_of_shape (discrete ι) C :=
 begin
-  rcases finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩,
-  haveI := has_finite_products.out C n,
-  exact has_limits_of_shape_of_equivalence (discrete.equivalence e.symm)
+ rcases finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩,
+ haveI := has_finite_products.out C n,
+ exact has_limits_of_shape_of_equivalence (discrete.equivalence e.symm)
 end
 
 /-- We can now write this for powers. -/
@@ -70,17 +70,17 @@ class has_finite_coproducts : Prop :=
 attribute [class] has_finite_coproducts
 
 instance has_colimits_of_shape_discrete [has_finite_coproducts C] (ι : Type w) [finite ι] :
-  has_colimits_of_shape (discrete ι) C :=
+ has_colimits_of_shape (discrete ι) C :=
 begin
-  rcases finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩,
-  haveI := has_finite_coproducts.out C n,
-  exact has_colimits_of_shape_of_equivalence (discrete.equivalence e.symm)
+ rcases finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩,
+ haveI := has_finite_coproducts.out C n,
+ exact has_colimits_of_shape_of_equivalence (discrete.equivalence e.symm)
 end
 
 /-- If `C` has finite colimits then it has finite coproducts. -/
 @[priority 10]
 instance has_finite_coproducts_of_has_finite_colimits [has_finite_colimits C] :
-  has_finite_coproducts C :=
+ has_finite_coproducts C :=
 ⟨λ J, by apply_instance⟩
 
 /--
@@ -90,3 +90,4 @@ lemma has_finite_coproducts_of_has_coproducts [has_coproducts.{w} C] : has_finit
 ⟨λ J, has_colimits_of_shape_of_equivalence (discrete.equivalence (equiv.ulift.{w}))⟩
 
 end category_theory.limits
+

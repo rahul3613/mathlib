@@ -25,14 +25,14 @@ namespace finset
 namespace nat
 
 /-- The antidiagonal of a natural number `n` is
-    the finset of pairs `(i, j)` such that `i + j = n`. -/
+ the finset of pairs `(i, j)` such that `i + j = n`. -/
 def antidiagonal (n : ℕ) : finset (ℕ × ℕ) :=
 ⟨multiset.nat.antidiagonal n, multiset.nat.nodup_antidiagonal n⟩
 
 /-- A pair (i, j) is contained in the antidiagonal of `n` if and only if `i + j = n`. -/
 @[simp] lemma mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} :
-  x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
-by rw [antidiagonal, mem_def, multiset.nat.mem_antidiagonal]
+ x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
+by rw [antidiagonal]; rw [ mem_def]; rw [ multiset.nat.mem_antidiagonal]
 
 /-- The cardinality of the antidiagonal of `n` is `n + 1`. -/
 @[simp] lemma card_antidiagonal (n : ℕ) : (antidiagonal n).card = n+1 :=
@@ -43,100 +43,101 @@ by simp [antidiagonal]
 rfl
 
 lemma antidiagonal_succ (n : ℕ) :
-  antidiagonal (n + 1) = cons (0, n + 1) ((antidiagonal n).map
-  (function.embedding.prod_map ⟨nat.succ, nat.succ_injective⟩ (function.embedding.refl _)))
-  (by simp) :=
+ antidiagonal (n + 1) = cons (0, n + 1) ((antidiagonal n).map
+ (function.embedding.prod_map ⟨nat.succ, nat.succ_injective⟩ (function.embedding.refl _)))
+ (by simp) :=
 begin
-  apply eq_of_veq,
-  rw [cons_val, map_val],
-  { apply multiset.nat.antidiagonal_succ },
+ apply eq_of_veq,
+ rw [cons_val]; rw [ map_val],
+ { apply multiset.nat.antidiagonal_succ },
 end
 
 lemma antidiagonal_succ' (n : ℕ) :
-  antidiagonal (n + 1) = cons (n + 1, 0) ((antidiagonal n).map
-  (function.embedding.prod_map (function.embedding.refl _) ⟨nat.succ, nat.succ_injective⟩))
-  (by simp) :=
+ antidiagonal (n + 1) = cons (n + 1, 0) ((antidiagonal n).map
+ (function.embedding.prod_map (function.embedding.refl _) ⟨nat.succ, nat.succ_injective⟩))
+ (by simp) :=
 begin
-  apply eq_of_veq,
-  rw [cons_val, map_val],
-  exact multiset.nat.antidiagonal_succ',
+ apply eq_of_veq,
+ rw [cons_val]; rw [ map_val],
+ exact multiset.nat.antidiagonal_succ',
 end
 
 lemma antidiagonal_succ_succ' {n : ℕ} :
-  antidiagonal (n + 2) =
-    cons (0, n + 2)
-      (cons (n + 2, 0) ((antidiagonal n).map
-        (function.embedding.prod_map ⟨nat.succ, nat.succ_injective⟩ ⟨nat.succ, nat.succ_injective⟩))
-        $ by simp) (by simp) :=
+ antidiagonal (n + 2) =
+ cons (0, n + 2)
+ (cons (n + 2, 0) ((antidiagonal n).map
+ (function.embedding.prod_map ⟨nat.succ, nat.succ_injective⟩ ⟨nat.succ, nat.succ_injective⟩))
+ $ by simp) (by simp) :=
 by { simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', finset.map_cons, map_map], refl }
 
 lemma map_swap_antidiagonal {n : ℕ} :
-  (antidiagonal n).map ⟨prod.swap, prod.swap_right_inverse.injective⟩ = antidiagonal n :=
+ (antidiagonal n).map ⟨prod.swap, prod.swap_right_inverse.injective⟩ = antidiagonal n :=
 eq_of_veq $ by simp [antidiagonal, multiset.nat.map_swap_antidiagonal]
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 lemma antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n)
-  (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst :=
+ (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst :=
 begin
-  refine ⟨congr_arg prod.fst, (λ h, prod.ext h ((add_right_inj q.fst).mp _))⟩,
-  rw mem_antidiagonal at hp hq,
-  rw [hq, ← h, hp],
+ refine ⟨congr_arg prod.fst, (λ h, prod.ext h ((add_right_inj q.fst).mp _))⟩,
+ rw mem_antidiagonal at hp hq,
+ rw [hq]; rw [ ← h]; rw [ hp],
 end
 
 lemma antidiagonal.fst_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) :
-  kl.1 ≤ n :=
+ kl.1 ≤ n :=
 begin
-  rw le_iff_exists_add,
-  use kl.2,
-  rwa [mem_antidiagonal, eq_comm] at hlk
+ rw le_iff_exists_add,
+ use kl.2,
+ rwa [mem_antidiagonal] at hlk; rwa [ eq_comm] at hlk
 end
 
 lemma antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagonal n) :
-  kl.2 ≤ n :=
+ kl.2 ≤ n :=
 begin
-  rw le_iff_exists_add,
-  use kl.1,
-  rwa [mem_antidiagonal, eq_comm, add_comm] at hlk
+ rw le_iff_exists_add,
+ use kl.1,
+ rwa [mem_antidiagonal] at hlk; rwa [ eq_comm] at hlk; rwa [ add_comm] at hlk
 end
 
 lemma filter_fst_eq_antidiagonal (n m : ℕ) :
-  filter (λ x : ℕ × ℕ, x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
+ filter (λ x : ℕ × ℕ, x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
 begin
-  ext ⟨x, y⟩,
-  simp only [mem_filter, nat.mem_antidiagonal],
-  split_ifs with h h,
-  { simp [and_comm, eq_tsub_iff_add_eq_of_le h, add_comm] {contextual := tt} },
-  { rw not_le at h,
-    simp only [not_mem_empty, iff_false, not_and],
-    exact λ hn, ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h) }
+ ext ⟨x, y⟩,
+ simp only [mem_filter, nat.mem_antidiagonal],
+ split_ifs with h h,
+ { simp [and_comm, eq_tsub_iff_add_eq_of_le h, add_comm] {contextual := tt} },
+ { rw not_le at h,
+ simp only [not_mem_empty, iff_false, not_and],
+ exact λ hn, ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h) }
 end
 
 lemma filter_snd_eq_antidiagonal (n m : ℕ) :
-  filter (λ x : ℕ × ℕ, x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
+ filter (λ x : ℕ × ℕ, x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
 begin
-  have : (λ (x : ℕ × ℕ), x.snd = m) ∘ prod.swap = (λ (x : ℕ × ℕ), x.fst = m),
-  { ext, simp },
-  rw ←map_swap_antidiagonal,
-  simp [filter_map, this, filter_fst_eq_antidiagonal, apply_ite (finset.map _)]
+ have : (λ (x : ℕ × ℕ), x.snd = m) ∘ prod.swap = (λ (x : ℕ × ℕ), x.fst = m),
+ { ext, simp },
+ rw ←map_swap_antidiagonal,
+ simp [filter_map, this, filter_fst_eq_antidiagonal, apply_ite (finset.map _)]
 end
 
 section equiv_prod
 
 /-- The disjoint union of antidiagonals `Σ (n : ℕ), antidiagonal n` is equivalent to the product
-    `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
+ `ℕ × ℕ`. This is such an equivalence, obtained by mapping `(n, (k, l))` to `(k, l)`. -/
 @[simps] def sigma_antidiagonal_equiv_prod : (Σ (n : ℕ), antidiagonal n) ≃ ℕ × ℕ :=
 { to_fun := λ x, x.2,
-  inv_fun := λ x, ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩,
-  left_inv :=
-    begin
-      rintros ⟨n, ⟨k, l⟩, h⟩,
-      rw mem_antidiagonal at h,
-      exact sigma.subtype_ext h rfl,
-    end,
-  right_inv := λ x, rfl }
+ inv_fun := λ x, ⟨x.1 + x.2, x, mem_antidiagonal.mpr rfl⟩,
+ left_inv :=
+ begin
+ rintros ⟨n, ⟨k, l⟩, h⟩,
+ rw mem_antidiagonal at h,
+ exact sigma.subtype_ext h rfl,
+ end,
+ right_inv := λ x, rfl }
 
 end equiv_prod
 
 end nat
 
 end finset
+

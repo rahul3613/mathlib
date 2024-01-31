@@ -49,14 +49,14 @@ contain only the names of the ancestor structures, without any arguments.
 @[user_attribute]
 meta def ancestor_attr : user_attribute unit (list name) :=
 { name := `ancestor,
-  descr := "ancestor of old structures",
-  parser := many ident }
+ descr := "ancestor of old structures",
+ parser := many ident }
 
 add_tactic_doc
 { name := "ancestor",
-  category := doc_category.attr,
-  decl_names := [`tactic.ancestor_attr],
-  tags := ["transport", "environment"] }
+ category := doc_category.attr,
+ decl_names := [`tactic.ancestor_attr],
+ tags := ["transport", "environment"] }
 
 end performance
 
@@ -75,7 +75,7 @@ On failure, the empty list is returned.
 -/
 meta def get_ancestors (cl : name) : tactic (list name) :=
 (++) <$> (prod.fst <$> subobject_names cl <|> pure [])
-     <*> get_tagged_ancestors cl
+ <*> get_tagged_ancestors cl
 
 /--
 Returns the (transitive) ancestors of a structure added via the `ancestor`
@@ -85,7 +85,8 @@ On failure, the empty list is returned.
 -/
 meta def find_ancestors : name → expr → tactic (list expr) | cl arg :=
 do cs ← get_ancestors cl,
-   r ← cs.mmap $ λ c, list.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg,
-   return r.join
+ r ← cs.mmap $ λ c, list.ret <$> (mk_app c [arg] >>= mk_instance) <|> find_ancestors c arg,
+ return r.join
 
 end tactic
+

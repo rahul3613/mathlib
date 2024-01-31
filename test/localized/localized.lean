@@ -47,3 +47,4 @@ example : 2 ↓ 3 = 6 := rfl
 example : 2 ⊖ 3 = 6 := rfl
 example {n m : ℕ} (h : n < m) : n ≤ m := by { simp [h] }
 end
+

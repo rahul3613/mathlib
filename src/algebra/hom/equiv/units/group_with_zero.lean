@@ -27,7 +27,7 @@ protected def mul_left₀ (a : G) (ha : a ≠ 0) : perm G :=
 (units.mk0 a ha).mul_left
 
 lemma _root_.mul_left_bijective₀ (a : G) (ha : a ≠ 0) :
-  function.bijective ((*) a : G → G) :=
+ function.bijective ((*) a : G → G) :=
 (equiv.mul_left₀ a ha).bijective
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` is a permutation of the
@@ -37,9 +37,10 @@ protected def mul_right₀ (a : G) (ha : a ≠ 0) : perm G :=
 (units.mk0 a ha).mul_right
 
 lemma _root_.mul_right_bijective₀ (a : G) (ha : a ≠ 0) :
-  function.bijective ((* a) : G → G) :=
+ function.bijective ((* a) : G → G) :=
 (equiv.mul_right₀ a ha).bijective
 
 end group_with_zero
 
 end equiv
+

@@ -43,7 +43,7 @@ def board := finset (ℤ × ℤ)
 local attribute [reducible] board
 
 /-- Left can play anywhere that a square and the square below it are open. -/
-def left  (b : board) : finset (ℤ × ℤ) := b ∩ b.map shift_up
+def left (b : board) : finset (ℤ × ℤ) := b ∩ b.map shift_up
 /-- Right can play anywhere that a square and the square to the left are open. -/
 def right (b : board) : finset (ℤ × ℤ) := b ∩ b.map shift_right
 
@@ -61,81 +61,81 @@ def move_right (b : board) (m : ℤ × ℤ) : board :=
 (b.erase m).erase (m.1 - 1, m.2)
 
 lemma fst_pred_mem_erase_of_mem_right {b : board} {m : ℤ × ℤ} (h : m ∈ right b) :
-  (m.1 - 1, m.2) ∈ b.erase m :=
+ (m.1 - 1, m.2) ∈ b.erase m :=
 begin
-  rw mem_right at h,
-  apply finset.mem_erase_of_ne_of_mem _ h.2,
-  exact ne_of_apply_ne prod.fst (pred_ne_self m.1),
+ rw mem_right at h,
+ apply finset.mem_erase_of_ne_of_mem _ h.2,
+ exact ne_of_apply_ne prod.fst (pred_ne_self m.1),
 end
 
 lemma snd_pred_mem_erase_of_mem_left {b : board} {m : ℤ × ℤ} (h : m ∈ left b) :
-  (m.1, m.2 - 1) ∈ b.erase m :=
+ (m.1, m.2 - 1) ∈ b.erase m :=
 begin
-  rw mem_left at h,
-  apply finset.mem_erase_of_ne_of_mem _ h.2,
-  exact ne_of_apply_ne prod.snd (pred_ne_self m.2),
+ rw mem_left at h,
+ apply finset.mem_erase_of_ne_of_mem _ h.2,
+ exact ne_of_apply_ne prod.snd (pred_ne_self m.2),
 end
 
 lemma card_of_mem_left {b : board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ finset.card b :=
 begin
-  have w₁ : m ∈ b := (finset.mem_inter.1 h).1,
-  have w₂ : (m.1, m.2 - 1) ∈ b.erase m := snd_pred_mem_erase_of_mem_left h,
-  have i₁ := finset.card_erase_lt_of_mem w₁,
-  have i₂ := nat.lt_of_le_of_lt (nat.zero_le _) (finset.card_erase_lt_of_mem w₂),
-  exact nat.lt_of_le_of_lt i₂ i₁,
+ have w₁ : m ∈ b := (finset.mem_inter.1 h).1,
+ have w₂ : (m.1, m.2 - 1) ∈ b.erase m := snd_pred_mem_erase_of_mem_left h,
+ have i₁ := finset.card_erase_lt_of_mem w₁,
+ have i₂ := nat.lt_of_le_of_lt (nat.zero_le _) (finset.card_erase_lt_of_mem w₂),
+ exact nat.lt_of_le_of_lt i₂ i₁,
 end
 
 lemma card_of_mem_right {b : board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ finset.card b :=
 begin
-  have w₁ : m ∈ b := (finset.mem_inter.1 h).1,
-  have w₂ := fst_pred_mem_erase_of_mem_right h,
-  have i₁ := finset.card_erase_lt_of_mem w₁,
-  have i₂ := nat.lt_of_le_of_lt (nat.zero_le _) (finset.card_erase_lt_of_mem w₂),
-  exact nat.lt_of_le_of_lt i₂ i₁,
+ have w₁ : m ∈ b := (finset.mem_inter.1 h).1,
+ have w₂ := fst_pred_mem_erase_of_mem_right h,
+ have i₁ := finset.card_erase_lt_of_mem w₁,
+ have i₂ := nat.lt_of_le_of_lt (nat.zero_le _) (finset.card_erase_lt_of_mem w₂),
+ exact nat.lt_of_le_of_lt i₂ i₁,
 end
 
 lemma move_left_card {b : board} {m : ℤ × ℤ} (h : m ∈ left b) :
-  finset.card (move_left b m) + 2 = finset.card b :=
+ finset.card (move_left b m) + 2 = finset.card b :=
 begin
-  dsimp [move_left],
-  rw finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h),
-  rw finset.card_erase_of_mem (finset.mem_of_mem_inter_left h),
-  exact tsub_add_cancel_of_le (card_of_mem_left h),
+ dsimp [move_left],
+ rw finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h),
+ rw finset.card_erase_of_mem (finset.mem_of_mem_inter_left h),
+ exact tsub_add_cancel_of_le (card_of_mem_left h),
 end
 
 lemma move_right_card {b : board} {m : ℤ × ℤ} (h : m ∈ right b) :
-  finset.card (move_right b m) + 2 = finset.card b :=
+ finset.card (move_right b m) + 2 = finset.card b :=
 begin
-  dsimp [move_right],
-  rw finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h),
-  rw finset.card_erase_of_mem (finset.mem_of_mem_inter_left h),
-  exact tsub_add_cancel_of_le (card_of_mem_right h),
+ dsimp [move_right],
+ rw finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h),
+ rw finset.card_erase_of_mem (finset.mem_of_mem_inter_left h),
+ exact tsub_add_cancel_of_le (card_of_mem_right h),
 end
 
 lemma move_left_smaller {b : board} {m : ℤ × ℤ} (h : m ∈ left b) :
-  finset.card (move_left b m) / 2 < finset.card b / 2 :=
+ finset.card (move_left b m) / 2 < finset.card b / 2 :=
 by simp [←move_left_card h, lt_add_one]
 lemma move_right_smaller {b : board} {m : ℤ × ℤ} (h : m ∈ right b) :
-  finset.card (move_right b m) / 2 < finset.card b / 2 :=
+ finset.card (move_right b m) / 2 < finset.card b / 2 :=
 by simp [←move_right_card h, lt_add_one]
 
 /-- The instance describing allowed moves on a Domineering board. -/
 instance state : state board :=
 { turn_bound := λ s, s.card / 2,
-  L := λ s, (left s).image (move_left s),
-  R := λ s, (right s).image (move_right s),
-  left_bound := λ s t m,
-  begin
-    simp only [finset.mem_image, prod.exists] at m,
-    rcases m with ⟨_, _, ⟨h, rfl⟩⟩,
-    exact move_left_smaller h
-  end,
-  right_bound := λ s t m,
-  begin
-    simp only [finset.mem_image, prod.exists] at m,
-    rcases m with ⟨_, _, ⟨h, rfl⟩⟩,
-    exact move_right_smaller h
-  end, }
+ L := λ s, (left s).image (move_left s),
+ R := λ s, (right s).image (move_right s),
+ left_bound := λ s t m,
+ begin
+ simp only [finset.mem_image, prod.exists] at m,
+ rcases m with ⟨_, _, ⟨h, rfl⟩⟩,
+ exact move_left_smaller h
+ end,
+ right_bound := λ s t m,
+ begin
+ simp only [finset.mem_image, prod.exists] at m,
+ rcases m with ⟨_, _, ⟨h, rfl⟩⟩,
+ exact move_right_smaller h
+ end, }
 
 end domineering
 
@@ -172,21 +172,22 @@ instance short_L : short domineering.L := by { dsimp [domineering.L], apply_inst
 -- example : domineering.L ≈ pgame.of_lists [0] [1] := dec_trivial
 -- example : (domineering ([(0,0), (0,1), (0,2), (0,3)].to_finset) ≈ 2) := dec_trivial
 -- example : (domineering ([(0,0), (0,1), (1,0), (1,1)].to_finset) ≈ pgame.of_lists [1] [-1]) :=
---   dec_trivial.
+-- dec_trivial.
 
 -- The 3x3 grid is doable, but takes a minute...
 -- example :
---   (domineering ([(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)].to_finset) ≈
---     pgame.of_lists [1] [-1]) := dec_trivial
+-- (domineering ([(0,0), (0,1), (0,2), (1,0), (1,1), (1,2), (2,0), (2,1), (2,2)].to_finset) ≈
+-- pgame.of_lists [1] [-1]) := dec_trivial
 
 -- The 5x5 grid is actually 0, but brute-forcing this is too challenging even for the VM.
 -- #eval to_bool (domineering ([
---   (0,0), (0,1), (0,2), (0,3), (0,4),
---   (1,0), (1,1), (1,2), (1,3), (1,4),
---   (2,0), (2,1), (2,2), (2,3), (2,4),
---   (3,0), (3,1), (3,2), (3,3), (3,4),
---   (4,0), (4,1), (4,2), (4,3), (4,4)
---   ].to_finset) ≈ 0)
+-- (0,0), (0,1), (0,2), (0,3), (0,4),
+-- (1,0), (1,1), (1,2), (1,3), (1,4),
+-- (2,0), (2,1), (2,2), (2,3), (2,4),
+-- (3,0), (3,1), (3,2), (3,3), (3,4),
+-- (4,0), (4,1), (4,2), (4,3), (4,4)
+-- ].to_finset) ≈ 0)
 
 
 end pgame
+

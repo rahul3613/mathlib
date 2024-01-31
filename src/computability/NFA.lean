@@ -26,9 +26,9 @@ open_locale computability
 universes u v
 
 /-- An NFA is a set of states (`σ`), a transition function from state to state labelled by the
-  alphabet (`step`), a starting state (`start`) and a set of acceptance states (`accept`).
-  Note the transition function sends a state to a `set` of states. These are the states that it
-  may be sent to. -/
+ alphabet (`step`), a starting state (`start`) and a set of acceptance states (`accept`).
+ Note the transition function sends a state to a `set` of states. These are the states that it
+ may be sent to. -/
 structure NFA (α : Type u) (σ : Type v) :=
 (step : σ → α → set σ)
 (start : set σ)
@@ -50,24 +50,24 @@ mem_Union₂
 by simp_rw [step_set, Union_false, Union_empty]
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
-  of `S`. -/
+ of `S`. -/
 def eval_from (start : set σ) : list α → set σ :=
 list.foldl M.step_set start
 
 @[simp] lemma eval_from_nil (S : set σ) : M.eval_from S [] = S := rfl
 @[simp] lemma eval_from_singleton (S : set σ) (a : α) : M.eval_from S [a] = M.step_set S a := rfl
 @[simp] lemma eval_from_append_singleton (S : set σ) (x : list α) (a : α) :
-  M.eval_from S (x ++ [a]) = M.step_set (M.eval_from S x) a :=
+ M.eval_from S (x ++ [a]) = M.step_set (M.eval_from S x) a :=
 by simp only [eval_from, list.foldl_append, list.foldl_cons, list.foldl_nil]
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
-  `M.start`. -/
+ `M.start`. -/
 def eval : list α → set σ := M.eval_from M.start
 
 @[simp] lemma eval_nil : M.eval [] = M.start := rfl
 @[simp] lemma eval_singleton (a : α) : M.eval [a] = M.step_set M.start a := rfl
 @[simp] lemma eval_append_singleton (x : list α) (a : α) :
-  M.eval (x ++ [a]) = M.step_set (M.eval x) a :=
+ M.eval (x ++ [a]) = M.step_set (M.eval x) a :=
 eval_from_append_singleton _ _ _ _
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
@@ -75,28 +75,28 @@ def accepts : language α :=
 λ x, ∃ S ∈ M.accept, S ∈ M.eval x
 
 /-- `M.to_DFA` is an `DFA` constructed from a `NFA` `M` using the subset construction. The
-  states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
+ states is the type of `set`s of `M.state` and the step function is `M.step_set`. -/
 def to_DFA : DFA α (set σ) :=
 { step := M.step_set,
-  start := M.start,
-  accept := {S | ∃ s ∈ S, s ∈ M.accept} }
+ start := M.start,
+ accept := {S | ∃ s ∈ S, s ∈ M.accept} }
 
 @[simp] lemma to_DFA_correct :
-  M.to_DFA.accepts = M.accepts :=
+ M.to_DFA.accepts = M.accepts :=
 begin
-  ext x,
-  rw [accepts, DFA.accepts, eval, DFA.eval],
-  change list.foldl _ _ _ ∈ {S | _} ↔ _,
-  split; { exact λ ⟨w, h2, h3⟩, ⟨w, h3, h2⟩ },
+ ext x,
+ rw [accepts]; rw [ DFA.accepts]; rw [ eval]; rw [ DFA.eval],
+ change list.foldl _ _ _ ∈ {S | _} ↔ _,
+ split; { exact λ ⟨w, h2, h3⟩, ⟨w, h3, h2⟩ },
 end
 
 lemma pumping_lemma [fintype σ] {x : list α} (hx : x ∈ M.accepts)
-  (hlen : fintype.card (set σ) ≤ list.length x) :
-  ∃ a b c, x = a ++ b ++ c ∧ a.length + b.length ≤ fintype.card (set σ) ∧ b ≠ [] ∧
-    {a} * {b}∗ * {c} ≤ M.accepts :=
+ (hlen : fintype.card (set σ) ≤ list.length x) :
+ ∃ a b c, x = a ++ b ++ c ∧ a.length + b.length ≤ fintype.card (set σ) ∧ b ≠ [] ∧
+ {a} * {b}∗ * {c} ≤ M.accepts :=
 begin
-  rw ←to_DFA_correct at hx ⊢,
-  exact M.to_DFA.pumping_lemma hx hlen
+ rw ←to_DFA_correct at hx ⊢,
+ exact M.to_DFA.pumping_lemma hx hlen
 end
 
 end NFA
@@ -104,33 +104,33 @@ end NFA
 namespace DFA
 
 /-- `M.to_NFA` is an `NFA` constructed from a `DFA` `M` by using the same start and accept
-  states and a transition function which sends `s` with input `a` to the singleton `M.step s a`. -/
+ states and a transition function which sends `s` with input `a` to the singleton `M.step s a`. -/
 def to_NFA (M : DFA α σ') : NFA α σ' :=
 { step := λ s a, {M.step s a},
-  start := {M.start},
-  accept := M.accept }
+ start := {M.start},
+ accept := M.accept }
 
 @[simp] lemma to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : list α) :
-  M.to_NFA.eval_from {start} s = {M.eval_from start s} :=
+ M.to_NFA.eval_from {start} s = {M.eval_from start s} :=
 begin
-  change list.foldl M.to_NFA.step_set {start} s = {list.foldl M.step start s},
-  induction s with a s ih generalizing start,
-  { tauto },
-  { rw [list.foldl, list.foldl,
-        show M.to_NFA.step_set {start} a = {M.step start a}, by simpa [NFA.step_set]],
-    tauto }
+ change list.foldl M.to_NFA.step_set {start} s = {list.foldl M.step start s},
+ induction s with a s ih generalizing start,
+ { tauto },
+ { rw [list.foldl]; rw [ list.foldl]; rw [ show M.to_NFA.step_set {start} a = {M.step start a}]; rw [ by simpa [NFA.step_set]],
+ tauto }
 end
 
 @[simp] lemma to_NFA_correct (M : DFA α σ) :
-  M.to_NFA.accepts = M.accepts :=
+ M.to_NFA.accepts = M.accepts :=
 begin
-  ext x,
-  change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _,
-  rw to_NFA_eval_from_match,
-  split,
-  { rintro ⟨ S, hS₁, hS₂ ⟩,
-    rwa set.mem_singleton_iff.mp hS₂ at hS₁ },
-  { exact λ h, ⟨M.eval x, h, rfl⟩ }
+ ext x,
+ change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _,
+ rw to_NFA_eval_from_match,
+ split,
+ { rintro ⟨ S, hS₁, hS₂ ⟩,
+ rwa set.mem_singleton_iff.mp hS₂ at hS₁ },
+ { exact λ h, ⟨M.eval x, h, rfl⟩ }
 end
 
 end DFA
+

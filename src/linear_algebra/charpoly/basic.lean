@@ -46,7 +46,7 @@ def charpoly : R[X] :=
 (to_matrix (choose_basis R M) (choose_basis R M) f).charpoly
 
 lemma charpoly_def :
-  f.charpoly = (to_matrix (choose_basis R M) (choose_basis R M) f).charpoly := rfl
+ f.charpoly = (to_matrix (choose_basis R M) (choose_basis R M) f).charpoly := rfl
 
 end basic
 
@@ -64,16 +64,15 @@ to the linear map itself, is zero.
 See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
 lemma aeval_self_charpoly : aeval f f.charpoly = 0 :=
 begin
-  apply (linear_equiv.map_eq_zero_iff (alg_equiv_matrix (choose_basis R M)).to_linear_equiv).1,
-  rw [alg_equiv.to_linear_equiv_apply, ← alg_equiv.coe_alg_hom,
-    ← polynomial.aeval_alg_hom_apply _ _ _, charpoly_def],
-  exact aeval_self_charpoly _,
+ apply (linear_equiv.map_eq_zero_iff (alg_equiv_matrix (choose_basis R M)).to_linear_equiv).1,
+ rw [alg_equiv.to_linear_equiv_apply]; rw [ ← alg_equiv.coe_alg_hom]; rw [ ← polynomial.aeval_alg_hom_apply _ _ _]; rw [ charpoly_def],
+ exact aeval_self_charpoly _,
 end
 
 lemma is_integral : is_integral R f := ⟨f.charpoly, ⟨charpoly_monic f, aeval_self_charpoly f⟩⟩
 
 lemma minpoly_dvd_charpoly {K : Type u} {M : Type v} [field K] [add_comm_group M] [module K M]
-  [finite_dimensional K M] (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
+ [finite_dimensional K M] (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
 minpoly.dvd _ _ (aeval_self_charpoly f)
 
 /-- Any endomorphism polynomial `p` is equivalent under evaluation to `p %ₘ f.charpoly`; that is,
@@ -84,29 +83,30 @@ lemma aeval_eq_aeval_mod_charpoly (p : R[X]) : aeval f p = aeval f (p %ₘ f.cha
 /-- Any endomorphism power can be computed as the sum of endomorphism powers less than the
 dimension of the module. -/
 lemma pow_eq_aeval_mod_charpoly (k : ℕ) : f^k = aeval f (X^k %ₘ f.charpoly) :=
-by rw [←aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
+by rw [←aeval_eq_aeval_mod_charpoly]; rw [ map_pow]; rw [ aeval_X]
 
 variable {f}
 
 lemma minpoly_coeff_zero_of_injective (hf : function.injective f) : (minpoly R f).coeff 0 ≠ 0 :=
 begin
-  intro h,
-  obtain ⟨P, hP⟩ := X_dvd_iff.2 h,
-  have hdegP : P.degree < (minpoly R f).degree,
-  { rw [hP, mul_comm],
-    refine degree_lt_degree_mul_X (λ h, _),
-    rw [h, mul_zero] at hP,
-    exact minpoly.ne_zero (is_integral f) hP },
-  have hPmonic : P.monic,
-  { suffices : (minpoly R f).monic,
-    { rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this },
-    exact minpoly.monic (is_integral f) },
-  have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _,
-  simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, alg_hom.map_mul,
-    zero_apply] at hzero,
-  exact not_le.2 hdegP (minpoly.min _ _ hPmonic (ext hzero)),
+ intro h,
+ obtain ⟨P, hP⟩ := X_dvd_iff.2 h,
+ have hdegP : P.degree < (minpoly R f).degree,
+ { rw [hP]; rw [ mul_comm],
+ refine degree_lt_degree_mul_X (λ h, _),
+ rw [h] at hP; rw [ mul_zero] at hP,
+ exact minpoly.ne_zero (is_integral f) hP },
+ have hPmonic : P.monic,
+ { suffices : (minpoly R f).monic,
+ { rwa [monic.def] at this ; rwa [ hP] at this ; rwa [ mul_comm] at this ; rwa [ leading_coeff_mul_X] at this ; rwa [ ← monic.def] at this },
+ exact minpoly.monic (is_integral f) },
+ have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _,
+ simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, alg_hom.map_mul,
+ zero_apply] at hzero,
+ exact not_le.2 hdegP (minpoly.min _ _ hPmonic (ext hzero)),
 end
 
 end cayley_hamilton
 
 end linear_map
+

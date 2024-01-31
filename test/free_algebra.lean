@@ -45,3 +45,4 @@ variables [comm_ring S] [add_comm_group M] [module S M] (Q : quadratic_form S M)
 example : (1 : clifford_algebra Q) - (1 : clifford_algebra Q) = 0 := by rw sub_self
 
 end clifford
+

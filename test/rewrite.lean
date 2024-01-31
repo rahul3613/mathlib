@@ -13,10 +13,10 @@ begin
  have : x + (y + z) = 3 + y, admit,
  have : a + (b + x) + y + (z + b + c) ≤ 0,
  (do this ← get_local `this,
-     tgt ← to_expr ```(a + (b + x) + y + (z + b + c)),
-     assoc ← mk_mapp ``add_monoid.add_assoc [`(ℕ),none],
-     (l,p) ← assoc_rewrite_intl assoc this tgt,
-     note `h none p  ),
+ tgt ← to_expr ```(a + (b + x) + y + (z + b + c)),
+ assoc ← mk_mapp ``add_monoid.add_assoc [`(ℕ),none],
+ (l,p) ← assoc_rewrite_intl assoc this tgt,
+ note `h none p ),
  erw h,
  guard_target a + b + 3 + y + b + c ≤ 0,
  admit,
@@ -29,8 +29,8 @@ begin
  have : ∀ y, x + (y + z) = 3 + y, admit,
  have : a + (b + x) + y + (z + b + c) ≤ 0,
  (do this ← get_local `this,
-     tgt ← to_expr ```(a + (b + x) + y + (z + b + c)),
-     assoc_rewrite_target this ),
+ tgt ← to_expr ```(a + (b + x) + y + (z + b + c)),
+ assoc_rewrite_target this ),
  guard_target a + b + 3 + y + b + c ≤ 0,
  admit,
  trivial
@@ -42,8 +42,9 @@ variables h₁ : a + (b + x) + y + (z + b + a) ≤ 0
 variables h₂ : y + b + c = y + b + a
 include h₀ h₁ h₂
 example : a + (b + x) + y + (z + b + c) ≤ 0 :=
-by { assoc_rw [h₀,h₂] at *,
-     guard_hyp _inst : is_associative ℕ has_add.add,
-       -- keep a local instance of is_associative to cache
-       -- type class queries
-     exact h₁ }
+by { assoc_rw [h₀] at *; assoc_rw [h₂] at *,
+ guard_hyp _inst : is_associative ℕ has_add.add,
+ -- keep a local instance of is_associative to cache
+ -- type class queries
+ exact h₁ }
+

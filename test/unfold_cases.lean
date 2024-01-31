@@ -20,39 +20,39 @@ inductive node (α)
 /-- this function creates 122 cases as opposed to the 5 we see here. -/
 def balance_eqn_compiler {α} : color → node α → α → node α → node α
 | color.black (node.tree color.red (node.tree color.red a x b) y c) z d :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color.black (node.tree color.red a x (node.tree color.red b y c)) z d :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color.black a x (node.tree color.red (node.tree color.red b y c) z d) :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color.black a x (node.tree color.red b y (node.tree color.red c z d)) :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color a x b := node.tree color a x b
 
 example : ∀ a (x:α) b y c z d, balance_eqn_compiler color.black (node.tree color.red (node.tree color.red a x b) y c) z d =
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d) :=
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d) :=
 begin
-  unfold_cases { refl },
+ unfold_cases { refl },
 end
 
 /-- this function creates 122 cases as opposed to the 5 we see here. -/
-def balance_match {α}  (c:color) (l:node α) (v:α) (r:node α) : node α :=
+def balance_match {α} (c:color) (l:node α) (v:α) (r:node α) : node α :=
 match c, l, v, r with
 | color.black, node.tree color.red (node.tree color.red a x b) y c, z, d :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color.black, node.tree color.red a x (node.tree color.red b y c), z, d :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color.black, a, x, node.tree color.red (node.tree color.red b y c) z d :=
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color.black, a, x, node.tree color.red b y (node.tree color.red c z d) :=
-     node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d)
 | color, a, x, b := node.tree color a x b
 end
 
 example : ∀ a (x:α) b y c z d, balance_match color.black (node.tree color.red (node.tree color.red a x b) y c) z d =
-    node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d) :=
+ node.tree color.red (node.tree color.black a x b) y (node.tree color.black c z d) :=
 begin
-  unfold_cases { refl },
+ unfold_cases { refl },
 end
 
 def foo : ℕ → ℕ → ℕ
@@ -67,7 +67,7 @@ def foo : ℕ → ℕ → ℕ
 
 example : ∀ x, foo x 17 = 17 :=
 begin
-  unfold_cases { refl },
+ unfold_cases { refl },
 end
 
 def bar : ℕ → ℕ
@@ -77,7 +77,7 @@ def bar : ℕ → ℕ
 
 example : ∀ x, bar x = 17 :=
 begin
-  unfold_cases { refl }
+ unfold_cases { refl }
 end
 
 def baz : ℕ → ℕ → Prop
@@ -88,5 +88,6 @@ def baz : ℕ → ℕ → Prop
 
 example : ∀ x, baz x 0 = false :=
 begin
-  unfold_cases { refl },
+ unfold_cases { refl },
 end
+

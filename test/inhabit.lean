@@ -11,3 +11,4 @@ by inhabit α; intro; use default; refl
 
 noncomputable def d {α} [nonempty α] : ∀ n : ℕ, α :=
 by inhabit α; intro; apply default
+

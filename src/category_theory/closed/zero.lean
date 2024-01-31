@@ -40,21 +40,21 @@ If a cartesian closed category has an initial object which is isomorphic to the 
 then each homset has exactly one element.
 -/
 def unique_homset_of_initial_iso_terminal [has_initial C] (i : ⊥_ C ≅ ⊤_ C) (X Y : C) :
-  unique (X ⟶ Y) :=
+ unique (X ⟶ Y) :=
 equiv.unique $
 calc (X ⟶ Y) ≃ (X ⨯ ⊤_ C ⟶ Y) : iso.hom_congr (prod.right_unitor _).symm (iso.refl _)
-         ... ≃ (X ⨯ ⊥_ C ⟶ Y) : iso.hom_congr (prod.map_iso (iso.refl _) i.symm) (iso.refl _)
-         ... ≃ (⊥_ C ⟶ Y ^^ X) : (exp.adjunction _).hom_equiv _ _
+ ... ≃ (X ⨯ ⊥_ C ⟶ Y) : iso.hom_congr (prod.map_iso (iso.refl _) i.symm) (iso.refl _)
+ ... ≃ (⊥_ C ⟶ Y ^^ X) : (exp.adjunction _).hom_equiv _ _
 
 open_locale zero_object
 
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
 def unique_homset_of_zero [has_zero_object C] (X Y : C) :
-  unique (X ⟶ Y) :=
+ unique (X ⟶ Y) :=
 begin
-  haveI : has_initial C := has_zero_object.has_initial,
-  apply unique_homset_of_initial_iso_terminal _ X Y,
-  refine ⟨default, (default : ⊤_ C ⟶ 0) ≫ default, _, _⟩; simp
+ haveI : has_initial C := has_zero_object.has_initial,
+ apply unique_homset_of_initial_iso_terminal _ X Y,
+ refine ⟨default, (default : ⊤_ C ⟶ 0) ≫ default, _, _⟩; simp
 end
 
 local attribute [instance] unique_homset_of_zero
@@ -65,11 +65,12 @@ one morphism.
 -/
 def equiv_punit [has_zero_object C] : C ≌ discrete punit :=
 equivalence.mk
-  (functor.star C)
-  (functor.from_punit 0)
-  (nat_iso.of_components
-    (λ X, { hom := default, inv := default })
-    (λ X Y f, dec_trivial))
-  (functor.punit_ext _ _)
+ (functor.star C)
+ (functor.from_punit 0)
+ (nat_iso.of_components
+ (λ X, { hom := default, inv := default })
+ (λ X Y f, dec_trivial))
+ (functor.punit_ext _ _)
 
 end category_theory
+

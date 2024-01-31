@@ -26,7 +26,7 @@ variables [group α]
 
 section typeclasses_left_right_le
 variables [has_le α] [covariant_class α α (*) (≤)] [covariant_class α α (swap (*)) (≤)]
-  {a b c d : α}
+ {a b c d : α}
 
 section
 
@@ -36,7 +36,7 @@ variable (α)
 @[to_additive "`x ↦ -x` as an order-reversing equivalence.", simps]
 def order_iso.inv : α ≃o αᵒᵈ :=
 { to_equiv := (equiv.inv α).trans order_dual.to_dual,
-  map_rel_iff' := λ a b, @inv_le_inv_iff α _ _ _ _ _ _ }
+ map_rel_iff' := λ a b, @inv_le_inv_iff α _ _ _ _ _ _ }
 
 end
 
@@ -55,7 +55,7 @@ lemma le_inv' : a ≤ b⁻¹ ↔ b ≤ a⁻¹ :=
 @[to_additive "`x ↦ a - x` as an order-reversing equivalence.", simps]
 def order_iso.div_left (a : α) : α ≃o αᵒᵈ :=
 { to_equiv := (equiv.div_left a).trans order_dual.to_dual,
-  map_rel_iff' := λ x y, @div_le_div_iff_left α _ _ _ _ _ _ _ }
+ map_rel_iff' := λ x y, @div_le_div_iff_left α _ _ _ _ _ _ _ }
 
 end typeclasses_left_right_le
 
@@ -72,19 +72,19 @@ variables [covariant_class α α (swap (*)) (≤)] {a b c d : α}
 
 /-- `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
 @[to_additive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
-  simps to_equiv apply {simp_rhs := tt}]
+ simps to_equiv apply {simp_rhs := tt}]
 def order_iso.mul_right (a : α) : α ≃o α :=
 { map_rel_iff' := λ _ _, mul_le_mul_iff_right a, to_equiv := equiv.mul_right a }
 
 @[simp, to_additive] lemma order_iso.mul_right_symm (a : α) :
-  (order_iso.mul_right a).symm = order_iso.mul_right a⁻¹ :=
+ (order_iso.mul_right a).symm = order_iso.mul_right a⁻¹ :=
 by { ext x, refl }
 
 /-- `x ↦ x / a` as an order isomorphism. -/
 @[to_additive "`x ↦ x - a` as an order isomorphism.", simps]
 def order_iso.div_right (a : α) : α ≃o α :=
 { to_equiv := equiv.div_right a,
-  map_rel_iff' := λ x y, div_le_div_iff_right a }
+ map_rel_iff' := λ x y, div_le_div_iff_right a }
 
 end right
 
@@ -93,14 +93,15 @@ variables [covariant_class α α (*) (≤)]
 
 /-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[to_additive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
-  simps to_equiv apply  {simp_rhs := tt}]
+ simps to_equiv apply {simp_rhs := tt}]
 def order_iso.mul_left (a : α) : α ≃o α :=
 { map_rel_iff' := λ _ _, mul_le_mul_iff_left a, to_equiv := equiv.mul_left a }
 
 @[simp, to_additive] lemma order_iso.mul_left_symm (a : α) :
-  (order_iso.mul_left a).symm = order_iso.mul_left a⁻¹ :=
+ (order_iso.mul_left a).symm = order_iso.mul_left a⁻¹ :=
 by { ext x, refl }
 
 end left
 
 end group
+

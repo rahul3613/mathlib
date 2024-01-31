@@ -5,14 +5,14 @@ import tactic.lint
 
 example (f : ℕ → ℕ) : f 42 = 0 :=
 begin
-  -- Hence it doesn't work:
-  success_if_fail {simp},
+ -- Hence it doesn't work:
+ success_if_fail {simp},
 
-  -- BTW, rw doesn't work either:
-  success_if_fail {rw const_zero_eq_zero},
+ -- BTW, rw doesn't work either:
+ success_if_fail {rw const_zero_eq_zero},
 
-  -- It only works if explicitly instantiate with `f`:
-  simp only [const_zero_eq_zero f]
+ -- It only works if explicitly instantiate with `f`:
+ simp only [const_zero_eq_zero f]
 end
 
 
@@ -34,3 +34,4 @@ decl ← get_decl ``injective_succ,
 res ← linter.simp_var_head.test decl,
 -- linter does not complain
 guard res.is_none
+

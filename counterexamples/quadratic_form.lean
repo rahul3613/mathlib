@@ -43,18 +43,19 @@ lemma B_ne_zero : B F ≠ 0 := λ h, by simpa using bilin_form.congr_fun h (1, 0
 This disproves a weaker version of `quadratic_form.associated_left_inverse`.
 -/
 lemma {u} bilin_form.not_inj_on_to_quadratic_form_is_symm :
-  ¬∀ {R M : Type u} [semiring R] [add_comm_monoid M],
-    by exactI ∀ [module R M],
-    by exactI set.inj_on
-      (to_quadratic_form : bilin_form R M → quadratic_form R M)
-      { B | B.is_symm }:=
+ ¬∀ {R M : Type u} [semiring R] [add_comm_monoid M],
+ by exactI ∀ [module R M],
+ by exactI set.inj_on
+ (to_quadratic_form : bilin_form R M → quadratic_form R M)
+ { B | B.is_symm }:=
 begin
-  intro h,
-  let F := ulift.{u} (zmod 2),
-  apply B_ne_zero F,
-  apply h (is_symm_B F) (is_symm_zero),
-  rw [bilin_form.to_quadratic_form_zero, bilin_form.to_quadratic_form_eq_zero],
-  exact is_alt_B F,
+ intro h,
+ let F := ulift.{u} (zmod 2),
+ apply B_ne_zero F,
+ apply h (is_symm_B F) (is_symm_zero),
+ rw [bilin_form.to_quadratic_form_zero]; rw [ bilin_form.to_quadratic_form_eq_zero],
+ exact is_alt_B F,
 end
 
 end counterexample
+

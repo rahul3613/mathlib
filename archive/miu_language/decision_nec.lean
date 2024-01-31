@@ -56,13 +56,13 @@ or.inr rfl
 If `a` is 1 or 2 mod 3 and if `b` is `a` or twice `a` mod 3, then `b` is 1 or 2 mod 3.
 -/
 lemma mod3_eq_1_or_mod3_eq_2 {a b : ℕ} (h1 : a % 3 = 1 ∨ a % 3 = 2)
-  (h2 : b % 3 = a % 3 ∨  b % 3 = (2 * a % 3)) : b % 3 = 1 ∨ b % 3 = 2 :=
+ (h2 : b % 3 = a % 3 ∨ b % 3 = (2 * a % 3)) : b % 3 = 1 ∨ b % 3 = 2 :=
 begin
-  cases h2,
-  { rw h2, exact h1, },
-  { cases h1,
-    { right, simp [h2,mul_mod,h1, nat.succ_lt_succ] },
-    { left, simpa [h2,mul_mod,h1], }, },
+ cases h2,
+ { rw h2, exact h1, },
+ { cases h1,
+ { right, simp [h2,mul_mod,h1, nat.succ_lt_succ] },
+ { left, simpa [h2,mul_mod,h1], }, },
 end
 
 /--
@@ -70,17 +70,17 @@ end
 is 1 or 2 modulo 3.
 -/
 theorem count_equiv_one_or_two_mod3_of_derivable (en : miustr): derivable en →
-  (count I en) % 3 = 1 ∨ (count I en) % 3 = 2:=
+ (count I en) % 3 = 1 ∨ (count I en) % 3 = 2:=
 begin
-  intro h,
-  induction h,
-  { left, apply mod_def, },
-  any_goals {apply mod3_eq_1_or_mod3_eq_2 h_ih},
-  { left, simp only [count_append], refl, },
-  { right, simp only [count, countp, count_append, if_false,two_mul], },
-  { left, simp only [count, count_append, countp, if_false, if_pos],
-    rw [add_right_comm, add_mod_right], },
-  { left, simp only [count ,countp, countp_append, if_false, add_zero], },
+ intro h,
+ induction h,
+ { left, apply mod_def, },
+ any_goals {apply mod3_eq_1_or_mod3_eq_2 h_ih},
+ { left, simp only [count_append], refl, },
+ { right, simp only [count, countp, count_append, if_false,two_mul], },
+ { left, simp only [count, count_append, countp, if_false, if_pos],
+ rw [add_right_comm]; rw [ add_mod_right], },
+ { left, simp only [count ,countp, countp_append, if_false, add_zero], },
 end
 
 /--
@@ -90,9 +90,9 @@ immediately from `dec_trivial`.
 -/
 theorem not_derivable_mu : ¬(derivable "MU") :=
 begin
-  intro h,
-  cases (count_equiv_one_or_two_mod3_of_derivable _ h);
-    contradiction,
+ intro h,
+ cases (count_equiv_one_or_two_mod3_of_derivable _ h);
+ contradiction,
 end
 
 /-!
@@ -114,9 +114,9 @@ Demonstration that `"MI"` starts with `M` and has no `M` in its tail.
 -/
 lemma goodmi : goodm [M,I] :=
 begin
-  split,
-  { refl },
-  { rw [tail ,mem_singleton], trivial },
+ split,
+ { refl },
+ { rw [tail ]; rw [mem_singleton], trivial },
 end
 
 /-!
@@ -125,76 +125,76 @@ We'll show, for each `i` from 1 to 4, that if `en` follows by Rule `i` from `st`
 -/
 
 lemma goodm_of_rule1 (xs : miustr) (h₁ : derivable (xs ++ [I])) (h₂ : goodm (xs ++ [I]))
-  : goodm (xs ++ [I,U]) :=
+ : goodm (xs ++ [I,U]) :=
 begin
-  cases h₂ with mhead nmtail,
-  have : xs ≠ nil,
-  { intro h, rw h at *, rw [nil_append, head] at mhead, contradiction, },
-  split,
-  { rwa [head_append] at *; exact this, },
-  { change [I,U] with [I] ++ [U],
-    rw [←append_assoc, tail_append_singleton_of_ne_nil],
-    { simp only [mem_append, nmtail, false_or, mem_singleton, not_false_iff], },
-    { exact append_ne_nil_of_ne_nil_left _ _ this, }, },
+ cases h₂ with mhead nmtail,
+ have : xs ≠ nil,
+ { intro h, rw h at *, rw [nil_append] at mhead; rw [ head] at mhead, contradiction, },
+ split,
+ { rwa [head_append] at *; exact this, },
+ { change [I,U] with [I] ++ [U],
+ rw [←append_assoc]; rw [ tail_append_singleton_of_ne_nil],
+ { simp only [mem_append, nmtail, false_or, mem_singleton, not_false_iff], },
+ { exact append_ne_nil_of_ne_nil_left _ _ this, }, },
 end
 
 lemma goodm_of_rule2 (xs : miustr) (h₁ : derivable (M :: xs))
-  (h₂ : goodm (M :: xs)) : goodm (M :: xs ++ xs) :=
+ (h₂ : goodm (M :: xs)) : goodm (M :: xs ++ xs) :=
 begin
-  split,
-  { refl, },
-  { cases h₂ with mhead mtail,
-    contrapose! mtail,
-    rw cons_append at mtail,
-    rw tail at *,
-    exact (or_self _).mp (mem_append.mp mtail), },
+ split,
+ { refl, },
+ { cases h₂ with mhead mtail,
+ contrapose! mtail,
+ rw cons_append at mtail,
+ rw tail at *,
+ exact (or_self _).mp (mem_append.mp mtail), },
 end
 
-lemma goodm_of_rule3  (as bs : miustr) (h₁ : derivable (as ++ [I,I,I] ++ bs))
-  (h₂ : goodm (as ++ [I,I,I] ++ bs)) : goodm (as ++ U :: bs) :=
+lemma goodm_of_rule3 (as bs : miustr) (h₁ : derivable (as ++ [I,I,I] ++ bs))
+ (h₂ : goodm (as ++ [I,I,I] ++ bs)) : goodm (as ++ U :: bs) :=
 begin
-  cases h₂ with mhead nmtail,
-  have k : as ≠ nil ,
-  { intro h, rw h at mhead, rw [nil_append] at mhead, contradiction, },
-  split,
-  { revert mhead, simp only [append_assoc,head_append _ k], exact id, },
-  { contrapose! nmtail,
-    rcases (exists_cons_of_ne_nil k) with ⟨x,xs,rfl⟩,
-    simp only [cons_append, tail, mem_append, mem_cons_iff, false_or, mem_nil_iff, or_false] at *,
-    exact nmtail, },
+ cases h₂ with mhead nmtail,
+ have k : as ≠ nil ,
+ { intro h, rw h at mhead, rw [nil_append] at mhead, contradiction, },
+ split,
+ { revert mhead, simp only [append_assoc,head_append _ k], exact id, },
+ { contrapose! nmtail,
+ rcases (exists_cons_of_ne_nil k) with ⟨x,xs,rfl⟩,
+ simp only [cons_append, tail, mem_append, mem_cons_iff, false_or, mem_nil_iff, or_false] at *,
+ exact nmtail, },
 end
 
 /-!
  The proof of the next lemma is identical, on the tactic level, to the previous proof.
 -/
 
-lemma goodm_of_rule4  (as bs : miustr) (h₁ : derivable (as ++ [U,U] ++ bs))
-  (h₂ : goodm (as ++ [U,U] ++ bs)) : goodm (as ++ bs) :=
+lemma goodm_of_rule4 (as bs : miustr) (h₁ : derivable (as ++ [U,U] ++ bs))
+ (h₂ : goodm (as ++ [U,U] ++ bs)) : goodm (as ++ bs) :=
 begin
-  cases h₂ with mhead nmtail,
-  have k : as ≠ nil ,
-  { intro h, rw h at mhead, rw [nil_append] at mhead, contradiction, },
-  split,
-  { revert mhead, simp only [append_assoc,head_append _ k], exact id, },
-  { contrapose! nmtail,
-    rcases (exists_cons_of_ne_nil k) with ⟨x,xs,rfl⟩,
-    simp only [cons_append, tail, mem_append, mem_cons_iff, false_or, mem_nil_iff, or_false] at *,
-    exact nmtail, },
+ cases h₂ with mhead nmtail,
+ have k : as ≠ nil ,
+ { intro h, rw h at mhead, rw [nil_append] at mhead, contradiction, },
+ split,
+ { revert mhead, simp only [append_assoc,head_append _ k], exact id, },
+ { contrapose! nmtail,
+ rcases (exists_cons_of_ne_nil k) with ⟨x,xs,rfl⟩,
+ simp only [cons_append, tail, mem_append, mem_cons_iff, false_or, mem_nil_iff, or_false] at *,
+ exact nmtail, },
 end
 
 /--
 Any derivable string must begin with `M` and have no `M` in its tail.
 -/
 theorem goodm_of_derivable (en : miustr): derivable en →
-  goodm en:=
+ goodm en:=
 begin
-  intro h,
-  induction h,
-  { exact goodmi, },
-  { apply goodm_of_rule1; assumption, },
-  { apply goodm_of_rule2; assumption, },
-  { apply goodm_of_rule3; assumption, },
-  { apply goodm_of_rule4; assumption, },
+ intro h,
+ induction h,
+ { exact goodmi, },
+ { apply goodm_of_rule1; assumption, },
+ { apply goodm_of_rule2; assumption, },
+ { apply goodm_of_rule3; assumption, },
+ { apply goodm_of_rule4; assumption, },
 end
 
 /-!
@@ -215,10 +215,11 @@ Suppose `en : miustr`. If `en` is `derivable`, then the condition `decstr en` ho
 -/
 theorem decstr_of_der {en : miustr} : derivable en → decstr en :=
 begin
-  intro h,
-  split,
-  { exact goodm_of_derivable en h, },
-  { exact count_equiv_one_or_two_mod3_of_derivable en h, },
+ intro h,
+ split,
+ { exact goodm_of_derivable en h, },
+ { exact count_equiv_one_or_two_mod3_of_derivable en h, },
 end
 
 end miu
+

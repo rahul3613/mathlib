@@ -23,16 +23,16 @@ In other words, a type that is `inhabited` and a `subsingleton`.
 ## Main statements
 
 * `unique.mk'`: an inhabited subsingleton type is `unique`. This can not be an instance because it
-  would lead to loops in typeclass inference.
+ would lead to loops in typeclass inference.
 
 * `function.surjective.unique`: if the domain of a surjective function is `unique`, then its
-  codomain is `unique` as well.
+ codomain is `unique` as well.
 
 * `function.injective.subsingleton`: if the codomain of an injective function is `subsingleton`,
-  then its domain is `subsingleton` as well.
+ then its domain is `subsingleton` as well.
 
 * `function.injective.unique`: if the codomain of an injective function is `subsingleton` and its
-  domain is `inhabited`, then its domain is `unique`.
+ domain is `inhabited`, then its domain is `unique`.
 
 ## Implementation details
 
@@ -60,7 +60,7 @@ lemma unique_iff_exists_unique (α : Sort u) : nonempty (unique α) ↔ ∃! a :
 ⟨λ ⟨u⟩, ⟨u.default, trivial, λ a _, u.uniq a⟩, λ ⟨a,_,h⟩, ⟨⟨⟨a⟩, λ _, h _ trivial⟩⟩⟩
 
 lemma unique_subtype_iff_exists_unique {α} (p : α → Prop) :
-  nonempty (unique (subtype p)) ↔ ∃! a, p a :=
+ nonempty (unique (subtype p)) ↔ ∃! a, p a :=
 ⟨λ ⟨u⟩, ⟨u.default.1, u.default.2, λ a h, congr_arg subtype.val (u.uniq ⟨a,h⟩)⟩,
  λ ⟨a,ha,he⟩, ⟨⟨⟨⟨a,ha⟩⟩, λ ⟨b,hb⟩, by { congr, exact he b hb }⟩⟩⟩
 
@@ -72,11 +72,11 @@ equivalent by `unique.subsingleton.unique`.
 See note [reducible non-instances]. -/
 @[reducible] def unique_of_subsingleton {α : Sort*} [subsingleton α] (a : α) : unique α :=
 { default := a,
-  uniq := λ _, subsingleton.elim _ _ }
+ uniq := λ _, subsingleton.elim _ _ }
 
 instance punit.unique : unique punit.{u} :=
 { default := punit.star,
-  uniq := λ x, punit_eq x _ }
+ uniq := λ x, punit_eq x _ }
 
 @[simp] lemma punit.default_eq_star : (default : punit) = punit.star := rfl
 
@@ -123,7 +123,7 @@ lemma exists_iff {p : α → Prop} : Exists p ↔ p default :=
 end
 
 @[ext] protected lemma subsingleton_unique' : ∀ (h₁ h₂ : unique α), h₁ = h₂
-| ⟨⟨x⟩, h⟩ ⟨⟨y⟩, _⟩ := by congr; rw [h x, h y]
+| ⟨⟨x⟩, h⟩ ⟨⟨y⟩, _⟩ := by congr; rw [h x]; rw [ h y]
 
 instance subsingleton_unique : subsingleton (unique α) :=
 ⟨unique.subsingleton_unique'⟩
@@ -136,31 +136,31 @@ a loop in the class inheritance graph. -/
 end unique
 
 lemma unique_iff_subsingleton_and_nonempty (α : Sort u) :
-  nonempty (unique α) ↔ subsingleton α ∧ nonempty α :=
+ nonempty (unique α) ↔ subsingleton α ∧ nonempty α :=
 ⟨λ ⟨u⟩, by split; exactI infer_instance,
  λ ⟨hs, hn⟩, ⟨by { resetI, inhabit α, exact unique.mk' α }⟩⟩
 
 @[simp] lemma pi.default_def {β : α → Sort v} [Π a, inhabited (β a)] :
-  @default (Π a, β a) _ = λ a : α, @default (β a) _ := rfl
+ @default (Π a, β a) _ = λ a : α, @default (β a) _ := rfl
 
 lemma pi.default_apply {β : α → Sort v} [Π a, inhabited (β a)] (a : α) :
-  @default (Π a, β a) _ a = default := rfl
+ @default (Π a, β a) _ a = default := rfl
 
 instance pi.unique {β : α → Sort v} [Π a, unique (β a)] : unique (Π a, β a) :=
 { uniq := λ f, funext $ λ x, unique.eq_default _,
-  .. pi.inhabited α }
+ .. pi.inhabited α }
 
 /-- There is a unique function on an empty domain. -/
 instance pi.unique_of_is_empty [is_empty α] (β : α → Sort v) :
-  unique (Π a, β a) :=
+ unique (Π a, β a) :=
 { default := is_empty_elim,
-  uniq := λ f, funext is_empty_elim }
+ uniq := λ f, funext is_empty_elim }
 
 lemma eq_const_of_unique [unique α] (f : α → β) : f = function.const α (f default) :=
 by { ext x, rw subsingleton.elim x default }
 
 lemma heq_const_of_unique [unique α] {β : α → Sort v}
-  (f : Π a, β a) : f == function.const α (f default) :=
+ (f : Π a, β a) : f == function.const α (f default) :=
 function.hfunext rfl $ λ i _ _, by rw subsingleton.elim i default
 
 namespace function
@@ -170,13 +170,13 @@ variable {f : α → β}
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
 protected lemma injective.subsingleton (hf : injective f) [subsingleton β] :
-  subsingleton α :=
+ subsingleton α :=
 ⟨λ x y, hf $ subsingleton.elim _ _⟩
 
 /-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
 well. -/
 protected lemma surjective.subsingleton [subsingleton α] (hf : surjective f) :
-  subsingleton β :=
+ subsingleton β :=
 ⟨hf.forall₂.2 $ λ x y, congr_arg f $ subsingleton.elim x y⟩
 
 /-- If the domain of a surjective function is a singleton,
@@ -190,15 +190,15 @@ protected def injective.unique [inhabited α] [subsingleton β] (hf : injective 
 
 /-- If a constant function is surjective, then the codomain is a singleton. -/
 def surjective.unique_of_surjective_const (α : Type*) {β : Type*} (b : β)
-  (h : function.surjective (function.const α b)) : unique β :=
+ (h : function.surjective (function.const α b)) : unique β :=
 @unique_of_subsingleton _ (subsingleton_of_forall_eq b $ h.forall.mpr (λ _, rfl)) b
 
 end function
 
 lemma unique.bijective {A B} [unique A] [unique B] {f : A → B} : function.bijective f :=
 begin
-  rw function.bijective_iff_has_inverse,
-  refine ⟨default, _, _⟩; intro x; simp
+ rw function.bijective_iff_has_inverse,
+ refine ⟨default, _, _⟩; intro x; simp
 end
 
 namespace option
@@ -206,7 +206,7 @@ namespace option
 /-- `option α` is a `subsingleton` if and only if `α` is empty. -/
 lemma subsingleton_iff_is_empty {α} : subsingleton (option α) ↔ is_empty α :=
 ⟨λ h, ⟨λ x, option.no_confusion $ @subsingleton.elim _ h x none⟩,
-  λ h, ⟨λ x y, option.cases_on x (option.cases_on y rfl (λ x, h.elim x)) (λ x, h.elim x)⟩⟩
+ λ h, ⟨λ x y, option.cases_on x (option.cases_on y rfl (λ x, h.elim x)) (λ x, h.elim x)⟩⟩
 
 instance {α} [is_empty α] : unique (option α) := @unique.mk' _ _ (subsingleton_iff_is_empty.2 ‹_›)
 
@@ -216,10 +216,11 @@ section subtype
 
 instance unique.subtype_eq (y : α) : unique {x // x = y} :=
 { default := ⟨y, rfl⟩,
-  uniq := λ ⟨x, hx⟩, by simpa using hx }
+ uniq := λ ⟨x, hx⟩, by simpa using hx }
 
 instance unique.subtype_eq' (y : α) : unique {x // y = x} :=
 { default := ⟨y, rfl⟩,
-  uniq := λ ⟨x, hx⟩, by simpa using hx.symm }
+ uniq := λ ⟨x, hx⟩, by simpa using hx.symm }
 
 end subtype
+

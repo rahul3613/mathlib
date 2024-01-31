@@ -50,13 +50,13 @@ by library_search -- exact mul_dvd_mul_left a w
 -- after successfully applying a lemma from the library.)
 example {a b c d: nat} (h₁ : a < c) (h₂ : b < d) : max (c + d) (a + b) = (c + d) :=
 begin
-  library_search [add_lt_add], -- Says: `exact max_eq_left_of_lt (add_lt_add h₁ h₂)`
+ library_search [add_lt_add], -- Says: `exact max_eq_left_of_lt (add_lt_add h₁ h₂)`
 end
 
 -- We can also use attributes:
 meta def ex_attr : user_attribute := {
-  name := `ex,
-  descr := "A lemma that should be applied by `library_search` when discharging subgoals."
+ name := `ex,
+ descr := "A lemma that should be applied by `library_search` when discharging subgoals."
 }
 
 run_cmd attribute.register ``ex_attr
@@ -65,7 +65,7 @@ attribute [ex] add_lt_add
 
 example {a b c d: nat} (h₁ : a < c) (h₂ : b < d) : max (c + d) (a + b) = (c + d) :=
 begin
-  library_search with ex, -- Says: `exact max_eq_left_of_lt (add_lt_add h₁ h₂)`
+ library_search with ex, -- Says: `exact max_eq_left_of_lt (add_lt_add h₁ h₂)`
 end
 
 example (a b : ℕ) (h : 0 < b) : (a * b) / b = a :=
@@ -73,8 +73,9 @@ by library_search -- Says: `exact nat.mul_div_left a h`
 
 example (a b : ℕ) (h : b ≠ 0) : (a * b) / b = a :=
 begin
-  success_if_fail { library_search },
-  library_search [pos_iff_ne_zero.mpr],
+ success_if_fail { library_search },
+ library_search [pos_iff_ne_zero.mpr],
 end
 
 end test.library_search
+

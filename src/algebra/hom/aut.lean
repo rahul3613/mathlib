@@ -45,11 +45,11 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 instance : group (mul_aut M) :=
 by refine_struct
 { mul := λ g h, mul_equiv.trans h g,
-  one := mul_equiv.refl M,
-  inv := mul_equiv.symm,
-  div := _,
-  npow := @npow_rec _ ⟨mul_equiv.refl M⟩ ⟨λ g h, mul_equiv.trans h g⟩,
-  zpow := @zpow_rec _ ⟨mul_equiv.refl M⟩ ⟨λ g h, mul_equiv.trans h g⟩ ⟨mul_equiv.symm⟩ };
+ one := mul_equiv.refl M,
+ inv := mul_equiv.symm,
+ div := _,
+ npow := @npow_rec _ ⟨mul_equiv.refl M⟩ ⟨λ g h, mul_equiv.trans h g⟩,
+ zpow := @zpow_rec _ ⟨mul_equiv.refl M⟩ ⟨λ g h, mul_equiv.trans h g⟩ ⟨mul_equiv.symm⟩ };
 intros; ext; try { refl }; apply equiv.left_inv
 
 instance : inhabited (mul_aut M) := ⟨1⟩
@@ -78,10 +78,10 @@ by refine_struct { to_fun := mul_equiv.to_equiv }; intros; refl
 This generalizes `function.End.apply_mul_action`. -/
 instance apply_mul_distrib_mul_action {M} [monoid M] : mul_distrib_mul_action (mul_aut M) M :=
 { smul := ($),
-  one_smul := λ _, rfl,
-  mul_smul := λ _ _ _, rfl,
-  smul_one := mul_equiv.map_one,
-  smul_mul := mul_equiv.map_mul }
+ one_smul := λ _, rfl,
+ mul_smul := λ _ _ _, rfl,
+ smul_one := mul_equiv.map_one,
+ smul_mul := mul_equiv.map_mul }
 
 @[simp] protected lemma smul_def {M} [monoid M] (f : mul_aut M) (a : M) : f • a = f a := rfl
 
@@ -95,13 +95,13 @@ See also the type `conj_act G` for any group `G`, which has a `mul_action (conj_
 where `conj G` acts on `G` by conjugation. -/
 def conj [group G] : G →* mul_aut G :=
 { to_fun := λ g,
-  { to_fun := λ h, g * h * g⁻¹,
-    inv_fun := λ h, g⁻¹ * h * g,
-    left_inv := λ _, by simp [mul_assoc],
-    right_inv := λ _, by simp [mul_assoc],
-    map_mul' := by simp [mul_assoc] },
-  map_mul' := λ _ _, by ext; simp [mul_assoc],
-  map_one' := by ext; simp [mul_assoc] }
+ { to_fun := λ h, g * h * g⁻¹,
+ inv_fun := λ h, g⁻¹ * h * g,
+ left_inv := λ _, by simp [mul_assoc],
+ right_inv := λ _, by simp [mul_assoc],
+ map_mul' := by simp [mul_assoc] },
+ map_mul' := λ _ _, by ext; simp [mul_assoc],
+ map_one' := by ext; simp [mul_assoc] }
 
 @[simp] lemma conj_apply [group G] (g h : G) : conj g h = g * h * g⁻¹ := rfl
 @[simp] lemma conj_symm_apply [group G] (g h : G) : (conj g).symm h = g⁻¹ * h * g := rfl
@@ -121,11 +121,11 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 instance group : group (add_aut A) :=
 by refine_struct
 { mul := λ g h, add_equiv.trans h g,
-  one := add_equiv.refl A,
-  inv := add_equiv.symm,
-  div := _,
-  npow := @npow_rec _ ⟨add_equiv.refl A⟩ ⟨λ g h, add_equiv.trans h g⟩,
-  zpow := @zpow_rec _ ⟨add_equiv.refl A⟩ ⟨λ g h, add_equiv.trans h g⟩ ⟨add_equiv.symm⟩ };
+ one := add_equiv.refl A,
+ inv := add_equiv.symm,
+ div := _,
+ npow := @npow_rec _ ⟨add_equiv.refl A⟩ ⟨λ g h, add_equiv.trans h g⟩,
+ zpow := @zpow_rec _ ⟨add_equiv.refl A⟩ ⟨λ g h, add_equiv.trans h g⟩ ⟨add_equiv.symm⟩ };
 intros; ext; try { refl }; apply equiv.left_inv
 
 instance : inhabited (add_aut A) := ⟨1⟩
@@ -154,10 +154,10 @@ by refine_struct { to_fun := add_equiv.to_equiv }; intros; refl
 This generalizes `function.End.apply_mul_action`. -/
 instance apply_distrib_mul_action {A} [add_monoid A] : distrib_mul_action (add_aut A) A :=
 { smul := ($),
-  smul_zero := add_equiv.map_zero,
-  smul_add := add_equiv.map_add,
-  one_smul := λ _, rfl,
-  mul_smul := λ _ _ _, rfl }
+ smul_zero := add_equiv.map_zero,
+ smul_add := add_equiv.map_add,
+ one_smul := λ _, rfl,
+ mul_smul := λ _ _ _, rfl }
 
 @[simp] protected lemma smul_def {A} [add_monoid A] (f : add_aut A) (a : A) : f • a = f a := rfl
 
@@ -170,16 +170,17 @@ homomorphism mapping addition in `G` into multiplication in the automorphism gro
 (written additively in order to define the map). -/
 def conj [add_group G] : G →+ additive (add_aut G) :=
 { to_fun := λ g, @additive.of_mul (add_aut G)
-  { to_fun := λ h, g + h + -g, -- this definition is chosen to match `mul_aut.conj`
-    inv_fun := λ h, -g + h + g,
-    left_inv := λ _, by simp [add_assoc],
-    right_inv := λ _, by simp [add_assoc],
-    map_add' := by simp [add_assoc] },
-  map_add' := λ _ _, by apply additive.to_mul.injective; ext; simp [add_assoc],
-  map_zero' := by ext; simpa }
+ { to_fun := λ h, g + h + -g, -- this definition is chosen to match `mul_aut.conj`
+ inv_fun := λ h, -g + h + g,
+ left_inv := λ _, by simp [add_assoc],
+ right_inv := λ _, by simp [add_assoc],
+ map_add' := by simp [add_assoc] },
+ map_add' := λ _ _, by apply additive.to_mul.injective; ext; simp [add_assoc],
+ map_zero' := by ext; simpa }
 
 @[simp] lemma conj_apply [add_group G] (g h : G) : conj g h = g + h + -g := rfl
 @[simp] lemma conj_symm_apply [add_group G] (g h : G) : (conj g).symm h = -g + h + g := rfl
 @[simp] lemma conj_inv_apply [add_group G] (g h : G) : (-(conj g)) h = -g + h + g := rfl
 
 end add_aut
+

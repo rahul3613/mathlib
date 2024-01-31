@@ -13,176 +13,176 @@ variables {α β γ : Type u}
 
 example (x : α × β × γ) : true :=
 begin
-  rcases x with ⟨a, b, c⟩,
-  { guard_hyp a : α,
-    guard_hyp b : β,
-    guard_hyp c : γ,
-    trivial }
+ rcases x with ⟨a, b, c⟩,
+ { guard_hyp a : α,
+ guard_hyp b : β,
+ guard_hyp c : γ,
+ trivial }
 end
 
 example (x : α × β × γ) : true :=
 begin
-  rcases x with ⟨a, ⟨-, c⟩⟩,
-  { guard_hyp a : α,
-    success_if_fail { guard_hyp x_snd_fst : β },
-    guard_hyp c : γ,
-    trivial }
+ rcases x with ⟨a, ⟨-, c⟩⟩,
+ { guard_hyp a : α,
+ success_if_fail { guard_hyp x_snd_fst : β },
+ guard_hyp c : γ,
+ trivial }
 end
 
 example (x : (α × β) × γ) : true :=
 begin
-  rcases x with ⟨⟨a:α, b⟩, c⟩,
-  { guard_hyp a : α,
-    guard_hyp b : β,
-    guard_hyp c : γ,
-    trivial }
+ rcases x with ⟨⟨a:α, b⟩, c⟩,
+ { guard_hyp a : α,
+ guard_hyp b : β,
+ guard_hyp c : γ,
+ trivial }
 end
 
 example : inhabited α × option β ⊕ γ → true :=
 begin
-  rintro (⟨⟨a⟩, _ | b⟩ | c),
-  { guard_hyp a : α, trivial },
-  { guard_hyp a : α, guard_hyp b : β, trivial },
-  { guard_hyp c : γ, trivial }
+ rintro (⟨⟨a⟩, _ | b⟩ | c),
+ { guard_hyp a : α, trivial },
+ { guard_hyp a : α, guard_hyp b : β, trivial },
+ { guard_hyp c : γ, trivial }
 end
 
 example : cond ff ℕ ℤ → cond tt ℤ ℕ → (ℕ ⊕ unit) → true :=
 begin
-  rintro (x y : ℤ) (z | u),
-  { guard_hyp x : ℤ, guard_hyp y : ℤ, guard_hyp z : ℕ, trivial },
-  { guard_hyp x : ℤ, guard_hyp y : ℤ, guard_hyp u : unit, trivial }
+ rintro (x y : ℤ) (z | u),
+ { guard_hyp x : ℤ, guard_hyp y : ℤ, guard_hyp z : ℕ, trivial },
+ { guard_hyp x : ℤ, guard_hyp y : ℤ, guard_hyp u : unit, trivial }
 end
 
 example (x y : ℕ) (h : x = y) : true :=
 begin
-  rcases x with _|⟨⟩|z,
-  { guard_hyp h : nat.zero = y, trivial },
-  { guard_hyp h : nat.succ nat.zero = y, trivial },
-  { guard_hyp z : ℕ,
-    guard_hyp h : z.succ.succ = y, trivial },
+ rcases x with _|⟨⟩|z,
+ { guard_hyp h : nat.zero = y, trivial },
+ { guard_hyp h : nat.succ nat.zero = y, trivial },
+ { guard_hyp z : ℕ,
+ guard_hyp h : z.succ.succ = y, trivial },
 end
 
 -- from equiv.sum_empty
 example (s : α ⊕ empty) : true :=
 begin
-  rcases s with _ | ⟨⟨⟩⟩,
-  { guard_hyp s : α, trivial }
+ rcases s with _ | ⟨⟨⟩⟩,
+ { guard_hyp s : α, trivial }
 end
 
 example : true :=
 begin
-  obtain ⟨n : ℕ, h : n = n, -⟩ : ∃ n : ℕ, n = n ∧ true,
-  { existsi 0, simp },
-  guard_hyp n : ℕ,
-  guard_hyp h : n = n,
-  success_if_fail {assumption},
-  trivial
+ obtain ⟨n : ℕ, h : n = n, -⟩ : ∃ n : ℕ, n = n ∧ true,
+ { existsi 0, simp },
+ guard_hyp n : ℕ,
+ guard_hyp h : n = n,
+ success_if_fail {assumption},
+ trivial
 end
 
 example : true :=
 begin
-  obtain : ∃ n : ℕ, n = n ∧ true,
-  { existsi 0, simp },
-  trivial
+ obtain : ∃ n : ℕ, n = n ∧ true,
+ { existsi 0, simp },
+ trivial
 end
 
 example : true :=
 begin
-  obtain (h : true) | ⟨⟨⟩⟩ : true ∨ false,
-  { left, trivial },
-  guard_hyp h : true,
-  trivial
+ obtain (h : true) | ⟨⟨⟩⟩ : true ∨ false,
+ { left, trivial },
+ guard_hyp h : true,
+ trivial
 end
 
 example : true :=
 begin
-  obtain h | ⟨⟨⟩⟩ : true ∨ false := or.inl trivial,
-  guard_hyp h : true,
-  trivial
+ obtain h | ⟨⟨⟩⟩ : true ∨ false := or.inl trivial,
+ guard_hyp h : true,
+ trivial
 end
 
 example : true :=
 begin
-  obtain ⟨h, h2⟩ := and.intro trivial trivial,
-  guard_hyp h : true,
-  guard_hyp h2 : true,
-  trivial
+ obtain ⟨h, h2⟩ := and.intro trivial trivial,
+ guard_hyp h : true,
+ guard_hyp h2 : true,
+ trivial
 end
 
 example : true :=
 begin
-  success_if_fail {obtain ⟨h, h2⟩},
-  trivial
+ success_if_fail {obtain ⟨h, h2⟩},
+ trivial
 end
 
 example (x y : α × β) : true :=
 begin
-  rcases ⟨x, y⟩ with ⟨⟨a, b⟩, c, d⟩,
-  { guard_hyp a : α,
-    guard_hyp b : β,
-    guard_hyp c : α,
-    guard_hyp d : β,
-    trivial }
+ rcases ⟨x, y⟩ with ⟨⟨a, b⟩, c, d⟩,
+ { guard_hyp a : α,
+ guard_hyp b : β,
+ guard_hyp c : α,
+ guard_hyp d : β,
+ trivial }
 end
 
 example (x y : α ⊕ β) : true :=
 begin
-  obtain ⟨a|b, c|d⟩ := ⟨x, y⟩,
-  { guard_hyp a : α, guard_hyp c : α, trivial },
-  { guard_hyp a : α, guard_hyp d : β, trivial },
-  { guard_hyp b : β, guard_hyp c : α, trivial },
-  { guard_hyp b : β, guard_hyp d : β, trivial },
+ obtain ⟨a|b, c|d⟩ := ⟨x, y⟩,
+ { guard_hyp a : α, guard_hyp c : α, trivial },
+ { guard_hyp a : α, guard_hyp d : β, trivial },
+ { guard_hyp b : β, guard_hyp c : α, trivial },
+ { guard_hyp b : β, guard_hyp d : β, trivial },
 end
 
 example {i j : ℕ} : (Σ' x, i ≤ x ∧ x ≤ j) → i ≤ j :=
 begin
-  intro h,
-  rcases h' : h with ⟨x,h₀,h₁⟩,
-  guard_hyp h' : h = ⟨x,h₀,h₁⟩,
-  apply le_trans h₀ h₁,
+ intro h,
+ rcases h' : h with ⟨x,h₀,h₁⟩,
+ guard_hyp h' : h = ⟨x,h₀,h₁⟩,
+ apply le_trans h₀ h₁,
 end
 
 protected def set.foo {α β} (s : set α) (t : set β) : set (α × β) := ∅
 
 example {α} (V : set α) (w : true → ∃ p, p ∈ (V.foo V) ∩ (V.foo V)) : true :=
 begin
-  obtain ⟨a, h⟩ : ∃ p, p ∈ (V.foo V) ∩ (V.foo V) := w trivial,
-  trivial,
+ obtain ⟨a, h⟩ : ∃ p, p ∈ (V.foo V) ∩ (V.foo V) := w trivial,
+ trivial,
 end
 
 example (n : ℕ) : true :=
 begin
-  obtain one_lt_n | n_le_one : 1 < n + 1 ∨ n + 1 ≤ 1 := nat.lt_or_ge 1 (n + 1),
-  trivial, trivial,
+ obtain one_lt_n | n_le_one : 1 < n + 1 ∨ n + 1 ≤ 1 := nat.lt_or_ge 1 (n + 1),
+ trivial, trivial,
 end
 
 example (n : ℕ) : true :=
 begin
-  obtain one_lt_n | (n_le_one : n + 1 ≤ 1) := nat.lt_or_ge 1 (n + 1),
-  trivial, trivial,
+ obtain one_lt_n | (n_le_one : n + 1 ≤ 1) := nat.lt_or_ge 1 (n + 1),
+ trivial, trivial,
 end
 
 example (h : ∃ x : ℕ, x = x ∧ 1 = 1) : true :=
 begin
-  rcases h with ⟨-, _⟩,
-  (do lc ← tactic.local_context, guard lc.empty),
-  trivial
+ rcases h with ⟨-, _⟩,
+ (do lc ← tactic.local_context, guard lc.empty),
+ trivial
 end
 
 example (h : ∃ x : ℕ, x = x ∧ 1 = 1) : true :=
 begin
-  rcases h with ⟨-, _, h⟩,
-  (do lc ← tactic.local_context, guard (lc.length = 1)),
-  guard_hyp h : 1 = 1,
-  trivial
+ rcases h with ⟨-, _, h⟩,
+ (do lc ← tactic.local_context, guard (lc.length = 1)),
+ guard_hyp h : 1 = 1,
+ trivial
 end
 
 example (h : true ∨ true ∨ true) : true :=
 begin
-  rcases h with -|-|-,
-  iterate 3 {
-    (do lc ← tactic.local_context, guard lc.empty),
-    trivial },
+ rcases h with -|-|-,
+ iterate 3 {
+ (do lc ← tactic.local_context, guard lc.empty),
+ trivial },
 end
 
 example : bool → false → true
@@ -191,15 +191,15 @@ example : bool → false → true
 
 example : true :=
 begin
-  obtain h : true,
-  { trivial },
-  exact h
+ obtain h : true,
+ { trivial },
+ exact h
 end
 
 example {a b} (h : a ∧ b) : a ∧ b :=
 begin
-  rcases h with t,
-  exact t
+ rcases h with t,
+ exact t
 end
 
 structure baz {α : Type*} (f : α → α) : Prop := [inst : nonempty α] (h : f ∘ f = id)
@@ -212,25 +212,25 @@ inductive test : nat → Prop
 
 example {n} (h : test n) : n = n :=
 begin
-  have : true,
-  { rcases h with a | b,
-    { guard_hyp a : nat, trivial },
-    { guard_hyp b : ‹nat› > 5, trivial } },
-  { rcases h with a | @⟨n, b⟩,
-    { guard_hyp a : nat, trivial },
-    { guard_hyp b : n > 5, trivial } },
+ have : true,
+ { rcases h with a | b,
+ { guard_hyp a : nat, trivial },
+ { guard_hyp b : ‹nat› > 5, trivial } },
+ { rcases h with a | @⟨n, b⟩,
+ { guard_hyp a : nat, trivial },
+ { guard_hyp b : n > 5, trivial } },
 end
 
 open tactic
 meta def test_rcases_hint (s : string) (num_goals : ℕ) (depth := 5) : tactic unit :=
 do change `(true),
-  h ← get_local `h,
-  pat ← rcases_hint ```(h) depth,
-  p ← pp pat,
-  guard (p.to_string = s) <|> fail format!"got '{p.to_string}', expected: '{s}'",
-  gs ← get_goals,
-  guard (gs.length = num_goals) <|> fail format!"there are {gs.length} goals remaining",
-  all_goals triv $> ()
+ h ← get_local `h,
+ pat ← rcases_hint ```(h) depth,
+ p ← pp pat,
+ guard (p.to_string = s) <|> fail format!"got '{p.to_string}', expected: '{s}'",
+ gs ← get_goals,
+ guard (gs.length = num_goals) <|> fail format!"there are {gs.length} goals remaining",
+ all_goals triv $> ()
 
 example {α} (h : ∃ x : α, x = x) := by test_rcases_hint "⟨h_w, ⟨⟩⟩" 1
 example (h : true ∨ true ∨ true) := by test_rcases_hint "⟨⟨⟩⟩ | ⟨⟨⟩⟩ | ⟨⟨⟩⟩" 3
@@ -266,63 +266,63 @@ section rsuffices
 
 example : true :=
 begin
-  rsuffices ⟨n : ℕ, h : n = n, -⟩ : ∃ n : ℕ, n = n ∧ true,
-  { guard_hyp n : ℕ,
-    guard_hyp h : n = n,
-    success_if_fail {assumption},
-    trivial },
-  { existsi 0, simp },
+ rsuffices ⟨n : ℕ, h : n = n, -⟩ : ∃ n : ℕ, n = n ∧ true,
+ { guard_hyp n : ℕ,
+ guard_hyp h : n = n,
+ success_if_fail {assumption},
+ trivial },
+ { existsi 0, simp },
 end
 
 example : true :=
 begin
-  rsuffices : ∃ n : ℕ, n = n ∧ true,
-  { trivial },
-  { existsi 0, simp },
+ rsuffices : ∃ n : ℕ, n = n ∧ true,
+ { trivial },
+ { existsi 0, simp },
 end
 
 example : true :=
 begin
-  rsuffices (h : true) | ⟨⟨⟩⟩ : true ∨ false,
-  { guard_hyp h : true,
-    trivial },
-  { left, trivial },
+ rsuffices (h : true) | ⟨⟨⟩⟩ : true ∨ false,
+ { guard_hyp h : true,
+ trivial },
+ { left, trivial },
 end
 
 example : true :=
 begin
-  success_if_fail {rsuffices ⟨h, h2⟩},
-  trivial
+ success_if_fail {rsuffices ⟨h, h2⟩},
+ trivial
 end
 
 example (x y : α × β) : true :=
 begin
-  rsuffices ⟨⟨a, b⟩, c, d⟩ : (α × β) × (α × β),
-  { guard_hyp a : α,
-    guard_hyp b : β,
-    guard_hyp c : α,
-    guard_hyp d : β,
-    trivial },
-  { exact ⟨x, y⟩ }
+ rsuffices ⟨⟨a, b⟩, c, d⟩ : (α × β) × (α × β),
+ { guard_hyp a : α,
+ guard_hyp b : β,
+ guard_hyp c : α,
+ guard_hyp d : β,
+ trivial },
+ { exact ⟨x, y⟩ }
 end
 
 -- This test demonstrates why `swap` is not used in the implementation of `rsuffices`:
 -- it would make the _second_ goal the one requiring ⟨x, y⟩, not the last one.
 example (x y : α ⊕ β) : true :=
 begin
-  rsuffices ⟨a|b, c|d⟩ : (α ⊕ β) × (α ⊕ β),
-  { guard_hyp a : α, guard_hyp c : α, trivial },
-  { guard_hyp a : α, guard_hyp d : β, trivial },
-  { guard_hyp b : β, guard_hyp c : α, trivial },
-  { guard_hyp b : β, guard_hyp d : β, trivial },
-  exact ⟨x, y⟩,
+ rsuffices ⟨a|b, c|d⟩ : (α ⊕ β) × (α ⊕ β),
+ { guard_hyp a : α, guard_hyp c : α, trivial },
+ { guard_hyp a : α, guard_hyp d : β, trivial },
+ { guard_hyp b : β, guard_hyp c : α, trivial },
+ { guard_hyp b : β, guard_hyp d : β, trivial },
+ exact ⟨x, y⟩,
 end
 
 example {α} (V : set α) (w : true → ∃ p, p ∈ (V.foo V) ∩ (V.foo V)) : true :=
 begin
-  rsuffices ⟨a, h⟩ : ∃ p, p ∈ (V.foo V) ∩ (V.foo V),
-  { trivial },
-  { exact w trivial },
+ rsuffices ⟨a, h⟩ : ∃ p, p ∈ (V.foo V) ∩ (V.foo V),
+ { trivial },
+ { exact w trivial },
 end
 
 -- Now some tests that ensure that things stay in the correct order.
@@ -331,42 +331,43 @@ end
 -- the `∃ ...` goal would get put _after_ the `true` goal.
 example : nonempty ℕ ∧ true :=
 begin
-  split,
-  rsuffices ⟨n : ℕ, hn⟩ : ∃ n, _,
-  { exact ⟨n⟩ },
-  { exact true },
-  { exact ⟨0, trivial⟩ },
-  { trivial },
+ split,
+ rsuffices ⟨n : ℕ, hn⟩ : ∃ n, _,
+ { exact ⟨n⟩ },
+ { exact true },
+ { exact ⟨0, trivial⟩ },
+ { trivial },
 end
 
 section instances
 
 example (h : Π {α}, inhabited α) : inhabited (α ⊕ β) :=
 begin
-  rsufficesI (ha | hb) : inhabited α ⊕ inhabited β,
-  { exact ⟨sum.inl default⟩ },
-  { exact ⟨sum.inr default⟩ },
-  { exact sum.inl h }
+ rsufficesI (ha | hb) : inhabited α ⊕ inhabited β,
+ { exact ⟨sum.inl default⟩ },
+ { exact ⟨sum.inr default⟩ },
+ { exact sum.inl h }
 end
 
 include β
 -- this test demonstrates that the `resetI` also applies onto the goal.
 example (h : Π {α}, inhabited α) : inhabited α :=
 begin
-  have : inhabited β := h,
-  rsufficesI t : β,
-  { exact h },
-  { exact default }
+ have : inhabited β := h,
+ rsufficesI t : β,
+ { exact h },
+ { exact default }
 end
 
 example (h : Π {α}, inhabited α) : β :=
 begin
-  rsufficesI ht : inhabited β,
-  { guard_hyp ht : inhabited β,
-    exact default },
-  { exact h }
+ rsufficesI ht : inhabited β,
+ { guard_hyp ht : inhabited β,
+ exact default },
+ { exact h }
 end
 
 end instances
 
 end rsuffices
+

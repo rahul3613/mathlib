@@ -23,11 +23,11 @@ section group
 variables {α β γ : Type*} [group α] [mul_action α β]
 
 lemma mul_support_comp_inv_smul [has_one γ] (c : α) (f : β → γ) :
-  mul_support (λ x, f (c⁻¹ • x)) = c • mul_support f :=
+ mul_support (λ x, f (c⁻¹ • x)) = c • mul_support f :=
 by { ext x, simp only [mem_smul_set_iff_inv_smul_mem, mem_mul_support] }
 
 lemma support_comp_inv_smul [has_zero γ] (c : α) (f : β → γ) :
-  support (λ x, f (c⁻¹ • x)) = c • support f :=
+ support (λ x, f (c⁻¹ • x)) = c • support f :=
 by { ext x, simp only [mem_smul_set_iff_inv_smul_mem, mem_support] }
 
 attribute [to_additive support_comp_inv_smul] mul_support_comp_inv_smul
@@ -39,13 +39,14 @@ section group_with_zero
 variables {α β γ : Type*} [group_with_zero α] [mul_action α β]
 
 lemma mul_support_comp_inv_smul₀ [has_one γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-  mul_support (λ x, f (c⁻¹ • x)) = c • mul_support f :=
+ mul_support (λ x, f (c⁻¹ • x)) = c • mul_support f :=
 by { ext x, simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_mul_support] }
 
 lemma support_comp_inv_smul₀ [has_zero γ] {c : α} (hc : c ≠ 0) (f : β → γ) :
-  support (λ x, f (c⁻¹ • x)) = c • support f :=
+ support (λ x, f (c⁻¹ • x)) = c • support f :=
 by { ext x, simp only [mem_smul_set_iff_inv_smul_mem₀ hc, mem_support] }
 
 attribute [to_additive support_comp_inv_smul₀] mul_support_comp_inv_smul₀
 
 end group_with_zero
+

@@ -3,14 +3,14 @@ import tactic.alias
 
 /-- Test assertion helpers -/
 meta def assert_ok (n : name) := do
-  decl ← tactic.get_decl n,
-  some msg ← linter.to_additive_doc.test decl | pure (),
-  fail! "Linting {n} complained unexpectedly:\n{msg}"
+ decl ← tactic.get_decl n,
+ some msg ← linter.to_additive_doc.test decl | pure (),
+ fail! "Linting {n} complained unexpectedly:\n{msg}"
 
 meta def assert_complain (n : name) := do
-  decl ← tactic.get_decl n,
-  none ← linter.to_additive_doc.test decl | pure (),
-  fail! "Linting {n} succeeded unexpectedly"
+ decl ← tactic.get_decl n,
+ none ← linter.to_additive_doc.test decl | pure (),
+ fail! "Linting {n} succeeded unexpectedly"
 
 /-- Docstring -/
 @[to_additive add_foo]
@@ -60,3 +60,4 @@ attribute [to_additive] a_one_of_b_one
 run_cmd assert_ok ``a_one_iff_b_one
 run_cmd assert_ok ``a_one_of_b_one
 run_cmd assert_ok ``b_one_of_a_one
+

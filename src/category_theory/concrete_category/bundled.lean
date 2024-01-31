@@ -43,7 +43,7 @@ instance : has_coe_to_sort (bundled c) (Type u) := ⟨bundled.α⟩
 /-
 `bundled.map` is reducible so that, if we define a category
 
-  def Ring : Type (u+1) := induced_category SemiRing (bundled.map @ring.to_semiring)
+ def Ring : Type (u+1) := induced_category SemiRing (bundled.map @ring.to_semiring)
 
 instance search is able to "see" that a morphism R ⟶ S in Ring is really
 a (semi)ring homomorphism from R.α to S.α, and not merely from
@@ -56,3 +56,4 @@ a (semi)ring homomorphism from R.α to S.α, and not merely from
 end bundled
 
 end category_theory
+

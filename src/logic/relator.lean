@@ -49,30 +49,30 @@ def bi_unique : Prop := left_unique R ∧ right_unique R
 variable {R}
 
 lemma right_total.rel_forall (h : right_total R) :
-  ((R ⇒ implies) ⇒ implies) (λp, ∀i, p i) (λq, ∀i, q i) :=
+ ((R ⇒ implies) ⇒ implies) (λp, ∀i, p i) (λq, ∀i, q i) :=
 assume p q Hrel H b, exists.elim (h b) (assume a Rab, Hrel Rab (H _))
 
 lemma left_total.rel_exists (h : left_total R) :
-  ((R ⇒ implies) ⇒ implies) (λp, ∃i, p i) (λq, ∃i, q i) :=
+ ((R ⇒ implies) ⇒ implies) (λp, ∃i, p i) (λq, ∃i, q i) :=
 assume p q Hrel ⟨a, pa⟩, (h a).imp $ λ b Rab, Hrel Rab pa
 
 lemma bi_total.rel_forall (h : bi_total R) :
-  ((R ⇒ iff) ⇒ iff) (λp, ∀i, p i) (λq, ∀i, q i) :=
+ ((R ⇒ iff) ⇒ iff) (λp, ∀i, p i) (λq, ∀i, q i) :=
 assume p q Hrel,
-  ⟨assume H b, exists.elim (h.right b) (assume a Rab, (Hrel Rab).mp (H _)),
-    assume H a, exists.elim (h.left a) (assume b Rab, (Hrel Rab).mpr (H _))⟩
+ ⟨assume H b, exists.elim (h.right b) (assume a Rab, (Hrel Rab).mp (H _)),
+ assume H a, exists.elim (h.left a) (assume b Rab, (Hrel Rab).mpr (H _))⟩
 
 lemma bi_total.rel_exists (h : bi_total R) : ((R ⇒ iff) ⇒ iff) (λp, ∃i, p i) (λq, ∃i, q i) :=
 assume p q Hrel,
-  ⟨assume ⟨a, pa⟩, (h.left a).imp $ λ b Rab, (Hrel Rab).1 pa,
-    assume ⟨b, qb⟩, (h.right b).imp $ λ a Rab, (Hrel Rab).2 qb⟩
+ ⟨assume ⟨a, pa⟩, (h.left a).imp $ λ b Rab, (Hrel Rab).1 pa,
+ assume ⟨b, qb⟩, (h.right b).imp $ λ a Rab, (Hrel Rab).2 qb⟩
 
 lemma left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R ⇒ (R ⇒ iff)) eq eq') : left_unique R :=
 λ a b c (ac : R a c) (bc : R b c), (he ac bc).mpr ((he bc bc).mp rfl)
 
 end
 
-lemma rel_imp : (iff ⇒ (iff  ⇒ iff)) implies implies :=
+lemma rel_imp : (iff ⇒ (iff ⇒ iff)) implies implies :=
 assume p q h r s l, imp_congr h l
 
 lemma rel_not : (iff ⇒ iff) not not :=
@@ -100,3 +100,4 @@ lemma rel_eq {r : α → β → Prop} (hr : bi_unique r) : (r ⇒ r ⇒ (↔)) (
 λ a b h₁ c d h₂, ⟨λ h, hr.right h₁ $ h.symm ▸ h₂, λ h, hr.left h₁ $ h.symm ▸ h₂⟩
 
 end relator
+

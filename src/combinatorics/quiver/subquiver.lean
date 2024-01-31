@@ -20,9 +20,9 @@ subquivers by definition contain all vertices.
 universes v u
 
 /-- A wide subquiver `H` of `G` picks out a set `H a b` of arrows from `a` to `b`
-    for every pair of vertices `a b`.
+ for every pair of vertices `a b`.
 
-    NB: this does not work for `Prop`-valued quivers. It requires `G : quiver.{v+1} V`. -/
+ NB: this does not work for `Prop`-valued quivers. It requires `G : quiver.{v+1} V`. -/
 def wide_subquiver (V) [quiver.{v+1} V] :=
 Π a b : V, set (a ⟶ b)
 
@@ -32,7 +32,7 @@ some `wide_subquiver`. -/
 def wide_subquiver.to_Type (V) [quiver V] (H : wide_subquiver V) : Type u := V
 
 instance wide_subquiver_has_coe_to_sort {V} [quiver V] :
-  has_coe_to_sort (wide_subquiver V) (Type u) :=
+ has_coe_to_sort (wide_subquiver V) (Type u) :=
 { coe := λ H, wide_subquiver.to_Type V H }
 
 /-- A wide subquiver viewed as a quiver on its own. -/
@@ -55,11 +55,11 @@ structure total (V : Type u) [quiver.{v} V] : Sort (max (u+1) v) :=
 
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
 def wide_subquiver_equiv_set_total {V} [quiver V] :
-  wide_subquiver V ≃ set (total V) :=
+ wide_subquiver V ≃ set (total V) :=
 { to_fun := λ H, { e | e.hom ∈ H e.left e.right },
-  inv_fun := λ S a b, { e | total.mk a b e ∈ S },
-  left_inv := λ H, rfl,
-  right_inv := by { intro S, ext, cases x, refl } }
+ inv_fun := λ S a b, { e | total.mk a b e ∈ S },
+ left_inv := λ H, rfl,
+ right_inv := by { intro S, ext, cases x, refl } }
 
 /-- An `L`-labelling of a quiver assigns to every arrow an element of `L`. -/
 def labelling (V : Type u) [quiver V] (L : Sort*) := Π ⦃a b : V⦄, (a ⟶ b) → L
@@ -68,3 +68,4 @@ instance {V : Type u} [quiver V] (L) [inhabited L] : inhabited (labelling V L) :
 ⟨λ a b e, default⟩
 
 end quiver
+

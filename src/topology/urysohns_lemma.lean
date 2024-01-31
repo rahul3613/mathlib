@@ -52,16 +52,16 @@ in a small neighborhood of `x` we have `|c.lim y - c.lim x| ≤ (3 / 4) ^ n`. In
 from `c.lim x ∈ [0, 1]`, `c.lim y ∈ [0, 1]`. For the induction step, consider two cases:
 
 * `x ∈ c.left.U`; then for `y` in a small neighborhood of `x` we have `y ∈ c.left.U ⊆ c.right.C`
-  (hence `c.right.lim x = c.right.lim y = 0`) and `|c.left.lim y - c.left.lim x| ≤ (3 / 4) ^ n`.
-  Then
-  `|c.lim y - c.lim x| = |c.left.lim y - c.left.lim x| / 2 ≤ (3 / 4) ^ n / 2 < (3 / 4) ^ (n + 1)`.
+ (hence `c.right.lim x = c.right.lim y = 0`) and `|c.left.lim y - c.left.lim x| ≤ (3 / 4) ^ n`.
+ Then
+ `|c.lim y - c.lim x| = |c.left.lim y - c.left.lim x| / 2 ≤ (3 / 4) ^ n / 2 < (3 / 4) ^ (n + 1)`.
 
 * otherwise, `x ∉ c.left.right.C`; then for `y` in a small neighborhood of `x` we have
-  `y ∉ c.left.right.C ⊇ c.left.left.U` (hence `c.left.left.lim x = c.left.left.lim y = 1`),
-  `|c.left.right.lim y - c.left.right.lim x| ≤ (3 / 4) ^ n`, and
-  `|c.right.lim y - c.right.lim x| ≤ (3 / 4) ^ n`. Combining these inequalities, the triangle
-  inequality, and the recurrence formula for `c.lim`, we get
-  `|c.lim x - c.lim y| ≤ (3 / 4) ^ (n + 1)`.
+ `y ∉ c.left.right.C ⊇ c.left.left.U` (hence `c.left.left.lim x = c.left.left.lim y = 1`),
+ `|c.left.right.lim y - c.left.right.lim x| ≤ (3 / 4) ^ n`, and
+ `|c.right.lim y - c.right.lim x| ≤ (3 / 4) ^ n`. Combining these inequalities, the triangle
+ inequality, and the recurrence formula for `c.lim`, we get
+ `|c.lim x - c.lim y| ≤ (3 / 4) ^ (n + 1)`.
 
 The actual formalization uses `midpoint ℝ x y` instead of `(x + y) / 2` because we have more API
 lemmas about `midpoint`.
@@ -96,19 +96,19 @@ namespace CU
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. -/
 @[simps C] def left (c : CU X) : CU X :=
 { C := c.C,
-  U := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some,
-  closed_C := c.closed_C,
-  open_U := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.1,
-  subset := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.2.1 }
+ U := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some,
+ closed_C := c.closed_C,
+ open_U := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.1,
+ subset := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.2.1 }
 
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
 such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u, c.U)`. -/
 @[simps U] def right (c : CU X) : CU X :=
 { C := closure (normal_exists_closure_subset c.closed_C c.open_U c.subset).some,
-  U := c.U,
-  closed_C := is_closed_closure,
-  open_U := c.open_U,
-  subset := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.2.2 }
+ U := c.U,
+ closed_C := is_closed_closure,
+ open_U := c.open_U,
+ subset := (normal_exists_closure_subset c.closed_C c.open_U c.subset).some_spec.2.2 }
 
 lemma left_U_subset_right_C (c : CU X) : c.left.U ⊆ c.right.C :=
 subset_closure
@@ -126,76 +126,76 @@ noncomputable def approx : ℕ → CU X → X → ℝ
 | (n + 1) c x := midpoint ℝ (approx n c.left x) (approx n c.right x)
 
 lemma approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.C) :
-  c.approx n x = 0 :=
+ c.approx n x = 0 :=
 begin
-  induction n with n ihn generalizing c,
-  { exact indicator_of_not_mem (λ hU, hU $ c.subset hx) _ },
-  { simp only [approx],
-    rw [ihn, ihn, midpoint_self],
-    exacts [c.subset_right_C hx, hx] }
+ induction n with n ihn generalizing c,
+ { exact indicator_of_not_mem (λ hU, hU $ c.subset hx) _ },
+ { simp only [approx],
+ rw [ihn]; rw [ ihn]; rw [ midpoint_self],
+ exacts [c.subset_right_C hx, hx] }
 end
 
 lemma approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) :
-  c.approx n x = 1 :=
+ c.approx n x = 1 :=
 begin
-  induction n with n ihn generalizing c,
-  { exact indicator_of_mem hx _ },
-  { simp only [approx],
-    rw [ihn, ihn, midpoint_self],
-    exacts [hx, λ hU, hx $ c.left_U_subset hU] }
+ induction n with n ihn generalizing c,
+ { exact indicator_of_mem hx _ },
+ { simp only [approx],
+ rw [ihn]; rw [ ihn]; rw [ midpoint_self],
+ exacts [hx, λ hU, hx $ c.left_U_subset hU] }
 end
 
 lemma approx_nonneg (c : CU X) (n : ℕ) (x : X) :
-  0 ≤ c.approx n x :=
+ 0 ≤ c.approx n x :=
 begin
-  induction n with n ihn generalizing c,
-  { exact indicator_nonneg (λ _ _, zero_le_one) _ },
-  { simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv],
-    refine mul_nonneg (inv_nonneg.2 zero_le_two) (add_nonneg _ _); apply ihn }
+ induction n with n ihn generalizing c,
+ { exact indicator_nonneg (λ _ _, zero_le_one) _ },
+ { simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv],
+ refine mul_nonneg (inv_nonneg.2 zero_le_two) (add_nonneg _ _); apply ihn }
 end
 
 lemma approx_le_one (c : CU X) (n : ℕ) (x : X) :
-  c.approx n x ≤ 1 :=
+ c.approx n x ≤ 1 :=
 begin
-  induction n with n ihn generalizing c,
-  { exact indicator_apply_le' (λ _, le_rfl) (λ _, zero_le_one) },
-  { simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv, smul_eq_mul, ← div_eq_inv_mul],
-    refine iff.mpr (div_le_one zero_lt_two) (add_le_add _ _); apply ihn }
+ induction n with n ihn generalizing c,
+ { exact indicator_apply_le' (λ _, le_rfl) (λ _, zero_le_one) },
+ { simp only [approx, midpoint_eq_smul_add, inv_of_eq_inv, smul_eq_mul, ← div_eq_inv_mul],
+ refine iff.mpr (div_le_one zero_lt_two) (add_le_add _ _); apply ihn }
 end
 
 lemma bdd_above_range_approx (c : CU X) (x : X) : bdd_above (range $ λ n, c.approx n x) :=
 ⟨1, λ y ⟨n, hn⟩, hn ▸ c.approx_le_one n x⟩
 
 lemma approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (n₁ n₂ : ℕ) (x : X) :
-  c₂.approx n₂ x ≤ c₁.approx n₁ x :=
+ c₂.approx n₂ x ≤ c₁.approx n₁ x :=
 begin
-  by_cases hx : x ∈ c₁.U,
-  { calc approx n₂ c₂ x = 0              : approx_of_mem_C _ _ (h hx)
-                    ... ≤ approx n₁ c₁ x : approx_nonneg _ _ _ },
-  { calc approx n₂ c₂ x ≤ 1              : approx_le_one _ _ _
-                    ... = approx n₁ c₁ x : (approx_of_nmem_U _ _ hx).symm }
+ by_cases hx : x ∈ c₁.U,
+ { calc approx n₂ c₂ x = 0 : approx_of_mem_C _ _ (h hx)
+ ... ≤ approx n₁ c₁ x : approx_nonneg _ _ _ },
+ { calc approx n₂ c₂ x ≤ 1 : approx_le_one _ _ _
+ ... = approx n₁ c₁ x : (approx_of_nmem_U _ _ hx).symm }
 end
 
 lemma approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
-  c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) :=
+ c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) :=
 begin
-  induction n with n ihn generalizing c,
-  { exact ⟨le_rfl, indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset)
-      (λ _, zero_le_one) _⟩ },
-  { simp only [approx, mem_Icc],
-    refine ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩;
-      apply approx_le_approx_of_U_sub_C,
-    exacts [subset_closure, subset_closure] }
+ induction n with n ihn generalizing c,
+ { exact ⟨le_rfl, indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset)
+ (λ _, zero_le_one) _⟩ },
+ { simp only [approx, mem_Icc],
+ refine ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩;
+ apply approx_le_approx_of_U_sub_C,
+ exacts [subset_closure, subset_closure] }
 end
 
 lemma approx_le_succ (c : CU X) (n : ℕ) (x : X) :
-  c.approx n x ≤ c.approx (n + 1) x :=
+ c.approx n x ≤ c.approx (n + 1) x :=
 begin
-  induction n with n ihn generalizing c,
-  { simp only [approx, right_U, right_le_midpoint],
-    exact (approx_mem_Icc_right_left c 0 x).2 },
-  { rw [approx, approx],
-    exact midpoint_le_midpoint (ihn _) (ihn _) }
+ induction n with n ihn generalizing c,
+ { simp only [approx, right_U, right_le_midpoint],
+ exact (approx_mem_Icc_right_left c 0 x).2 },
+ { rw [approx]; rw [ approx],
+ exact midpoint_le_midpoint (ihn _) (ihn _) }
 end
 
 lemma approx_mono (c : CU X) (x : X) : monotone (λ n, c.approx n x) :=
@@ -209,7 +209,7 @@ monotone_nat_of_le_succ $ λ n, c.approx_le_succ n x
 protected noncomputable def lim (c : CU X) (x : X) : ℝ := ⨆ n, c.approx n x
 
 lemma tendsto_approx_at_top (c : CU X) (x : X) :
-  tendsto (λ n, c.approx n x) at_top (𝓝 $ c.lim x) :=
+ tendsto (λ n, c.approx n x) at_top (𝓝 $ c.lim x) :=
 tendsto_at_top_csupr (c.approx_mono x) ⟨1, λ x ⟨n, hn⟩, hn ▸ c.approx_le_one _ _⟩
 
 lemma lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 :=
@@ -219,11 +219,11 @@ lemma lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 :=
 by simp only [CU.lim, approx_of_nmem_U c _ h, csupr_const]
 
 lemma lim_eq_midpoint (c : CU X) (x : X) :
-  c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
+ c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
 begin
-  refine tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _),
-  simp only [approx],
-  exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
+ refine tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _),
+ simp only [approx],
+ exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
 end
 
 lemma approx_le_lim (c : CU X) (x : X) (n : ℕ) : c.approx n x ≤ c.lim x :=
@@ -241,37 +241,35 @@ lemma lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
 lemma continuous_lim (c : CU X) : continuous c.lim :=
 begin
-  obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by norm_num,
-  refine continuous_iff_continuous_at.2
-    (λ x, (metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 $ λ n _, _),
-  simp only [metric.mem_closed_ball],
-  induction n with n ihn generalizing c,
-  { refine eventually_of_forall (λ y, _),
-    rw pow_zero,
-    exact real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _) },
-  { by_cases hxl : x ∈ c.left.U,
-    { filter_upwards [is_open.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd,
-      rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint,
-        c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
-        c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)],
-      refine (dist_midpoint_midpoint_le _ _ _ _).trans _,
-      rw [dist_self, add_zero, div_eq_inv_mul],
-      exact mul_le_mul h1234.le hyd dist_nonneg (h0.trans h1234).le },
-    { replace hxl : x ∈ c.left.right.Cᶜ, from compl_subset_compl.2 c.left.right.subset hxl,
-      filter_upwards [is_open.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl,
-        ihn c.left.right, ihn c.right] with y hyl hydl hydr,
-      replace hxl : x ∉ c.left.left.U, from compl_subset_compl.2 c.left.left_U_subset_right_C hxl,
-      replace hyl : y ∉ c.left.left.U, from compl_subset_compl.2 c.left.left_U_subset_right_C hyl,
-      simp only [pow_succ, c.lim_eq_midpoint, c.left.lim_eq_midpoint,
-        c.left.left.lim_of_nmem_U _ hxl, c.left.left.lim_of_nmem_U _ hyl],
-      refine (dist_midpoint_midpoint_le _ _ _ _).trans _,
-      refine (div_le_div_of_le_of_nonneg (add_le_add_right (dist_midpoint_midpoint_le _ _ _ _) _)
-        zero_le_two).trans _,
-      rw [dist_self, zero_add],
-      refine (div_le_div_of_le_of_nonneg
-        (add_le_add (div_le_div_of_le_of_nonneg hydl zero_le_two) hydr) zero_le_two).trans_eq _,
-      generalize : (3 / 4 : ℝ) ^ n = r,
-      field_simp [(two_ne_zero' ℝ)], ring } }
+ obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by norm_num,
+ refine continuous_iff_continuous_at.2
+ (λ x, (metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 $ λ n _, _),
+ simp only [metric.mem_closed_ball],
+ induction n with n ihn generalizing c,
+ { refine eventually_of_forall (λ y, _),
+ rw pow_zero,
+ exact real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _) },
+ { by_cases hxl : x ∈ c.left.U,
+ { filter_upwards [is_open.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd,
+ rw [pow_succ]; rw [ c.lim_eq_midpoint]; rw [ c.lim_eq_midpoint]; rw [ c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl)]; rw [ c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)],
+ refine (dist_midpoint_midpoint_le _ _ _ _).trans _,
+ rw [dist_self]; rw [ add_zero]; rw [ div_eq_inv_mul],
+ exact mul_le_mul h1234.le hyd dist_nonneg (h0.trans h1234).le },
+ { replace hxl : x ∈ c.left.right.Cᶜ, from compl_subset_compl.2 c.left.right.subset hxl,
+ filter_upwards [is_open.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl,
+ ihn c.left.right, ihn c.right] with y hyl hydl hydr,
+ replace hxl : x ∉ c.left.left.U, from compl_subset_compl.2 c.left.left_U_subset_right_C hxl,
+ replace hyl : y ∉ c.left.left.U, from compl_subset_compl.2 c.left.left_U_subset_right_C hyl,
+ simp only [pow_succ, c.lim_eq_midpoint, c.left.lim_eq_midpoint,
+ c.left.left.lim_of_nmem_U _ hxl, c.left.left.lim_of_nmem_U _ hyl],
+ refine (dist_midpoint_midpoint_le _ _ _ _).trans _,
+ refine (div_le_div_of_le_of_nonneg (add_le_add_right (dist_midpoint_midpoint_le _ _ _ _) _)
+ zero_le_two).trans _,
+ rw [dist_self]; rw [ zero_add],
+ refine (div_le_div_of_le_of_nonneg
+ (add_le_add (div_le_div_of_le_of_nonneg hydl zero_le_two) hydr) zero_le_two).trans_eq _,
+ generalize : (3 / 4 : ℝ) ^ n = r,
+ field_simp [(two_ne_zero' ℝ)], ring } }
 end
 
 end CU
@@ -288,11 +286,12 @@ then there exists a continuous function `f : X → ℝ` such that
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
 lemma exists_continuous_zero_one_of_closed {s t : set X} (hs : is_closed s) (ht : is_closed t)
-  (hd : disjoint s t) :
-  ∃ f : C(X, ℝ), eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
+ (hd : disjoint s t) :
+ ∃ f : C(X, ℝ), eq_on f 0 s ∧ eq_on f 1 t ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
 begin
-  -- The actual proof is in the code above. Here we just repack it into the expected format.
-  set c : urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, disjoint_left.1 hd⟩,
-  exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C,
-    λ x hx, c.lim_of_nmem_U _ (λ h, h hx), c.lim_mem_Icc⟩
+ -- The actual proof is in the code above. Here we just repack it into the expected format.
+ set c : urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, disjoint_left.1 hd⟩,
+ exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C,
+ λ x hx, c.lim_of_nmem_U _ (λ h, h hx), c.lim_mem_Icc⟩
 end
+

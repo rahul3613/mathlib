@@ -31,24 +31,24 @@ instance distrib [distrib α] : distrib (ulift α) :=
 by refine_struct { add := (+), mul := (*), .. }; tactic.pi_instance_derive_field
 
 instance non_unital_non_assoc_semiring [non_unital_non_assoc_semiring α] :
-  non_unital_non_assoc_semiring (ulift α) :=
+ non_unital_non_assoc_semiring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), add := (+), mul := (*),
-  nsmul := add_monoid.nsmul, };
+ nsmul := add_monoid.nsmul, };
 tactic.pi_instance_derive_field
 
 instance non_assoc_semiring [non_assoc_semiring α] : non_assoc_semiring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), one := 1, add := (+), mul := (*),
-  nsmul := add_monoid.nsmul, .. ulift.add_monoid_with_one };
+ nsmul := add_monoid.nsmul, .. ulift.add_monoid_with_one };
 tactic.pi_instance_derive_field
 
 instance non_unital_semiring [non_unital_semiring α] : non_unital_semiring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), add := (+), mul := (*),
-  nsmul := add_monoid.nsmul, };
+ nsmul := add_monoid.nsmul, };
 tactic.pi_instance_derive_field
 
 instance semiring [semiring α] : semiring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), one := 1, add := (+), mul := (*),
-  nsmul := add_monoid.nsmul, npow := monoid.npow, .. ulift.add_monoid_with_one };
+ nsmul := add_monoid.nsmul, npow := monoid.npow, .. ulift.add_monoid_with_one };
 tactic.pi_instance_derive_field
 
 /--
@@ -56,50 +56,50 @@ The ring equivalence between `ulift α` and `α`.
 -/
 def ring_equiv [non_unital_non_assoc_semiring α] : ulift α ≃+* α :=
 { to_fun := ulift.down,
-  inv_fun := ulift.up,
-  map_mul' := λ x y, rfl,
-  map_add' := λ x y, rfl,
-  left_inv := by tidy,
-  right_inv := by tidy, }
+ inv_fun := ulift.up,
+ map_mul' := λ x y, rfl,
+ map_add' := λ x y, rfl,
+ left_inv := by tidy,
+ right_inv := by tidy, }
 
 instance non_unital_comm_semiring [non_unital_comm_semiring α] :
-  non_unital_comm_semiring (ulift α) :=
+ non_unital_comm_semiring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), add := (+), mul := (*), nsmul := add_monoid.nsmul };
 tactic.pi_instance_derive_field
 
 instance comm_semiring [comm_semiring α] : comm_semiring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), one := 1, add := (+), mul := (*),
-  nsmul := add_monoid.nsmul, npow := monoid.npow, .. ulift.semiring };
+ nsmul := add_monoid.nsmul, npow := monoid.npow, .. ulift.semiring };
 tactic.pi_instance_derive_field
 
 instance non_unital_non_assoc_ring [non_unital_non_assoc_ring α] :
-  non_unital_non_assoc_ring (ulift α) :=
+ non_unital_non_assoc_ring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), add := (+), mul := (*), sub := has_sub.sub,
-  neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul };
+ neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul };
 tactic.pi_instance_derive_field
 
 instance non_unital_ring [non_unital_ring α] :
-  non_unital_ring (ulift α) :=
+ non_unital_ring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), add := (+), mul := (*), sub := has_sub.sub,
-  neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul };
+ neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul };
 tactic.pi_instance_derive_field
 
 instance non_assoc_ring [non_assoc_ring α] :
-  non_assoc_ring (ulift α) :=
+ non_assoc_ring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), one := 1, add := (+), mul := (*), sub := has_sub.sub,
-  neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul,
-  .. ulift.add_group_with_one };
+ neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul,
+ .. ulift.add_group_with_one };
 tactic.pi_instance_derive_field
 
 instance ring [ring α] : ring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), one := 1, add := (+), mul := (*), sub := has_sub.sub,
-  neg := has_neg.neg, nsmul := add_monoid.nsmul, npow := monoid.npow,
-  zsmul := sub_neg_monoid.zsmul, .. ulift.semiring, .. ulift.add_group_with_one };
+ neg := has_neg.neg, nsmul := add_monoid.nsmul, npow := monoid.npow,
+ zsmul := sub_neg_monoid.zsmul, .. ulift.semiring, .. ulift.add_group_with_one };
 tactic.pi_instance_derive_field
 
 instance non_unital_comm_ring [non_unital_comm_ring α] : non_unital_comm_ring (ulift α) :=
 by refine_struct { zero := (0 : ulift α), add := (+), mul := (*), sub := has_sub.sub,
-  neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul };
+ neg := has_neg.neg, nsmul := add_monoid.nsmul, zsmul := sub_neg_monoid.zsmul };
 tactic.pi_instance_derive_field
 
 instance comm_ring [comm_ring α] : comm_ring (ulift α) :=
@@ -107,3 +107,4 @@ by refine_struct { .. ulift.ring };
 tactic.pi_instance_derive_field
 
 end ulift
+

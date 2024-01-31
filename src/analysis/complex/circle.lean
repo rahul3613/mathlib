@@ -14,7 +14,7 @@ import analysis.normed.field.unit_ball
 > Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `circle` to be the metric sphere (`metric.sphere`) in `ℂ` centred at `0` of
-radius `1`.  We equip it with the following structure:
+radius `1`. We equip it with the following structure:
 
 * a submonoid of `ℂ`
 * a group
@@ -27,7 +27,7 @@ We furthermore define `exp_map_circle` to be the natural map `λ t, exp (t * I)`
 
 Because later (in `geometry.manifold.instances.sphere`) one wants to equip the circle with a smooth
 manifold structure borrowed from `metric.sphere`, the underlying set is
-`{z : ℂ | abs (z - 0) = 1}`.  This prevents certain algebraic facts from working definitionally --
+`{z : ℂ | abs (z - 0) = 1}`. This prevents certain algebraic facts from working definitionally --
 for example, the circle is not defeq to `{z : ℂ | abs z = 1}`, which is the kernel of `complex.abs`
 considered as a homomorphism from `ℂ` to `ℝ`, nor is it defeq to `{z : ℂ | norm_sq z = 1}`, which
 is the kernel of the homomorphism `complex.norm_sq` from `ℂ` to `ℝ`.
@@ -61,7 +61,7 @@ instance : comm_group circle := metric.sphere.comm_group
 @[simp] lemma coe_inv_circle (z : circle) : ↑(z⁻¹) = (z : ℂ)⁻¹ := rfl
 
 lemma coe_inv_circle_eq_conj (z : circle) : ↑(z⁻¹) = conj (z : ℂ) :=
-by rw [coe_inv_circle, inv_def, norm_sq_eq_of_mem_circle, inv_one, of_real_one, mul_one]
+by rw [coe_inv_circle]; rw [ inv_def]; rw [ norm_sq_eq_of_mem_circle]; rw [ inv_one]; rw [ of_real_one]; rw [ mul_one]
 
 @[simp] lemma coe_div_circle (z w : circle) : ↑(z / w) = (z:ℂ) / w :=
 circle.subtype.map_div z w
@@ -71,7 +71,7 @@ def circle.to_units : circle →* units ℂ := unit_sphere_to_units ℂ
 
 -- written manually because `@[simps]` was slow and generated the wrong lemma
 @[simp] lemma circle.to_units_apply (z : circle) :
-  circle.to_units z = units.mk0 z (ne_zero_of_mem_circle z) := rfl
+ circle.to_units z = units.mk0 z (ne_zero_of_mem_circle z) := rfl
 
 instance : compact_space circle := metric.sphere.compact_space _ _
 
@@ -79,7 +79,7 @@ instance : topological_group circle := metric.sphere.topological_group
 
 /-- If `z` is a nonzero complex number, then `conj z / z` belongs to the unit circle. -/
 @[simps] def circle.of_conj_div_self (z : ℂ) (hz : z ≠ 0) : circle :=
-⟨conj z / z, mem_circle_iff_abs.2 $ by rw [map_div₀, abs_conj, div_self (complex.abs.ne_zero hz)]⟩
+⟨conj z / z, mem_circle_iff_abs.2 $ by rw [map_div₀]; rw [ abs_conj]; rw [ div_self (complex.abs.ne_zero hz)]⟩
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
 def exp_map_circle : C(ℝ, circle) :=
@@ -89,24 +89,25 @@ def exp_map_circle : C(ℝ, circle) :=
 rfl
 
 @[simp] lemma exp_map_circle_zero : exp_map_circle 0 = 1 :=
-subtype.ext $ by rw [exp_map_circle_apply, of_real_zero, zero_mul, exp_zero, submonoid.coe_one]
+subtype.ext $ by rw [exp_map_circle_apply]; rw [ of_real_zero]; rw [ zero_mul]; rw [ exp_zero]; rw [ submonoid.coe_one]
 
 @[simp] lemma exp_map_circle_add (x y : ℝ) :
-  exp_map_circle (x + y) = exp_map_circle x * exp_map_circle y :=
+ exp_map_circle (x + y) = exp_map_circle x * exp_map_circle y :=
 subtype.ext $ by simp only [exp_map_circle_apply, submonoid.coe_mul, of_real_add, add_mul,
-  complex.exp_add]
+ complex.exp_add]
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of
 groups. -/
 @[simps]
 def exp_map_circle_hom : ℝ →+ (additive circle) :=
 { to_fun := additive.of_mul ∘ exp_map_circle,
-  map_zero' := exp_map_circle_zero,
-  map_add' := exp_map_circle_add }
+ map_zero' := exp_map_circle_zero,
+ map_add' := exp_map_circle_add }
 
 @[simp] lemma exp_map_circle_sub (x y : ℝ) :
-  exp_map_circle (x - y) = exp_map_circle x / exp_map_circle y :=
+ exp_map_circle (x - y) = exp_map_circle x / exp_map_circle y :=
 exp_map_circle_hom.map_sub x y
 
 @[simp] lemma exp_map_circle_neg (x : ℝ) : exp_map_circle (-x) = (exp_map_circle x)⁻¹ :=
 exp_map_circle_hom.map_neg x
+

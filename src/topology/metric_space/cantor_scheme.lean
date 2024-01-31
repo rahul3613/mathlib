@@ -20,9 +20,9 @@ This file develops the basic, abstract theory of these schemes and the functions
 ## Main Definitions
 
 * `cantor_scheme.induced_map A` : The aforementioned "limit" of a scheme `A : list β → set α`.
-  This is a partial function from `ℕ → β` to `a`,
-  implemented here as an object of type `Σ s : set (ℕ → β), s → α`.
-  That is, `(induced_map A).1` is the domain and `(induced_map A).2` is the function.
+ This is a partial function from `ℕ → β` to `a`,
+ implemented here as an object of type `Σ s : set (ℕ → β), s → α`.
+ That is, `(induced_map A).1` is the domain and `(induced_map A).2` is the function.
 
 ## Implementation Notes
 
@@ -74,40 +74,40 @@ variable {A}
 /-- If `x` is in the domain of the induced map of a scheme `A`,
 its image under this map is in each set along the corresponding branch. -/
 lemma map_mem (x : (induced_map A).1) (n : ℕ) :
-  (induced_map A).2 x ∈ A (res x n) :=
+ (induced_map A).2 x ∈ A (res x n) :=
 begin
-  have := x.property.some_mem,
-  rw mem_Inter at this,
-  exact this n,
+ have := x.property.some_mem,
+ rw mem_Inter at this,
+ exact this n,
 end
 
 protected lemma closure_antitone.antitone [topological_space α] (hA : closure_antitone A) :
-  cantor_scheme.antitone A :=
+ cantor_scheme.antitone A :=
 λ l a, subset_closure.trans (hA l a)
 
 protected lemma antitone.closure_antitone [topological_space α] (hanti : cantor_scheme.antitone A)
-  (hclosed : ∀ l, is_closed (A l)) : closure_antitone A :=
+ (hclosed : ∀ l, is_closed (A l)) : closure_antitone A :=
 λ l a, (hclosed _).closure_eq.subset.trans (hanti _ _)
 
 /-- A scheme where the children of each set are pairwise disjoint induces an injective map. -/
 theorem disjoint.map_injective (hA : cantor_scheme.disjoint A) : injective (induced_map A).2 :=
 begin
-  rintros ⟨x, hx⟩ ⟨y, hy⟩ hxy,
-  refine subtype.coe_injective (res_injective _),
-  dsimp,
-  ext n : 1,
-  induction n with n ih, { simp },
-  simp only [res_succ],
-  refine ⟨_, ih⟩,
-  contrapose hA,
-  simp only [cantor_scheme.disjoint, _root_.pairwise, ne.def, not_forall, exists_prop],
-  refine ⟨res x n, _, _, hA, _⟩,
-  rw not_disjoint_iff,
-  refine ⟨(induced_map A).2 ⟨x, hx⟩, _, _⟩,
-  { rw ← res_succ,
-    apply map_mem, },
-  rw [hxy, ih, ← res_succ],
-  apply map_mem,
+ rintros ⟨x, hx⟩ ⟨y, hy⟩ hxy,
+ refine subtype.coe_injective (res_injective _),
+ dsimp,
+ ext n : 1,
+ induction n with n ih, { simp },
+ simp only [res_succ],
+ refine ⟨_, ih⟩,
+ contrapose hA,
+ simp only [cantor_scheme.disjoint, _root_.pairwise, ne.def, not_forall, exists_prop],
+ refine ⟨res x n, _, _, hA, _⟩,
+ rw not_disjoint_iff,
+ refine ⟨(induced_map A).2 ⟨x, hx⟩, _, _⟩,
+ { rw ← res_succ,
+ apply map_mem, },
+ rw [hxy]; rw [ ih]; rw [ ← res_succ],
+ apply map_mem,
 end
 
 end topology
@@ -125,74 +125,75 @@ def vanishing_diam : Prop :=
 variable {A}
 
 lemma vanishing_diam.dist_lt (hA : vanishing_diam A) (ε : ℝ) (ε_pos : 0 < ε) (x : ℕ → β) :
-  ∃ n : ℕ, ∀ y z ∈ A (res x n), dist y z < ε :=
+ ∃ n : ℕ, ∀ y z ∈ A (res x n), dist y z < ε :=
 begin
-  specialize hA x,
-  rw ennreal.tendsto_at_top_zero at hA,
-  cases hA (ennreal.of_real (ε / 2))
-    (by { simp only [gt_iff_lt, ennreal.of_real_pos], linarith }) with n hn,
-  use n,
-  intros y hy z hz,
-  rw [← ennreal.of_real_lt_of_real_iff ε_pos, ← edist_dist],
-  apply lt_of_le_of_lt (emetric.edist_le_diam_of_mem hy hz),
-  apply lt_of_le_of_lt (hn _ (le_refl _)),
-  rw ennreal.of_real_lt_of_real_iff ε_pos,
-  linarith,
+ specialize hA x,
+ rw ennreal.tendsto_at_top_zero at hA,
+ cases hA (ennreal.of_real (ε / 2))
+ (by { simp only [gt_iff_lt, ennreal.of_real_pos], linarith }) with n hn,
+ use n,
+ intros y hy z hz,
+ rw [← ennreal.of_real_lt_of_real_iff ε_pos]; rw [ ← edist_dist],
+ apply lt_of_le_of_lt (emetric.edist_le_diam_of_mem hy hz),
+ apply lt_of_le_of_lt (hn _ (le_refl _)),
+ rw ennreal.of_real_lt_of_real_iff ε_pos,
+ linarith,
 end
 
 /-- A scheme with vanishing diameter along each branch induces a continuous map. -/
 theorem vanishing_diam.map_continuous [topological_space β] [discrete_topology β]
-  (hA : vanishing_diam A) : continuous (induced_map A).2 :=
+ (hA : vanishing_diam A) : continuous (induced_map A).2 :=
 begin
-  rw metric.continuous_iff',
-  rintros ⟨x, hx⟩ ε ε_pos,
-  cases hA.dist_lt _ ε_pos x with n hn,
-  rw _root_.eventually_nhds_iff,
-  refine ⟨coe ⁻¹' cylinder x n, _, _, by simp⟩,
-  { rintros ⟨y, hy⟩ hyx,
-    rw [mem_preimage, subtype.coe_mk, cylinder_eq_res, mem_set_of] at hyx,
-    apply hn,
-    { rw ← hyx,
-      apply map_mem, },
-    apply map_mem, },
-  apply continuous_subtype_coe.is_open_preimage,
-  apply is_open_cylinder,
+ rw metric.continuous_iff',
+ rintros ⟨x, hx⟩ ε ε_pos,
+ cases hA.dist_lt _ ε_pos x with n hn,
+ rw _root_.eventually_nhds_iff,
+ refine ⟨coe ⁻¹' cylinder x n, _, _, by simp⟩,
+ { rintros ⟨y, hy⟩ hyx,
+ rw [mem_preimage] at hyx; rw [ subtype.coe_mk] at hyx; rw [ cylinder_eq_res] at hyx; rw [ mem_set_of] at hyx,
+ apply hn,
+ { rw ← hyx,
+ apply map_mem, },
+ apply map_mem, },
+ apply continuous_subtype_coe.is_open_preimage,
+ apply is_open_cylinder,
 end
 
 /-- A scheme on a complete space with vanishing diameter
 such that each set contains the closure of its children
 induces a total map. -/
 theorem closure_antitone.map_of_vanishing_diam [complete_space α]
-  (hdiam : vanishing_diam A) (hanti : closure_antitone A) (hnonempty : ∀ l, (A l).nonempty) :
-  (induced_map A).1 = univ :=
+ (hdiam : vanishing_diam A) (hanti : closure_antitone A) (hnonempty : ∀ l, (A l).nonempty) :
+ (induced_map A).1 = univ :=
 begin
-  rw eq_univ_iff_forall,
-  intro x,
-  choose u hu using λ n, hnonempty (res x n),
-  have umem : ∀ n m : ℕ, n ≤ m → u m ∈ A (res x n),
-  { have : antitone (λ n : ℕ, A (res x n)),
-    { refine antitone_nat_of_succ_le _,
-      intro n,
-      apply hanti.antitone, },
-    intros n m hnm,
-    exact this hnm (hu _), },
-  have : cauchy_seq u,
-  { rw metric.cauchy_seq_iff,
-    intros ε ε_pos,
-    cases hdiam.dist_lt _ ε_pos x with n hn,
-    use n,
-    intros m₀ hm₀ m₁ hm₁,
-    apply hn; apply umem; assumption, },
-  cases cauchy_seq_tendsto_of_complete this with y hy,
-  use y,
-  rw mem_Inter,
-  intro n,
-  apply hanti _ (x n),
-  apply mem_closure_of_tendsto hy,
-  rw eventually_at_top,
-  exact ⟨n.succ, umem _⟩,
+ rw eq_univ_iff_forall,
+ intro x,
+ choose u hu using λ n, hnonempty (res x n),
+ have umem : ∀ n m : ℕ, n ≤ m → u m ∈ A (res x n),
+ { have : antitone (λ n : ℕ, A (res x n)),
+ { refine antitone_nat_of_succ_le _,
+ intro n,
+ apply hanti.antitone, },
+ intros n m hnm,
+ exact this hnm (hu _), },
+ have : cauchy_seq u,
+ { rw metric.cauchy_seq_iff,
+ intros ε ε_pos,
+ cases hdiam.dist_lt _ ε_pos x with n hn,
+ use n,
+ intros m₀ hm₀ m₁ hm₁,
+ apply hn; apply umem; assumption, },
+ cases cauchy_seq_tendsto_of_complete this with y hy,
+ use y,
+ rw mem_Inter,
+ intro n,
+ apply hanti _ (x n),
+ apply mem_closure_of_tendsto hy,
+ rw eventually_at_top,
+ exact ⟨n.succ, umem _⟩,
 end
 
 end metric
 
 end cantor_scheme
+

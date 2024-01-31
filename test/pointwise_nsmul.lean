@@ -32,3 +32,4 @@ example (s : filter β) (n : ℤ) : s ^ n = zpow_rec n s := rfl
 
 example : 2 • ({2, 3} : finset ℕ) = {4, 5, 6} := rfl
 example : ({2, 3}^2 : finset ℕ) = {4, 6, 9} := rfl
+

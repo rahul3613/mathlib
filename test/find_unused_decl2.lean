@@ -14,3 +14,4 @@ def some_val : list ℕ := [1,2,3]
 def other_val : my_list := some_val
 
 def used_somewhere_else : my_list := some_val
+

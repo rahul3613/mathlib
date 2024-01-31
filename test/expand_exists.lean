@@ -23,12 +23,12 @@ lemma dependent_type_spec_res
 {α : Type*} (a : α) : (a, dependent_type_val a) = (a, dependent_type_val a) := dependent_type_spec a
 
 @[expand_exists nat_greater_nosplit nat_greater_nosplit_spec,
-  expand_exists nat_greater_split nat_greater_split_lt nat_greater_split_neq]
+ expand_exists nat_greater_split nat_greater_split_lt nat_greater_split_neq]
 lemma nat_greater_exists₂ (n : ℕ) : ∃ m : ℕ, n < m ∧ m ≠ 0 := begin
-  use n + 1,
-  split,
-  fconstructor,
-  finish,
+ use n + 1,
+ split,
+ fconstructor,
+ finish,
 end
 
 noncomputable def nat_greater_nosplit_res : ℕ → ℕ := nat_greater_nosplit
@@ -39,3 +39,4 @@ lemma nat_greater_nosplit_spec_res :
 
 lemma nat_greater_split_spec_lt_res : ∀ (n : ℕ), n < nat_greater_nosplit n := nat_greater_split_lt
 lemma nat_greater_split_spec_neq_res : ∀ (n : ℕ), nat_greater_nosplit n ≠ 0 := nat_greater_split_neq
+

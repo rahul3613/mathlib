@@ -23,7 +23,7 @@ and the fraction field `fraction_ring R`.
 ## Main results
 
 - `char_p_of_injective_algebra_map` If `R →+* A` is an injective algebra map
-  then `A` has the same characteristic as `R`.
+ then `A` has the same characteristic as `R`.
 
 Instances constructed from this result:
 - Any `free_algebra R X` has the same characteristic as `R`.
@@ -34,30 +34,30 @@ Instances constructed from this result:
 
 /-- If the algebra map `R →+* A` is injective then `A` has the same characteristic as `R`. -/
 lemma char_p_of_injective_algebra_map {R A : Type*} [comm_semiring R] [semiring A] [algebra R A]
-  (h : function.injective (algebra_map R A)) (p : ℕ) [char_p R p] : char_p A p :=
+ (h : function.injective (algebra_map R A)) (p : ℕ) [char_p R p] : char_p A p :=
 { cast_eq_zero_iff := λx,
-  begin
-    rw ←char_p.cast_eq_zero_iff R p x,
-    change algebra_map ℕ A x = 0 ↔ algebra_map ℕ R x = 0,
-    rw is_scalar_tower.algebra_map_apply ℕ R A x,
-    refine iff.trans _ h.eq_iff,
-    rw ring_hom.map_zero,
-  end }
+ begin
+ rw ←char_p.cast_eq_zero_iff R p x,
+ change algebra_map ℕ A x = 0 ↔ algebra_map ℕ R x = 0,
+ rw is_scalar_tower.algebra_map_apply ℕ R A x,
+ refine iff.trans _ h.eq_iff,
+ rw ring_hom.map_zero,
+ end }
 
 lemma char_p_of_injective_algebra_map' (R A : Type*) [field R] [semiring A] [algebra R A]
-  [nontrivial A] (p : ℕ) [char_p R p] : char_p A p :=
+ [nontrivial A] (p : ℕ) [char_p R p] : char_p A p :=
 char_p_of_injective_algebra_map (algebra_map R A).injective p
 
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
 lemma char_zero_of_injective_algebra_map {R A : Type*} [comm_semiring R] [semiring A] [algebra R A]
-  (h : function.injective (algebra_map R A)) [char_zero R] : char_zero A :=
+ (h : function.injective (algebra_map R A)) [char_zero R] : char_zero A :=
 { cast_injective := λ x y hxy,
-  begin
-    change algebra_map ℕ A x = algebra_map ℕ A y at hxy,
-    rw is_scalar_tower.algebra_map_apply ℕ R A x at hxy,
-    rw is_scalar_tower.algebra_map_apply ℕ R A y at hxy,
-    exact char_zero.cast_injective (h hxy),
-  end }
+ begin
+ change algebra_map ℕ A x = algebra_map ℕ A y at hxy,
+ rw is_scalar_tower.algebra_map_apply ℕ R A x at hxy,
+ rw is_scalar_tower.algebra_map_apply ℕ R A y at hxy,
+ exact char_zero.cast_injective (h hxy),
+ end }
 -- `char_p.char_p_to_char_zero A _ (char_p_of_injective_algebra_map h 0)` does not work
 -- here as it would require `ring A`.
 
@@ -99,7 +99,7 @@ lemma algebra.char_p_iff (p : ℕ) : char_p K p ↔ char_p L p :=
 (algebra_map K L).char_p_iff_char_p p
 
 lemma algebra.ring_char_eq : ring_char K = ring_char L :=
-by { rw [ring_char.eq_iff, algebra.char_p_iff K L], apply ring_char.char_p }
+by { rw [ring_char.eq_iff]; rw [ algebra.char_p_iff K L], apply ring_char.char_p }
 
 end
 
@@ -120,7 +120,7 @@ end free_algebra
 namespace is_fraction_ring
 
 variables (R : Type*) {K : Type*} [comm_ring R]
-  [field K] [algebra R K] [is_fraction_ring R K]
+ [field K] [algebra R K] [is_fraction_ring R K]
 variables (p : ℕ)
 
 /-- If `R` has characteristic `p`, then so does Frac(R). -/
@@ -142,3 +142,4 @@ instance char_zero [char_zero R] : char_zero (fraction_ring R) :=
 char_zero_of_is_fraction_ring R
 
 end is_fraction_ring
+

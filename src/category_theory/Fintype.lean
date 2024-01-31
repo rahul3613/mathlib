@@ -50,22 +50,22 @@ instance concrete_category_Fintype : concrete_category Fintype := ⟨incl⟩
 
 @[simp] lemma id_apply (X : Fintype) (x : X) : (𝟙 X : X → X) x = x := rfl
 @[simp] lemma comp_apply {X Y Z : Fintype} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
-  (f ≫ g) x = g (f x) := rfl
+ (f ≫ g) x = g (f x) := rfl
 
 /-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
 -- See `equiv_equiv_iso` in the root namespace for the analogue in `Type`.
 @[simps]
 def equiv_equiv_iso {A B : Fintype} : (A ≃ B) ≃ (A ≅ B) :=
 { to_fun := λ e,
-  { hom := e,
-    inv := e.symm, },
-  inv_fun := λ i,
-  { to_fun := i.hom,
-    inv_fun := i.inv,
-    left_inv := iso.hom_inv_id_apply i,
-    right_inv := iso.inv_hom_id_apply i, },
-  left_inv := by tidy,
-  right_inv := by tidy, }
+ { hom := e,
+ inv := e.symm, },
+ inv_fun := λ i,
+ { to_fun := i.hom,
+ inv_fun := i.inv,
+ left_inv := iso.hom_inv_id_apply i,
+ right_inv := iso.inv_hom_id_apply i, },
+ left_inv := by tidy,
+ right_inv := by tidy, }
 
 universe u
 /--
@@ -92,39 +92,39 @@ lemma ext (X Y : skeleton) : X.len = Y.len → X = Y := ulift.ext _ _
 
 instance : small_category skeleton.{u} :=
 { hom := λ X Y, ulift.{u} (fin X.len) → ulift.{u} (fin Y.len),
-  id := λ _, id,
-  comp := λ _ _ _ f g, g ∘ f }
+ id := λ _, id,
+ comp := λ _ _ _ f g, g ∘ f }
 
 lemma is_skeletal : skeletal skeleton.{u} := λ X Y ⟨h⟩, ext _ _ $ fin.equiv_iff_eq.mp $
-  nonempty.intro $
+ nonempty.intro $
 { to_fun := λ x, (h.hom ⟨x⟩).down,
-  inv_fun := λ x, (h.inv ⟨x⟩).down,
-  left_inv := begin
-    intro a,
-    change ulift.down _ = _,
-    rw ulift.up_down,
-    change ((h.hom ≫ h.inv) _).down = _,
-    simpa,
-  end,
-  right_inv := begin
-    intro a,
-    change ulift.down _ = _,
-    rw ulift.up_down,
-    change ((h.inv ≫ h.hom) _).down = _,
-    simpa,
-  end }
+ inv_fun := λ x, (h.inv ⟨x⟩).down,
+ left_inv := begin
+ intro a,
+ change ulift.down _ = _,
+ rw ulift.up_down,
+ change ((h.hom ≫ h.inv) _).down = _,
+ simpa,
+ end,
+ right_inv := begin
+ intro a,
+ change ulift.down _ = _,
+ rw ulift.up_down,
+ change ((h.inv ≫ h.hom) _).down = _,
+ simpa,
+ end }
 
 /-- The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
 def incl : skeleton.{u} ⥤ Fintype.{u} :=
 { obj := λ X, Fintype.of (ulift (fin X.len)),
-  map := λ _ _ f, f }
+ map := λ _ _ f, f }
 
 instance : full incl := { preimage := λ _ _ f, f }
 instance : faithful incl := {}
 instance : ess_surj incl :=
 ess_surj.mk $ λ X, let F := fintype.equiv_fin X in ⟨mk (fintype.card X), nonempty.intro
-  { hom := F.symm ∘ ulift.down,
-    inv := ulift.up ∘ F }⟩
+ { hom := F.symm ∘ ulift.down,
+ inv := ulift.up ∘ F }⟩
 
 noncomputable instance : is_equivalence incl :=
 equivalence.of_fully_faithfully_ess_surj _
@@ -134,8 +134,8 @@ noncomputable def equivalence : skeleton ≌ Fintype := incl.as_equivalence
 
 @[simp] lemma incl_mk_nat_card (n : ℕ) : fintype.card (incl.obj (mk n)) = n :=
 begin
-  convert finset.card_fin n,
-  apply fintype.of_equiv_card,
+ convert finset.card_fin n,
+ apply fintype.of_equiv_card,
 end
 
 end skeleton
@@ -143,6 +143,7 @@ end skeleton
 /-- `Fintype.skeleton` is a skeleton of `Fintype`. -/
 noncomputable def is_skeleton : is_skeleton_of Fintype skeleton skeleton.incl :=
 { skel := skeleton.is_skeletal,
-  eqv := by apply_instance }
+ eqv := by apply_instance }
 
 end Fintype
+

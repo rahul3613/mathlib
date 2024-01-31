@@ -61,7 +61,7 @@ attribute [instance] projective_presentation.projective projective_presentation.
 variables (C)
 
 /-- A category "has enough projectives" if for every object `X` there is a projective object `P` and
-    an epimorphism `P ↠ X`. -/
+ an epimorphism `P ↠ X`. -/
 class enough_projectives : Prop :=
 (presentation : ∀ (X : C), nonempty (projective_presentation X))
 
@@ -76,7 +76,7 @@ def factor_thru {P X E : C} [projective P] (f : P ⟶ X) (e : E ⟶ X) [epi e] :
 (projective.factors f e).some
 
 @[simp] lemma factor_thru_comp {P X E : C} [projective P] (f : P ⟶ X) (e : E ⟶ X) [epi e] :
-  factor_thru f e ≫ e = f :=
+ factor_thru f e ≫ e = f :=
 (projective.factors f e).some_spec
 
 section
@@ -89,10 +89,10 @@ end
 
 lemma of_iso {P Q : C} (i : P ≅ Q) (hP : projective P) : projective Q :=
 begin
-  fsplit,
-  introsI E X f e e_epi,
-  obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e,
-  exact ⟨i.inv ≫ f', by simp [hf']⟩
+ fsplit,
+ introsI E X f e e_epi,
+ obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e,
+ exact ⟨i.inv ≫ f', by simp [hf']⟩
 end
 
 lemma iso_iff {P Q : C} (i : P ≅ Q) : projective P ↔ projective Q :=
@@ -101,44 +101,44 @@ lemma iso_iff {P Q : C} (i : P ≅ Q) : projective P ↔ projective Q :=
 /-- The axiom of choice says that every type is a projective object in `Type`. -/
 instance (X : Type u) : projective X :=
 { factors := λ E X' f e epi,
-  ⟨λ x, ((epi_iff_surjective _).mp epi (f x)).some,
-  by { ext x, exact ((epi_iff_surjective _).mp epi (f x)).some_spec, }⟩ }
+ ⟨λ x, ((epi_iff_surjective _).mp epi (f x)).some,
+ by { ext x, exact ((epi_iff_surjective _).mp epi (f x)).some_spec, }⟩ }
 
 instance Type.enough_projectives : enough_projectives (Type u) :=
 { presentation := λ X, ⟨{ P := X, f := 𝟙 X, }⟩, }
 
 instance {P Q : C} [has_binary_coproduct P Q] [projective P] [projective Q] :
-  projective (P ⨿ Q) :=
+ projective (P ⨿ Q) :=
 { factors := λ E X' f e epi, by exactI
-  ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by tidy⟩, }
+ ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by tidy⟩, }
 
 section
 local attribute [tidy] tactic.discrete_cases
 
 instance {β : Type v} (g : β → C) [has_coproduct g] [∀ b, projective (g b)] :
-  projective (∐ g) :=
+ projective (∐ g) :=
 { factors := λ E X' f e epi, by exactI
-  ⟨sigma.desc (λ b, factor_thru (sigma.ι g b ≫ f) e), by tidy⟩, }
+ ⟨sigma.desc (λ b, factor_thru (sigma.ι g b ≫ f) e), by tidy⟩, }
 
 end
 
 instance {P Q : C} [has_zero_morphisms C] [has_binary_biproduct P Q]
-  [projective P] [projective Q] :
-  projective (P ⊞ Q) :=
+ [projective P] [projective Q] :
+ projective (P ⊞ Q) :=
 { factors := λ E X' f e epi, by exactI
-  ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by tidy⟩, }
+ ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by tidy⟩, }
 
 instance {β : Type v} (g : β → C) [has_zero_morphisms C] [has_biproduct g]
-  [∀ b, projective (g b)] : projective (⨁ g) :=
+ [∀ b, projective (g b)] : projective (⨁ g) :=
 { factors := λ E X' f e epi, by exactI
-  ⟨biproduct.desc (λ b, factor_thru (biproduct.ι g b ≫ f) e), by tidy⟩, }
+ ⟨biproduct.desc (λ b, factor_thru (biproduct.ι g b ≫ f) e), by tidy⟩, }
 
 lemma projective_iff_preserves_epimorphisms_coyoneda_obj (P : C) :
-  projective P ↔ (coyoneda.obj (op P)).preserves_epimorphisms :=
+ projective P ↔ (coyoneda.obj (op P)).preserves_epimorphisms :=
 ⟨λ hP, ⟨λ X Y f hf, (epi_iff_surjective _).2 $ λ g, have projective (unop (op P)), from hP,
-  by exactI ⟨factor_thru g f, factor_thru_comp _ _⟩⟩,
+ by exactI ⟨factor_thru g f, factor_thru_comp _ _⟩⟩,
  λ h, ⟨λ E X f e he, by exactI (epi_iff_surjective _).1
-  (infer_instance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
+ (infer_instance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
 
 section enough_projectives
 variables [enough_projectives C]
@@ -193,36 +193,36 @@ namespace adjunction
 variables {D : Type*} [category D] {F : C ⥤ D} {G : D ⥤ C}
 
 lemma map_projective (adj : F ⊣ G) [G.preserves_epimorphisms] (P : C) (hP : projective P) :
-  projective (F.obj P) :=
+ projective (F.obj P) :=
 ⟨λ X Y f g, begin
-  introI,
-  rcases hP.factors (adj.unit.app P ≫ G.map f) (G.map g),
-  use F.map w ≫ adj.counit.app X,
-  rw [category.assoc, ←adjunction.counit_naturality, ←category.assoc, ←F.map_comp, h],
-  simp,
+ introI,
+ rcases hP.factors (adj.unit.app P ≫ G.map f) (G.map g),
+ use F.map w ≫ adj.counit.app X,
+ rw [category.assoc]; rw [ ←adjunction.counit_naturality]; rw [ ←category.assoc]; rw [ ←F.map_comp]; rw [ h],
+ simp,
 end⟩
 
 lemma projective_of_map_projective (adj : F ⊣ G) [full F] [faithful F] (P : C)
-  (hP : projective (F.obj P)) : projective P :=
+ (hP : projective (F.obj P)) : projective P :=
 ⟨λ X Y f g, begin
-  introI,
-  haveI : preserves_colimits_of_size.{0 0} F := adj.left_adjoint_preserves_colimits,
-  rcases @hP.1 (F.map f) (F.map g),
-  use adj.unit.app _ ≫ G.map w ≫ (inv $ adj.unit.app _),
-  refine faithful.map_injective F _,
-  simpa
+ introI,
+ haveI : preserves_colimits_of_size.{0 0} F := adj.left_adjoint_preserves_colimits,
+ rcases @hP.1 (F.map f) (F.map g),
+ use adj.unit.app _ ≫ G.map w ≫ (inv $ adj.unit.app _),
+ refine faithful.map_injective F _,
+ simpa
 end⟩
 
 /-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
 `X` to a projective presentation of `F(X)`. -/
 def map_projective_presentation (adj : F ⊣ G) [G.preserves_epimorphisms] (X : C)
-  (Y : projective_presentation X) : projective_presentation (F.obj X) :=
+ (Y : projective_presentation X) : projective_presentation (F.obj X) :=
 { P := F.obj Y.P,
-  projective := adj.map_projective _ Y.projective,
-  f := F.map Y.f,
-  epi := by
-    haveI : preserves_colimits_of_size.{0 0} F := adj.left_adjoint_preserves_colimits;
-    apply_instance }
+ projective := adj.map_projective _ Y.projective,
+ f := F.map Y.f,
+ epi := by
+ haveI : preserves_colimits_of_size.{0 0} F := adj.left_adjoint_preserves_colimits;
+ apply_instance }
 
 end adjunction
 namespace equivalence
@@ -232,21 +232,21 @@ variables {D : Type*} [category D] (F : C ≌ D)
 /-- Given an equivalence of categories `F`, a projective presentation of `F(X)` induces a
 projective presentation of `X.` -/
 def projective_presentation_of_map_projective_presentation
-  (X : C) (Y : projective_presentation (F.functor.obj X)) : projective_presentation X :=
+ (X : C) (Y : projective_presentation (F.functor.obj X)) : projective_presentation X :=
 { P := F.inverse.obj Y.P,
-  projective := adjunction.map_projective F.symm.to_adjunction Y.P Y.projective,
-  f := F.inverse.map Y.f ≫ F.unit_inv.app _,
-  epi := epi_comp _ _ }
+ projective := adjunction.map_projective F.symm.to_adjunction Y.P Y.projective,
+ f := F.inverse.map Y.f ≫ F.unit_inv.app _,
+ epi := epi_comp _ _ }
 
 lemma enough_projectives_iff (F : C ≌ D) :
-  enough_projectives C ↔ enough_projectives D :=
+ enough_projectives C ↔ enough_projectives D :=
 begin
-  split,
-  all_goals { intro H, constructor, intro X, constructor },
-  { exact F.symm.projective_presentation_of_map_projective_presentation _
-      (nonempty.some (H.presentation (F.inverse.obj X))) },
-  { exact F.projective_presentation_of_map_projective_presentation X
-      (nonempty.some (H.presentation (F.functor.obj X))) },
+ split,
+ all_goals { intro H, constructor, intro X, constructor },
+ { exact F.symm.projective_presentation_of_map_projective_presentation _
+ (nonempty.some (H.presentation (F.inverse.obj X))) },
+ { exact F.projective_presentation_of_map_projective_presentation X
+ (nonempty.some (H.presentation (F.functor.obj X))) },
 end
 
 end equivalence
@@ -260,23 +260,22 @@ the middle object `R` of a pair of exact morphisms `f : Q ⟶ R` and `g : R ⟶ 
 such that `h ≫ g = 0`, there is a lift of `h` to `Q`.
 -/
 def exact.lift {P Q R S : C} [projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S)
-  (hfg : exact f g) (w : h ≫ g = 0) : P ⟶ Q :=
+ (hfg : exact f g) (w : h ≫ g = 0) : P ⟶ Q :=
 factor_thru
-  (factor_thru
-    (factor_thru_kernel_subobject g h w)
-    (image_to_kernel f g hfg.w))
-  (factor_thru_image_subobject f)
+ (factor_thru
+ (factor_thru_kernel_subobject g h w)
+ (image_to_kernel f g hfg.w))
+ (factor_thru_image_subobject f)
 
 @[simp] lemma exact.lift_comp {P Q R S : C} [projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S)
-  (hfg : exact f g) (w : h ≫ g = 0) : exact.lift h f g hfg w ≫ f = h :=
+ (hfg : exact f g) (w : h ≫ g = 0) : exact.lift h f g hfg w ≫ f = h :=
 begin
-  simp [exact.lift],
-  conv_lhs { congr, skip, rw ← image_subobject_arrow_comp f, },
-  rw [←category.assoc, factor_thru_comp, ←image_to_kernel_arrow,
-    ←category.assoc, category_theory.projective.factor_thru_comp,
-    factor_thru_kernel_subobject_comp_arrow],
+ simp [exact.lift],
+ conv_lhs { congr, skip, rw ← image_subobject_arrow_comp f, },
+ rw [←category.assoc]; rw [ factor_thru_comp]; rw [ ←image_to_kernel_arrow]; rw [ ←category.assoc]; rw [ category_theory.projective.factor_thru_comp]; rw [ factor_thru_kernel_subobject_comp_arrow],
 end
 
 end
 
 end category_theory
+

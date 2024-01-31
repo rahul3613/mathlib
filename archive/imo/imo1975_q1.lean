@@ -35,17 +35,18 @@ variables (hy : antitone_on y (finset.Icc 1 n))
 include hx hy hσ
 
 theorem imo1975_q1 :
-  ∑ i in finset.Icc 1 n, (x i - y i) ^ 2 ≤ ∑ i in finset.Icc 1 n, (x i - y (σ i)) ^ 2 :=
+ ∑ i in finset.Icc 1 n, (x i - y i) ^ 2 ≤ ∑ i in finset.Icc 1 n, (x i - y (σ i)) ^ 2 :=
 begin
-  simp only [sub_sq, finset.sum_add_distrib, finset.sum_sub_distrib],
-  -- a finite sum is invariant if we permute the order of summation
-  have hσy : ∑ (i : ℕ) in finset.Icc 1 n, y i ^ 2 = ∑ (i : ℕ) in finset.Icc 1 n, y (σ i) ^ 2,
-  { rw ← equiv.perm.sum_comp σ (finset.Icc 1 n) _ hσ },
-  -- let's cancel terms appearing on both sides
-  norm_num [hσy, mul_assoc, ← finset.mul_sum],
-  -- what's left to prove is a version of the rearrangement inequality
-  apply monovary_on.sum_mul_comp_perm_le_sum_mul _ hσ,
-  -- finally we need to show that `x` and `y` 'vary' together on `[1, n]` and this is due to both of
-  -- them being `decreasing`
-  exact antitone_on.monovary_on hx hy
+ simp only [sub_sq, finset.sum_add_distrib, finset.sum_sub_distrib],
+ -- a finite sum is invariant if we permute the order of summation
+ have hσy : ∑ (i : ℕ) in finset.Icc 1 n, y i ^ 2 = ∑ (i : ℕ) in finset.Icc 1 n, y (σ i) ^ 2,
+ { rw ← equiv.perm.sum_comp σ (finset.Icc 1 n) _ hσ },
+ -- let's cancel terms appearing on both sides
+ norm_num [hσy, mul_assoc, ← finset.mul_sum],
+ -- what's left to prove is a version of the rearrangement inequality
+ apply monovary_on.sum_mul_comp_perm_le_sum_mul _ hσ,
+ -- finally we need to show that `x` and `y` 'vary' together on `[1, n]` and this is due to both of
+ -- them being `decreasing`
+ exact antitone_on.monovary_on hx hy
 end
+

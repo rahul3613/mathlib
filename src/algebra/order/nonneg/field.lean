@@ -43,32 +43,33 @@ protected lemma coe_inv (a : {x : α // 0 ≤ x}) : ((a⁻¹ : {x : α // 0 ≤ 
 instance has_div : has_div {x : α // 0 ≤ x} := ⟨λ x y, ⟨x / y, div_nonneg x.2 y.2⟩⟩
 
 @[simp, norm_cast] protected lemma coe_div (a b : {x : α // 0 ≤ x}) :
-  ((a / b : {x : α // 0 ≤ x}) : α) = a / b := rfl
+ ((a / b : {x : α // 0 ≤ x}) : α) = a / b := rfl
 
 @[simp] lemma mk_div_mk (hx : 0 ≤ x) (hy : 0 ≤ y) :
-  (⟨x, hx⟩ : {x : α // 0 ≤ x}) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ := rfl
+ (⟨x, hx⟩ : {x : α // 0 ≤ x}) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ := rfl
 
 instance has_zpow : has_pow {x : α // 0 ≤ x} ℤ := ⟨λ a n, ⟨a ^ n, zpow_nonneg a.2 _⟩⟩
 
 @[simp, norm_cast] protected lemma coe_zpow (a : {x : α // 0 ≤ x}) (n : ℤ) :
-  ((a ^ n : {x : α // 0 ≤ x}) : α) = a ^ n := rfl
+ ((a ^ n : {x : α // 0 ≤ x}) : α) = a ^ n := rfl
 
 @[simp] lemma mk_zpow (hx : 0 ≤ x) (n : ℤ) :
-  (⟨x, hx⟩ : {x : α // 0 ≤ x}) ^ n = ⟨x ^ n, zpow_nonneg hx n⟩ := rfl
+ (⟨x, hx⟩ : {x : α // 0 ≤ x}) ^ n = ⟨x ^ n, zpow_nonneg hx n⟩ := rfl
 
 instance linear_ordered_semifield : linear_ordered_semifield {x : α // 0 ≤ x} :=
 subtype.coe_injective.linear_ordered_semifield _ nonneg.coe_zero nonneg.coe_one nonneg.coe_add
-    nonneg.coe_mul nonneg.coe_inv nonneg.coe_div (λ _ _, rfl) nonneg.coe_pow nonneg.coe_zpow
-    nonneg.coe_nat_cast (λ _ _, rfl) (λ _ _, rfl)
+ nonneg.coe_mul nonneg.coe_inv nonneg.coe_div (λ _ _, rfl) nonneg.coe_pow nonneg.coe_zpow
+ nonneg.coe_nat_cast (λ _ _, rfl) (λ _ _, rfl)
 
 end linear_ordered_semifield
 
 instance canonically_linear_ordered_semifield [linear_ordered_field α] :
-  canonically_linear_ordered_semifield {x : α // 0 ≤ x} :=
+ canonically_linear_ordered_semifield {x : α // 0 ≤ x} :=
 { ..nonneg.linear_ordered_semifield, ..nonneg.canonically_ordered_comm_semiring }
 
 instance linear_ordered_comm_group_with_zero [linear_ordered_field α] :
-  linear_ordered_comm_group_with_zero {x : α // 0 ≤ x} :=
+ linear_ordered_comm_group_with_zero {x : α // 0 ≤ x} :=
 infer_instance
 
 end nonneg
+

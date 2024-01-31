@@ -11,9 +11,9 @@ def d : ℕ := default
 
 example : f c = 0 :=
 begin
-  simp,
-  guard_target f d = 0, -- does not apply f_c
-  refl
+ simp,
+ guard_target f d = 0, -- does not apply f_c
+ refl
 end
 
 open tactic
@@ -39,9 +39,9 @@ def h : morphism := ⟨default⟩
 
 example : h c = 0 :=
 begin
-  simp,
-  guard_target h d = 0, -- does not apply h_c
-  refl
+ simp,
+ guard_target h d = 0, -- does not apply h_c
+ refl
 end
 
 open tactic
@@ -50,3 +50,4 @@ decl ← get_decl ``h_c,
 res ← linter.simp_nf.test decl,
 -- linter complains
 guard $ res.is_some
+

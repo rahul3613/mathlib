@@ -54,21 +54,21 @@ For `n + 1`, we prove the result by induction but by adding `aₙ₊₁ ∣ aₙ
 hypothesis, where `b` is the previous sum, $\sum_{i=0}^{n-1} (a_0 a_n) / (a_i a_{i+1})$, as a
 natural.
 * Base case:
-  * $\sum_{i=0}^0 (a_0 a_{0+1}) / (a_0 a_{0+1})$ is a natural:
-    $\sum_{i=0}^0 (a_0 a_{0+1}) / (a_0 a_{0+1}) = (a_0 a_1) / (a_0 a_1) = 1$.
-  * Divisibility condition:
-    `a₀ * 1 - a₀ = 0` is clearly divisible by `a₁`.
+ * $\sum_{i=0}^0 (a_0 a_{0+1}) / (a_0 a_{0+1})$ is a natural:
+ $\sum_{i=0}^0 (a_0 a_{0+1}) / (a_0 a_{0+1}) = (a_0 a_1) / (a_0 a_1) = 1$.
+ * Divisibility condition:
+ `a₀ * 1 - a₀ = 0` is clearly divisible by `a₁`.
 * Induction step:
-  * $\sum_{i=0}^n (a_0 a_{n+1}) / (a_i a_{i+1})$ is a natural:
-    $$\sum_{i=0}^{n+1} (a_0 a_{n+2}) / (a_i a_{i+1})
-      = \sum_{i=0}^n\ (a_0 a_{n+2}) / (a_i a_{i+1}) + (a_0 a_{n+2}) / (a_{n+1} a_{n+2})
-      = a_{n+2} / a_{n+1} × \sum_{i=0}^n (a_0 a_{n+1}) / (a_i a_{i+1}) + a_0 / a_{n+1}
-      = a_{n+2} / a_{n+1} × b + a_0 / a_{n+1}
-      = (a_n + a_{n+2}) / a_{n+1} × b - (a_n b - a_0)(a_{n+1})$$
-    which is a natural because `(aₙ + aₙ₊₂)/aₙ₊₁`, `b` and `(aₙ * b - a₀)/aₙ₊₁` are (plus an
-    annoying inequality, or the fact that the original sum is positive because its terms are).
-  * Divisibility condition:
-    `aₙ₊₁ * ((aₙ + aₙ₊₂)/aₙ₊₁ * b - (aₙ * b - a₀)/aₙ₊₁) - a₀ = aₙ₊₁aₙ₊₂b` is divisible by `aₙ₊₂`.
+ * $\sum_{i=0}^n (a_0 a_{n+1}) / (a_i a_{i+1})$ is a natural:
+ $$\sum_{i=0}^{n+1} (a_0 a_{n+2}) / (a_i a_{i+1})
+ = \sum_{i=0}^n\ (a_0 a_{n+2}) / (a_i a_{i+1}) + (a_0 a_{n+2}) / (a_{n+1} a_{n+2})
+ = a_{n+2} / a_{n+1} × \sum_{i=0}^n (a_0 a_{n+1}) / (a_i a_{i+1}) + a_0 / a_{n+1}
+ = a_{n+2} / a_{n+1} × b + a_0 / a_{n+1}
+ = (a_n + a_{n+2}) / a_{n+1} × b - (a_n b - a_0)(a_{n+1})$$
+ which is a natural because `(aₙ + aₙ₊₂)/aₙ₊₁`, `b` and `(aₙ * b - a₀)/aₙ₊₁` are (plus an
+ annoying inequality, or the fact that the original sum is positive because its terms are).
+ * Divisibility condition:
+ `aₙ₊₁ * ((aₙ + aₙ₊₂)/aₙ₊₁ * b - (aₙ * b - a₀)/aₙ₊₁) - a₀ = aₙ₊₁aₙ₊₂b` is divisible by `aₙ₊₂`.
 -/
 
 open_locale big_operators
@@ -76,68 +76,65 @@ open_locale big_operators
 variables {α : Type*} [linear_ordered_field α]
 
 theorem oxford_invariants.week3_p1 (n : ℕ) (a : ℕ → ℕ) (a_pos : ∀ i ≤ n, 0 < a i)
-  (ha : ∀ i, i + 2 ≤ n → a (i + 1) ∣ a i + a (i + 2)) :
-  ∃ b : ℕ, (b : α) = ∑ i in finset.range n, (a 0 * a n)/(a i * a (i + 1)) :=
+ (ha : ∀ i, i + 2 ≤ n → a (i + 1) ∣ a i + a (i + 2)) :
+ ∃ b : ℕ, (b : α) = ∑ i in finset.range n, (a 0 * a n)/(a i * a (i + 1)) :=
 begin
-  -- Treat separately `n = 0` and `n ≥ 1`
-  cases n,
-  /- Case `n = 0`
-  The sum is trivially equal to `0` -/
-  { exact ⟨0, by rw [nat.cast_zero, finset.sum_range_zero]⟩ }, -- `⟨Claim it, Prove it⟩`
-  /- Case `n ≥ 1`. We replace `n` by `n + 1` everywhere to make this inequality explicit
-  Set up the stronger induction hypothesis -/
-  rsuffices ⟨b, hb, -⟩ :
-    ∃ b : ℕ, (b : α) = ∑ i in finset.range (n + 1), (a 0 * a (n + 1)) / (a i * a (i + 1))
-    ∧ a (n + 1) ∣ a n * b - a 0,
-  { exact ⟨b, hb⟩ },
-  simp_rw ←@nat.cast_pos α at a_pos,
-  /- Declare the induction
-  `ih` will be the induction hypothesis -/
-  induction n with n ih,
-  /- Base case
-  Claim that the sum equals `1`-/
-  { refine ⟨1, _, _⟩,
-    -- Check that this indeed equals the sum
-    { rw [nat.cast_one, finset.sum_range_one, div_self],
-      exact (mul_pos (a_pos 0 (nat.zero_le _)) (a_pos 1 (nat.zero_lt_succ _))).ne' },
-    -- Check the divisibility condition
-    { rw [mul_one, tsub_self],
-      exact dvd_zero _ } },
-  /- Induction step
-  `b` is the value of the previous sum as a natural, `hb` is the proof that it is indeed the value,
-  and `han` is the divisibility condition -/
-  obtain ⟨b, hb, han⟩ := ih (λ i hi, ha i $ nat.le_succ_of_le hi)
-    (λ i hi, a_pos i $ nat.le_succ_of_le hi),
-  specialize ha n le_rfl,
-  have ha₀ : a 0 ≤ a n * b, -- Needing this is an artifact of `ℕ`-subtraction.
-  { rw [←@nat.cast_le α, nat.cast_mul, hb, ←div_le_iff' (a_pos _ $ n.le_succ.trans $ nat.le_succ _),
-      ←mul_div_mul_right _ _ (a_pos _ $ nat.le_succ _).ne'],
-    suffices h : ∀ i, i ∈ finset.range (n + 1) → 0 ≤ (a 0 : α) * a (n + 1) / (a i * a (i + 1)),
-    { exact finset.single_le_sum h (finset.self_mem_range_succ n) },
-    refine (λ i _, div_nonneg _ _); refine mul_nonneg _ _; exact nat.cast_nonneg _ },
-  -- Claim that the sum equals `(aₙ + aₙ₊₂)/aₙ₊₁ * b - (aₙ * b - a₀)/aₙ₊₁`
-  refine ⟨(a n + a (n + 2))/ a (n + 1) * b - (a n * b - a 0) / a (n + 1), _, _⟩,
-  -- Check that this indeed equals the sum
-  { calc
-      (((a n + a (n + 2)) / a (n + 1) * b - (a n * b - a 0) / a (n + 1) : ℕ) : α)
-        = (a n + a (n + 2)) / a (n + 1) * b - (a n * b - a 0) / a (n + 1) : begin
-          norm_cast,
-          rw nat.cast_sub (nat.div_le_of_le_mul _),
-          rw [←mul_assoc, nat.mul_div_cancel' ha, add_mul],
-          exact tsub_le_self.trans (nat.le_add_right _ _),
-        end
-    ... = a (n + 2) / a (n + 1) * b + (a 0 * a (n + 2)) / (a (n + 1) * a (n + 2))
-        : by rw [add_div, add_mul, sub_div, mul_div_right_comm, add_sub_sub_cancel,
-            mul_div_mul_right _ _ (a_pos _ le_rfl).ne']
-    ... = ∑ (i : ℕ) in finset.range (n + 2), a 0 * a (n + 2) / (a i * a (i + 1))
-        : begin
-          rw [finset.sum_range_succ, hb, finset.mul_sum],
-          congr, ext i,
-          rw [←mul_div_assoc, ←mul_div_right_comm, mul_div_assoc, mul_div_cancel _
-            (a_pos _ $ nat.le_succ _).ne', mul_comm],
-        end },
-  -- Check the divisibility condition
-  { rw [mul_tsub, ← mul_assoc, nat.mul_div_cancel' ha, add_mul,
-      nat.mul_div_cancel' han, add_tsub_tsub_cancel ha₀, add_tsub_cancel_right],
-    exact dvd_mul_right _ _ }
+ -- Treat separately `n = 0` and `n ≥ 1`
+ cases n,
+ /- Case `n = 0`
+ The sum is trivially equal to `0` -/
+ { exact ⟨0, by rw [nat.cast_zero]; rw [ finset.sum_range_zero]⟩ }, -- `⟨Claim it, Prove it⟩`
+ /- Case `n ≥ 1`. We replace `n` by `n + 1` everywhere to make this inequality explicit
+ Set up the stronger induction hypothesis -/
+ rsuffices ⟨b, hb, -⟩ :
+ ∃ b : ℕ, (b : α) = ∑ i in finset.range (n + 1), (a 0 * a (n + 1)) / (a i * a (i + 1))
+ ∧ a (n + 1) ∣ a n * b - a 0,
+ { exact ⟨b, hb⟩ },
+ simp_rw ←@nat.cast_pos α at a_pos,
+ /- Declare the induction
+ `ih` will be the induction hypothesis -/
+ induction n with n ih,
+ /- Base case
+ Claim that the sum equals `1`-/
+ { refine ⟨1, _, _⟩,
+ -- Check that this indeed equals the sum
+ { rw [nat.cast_one]; rw [ finset.sum_range_one]; rw [ div_self],
+ exact (mul_pos (a_pos 0 (nat.zero_le _)) (a_pos 1 (nat.zero_lt_succ _))).ne' },
+ -- Check the divisibility condition
+ { rw [mul_one]; rw [ tsub_self],
+ exact dvd_zero _ } },
+ /- Induction step
+ `b` is the value of the previous sum as a natural, `hb` is the proof that it is indeed the value,
+ and `han` is the divisibility condition -/
+ obtain ⟨b, hb, han⟩ := ih (λ i hi, ha i $ nat.le_succ_of_le hi)
+ (λ i hi, a_pos i $ nat.le_succ_of_le hi),
+ specialize ha n le_rfl,
+ have ha₀ : a 0 ≤ a n * b, -- Needing this is an artifact of `ℕ`-subtraction.
+ { rw [←@nat.cast_le α]; rw [ nat.cast_mul]; rw [ hb]; rw [ ←div_le_iff' (a_pos _ $ n.le_succ.trans $ nat.le_succ _)]; rw [ ←mul_div_mul_right _ _ (a_pos _ $ nat.le_succ _).ne'],
+ suffices h : ∀ i, i ∈ finset.range (n + 1) → 0 ≤ (a 0 : α) * a (n + 1) / (a i * a (i + 1)),
+ { exact finset.single_le_sum h (finset.self_mem_range_succ n) },
+ refine (λ i _, div_nonneg _ _); refine mul_nonneg _ _; exact nat.cast_nonneg _ },
+ -- Claim that the sum equals `(aₙ + aₙ₊₂)/aₙ₊₁ * b - (aₙ * b - a₀)/aₙ₊₁`
+ refine ⟨(a n + a (n + 2))/ a (n + 1) * b - (a n * b - a 0) / a (n + 1), _, _⟩,
+ -- Check that this indeed equals the sum
+ { calc
+ (((a n + a (n + 2)) / a (n + 1) * b - (a n * b - a 0) / a (n + 1) : ℕ) : α)
+ = (a n + a (n + 2)) / a (n + 1) * b - (a n * b - a 0) / a (n + 1) : begin
+ norm_cast,
+ rw nat.cast_sub (nat.div_le_of_le_mul _),
+ rw [←mul_assoc]; rw [ nat.mul_div_cancel' ha]; rw [ add_mul],
+ exact tsub_le_self.trans (nat.le_add_right _ _),
+ end
+ ... = a (n + 2) / a (n + 1) * b + (a 0 * a (n + 2)) / (a (n + 1) * a (n + 2))
+ : by rw [add_div]; rw [ add_mul]; rw [ sub_div]; rw [ mul_div_right_comm]; rw [ add_sub_sub_cancel]; rw [ mul_div_mul_right _ _ (a_pos _ le_rfl).ne']
+ ... = ∑ (i : ℕ) in finset.range (n + 2), a 0 * a (n + 2) / (a i * a (i + 1))
+ : begin
+ rw [finset.sum_range_succ]; rw [ hb]; rw [ finset.mul_sum],
+ congr, ext i,
+ rw [←mul_div_assoc]; rw [ ←mul_div_right_comm]; rw [ mul_div_assoc]; rw [ mul_div_cancel _ (a_pos _ $ nat.le_succ _).ne']; rw [ mul_comm],
+ end },
+ -- Check the divisibility condition
+ { rw [mul_tsub]; rw [ ← mul_assoc]; rw [ nat.mul_div_cancel' ha]; rw [ add_mul]; rw [ nat.mul_div_cancel' han]; rw [ add_tsub_tsub_cancel ha₀]; rw [ add_tsub_cancel_right],
+ exact dvd_mul_right _ _ }
 end
+

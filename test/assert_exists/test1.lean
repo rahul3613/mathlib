@@ -6,3 +6,4 @@ assert_not_exists rat
 
 assert_instance monad option
 assert_no_instance nontrivial nat
+

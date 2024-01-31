@@ -54,3 +54,4 @@ example : ⁅a ⚬ b, c⁆ = a ⚬ ⁅b, c⁆ + ⁅a, c⁆ ⚬ b := by noncomm_r
 example : (a ⚬ b) ⚬ c - a ⚬ (b ⚬ c) = -⁅⁅a, b⁆, c⁆ + ⁅a, ⁅b, c⁆⁆ := by noncomm_ring
 
 example : a + -b = -b + a := by noncomm_ring
+

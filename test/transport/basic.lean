@@ -6,10 +6,10 @@ import algebra.lie.basic
 -- Note that we've never even mentioned the idea of addition or multiplication to `transport`.
 def semiring.map {α : Type} [semiring α] {β : Type} (e : α ≃ β) : semiring β :=
 begin
-  transport using e,
-  -- TODO
-  { simp *, refl }, -- nat_cast_zero
-  { intros, simp *, show _ = e _, simp, refl, }, -- nat_cast_succ
+ transport using e,
+ -- TODO
+ { simp *, refl }, -- nat_cast_zero
+ { intros, simp *, show _ = e _, simp, refl, }, -- nat_cast_succ
 end
 
 -- Indeed, it can equally well move a `semilattice_sup`.
@@ -19,8 +19,8 @@ by transport using e
 -- Verify definitional equality of the new structure data.
 example {α : Type} [semilattice_sup α] {β : Type} (e : α ≃ β) (x y : β) :
 begin
-  haveI := sup.map e,
-  exact (x ≤ y) = (e.symm x ≤ e.symm y),
+ haveI := sup.map e,
+ exact (x ≤ y) = (e.symm x ≤ e.symm y),
 end :=
 rfl
 
@@ -33,16 +33,16 @@ inductive mynat : Type
 
 def mynat_equiv : ℕ ≃ mynat :=
 { to_fun := λ n, nat.rec_on n mynat.zero (λ n, mynat.succ),
-  inv_fun := λ n, mynat.rec_on n nat.zero (λ n, nat.succ),
-  left_inv := λ n, begin induction n, refl, exact congr_arg nat.succ n_ih, end,
-  right_inv := λ n, begin induction n, refl, exact congr_arg mynat.succ n_ih, end }
+ inv_fun := λ n, mynat.rec_on n nat.zero (λ n, nat.succ),
+ left_inv := λ n, begin induction n, refl, exact congr_arg nat.succ n_ih, end,
+ right_inv := λ n, begin induction n, refl, exact congr_arg mynat.succ n_ih, end }
 
 @[simp] lemma mynat_equiv_apply_zero : mynat_equiv 0 = mynat.zero := rfl
 @[simp] lemma mynat_equiv_apply_succ (n : ℕ) :
-  mynat_equiv (n + 1) = mynat.succ (mynat_equiv n) := rfl
+ mynat_equiv (n + 1) = mynat.succ (mynat_equiv n) := rfl
 @[simp] lemma mynat_equiv_symm_apply_zero : mynat_equiv.symm mynat.zero = 0:= rfl
 @[simp] lemma mynat_equiv_symm_apply_succ (n : mynat) :
-  mynat_equiv.symm (mynat.succ n) = (mynat_equiv.symm n) + 1 := rfl
+ mynat_equiv.symm (mynat.succ n) = (mynat_equiv.symm n) + 1 := rfl
 
 instance semiring_mynat : semiring mynat :=
 semiring.map mynat_equiv
@@ -52,8 +52,8 @@ rfl
 
 -- Verify that we can do computations with the transported structure.
 example :
-  (mynat.succ (mynat.succ mynat.zero)) + (mynat.succ mynat.zero) =
-    (mynat.succ (mynat.succ (mynat.succ mynat.zero))) :=
+ (mynat.succ (mynat.succ mynat.zero)) + (mynat.succ mynat.zero) =
+ (mynat.succ (mynat.succ (mynat.succ mynat.zero))) :=
 rfl
 
 lemma mynat_zero_def : (0 : mynat) = mynat_equiv 0 :=
@@ -79,3 +79,4 @@ rfl
 
 example : (3 : mynat) ^ 2 = (9 : mynat) :=
 rfl
+

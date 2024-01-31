@@ -19,9 +19,9 @@ This file contains `nat` and `list` as examples of W types.
 
 ## Main results
 * `W_type.equiv_nat`: the construction of the naturals as a W-type is equivalent
-  to `nat`
+ to `nat`
 * `W_type.equiv_list`: the construction of lists on a type `γ` as a W-type is equivalent to
-  `list γ`
+ `list γ`
 -/
 
 universes u v
@@ -60,14 +60,14 @@ lemma left_inv_nat : function.left_inverse of_nat to_nat
 
 lemma right_inv_nat : function.right_inverse of_nat to_nat
 | nat.zero := rfl
-| (nat.succ n) := by rw [of_nat, to_nat, right_inv_nat n]
+| (nat.succ n) := by rw [of_nat]; rw [ to_nat]; rw [ right_inv_nat n]
 
 /-- The naturals are equivalent to their associated `W_type` -/
 def equiv_nat : W_type nat_β ≃ ℕ :=
 { to_fun := to_nat,
-  inv_fun := of_nat,
-  left_inv := left_inv_nat,
-  right_inv := right_inv_nat }
+ inv_fun := of_nat,
+ left_inv := left_inv_nat,
+ right_inv := right_inv_nat }
 
 open sum punit
 
@@ -77,9 +77,9 @@ This is useful when considering the associated polynomial endofunctor.
 -/
 @[simps] def nat_α_equiv_punit_sum_punit : nat_α ≃ punit.{u + 1} ⊕ punit :=
 { to_fun := λ c, match c with | nat_α.zero := inl star | nat_α.succ := inr star end,
-  inv_fun := λ b, match b with | inl x := nat_α.zero | inr x := nat_α.succ end,
-  left_inv := λ c, match c with | nat_α.zero := rfl | nat_α.succ := rfl end,
-  right_inv := λ b, match b with | inl star := rfl | inr star := rfl end }
+ inv_fun := λ b, match b with | inl x := nat_α.zero | inr x := nat_α.succ end,
+ left_inv := λ c, match c with | nat_α.zero := rfl | nat_α.succ := rfl end,
+ right_inv := λ b, match b with | inl star := rfl | inr star := rfl end }
 
 end nat
 
@@ -95,7 +95,7 @@ since we view `list γ` as
 | nil : list γ
 | cons x₀ : list γ → list γ
 | cons x₁ : list γ → list γ
-|   ⋮      γ many times
+| ⋮ γ many times
 ```
 -/
 inductive list_α : Type u
@@ -132,9 +132,9 @@ lemma right_inv_list : function.right_inverse (of_list γ) (to_list _)
 /-- Lists are equivalent to their associated `W_type` -/
 def equiv_list : W_type (list_β γ) ≃ list γ :=
 { to_fun := to_list _,
-  inv_fun := of_list _,
-  left_inv := left_inv_list _,
-  right_inv := right_inv_list _ }
+ inv_fun := of_list _,
+ left_inv := left_inv_list _,
+ right_inv := right_inv_list _ }
 
 /--
 `W_type.list_α` is equivalent to `γ` with an extra point.
@@ -142,10 +142,11 @@ This is useful when considering the associated polynomial endofunctor
 -/
 def list_α_equiv_punit_sum : list_α γ ≃ punit.{v + 1} ⊕ γ :=
 { to_fun := λ c, match c with | list_α.nil := sum.inl punit.star | list_α.cons x := sum.inr x end,
-  inv_fun := sum.elim (λ _, list_α.nil) (λ x, list_α.cons x),
-  left_inv := λ c, match c with | list_α.nil := rfl | list_α.cons x := rfl end,
-  right_inv := λ x, match x with | sum.inl punit.star := rfl | sum.inr x := rfl end, }
+ inv_fun := sum.elim (λ _, list_α.nil) (λ x, list_α.cons x),
+ left_inv := λ c, match c with | list_α.nil := rfl | list_α.cons x := rfl end,
+ right_inv := λ x, match x with | sum.inl punit.star := rfl | sum.inr x := rfl end, }
 
 end list
 
 end W_type
+

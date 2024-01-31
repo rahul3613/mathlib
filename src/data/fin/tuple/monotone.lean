@@ -18,9 +18,9 @@ open set fin matrix function
 variables {α : Type*}
 
 lemma lift_fun_vec_cons {n : ℕ} (r : α → α → Prop) [is_trans α r] {f : fin (n + 1) → α} {a : α} :
-  ((<) ⇒ r) (vec_cons a f) (vec_cons a f) ↔ r a (f 0) ∧ ((<) ⇒ r) f f :=
+ ((<) ⇒ r) (vec_cons a f) (vec_cons a f) ↔ r a (f 0) ∧ ((<) ⇒ r) f f :=
 by simp only [lift_fun_iff_succ r, forall_fin_succ, cons_val_succ, cons_val_zero, ← succ_cast_succ,
-  cast_succ_zero]
+ cast_succ_zero]
 
 variables [preorder α] {n : ℕ} {f : fin (n + 1) → α} {a : α}
 
@@ -37,19 +37,20 @@ lift_fun_vec_cons (>)
 @monotone_vec_cons αᵒᵈ _ _ _ _
 
 lemma strict_mono.vec_cons (hf : strict_mono f) (ha : a < f 0) :
-  strict_mono (vec_cons a f) :=
+ strict_mono (vec_cons a f) :=
 strict_mono_vec_cons.2 ⟨ha, hf⟩
 
 lemma strict_anti.vec_cons (hf : strict_anti f) (ha : f 0 < a) :
-  strict_anti (vec_cons a f) :=
+ strict_anti (vec_cons a f) :=
 strict_anti_vec_cons.2 ⟨ha, hf⟩
 
 lemma monotone.vec_cons (hf : monotone f) (ha : a ≤ f 0) :
-  monotone (vec_cons a f) :=
+ monotone (vec_cons a f) :=
 monotone_vec_cons.2 ⟨ha, hf⟩
 
 lemma antitone.vec_cons (hf : antitone f) (ha : f 0 ≤ a) :
-  antitone (vec_cons a f) :=
+ antitone (vec_cons a f) :=
 antitone_vec_cons.2 ⟨ha, hf⟩
 
 example : monotone ![1, 2, 2, 3] := by simp [subsingleton.monotone]
+

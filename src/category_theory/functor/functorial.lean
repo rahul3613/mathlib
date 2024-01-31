@@ -23,8 +23,8 @@ variables {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D
 -- Perhaps in the future we could redefine `functor` in terms of this, but that isn't the
 -- immediate plan.
 class functorial (F : C → D) : Type (max v₁ v₂ u₁ u₂) :=
-(map       : Π {X Y : C}, (X ⟶ Y) → ((F X) ⟶ (F Y)))
-(map_id'   : ∀ (X : C), map (𝟙 X) = 𝟙 (F X) . obviously)
+(map : Π {X Y : C}, (X ⟶ Y) → ((F X) ⟶ (F Y)))
+(map_id' : ∀ (X : C), map (𝟙 X) = 𝟙 (F X) . obviously)
 (map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = (map f) ≫ (map g) . obviously)
 
 /--
@@ -35,14 +35,14 @@ def map (F : C → D) [functorial.{v₁ v₂} F] {X Y : C} (f : X ⟶ Y) : F X �
 functorial.map.{v₁ v₂} f
 
 @[simp] lemma map_as_map {F : C → D} [functorial.{v₁ v₂} F] {X Y : C} {f : X ⟶ Y} :
-  functorial.map.{v₁ v₂} f = map F f := rfl
+ functorial.map.{v₁ v₂} f = map F f := rfl
 
 @[simp] lemma functorial.map_id {F : C → D} [functorial.{v₁ v₂} F] {X : C} :
-  map F (𝟙 X) = 𝟙 (F X) := functorial.map_id' X
+ map F (𝟙 X) = 𝟙 (F X) := functorial.map_id' X
 
 @[simp] lemma functorial.map_comp
-  {F : C → D} [functorial.{v₁ v₂} F] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} :
-  map F (f ≫ g) = map F f ≫ map F g := functorial.map_comp' f g
+ {F : C → D} [functorial.{v₁ v₂} F] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} :
+ map F (f ≫ g) = map F f ≫ map F g := functorial.map_comp' f g
 
 namespace functor
 
@@ -51,7 +51,7 @@ Bundle a functorial function as a functor.
 -/
 def of (F : C → D) [I : functorial.{v₁ v₂} F] : C ⥤ D :=
 { obj := F,
-  ..I }
+ ..I }
 
 end functor
 
@@ -73,9 +73,10 @@ variables {E : Type u₃} [category.{v₃} E]
 -- #lint reports an instance loop
 -- Will this be a problem?
 def functorial_comp (F : C → D) [functorial.{v₁ v₂} F] (G : D → E) [functorial.{v₂ v₃} G] :
-  functorial.{v₁ v₃} (G ∘ F) :=
+ functorial.{v₁ v₃} (G ∘ F) :=
 { ..(functor.of F ⋙ functor.of G) }
 
 end
 
 end category_theory
+

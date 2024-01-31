@@ -24,9 +24,10 @@ universes u v w x
 variables {α : Type u} {β : Type v} {ι : Sort w}
 
 lemma finite.set.finite_of_finite_image (s : set α)
-  {f : α → β} (h : s.inj_on f) [finite (f '' s)] : finite s :=
+ {f : α → β} (h : s.inj_on f) [finite (f '' s)] : finite s :=
 finite.of_equiv _ (equiv.of_bijective _ h.bij_on_image.bijective).symm
 
 lemma finite.of_injective_finite_range {f : ι → α}
-  (hf : function.injective f) [finite (range f)] : finite ι :=
+ (hf : function.injective f) [finite (range f)] : finite ι :=
 finite.of_injective (set.range_factorization f) (hf.cod_restrict _)
+

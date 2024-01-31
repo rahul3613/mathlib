@@ -16,7 +16,7 @@ import data.fin.tuple.reflection
 This file contains alternative definitions of common operators on matrices that expand
 definitionally to the expected expression when evaluated on `!![]` notation.
 
-This allows "proof by reflection", where we prove `A = !![A 0 0, A 0 1;  A 1 0, A 1 1]` by defining
+This allows "proof by reflection", where we prove `A = !![A 0 0, A 0 1; A 1 0, A 1 1]` by defining
 `matrix.eta_expand A` to be equal to the RHS definitionally, and then prove that
 `A = eta_expand A`.
 
@@ -48,19 +48,19 @@ def «forall» : Π {m n} (P : (matrix (fin m) (fin n) α) → Prop), Prop
 This can be use to prove
 ```lean
 example (P : matrix (fin 2) (fin 3) α → Prop) :
-  (∀ x, P x) ↔ ∀ a b c d e f, P !![a, b, c; d, e, f] :=
+ (∀ x, P x) ↔ ∀ a b c d e f, P !![a, b, c; d, e, f] :=
 (forall_iff _).symm
 ```
 -/
 lemma forall_iff : Π {m n} (P : (matrix (fin m) (fin n) α) → Prop), «forall» P ↔ ∀ x, P x
 | 0 n P := iff.symm fin.forall_fin_zero_pi
 | (m + 1) n P := begin
-  simp only [«forall», fin_vec.forall_iff, forall_iff],
-  exact iff.symm fin.forall_fin_succ_pi,
+ simp only [«forall», fin_vec.forall_iff, forall_iff],
+ exact iff.symm fin.forall_fin_succ_pi,
 end
 
 example (P : matrix (fin 2) (fin 3) α → Prop) :
-  (∀ x, P x) ↔ ∀ a b c d e f, P !![a, b, c; d, e, f] :=
+ (∀ x, P x) ↔ ∀ a b c d e f, P !![a, b, c; d, e, f] :=
 (forall_iff _).symm
 
 /--`∃` with better defeq for `∃ x : matrix (fin m) (fin n) α, P x`. -/
@@ -72,26 +72,26 @@ def «exists» : Π {m n} (P : (matrix (fin m) (fin n) α) → Prop), Prop
 This can be use to prove
 ```lean
 example (P : matrix (fin 2) (fin 3) α → Prop) :
-  (∃ x, P x) ↔ ∃ a b c d e f, P !![a, b, c; d, e, f] :=
+ (∃ x, P x) ↔ ∃ a b c d e f, P !![a, b, c; d, e, f] :=
 (exists_iff _).symm
 ```
 -/
 lemma exists_iff : Π {m n} (P : (matrix (fin m) (fin n) α) → Prop), «exists» P ↔ ∃ x, P x
 | 0 n P := iff.symm fin.exists_fin_zero_pi
 | (m + 1) n P := begin
-  simp only [«exists», fin_vec.exists_iff, exists_iff],
-  exact iff.symm fin.exists_fin_succ_pi,
+ simp only [«exists», fin_vec.exists_iff, exists_iff],
+ exact iff.symm fin.exists_fin_succ_pi,
 end
 
 example (P : matrix (fin 2) (fin 3) α → Prop) :
-  (∃ x, P x) ↔ ∃ a b c d e f, P !![a, b, c; d, e, f] :=
+ (∃ x, P x) ↔ ∃ a b c d e f, P !![a, b, c; d, e, f] :=
 (exists_iff _).symm
 
 /-- `matrix.tranpose` with better defeq for `fin` -/
 def transposeᵣ : Π {m n}, matrix (fin m) (fin n) α → matrix (fin n) (fin m) α
 | _ 0 A := of ![]
 | m (n + 1) A := of $ vec_cons (fin_vec.map (λ v : fin _ → α, v 0) A)
-                               (transposeᵣ (A.submatrix id fin.succ))
+ (transposeᵣ (A.submatrix id fin.succ))
 
 /-- This can be used to prove
 ```lean
@@ -100,13 +100,13 @@ example (a b c d : α) : transpose !![a, b; c, d] = !![a, c; b, d] := (transpose
 -/
 @[simp]
 lemma transposeᵣ_eq : Π {m n} (A : matrix (fin m) (fin n) α),
-  transposeᵣ A = transpose A
+ transposeᵣ A = transpose A
 | _ 0 A := subsingleton.elim _ _
 | m (n + 1) A := matrix.ext $ λ i j, begin
-  simp_rw [transposeᵣ, transposeᵣ_eq],
-  refine i.cases _ (λ i, _),
-  { dsimp, rw fin_vec.map_eq },
-  { simp only [of_apply, matrix.cons_val_succ], refl },
+ simp_rw [transposeᵣ, transposeᵣ_eq],
+ refine i.cases _ (λ i, _),
+ { dsimp, rw fin_vec.map_eq },
+ { simp only [of_apply, matrix.cons_val_succ], refl },
 end
 
 example (a b c d : α) : transpose !![a, b; c, d] = !![a, c; b, d] := (transposeᵣ_eq _).symm
@@ -118,105 +118,105 @@ fin_vec.sum $ fin_vec.seq (fin_vec.map (*) a) b
 /-- This can be used to prove
 ```lean
 example (a b c d : α) [has_mul α] [add_comm_monoid α] :
-  dot_product ![a, b] ![c, d] = a * c + b * d :=
+ dot_product ![a, b] ![c, d] = a * c + b * d :=
 (dot_productᵣ_eq _ _).symm
 ```
 -/
 @[simp]
 lemma dot_productᵣ_eq [has_mul α] [add_comm_monoid α] {m} (a b : fin m → α) :
-  dot_productᵣ a b = dot_product a b :=
+ dot_productᵣ a b = dot_product a b :=
 by simp_rw [dot_productᵣ, dot_product, fin_vec.sum_eq, fin_vec.seq_eq, fin_vec.map_eq]
 
 example (a b c d : α) [has_mul α] [add_comm_monoid α] :
-  dot_product ![a, b] ![c, d] = a * c + b * d :=
+ dot_product ![a, b] ![c, d] = a * c + b * d :=
 (dot_productᵣ_eq _ _).symm
 
 /-- `matrix.mul` with better defeq for `fin` -/
 def mulᵣ [has_mul α] [has_add α] [has_zero α]
-  (A : matrix (fin l) (fin m) α) (B : matrix (fin m) (fin n) α) :
-  matrix (fin l) (fin n) α :=
+ (A : matrix (fin l) (fin m) α) (B : matrix (fin m) (fin n) α) :
+ matrix (fin l) (fin n) α :=
 of $ fin_vec.map (λ v₁, fin_vec.map (λ v₂, dot_productᵣ v₁ v₂) Bᵀ) A
 
 /-- This can be used to prove
 ```lean
 example [add_comm_monoid α] [has_mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
-  !![a₁₁, a₁₂;
-     a₂₁, a₂₂] ⬝ !![b₁₁, b₁₂;
-                    b₂₁, b₂₂] =
-  !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
-     a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
+ !![a₁₁, a₁₂;
+ a₂₁, a₂₂] ⬝ !![b₁₁, b₁₂;
+ b₂₁, b₂₂] =
+ !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
+ a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
 (mulᵣ_eq _ _).symm
 ```
 -/
 @[simp]
 lemma mulᵣ_eq [has_mul α] [add_comm_monoid α]
-  (A : matrix (fin l) (fin m) α) (B : matrix (fin m) (fin n) α) :
-  mulᵣ A B = A.mul B :=
+ (A : matrix (fin l) (fin m) α) (B : matrix (fin m) (fin n) α) :
+ mulᵣ A B = A.mul B :=
 begin
-  simp [mulᵣ, function.comp, matrix.mul, matrix.transpose],
-  refl,
+ simp [mulᵣ, function.comp, matrix.mul, matrix.transpose],
+ refl,
 end
 
 example [add_comm_monoid α] [has_mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
-  !![a₁₁, a₁₂;
-     a₂₁, a₂₂].mul !![b₁₁, b₁₂;
-                      b₂₁, b₂₂] =
-  !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
-     a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
+ !![a₁₁, a₁₂;
+ a₂₁, a₂₂].mul !![b₁₁, b₁₂;
+ b₂₁, b₂₂] =
+ !![a₁₁*b₁₁ + a₁₂*b₂₁, a₁₁*b₁₂ + a₁₂*b₂₂;
+ a₂₁*b₁₁ + a₂₂*b₂₁, a₂₁*b₁₂ + a₂₂*b₂₂] :=
 (mulᵣ_eq _ _).symm
 
 /-- `matrix.mul_vec` with better defeq for `fin` -/
 def mul_vecᵣ [has_mul α] [has_add α] [has_zero α] (A : matrix (fin l) (fin m) α) (v : fin m → α) :
-  fin l → α :=
+ fin l → α :=
 fin_vec.map (λ a, dot_productᵣ a v) A
 
 /-- This can be used to prove
 ```lean
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
-  !![a₁₁, a₁₂;
-     a₂₁, a₂₂].mul_vec ![b₁, b₂] = ![a₁₁*b₁ + a₁₂*b₂, a₂₁*b₁ + a₂₂*b₂] :=
+ !![a₁₁, a₁₂;
+ a₂₁, a₂₂].mul_vec ![b₁, b₂] = ![a₁₁*b₁ + a₁₂*b₂, a₂₁*b₁ + a₂₂*b₂] :=
 (mul_vecᵣ_eq _ _).symm
 ```
 -/
 @[simp]
 lemma mul_vecᵣ_eq [non_unital_non_assoc_semiring α]
-  (A : matrix (fin l) (fin m) α) (v : fin m → α) :
-  mul_vecᵣ A v = A.mul_vec v :=
+ (A : matrix (fin l) (fin m) α) (v : fin m → α) :
+ mul_vecᵣ A v = A.mul_vec v :=
 begin
-  simp [mul_vecᵣ, function.comp],
-  refl,
+ simp [mul_vecᵣ, function.comp],
+ refl,
 end
 
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
-  !![a₁₁, a₁₂;
-     a₂₁, a₂₂].mul_vec ![b₁, b₂] = ![a₁₁*b₁ + a₁₂*b₂, a₂₁*b₁ + a₂₂*b₂] :=
+ !![a₁₁, a₁₂;
+ a₂₁, a₂₂].mul_vec ![b₁, b₂] = ![a₁₁*b₁ + a₁₂*b₂, a₂₁*b₁ + a₂₂*b₂] :=
 (mul_vecᵣ_eq _ _).symm
 
 /-- `matrix.vec_mul` with better defeq for `fin` -/
 def vec_mulᵣ [has_mul α] [has_add α] [has_zero α] (v : fin l → α) (A : matrix (fin l) (fin m) α):
-  fin m → α :=
+ fin m → α :=
 fin_vec.map (λ a, dot_productᵣ v a) Aᵀ
 
 /-- This can be used to prove
 ```lean
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
-  vec_mul ![b₁, b₂] !![a₁₁, a₁₂;
-                       a₂₁, a₂₂] = ![b₁*a₁₁ + b₂*a₂₁, b₁*a₁₂ + b₂*a₂₂] :=
+ vec_mul ![b₁, b₂] !![a₁₁, a₁₂;
+ a₂₁, a₂₂] = ![b₁*a₁₁ + b₂*a₂₁, b₁*a₁₂ + b₂*a₂₂] :=
 (vec_mulᵣ_eq _ _).symm
 ```
 -/
 @[simp]
 lemma vec_mulᵣ_eq [non_unital_non_assoc_semiring α]
-  (v : fin l → α) (A : matrix (fin l) (fin m) α)  :
-  vec_mulᵣ v A = vec_mul v A :=
+ (v : fin l → α) (A : matrix (fin l) (fin m) α) :
+ vec_mulᵣ v A = vec_mul v A :=
 begin
-  simp [vec_mulᵣ, function.comp],
-  refl,
+ simp [vec_mulᵣ, function.comp],
+ refl,
 end
 
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
-  vec_mul ![b₁, b₂] !![a₁₁, a₁₂;
-                       a₂₁, a₂₂] = ![b₁*a₁₁ + b₂*a₂₁, b₁*a₁₂ + b₂*a₂₂] :=
+ vec_mul ![b₁, b₂] !![a₁₁, a₁₂;
+ a₂₁, a₂₂] = ![b₁*a₁₁ + b₂*a₂₁, b₁*a₁₂ + b₂*a₂₂] :=
 (vec_mulᵣ_eq _ _).symm
 
 /-- Expand `A` to `!![A 0 0, ...; ..., A m n]` -/
@@ -226,18 +226,19 @@ matrix.of (fin_vec.eta_expand (λ i, fin_vec.eta_expand (λ j, A i j)))
 /-- This can be used to prove
 ```lean
 example (A : matrix (fin 2) (fin 2) α) :
-  A = !![A 0 0, A 0 1;
-         A 1 0, A 1 1] :=
+ A = !![A 0 0, A 0 1;
+ A 1 0, A 1 1] :=
 (eta_expand_eq _).symm
 ```
 -/
 lemma eta_expand_eq {m n} (A : matrix (fin m) (fin n) α) :
-  eta_expand A = A :=
+ eta_expand A = A :=
 by simp_rw [eta_expand, fin_vec.eta_expand_eq, matrix.of, equiv.refl_apply]
 
 example (A : matrix (fin 2) (fin 2) α) :
-  A = !![A 0 0, A 0 1;
-         A 1 0, A 1 1] :=
+ A = !![A 0 0, A 0 1;
+ A 1 0, A 1 1] :=
 (eta_expand_eq _).symm
 
 end matrix
+

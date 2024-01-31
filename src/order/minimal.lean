@@ -42,7 +42,7 @@ lemma minimals_subset : minimals r s ⊆ s := sep_subset _ _
 
 @[simp] lemma maximals_singleton : maximals r {a} = {a} :=
 (maximals_subset _ _).antisymm $ singleton_subset_iff.2 $
-  ⟨rfl, by { rintro b (rfl : b = a), exact id }⟩
+ ⟨rfl, by { rintro b (rfl : b = a), exact id }⟩
 
 @[simp] lemma minimals_singleton : minimals r {a} = {a} := maximals_singleton _ _
 
@@ -79,21 +79,21 @@ h.induction_on (minimals_empty _) (maximals_singleton _)
 lemma set.subsingleton.minimals_eq (h : s.subsingleton) : minimals r s = s := h.maximals_eq
 
 lemma maximals_mono [is_antisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
-  maximals r₂ s ⊆ maximals r₁ s :=
+ maximals r₂ s ⊆ maximals r₁ s :=
 λ a ha, ⟨ha.1, λ b hb hab,
-  by { have := eq_of_mem_maximals ha hb (h _ _ hab), subst this, exact hab }⟩
+ by { have := eq_of_mem_maximals ha hb (h _ _ hab), subst this, exact hab }⟩
 
 lemma minimals_mono [is_antisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) :
-  minimals r₂ s ⊆ minimals r₁ s :=
+ minimals r₂ s ⊆ minimals r₁ s :=
 λ a ha, ⟨ha.1, λ b hb hab,
-  by { have := eq_of_mem_minimals ha hb (h _ _ hab), subst this, exact hab }⟩
+ by { have := eq_of_mem_minimals ha hb (h _ _ hab), subst this, exact hab }⟩
 
 lemma maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t :=
 begin
-  intros a ha,
-  obtain h | h := ha.1,
-  { exact or.inl ⟨h, λ b hb, ha.2 $ or.inl hb⟩ },
-  { exact or.inr ⟨h, λ b hb, ha.2 $ or.inr hb⟩ }
+ intros a ha,
+ obtain h | h := ha.1,
+ { exact or.inl ⟨h, λ b hb, ha.2 $ or.inl hb⟩ },
+ { exact or.inr ⟨h, λ b hb, ha.2 $ or.inr hb⟩ }
 end
 
 lemma minimals_union : minimals r (s ∪ t) ⊆ minimals r s ∪ minimals r t := maximals_union
@@ -110,11 +110,11 @@ lemma inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) := int
 
 lemma _root_.is_antichain.maximals_eq (h : is_antichain r s) : maximals r s = s :=
 (maximals_subset _ _).antisymm $ λ a ha, ⟨ha, λ b hb hab,
-  by { have := h.eq ha hb hab, subst this, exact hab }⟩
+ by { have := h.eq ha hb hab, subst this, exact hab }⟩
 
 lemma _root_.is_antichain.minimals_eq (h : is_antichain r s) : minimals r s = s :=
 (minimals_subset _ _).antisymm $ λ a ha, ⟨ha, λ b hb hab,
-  by { have := h.eq hb ha hab, subst this, exact hab }⟩
+ by { have := h.eq hb ha hab, subst this, exact hab }⟩
 
 @[simp] lemma maximals_idem : maximals r (maximals r s) = maximals r s :=
 (maximals_subset _ _).antisymm $ λ a ha, ⟨ha, λ b hb, ha.2 hb.1⟩
@@ -124,23 +124,23 @@ lemma _root_.is_antichain.minimals_eq (h : is_antichain r s) : minimals r s = s 
 /-- If `maximals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 lemma is_antichain.max_maximals (ht : is_antichain r t) (h : maximals r s ⊆ t)
-  (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ maximals r s, r b a) :
-  maximals r s = t :=
+ (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ maximals r s, r b a) :
+ maximals r s = t :=
 begin
-  refine h.antisymm (λ a ha, _),
-  obtain ⟨b, hb, hr⟩ := hs ha,
-  rwa of_not_not (λ hab, ht (h hb) ha (ne.symm hab) hr),
+ refine h.antisymm (λ a ha, _),
+ obtain ⟨b, hb, hr⟩ := hs ha,
+ rwa of_not_not (λ hab, ht (h hb) ha (ne.symm hab) hr),
 end
 
 /-- If `minimals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 lemma is_antichain.max_minimals (ht : is_antichain r t) (h : minimals r s ⊆ t)
-  (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ minimals r s, r a b) :
-  minimals r s = t :=
+ (hs : ∀ ⦃a⦄, a ∈ t → ∃ b ∈ minimals r s, r a b) :
+ minimals r s = t :=
 begin
-  refine h.antisymm (λ a ha, _),
-  obtain ⟨b, hb, hr⟩ := hs ha,
-  rwa of_not_not (λ hab, ht ha (h hb) hab hr),
+ refine h.antisymm (λ a ha, _),
+ obtain ⟨b, hb, hr⟩ := hs ha,
+ rwa of_not_not (λ hab, ht ha (h hb) hab hr),
 end
 
 variables [partial_order α]
@@ -155,11 +155,12 @@ lemma is_greatest.maximals_eq (h : is_greatest s a) : maximals (≤) s = {a} :=
 eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, λ b hb, eq_of_mem_maximals hb h.1 $ h.2 hb.1⟩
 
 lemma is_antichain.minimals_upper_closure (hs : is_antichain (≤) s) :
-  minimals (≤) (upper_closure s : set α) = s :=
+ minimals (≤) (upper_closure s : set α) = s :=
 hs.max_minimals (λ a ⟨⟨b, hb, hba⟩, h⟩, by rwa eq_of_mem_minimals ‹a ∈ _› (subset_upper_closure hb)
-  hba) $ λ a ha, ⟨a, ⟨subset_upper_closure ha, λ b ⟨c, hc, hcb⟩ hba,
-    by rwa hs.eq' ha hc (hcb.trans hba)⟩, le_rfl⟩
+ hba) $ λ a ha, ⟨a, ⟨subset_upper_closure ha, λ b ⟨c, hc, hcb⟩ hba,
+ by rwa hs.eq' ha hc (hcb.trans hba)⟩, le_rfl⟩
 
 lemma is_antichain.maximals_lower_closure (hs : is_antichain (≤) s) :
-  maximals (≤) (lower_closure s : set α) = s :=
+ maximals (≤) (lower_closure s : set α) = s :=
 hs.to_dual.minimals_upper_closure
+

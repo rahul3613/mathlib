@@ -39,16 +39,16 @@ def mutually_singular {m0 : measurable_space α} (μ ν : measure α) : Prop :=
 ∃ (s : set α), measurable_set s ∧ μ s = 0 ∧ ν sᶜ = 0
 
 localized "infix (name := measure.mutually_singular)
-  ` ⟂ₘ `:60 := measure_theory.measure.mutually_singular" in measure_theory
+ ` ⟂ₘ `:60 := measure_theory.measure.mutually_singular" in measure_theory
 
 namespace mutually_singular
 
 lemma mk {s t : set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) :
-  mutually_singular μ ν :=
+ mutually_singular μ ν :=
 begin
-  use [to_measurable μ s, measurable_set_to_measurable _ _, (measure_to_measurable _).trans hs],
-  refine measure_mono_null (λ x hx, (hst trivial).resolve_left $ λ hxs, hx _) ht,
-  exact subset_to_measurable _ _ hxs
+ use [to_measurable μ s, measurable_set_to_measurable _ _, (measure_to_measurable _).trans hs],
+ refine measure_mono_null (λ x hx, (hst trivial).resolve_left $ λ hxs, hx _) ht,
+ exact subset_to_measurable _ _ hxs
 end
 
 @[simp] lemma zero_right : μ ⟂ₘ 0 := ⟨∅, measurable_set.empty, measure_empty, rfl⟩
@@ -67,22 +67,22 @@ lemma mono (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν�
 h.mono_ac hμ.absolutely_continuous hν.absolutely_continuous
 
 @[simp] lemma sum_left {ι : Type*} [countable ι] {μ : ι → measure α} :
-  (sum μ) ⟂ₘ ν ↔ ∀ i, μ i ⟂ₘ ν :=
+ (sum μ) ⟂ₘ ν ↔ ∀ i, μ i ⟂ₘ ν :=
 begin
-  refine ⟨λ h i, h.mono (le_sum _ _) le_rfl, λ H, _⟩,
-  choose s hsm hsμ hsν using H,
-  refine ⟨⋂ i, s i, measurable_set.Inter hsm, _, _⟩,
-  { rw [sum_apply _ (measurable_set.Inter hsm), ennreal.tsum_eq_zero],
-    exact λ i, measure_mono_null (Inter_subset _ _) (hsμ i) },
-  { rwa [compl_Inter, measure_Union_null_iff], }
+ refine ⟨λ h i, h.mono (le_sum _ _) le_rfl, λ H, _⟩,
+ choose s hsm hsμ hsν using H,
+ refine ⟨⋂ i, s i, measurable_set.Inter hsm, _, _⟩,
+ { rw [sum_apply _ (measurable_set.Inter hsm)]; rw [ ennreal.tsum_eq_zero],
+ exact λ i, measure_mono_null (Inter_subset _ _) (hsμ i) },
+ { rwa [compl_Inter]; rwa [ measure_Union_null_iff], }
 end
 
 @[simp] lemma sum_right {ι : Type*} [countable ι] {ν : ι → measure α} :
-  μ ⟂ₘ sum ν ↔ ∀ i, μ ⟂ₘ ν i :=
+ μ ⟂ₘ sum ν ↔ ∀ i, μ ⟂ₘ ν i :=
 comm.trans $ sum_left.trans $ forall_congr $ λ i, comm
 
 @[simp] lemma add_left_iff : μ₁ + μ₂ ⟂ₘ ν ↔ μ₁ ⟂ₘ ν ∧ μ₂ ⟂ₘ ν :=
-by rw [← sum_cond, sum_left, bool.forall_bool, cond, cond, and.comm]
+by rw [← sum_cond]; rw [ sum_left]; rw [ bool.forall_bool]; rw [ cond]; rw [ cond]; rw [ and.comm]
 
 @[simp] lemma add_right_iff : μ ⟂ₘ ν₁ + ν₂ ↔ μ ⟂ₘ ν₁ ∧ μ ⟂ₘ ν₂ :=
 comm.trans $ add_left_iff.trans $ and_congr comm comm
@@ -103,3 +103,4 @@ end mutually_singular
 end measure
 
 end measure_theory
+

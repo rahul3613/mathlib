@@ -36,45 +36,44 @@ variables [decidable_eq α] (s t : multiset α)
 
 instance : locally_finite_order (multiset α) :=
 locally_finite_order.of_Icc (multiset α)
-  (λ s t, (finset.Icc s.to_dfinsupp t.to_dfinsupp).map
-    (multiset.equiv_dfinsupp.to_equiv.symm.to_embedding))
-  (λ s t x, by simp)
+ (λ s t, (finset.Icc s.to_dfinsupp t.to_dfinsupp).map
+ (multiset.equiv_dfinsupp.to_equiv.symm.to_embedding))
+ (λ s t x, by simp)
 
 lemma Icc_eq :
-  finset.Icc s t =
-    (finset.Icc s.to_dfinsupp t.to_dfinsupp).map
-      (multiset.equiv_dfinsupp.to_equiv.symm.to_embedding) := rfl
+ finset.Icc s t =
+ (finset.Icc s.to_dfinsupp t.to_dfinsupp).map
+ (multiset.equiv_dfinsupp.to_equiv.symm.to_embedding) := rfl
 
 lemma uIcc_eq :
-  uIcc s t =
-    (uIcc s.to_dfinsupp t.to_dfinsupp).map
-      (multiset.equiv_dfinsupp.to_equiv.symm.to_embedding) :=
+ uIcc s t =
+ (uIcc s.to_dfinsupp t.to_dfinsupp).map
+ (multiset.equiv_dfinsupp.to_equiv.symm.to_embedding) :=
 (Icc_eq _ _).trans $ by simp [uIcc]
 
-lemma card_Icc  :
-  (finset.Icc s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) :=
-by simp_rw [Icc_eq, finset.card_map, dfinsupp.card_Icc, nat.card_Icc, multiset.to_dfinsupp_apply,
-  to_dfinsupp_support]
+lemma card_Icc :
+ (finset.Icc s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) :=
+by simp_rw [Icc_eq, finset.card_map, dfinsupp.card_Icc, nat.card_Icc, multiset.to_dfinsupp_apply, to_dfinsupp_support]
 
 lemma card_Ico :
-  (finset.Ico s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) - 1 :=
-by rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
+ (finset.Ico s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) - 1 :=
+by rw [card_Ico_eq_card_Icc_sub_one]; rw [ card_Icc]
 
 lemma card_Ioc :
-  (finset.Ioc s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) - 1 :=
-by rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
+ (finset.Ioc s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) - 1 :=
+by rw [card_Ioc_eq_card_Icc_sub_one]; rw [ card_Icc]
 
 lemma card_Ioo :
-  (finset.Ioo s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) - 2 :=
-by rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
+ (finset.Ioo s t).card = ∏ i in s.to_finset ∪ t.to_finset, (t.count i + 1 - s.count i) - 2 :=
+by rw [card_Ioo_eq_card_Icc_sub_two]; rw [ card_Icc]
 
 lemma card_uIcc :
-  (uIcc s t).card = ∏ i in s.to_finset ∪ t.to_finset, ((t.count i - s.count i : ℤ).nat_abs + 1) :=
-by simp_rw [uIcc_eq, finset.card_map, dfinsupp.card_uIcc, nat.card_uIcc, multiset.to_dfinsupp_apply,
-  to_dfinsupp_support]
+ (uIcc s t).card = ∏ i in s.to_finset ∪ t.to_finset, ((t.count i - s.count i : ℤ).nat_abs + 1) :=
+by simp_rw [uIcc_eq, finset.card_map, dfinsupp.card_uIcc, nat.card_uIcc, multiset.to_dfinsupp_apply, to_dfinsupp_support]
 
 lemma card_Iic :
-  (finset.Iic s).card = ∏ i in s.to_finset, (s.count i + 1) :=
+ (finset.Iic s).card = ∏ i in s.to_finset, (s.count i + 1) :=
 by simp_rw [Iic_eq_Icc, card_Icc, bot_eq_zero, to_finset_zero, empty_union, count_zero, tsub_zero]
 
 end multiset
+

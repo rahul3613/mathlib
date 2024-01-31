@@ -23,11 +23,11 @@ section thin
 
 lemma is_thin_iff : quiver.is_thin C ↔ ∀ c : C, subsingleton (c ⟶ c) :=
 begin
-  refine ⟨λ h c, h c c, λ h c d, subsingleton.intro $ λ f g, _⟩,
-  haveI := h d,
-  calc f = f ≫ (inv g ≫ g) : by simp only [inv_eq_inv, is_iso.inv_hom_id, category.comp_id]
-     ... = f ≫ (inv f ≫ g) : by congr
-     ... = g               : by simp only [inv_eq_inv, is_iso.hom_inv_id_assoc],
+ refine ⟨λ h c, h c c, λ h c d, subsingleton.intro $ λ f g, _⟩,
+ haveI := h d,
+ calc f = f ≫ (inv g ≫ g) : by simp only [inv_eq_inv, is_iso.inv_hom_id, category.comp_id]
+ ... = f ≫ (inv f ≫ g) : by congr
+ ... = g : by simp only [inv_eq_inv, is_iso.hom_inv_id_assoc],
 end
 
 end thin
@@ -42,3 +42,4 @@ end disconnected
 end groupoid
 
 end category_theory
+

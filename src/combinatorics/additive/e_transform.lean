@@ -18,12 +18,12 @@ as internals of other proofs.
 ## Main declarations
 
 * `finset.mul_dyson_e_transform`: The Dyson e-transform. Replaces `(s, t)` by
-  `(s ∪ e • t, t ∩ e⁻¹ • s)`. The additive version preserves `|s ∩ [1, m]| + |t ∩ [1, m - e]|`.
+ `(s ∪ e • t, t ∩ e⁻¹ • s)`. The additive version preserves `|s ∩ [1, m]| + |t ∩ [1, m - e]|`.
 * `finset.mul_e_transform_left`/`finset.mul_e_transform_right`: Replace `(s, t)` by
-  `(s ∩ s • e, t ∪ e⁻¹ • t)` and `(s ∪ s • e, t ∩ e⁻¹ • t)`. Preserve (together) the sum of
-  the cardinalities (see `finset.mul_e_transform.card`). In particular, one of the two transforms
-  increases the sum of the cardinalities and the other one decreases it. See
-  `le_or_lt_of_add_le_add` and around.
+ `(s ∩ s • e, t ∪ e⁻¹ • t)` and `(s ∪ s • e, t ∩ e⁻¹ • t)`. Preserve (together) the sum of
+ the cardinalities (see `finset.mul_e_transform.card`). In particular, one of the two transforms
+ increases the sum of the cardinalities and the other one decreases it. See
+ `le_or_lt_of_add_le_add` and around.
 
 ## TODO
 
@@ -33,7 +33,7 @@ Prove the invariance property of the Dyson e-transform.
 open mul_opposite
 open_locale pointwise
 
-variables {α  : Type*} [decidable_eq α]
+variables {α : Type*} [decidable_eq α]
 
 namespace finset
 
@@ -49,36 +49,35 @@ reduces the sum of the two sets.", simps]
 def mul_dyson_e_transform : finset α × finset α := (x.1 ∪ e • x.2, x.2 ∩ e⁻¹ • x.1)
 
 @[to_additive] lemma mul_dyson_e_transform.subset :
-  (mul_dyson_e_transform e x).1 * (mul_dyson_e_transform e x).2 ⊆ x.1 * x.2 :=
+ (mul_dyson_e_transform e x).1 * (mul_dyson_e_transform e x).2 ⊆ x.1 * x.2 :=
 begin
-  refine union_mul_inter_subset_union.trans (union_subset subset.rfl _),
-  rw [mul_smul_comm,  smul_mul_assoc, inv_smul_smul, mul_comm],
-  refl,
+ refine union_mul_inter_subset_union.trans (union_subset subset.rfl _),
+ rw [mul_smul_comm]; rw [ smul_mul_assoc]; rw [ inv_smul_smul]; rw [ mul_comm],
+ refl,
 end
 
 @[to_additive] lemma mul_dyson_e_transform.card :
-  (mul_dyson_e_transform e x).1.card + (mul_dyson_e_transform e x).2.card = x.1.card + x.2.card :=
+ (mul_dyson_e_transform e x).1.card + (mul_dyson_e_transform e x).2.card = x.1.card + x.2.card :=
 begin
-  dsimp,
-  rw [←card_smul_finset e (_ ∩ _), smul_finset_inter, smul_inv_smul, inter_comm,
-    card_union_add_card_inter, card_smul_finset],
+ dsimp,
+ rw [←card_smul_finset e (_ ∩ _)]; rw [ smul_finset_inter]; rw [ smul_inv_smul]; rw [ inter_comm]; rw [ card_union_add_card_inter]; rw [ card_smul_finset],
 end
 
 @[simp, to_additive] lemma mul_dyson_e_transform_idem :
-  mul_dyson_e_transform e (mul_dyson_e_transform e x) = mul_dyson_e_transform e x :=
+ mul_dyson_e_transform e (mul_dyson_e_transform e x) = mul_dyson_e_transform e x :=
 begin
-  ext : 1; dsimp,
-  { rw [smul_finset_inter, smul_inv_smul, inter_comm, union_eq_left_iff_subset],
-    exact inter_subset_union },
-  { rw [smul_finset_union, inv_smul_smul, union_comm, inter_eq_left_iff_subset],
-    exact inter_subset_union }
+ ext : 1; dsimp,
+ { rw [smul_finset_inter]; rw [ smul_inv_smul]; rw [ inter_comm]; rw [ union_eq_left_iff_subset],
+ exact inter_subset_union },
+ { rw [smul_finset_union]; rw [ inv_smul_smul]; rw [ union_comm]; rw [ inter_eq_left_iff_subset],
+ exact inter_subset_union }
 end
 
 variables {e x}
 
 @[to_additive] lemma mul_dyson_e_transform.smul_finset_snd_subset_fst :
-  e • (mul_dyson_e_transform e x).2 ⊆ (mul_dyson_e_transform e x).1 :=
-by { dsimp, rw [smul_finset_inter, smul_inv_smul, inter_comm], exact inter_subset_union }
+ e • (mul_dyson_e_transform e x).2 ⊆ (mul_dyson_e_transform e x).1 :=
+by { dsimp, rw [smul_finset_inter]; rw [ smul_inv_smul]; rw [ inter_comm], exact inter_subset_union }
 
 end comm_group
 
@@ -113,37 +112,37 @@ by simp [mul_e_transform_left]
 by simp [mul_e_transform_right]
 
 @[to_additive] lemma mul_e_transform_left.fst_mul_snd_subset :
-  (mul_e_transform_left e x).1 * (mul_e_transform_left e x).2 ⊆ x.1 * x.2 :=
+ (mul_e_transform_left e x).1 * (mul_e_transform_left e x).2 ⊆ x.1 * x.2 :=
 begin
-  refine inter_mul_union_subset_union.trans (union_subset subset.rfl _),
-  rw [op_smul_finset_mul_eq_mul_smul_finset, smul_inv_smul],
-  refl,
+ refine inter_mul_union_subset_union.trans (union_subset subset.rfl _),
+ rw [op_smul_finset_mul_eq_mul_smul_finset]; rw [ smul_inv_smul],
+ refl,
 end
 
 @[to_additive] lemma mul_e_transform_right.fst_mul_snd_subset :
-  (mul_e_transform_right e x).1 * (mul_e_transform_right e x).2 ⊆ x.1 * x.2 :=
+ (mul_e_transform_right e x).1 * (mul_e_transform_right e x).2 ⊆ x.1 * x.2 :=
 begin
-  refine union_mul_inter_subset_union.trans (union_subset subset.rfl _),
-  rw [op_smul_finset_mul_eq_mul_smul_finset, smul_inv_smul],
-  refl,
+ refine union_mul_inter_subset_union.trans (union_subset subset.rfl _),
+ rw [op_smul_finset_mul_eq_mul_smul_finset]; rw [ smul_inv_smul],
+ refl,
 end
 
 @[to_additive] lemma mul_e_transform_left.card :
-  (mul_e_transform_left e x).1.card + (mul_e_transform_right e x).1.card = 2 * x.1.card :=
-(card_inter_add_card_union _ _).trans $ by rw [card_smul_finset, two_mul]
+ (mul_e_transform_left e x).1.card + (mul_e_transform_right e x).1.card = 2 * x.1.card :=
+(card_inter_add_card_union _ _).trans $ by rw [card_smul_finset]; rw [ two_mul]
 
 @[to_additive] lemma mul_e_transform_right.card :
-  (mul_e_transform_left e x).2.card + (mul_e_transform_right e x).2.card = 2 * x.2.card :=
-(card_union_add_card_inter _ _).trans $ by rw [card_smul_finset, two_mul]
+ (mul_e_transform_left e x).2.card + (mul_e_transform_right e x).2.card = 2 * x.2.card :=
+(card_union_add_card_inter _ _).trans $ by rw [card_smul_finset]; rw [ two_mul]
 
 /-- This statement is meant to be combined with `le_or_lt_of_add_le_add` and similar lemmas. -/
 @[to_additive add_e_transform.card "This statement is meant to be combined with
 `le_or_lt_of_add_le_add` and similar lemmas."]
 protected lemma mul_e_transform.card :
-  (mul_e_transform_left e x).1.card + (mul_e_transform_left e x).2.card
-    + ((mul_e_transform_right e x).1.card + (mul_e_transform_right e x).2.card)
-    = x.1.card + x.2.card + (x.1.card + x.2.card) :=
-by rw [add_add_add_comm, mul_e_transform_left.card, mul_e_transform_right.card, ←mul_add, two_mul]
+ (mul_e_transform_left e x).1.card + (mul_e_transform_left e x).2.card
+ + ((mul_e_transform_right e x).1.card + (mul_e_transform_right e x).2.card)
+ = x.1.card + x.2.card + (x.1.card + x.2.card) :=
+by rw [add_add_add_comm]; rw [ mul_e_transform_left.card]; rw [ mul_e_transform_right.card]; rw [ ←mul_add]; rw [ two_mul]
 
 end group
 
@@ -151,12 +150,13 @@ section comm_group
 variables [comm_group α] (e : α) (x : finset α × finset α)
 
 @[simp, to_additive] lemma mul_e_transform_left_inv :
-  mul_e_transform_left e⁻¹ x = (mul_e_transform_right e x.swap).swap :=
+ mul_e_transform_left e⁻¹ x = (mul_e_transform_right e x.swap).swap :=
 by simp [-op_inv, op_smul_eq_smul, mul_e_transform_left, mul_e_transform_right]
 
 @[simp, to_additive] lemma mul_e_transform_right_inv :
-  mul_e_transform_right e⁻¹ x = (mul_e_transform_left e x.swap).swap :=
+ mul_e_transform_right e⁻¹ x = (mul_e_transform_left e x.swap).swap :=
 by simp [-op_inv, op_smul_eq_smul, mul_e_transform_left, mul_e_transform_right]
 
 end comm_group
 end finset
+

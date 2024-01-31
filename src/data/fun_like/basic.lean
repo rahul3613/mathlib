@@ -44,7 +44,7 @@ instance : has_coe_to_fun (my_hom A B) (λ _, A → B) := fun_like.has_coe_to_fu
 equalities. -/
 protected def copy (f : my_hom A B) (f' : A → B) (h : f' = ⇑f) : my_hom A B :=
 { to_fun := f',
-  map_op' := h.symm ▸ f.map_op' }
+ map_op' := h.symm ▸ f.map_op' }
 
 end my_hom
 ```
@@ -66,19 +66,19 @@ set_option old_structure_cmd true
 /-- `my_hom_class F A B` states that `F` is a type of `my_class.op`-preserving morphisms.
 You should extend this class when you extend `my_hom`. -/
 class my_hom_class (F : Type*) (A B : out_param $ Type*) [my_class A] [my_class B]
-  extends fun_like F A (λ _, B) :=
+ extends fun_like F A (λ _, B) :=
 (map_op : ∀ (f : F) (x y : A), f (my_class.op x y) = my_class.op (f x) (f y))
 
 end
 @[simp] lemma map_op {F A B : Type*} [my_class A] [my_class B] [my_hom_class F A B]
-  (f : F) (x y : A) : f (my_class.op x y) = my_class.op (f x) (f y) :=
+ (f : F) (x y : A) : f (my_class.op x y) = my_class.op (f x) (f y) :=
 my_hom_class.map_op
 
 -- You can replace `my_hom.fun_like` with the below instance:
 instance : my_hom_class (my_hom A B) A B :=
 { coe := my_hom.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  map_op := my_hom.map_op' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ map_op := my_hom.map_op' }
 
 -- [Insert `has_coe_to_fun`, `to_fun_eq_coe`, `ext` and `copy` here]
 ```
@@ -88,28 +88,28 @@ Typically, you can just declare a new class analogous to `my_hom_class`:
 
 ```
 structure cooler_hom (A B : Type*) [cool_class A] [cool_class B]
-  extends my_hom A B :=
+ extends my_hom A B :=
 (map_cool' : to_fun cool_class.cool = cool_class.cool)
 
 section
 set_option old_structure_cmd true
 
 class cooler_hom_class (F : Type*) (A B : out_param $ Type*) [cool_class A] [cool_class B]
-  extends my_hom_class F A B :=
+ extends my_hom_class F A B :=
 (map_cool : ∀ (f : F), f cool_class.cool = cool_class.cool)
 
 end
 
 @[simp] lemma map_cool {F A B : Type*} [cool_class A] [cool_class B] [cooler_hom_class F A B]
-  (f : F) : f cool_class.cool = cool_class.cool :=
+ (f : F) : f cool_class.cool = cool_class.cool :=
 my_hom_class.map_op
 
 -- You can also replace `my_hom.fun_like` with the below instance:
 instance : cool_hom_class (cool_hom A B) A B :=
 { coe := cool_hom.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  map_op := cool_hom.map_op',
-  map_cool := cool_hom.map_cool' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ map_op := cool_hom.map_op',
+ map_cool := cool_hom.map_cool' }
 
 -- [Insert `has_coe_to_fun`, `to_fun_eq_coe`, `ext` and `copy` here]
 ```
@@ -154,7 +154,7 @@ variables {F α β} [i : fun_like F α β]
 include i
 
 @[priority 100, -- Give this a priority between `coe_fn_trans` and the default priority
-  nolint dangerous_instance] -- `α` and `β` are out_params, so this instance should not be dangerous
+ nolint dangerous_instance] -- `α` and `β` are out_params, so this instance should not be dangerous
 instance : has_coe_to_fun F (λ _, Π a : α, β a) := { coe := fun_like.coe }
 
 @[simp] lemma coe_eq_coe_fn : (fun_like.coe : F → Π a : α, β a) = coe_fn := rfl
@@ -214,3 +214,4 @@ congr_arg _ h₂
 end fun_like
 
 end non_dependent
+

@@ -25,25 +25,26 @@ variables [comm_ring R] [add_comm_group M] [module R M] [add_comm_group N] [modu
 
 /-- If b : ι → M and c : κ → N are bases then so is λ i, b i.1 ⊗ₜ c i.2 : ι × κ → M ⊗ N. -/
 def basis.tensor_product (b : basis ι R M) (c : basis κ R N) :
-  basis (ι × κ) R (tensor_product R M N) :=
+ basis (ι × κ) R (tensor_product R M N) :=
 finsupp.basis_single_one.map
-  ((tensor_product.congr b.repr c.repr).trans $
-    (finsupp_tensor_finsupp R _ _ _ _).trans $
-    finsupp.lcongr (equiv.refl _) (tensor_product.lid R R)).symm
+ ((tensor_product.congr b.repr c.repr).trans $
+ (finsupp_tensor_finsupp R _ _ _ _).trans $
+ finsupp.lcongr (equiv.refl _) (tensor_product.lid R R)).symm
 
 @[simp]
 lemma basis.tensor_product_apply (b : basis ι R M) (c : basis κ R N) (i : ι) (j : κ) :
-  basis.tensor_product b c (i, j) = b i ⊗ₜ c j :=
+ basis.tensor_product b c (i, j) = b i ⊗ₜ c j :=
 by simp [basis.tensor_product]
 
 lemma basis.tensor_product_apply' (b : basis ι R M) (c : basis κ R N) (i : ι × κ) :
-  basis.tensor_product b c i = b i.1 ⊗ₜ c i.2 :=
+ basis.tensor_product b c i = b i.1 ⊗ₜ c i.2 :=
 by simp [basis.tensor_product]
 
 @[simp]
 lemma basis.tensor_product_repr_tmul_apply (b : basis ι R M) (c : basis κ R N)
-  (m : M) (n : N) (i : ι) (j : κ) :
-  (basis.tensor_product b c).repr (m ⊗ₜ n) (i, j) = b.repr m i * c.repr n j :=
+ (m : M) (n : N) (i : ι) (j : κ) :
+ (basis.tensor_product b c).repr (m ⊗ₜ n) (i, j) = b.repr m i * c.repr n j :=
 by simp [basis.tensor_product]
 
 end comm_ring
+

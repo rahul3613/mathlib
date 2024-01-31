@@ -19,7 +19,7 @@ This file defines a few binary operations on `finset α` for use in set family c
 * `s ⊻ t`: Finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t`.
 * `s ⊼ t`: Finset of elements of the form `a ⊓ b` where `a ∈ s`, `b ∈ t`.
 * `finset.disj_sups s t`: Finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t` and `a`
-  and `b` are disjoint.
+ and `b` are disjoint.
 
 ## Notation
 
@@ -41,11 +41,11 @@ namespace finset
 variables {α : Type*} [preorder α] {s t : set α} {a : α}
 
 instance decidable_pred_mem_upper_closure (s : finset α) [@decidable_rel α (≤)] :
-  decidable_pred (∈ upper_closure (s : set α)) :=
+ decidable_pred (∈ upper_closure (s : set α)) :=
 λ _, finset.decidable_dexists_finset
 
 instance decidable_pred_mem_lower_closure (s : finset α) [@decidable_rel α (≤)] :
-  decidable_pred (∈ lower_closure (s : set α)) :=
+ decidable_pred (∈ lower_closure (s : set α)) :=
 λ _, finset.decidable_dexists_finset
 
 end finset
@@ -72,7 +72,7 @@ variables (s t)
 lemma card_sups_le : (s ⊻ t).card ≤ s.card * t.card := card_image₂_le _ _ _
 
 lemma card_sups_iff :
-  (s ⊻ t).card = s.card * t.card ↔ (s ×ˢ t : set (α × α)).inj_on (λ x, x.1 ⊔ x.2) :=
+ (s ⊻ t).card = s.card * t.card ↔ (s ×ˢ t : set (α × α)).inj_on (λ x, x.1 ⊔ x.2) :=
 card_image₂_iff
 
 variables {s s₁ s₂ t t₁ t₂ u}
@@ -112,7 +112,7 @@ lemma sups_inter_subset_left : (s₁ ∩ s₂) ⊻ t ⊆ s₁ ⊻ t ∩ s₂ ⊻
 lemma sups_inter_subset_right : s ⊻ (t₁ ∩ t₂) ⊆ s ⊻ t₁ ∩ s ⊻ t₂ := image₂_inter_subset_right
 
 lemma subset_sups {s t : set α} :
-  ↑u ⊆ s ⊻ t → ∃ s' t' : finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊻ t' :=
+ ↑u ⊆ s ⊻ t → ∃ s' t' : finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊻ t' :=
 subset_image₂
 
 variables (s t u v)
@@ -133,16 +133,16 @@ image₂_image₂_image₂_comm sup_sup_sup_comm
 variables [@decidable_rel α (≤)]
 
 lemma filter_sups_le (s t : finset α) (a : α) :
-  (s ⊻ t).filter (λ b, b ≤ a) = s.filter (λ b, b ≤ a) ⊻ t.filter (λ b, b ≤ a) :=
+ (s ⊻ t).filter (λ b, b ≤ a) = s.filter (λ b, b ≤ a) ⊻ t.filter (λ b, b ≤ a) :=
 begin
-  ext b,
-  simp only [mem_filter, mem_sups],
-  split,
-  { rintro ⟨⟨b, hb, c, hc, rfl⟩, ha⟩,
-    rw sup_le_iff at ha,
-    exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩ },
-  { rintro ⟨b, hb, c, hc, _, rfl⟩,
-    exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, sup_le hb.2 hc.2⟩ }
+ ext b,
+ simp only [mem_filter, mem_sups],
+ split,
+ { rintro ⟨⟨b, hb, c, hc, rfl⟩, ha⟩,
+ rw sup_le_iff at ha,
+ exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩ },
+ { rintro ⟨b, hb, c, hc, _, rfl⟩,
+ exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, sup_le hb.2 hc.2⟩ }
 end
 
 end sups
@@ -166,7 +166,7 @@ variables (s t)
 lemma card_infs_le : (s ⊼ t).card ≤ s.card * t.card := card_image₂_le _ _ _
 
 lemma card_infs_iff :
-  (s ⊼ t).card = s.card * t.card ↔ (s ×ˢ t : set (α × α)).inj_on (λ x, x.1 ⊓ x.2) :=
+ (s ⊼ t).card = s.card * t.card ↔ (s ×ˢ t : set (α × α)).inj_on (λ x, x.1 ⊓ x.2) :=
 card_image₂_iff
 
 variables {s s₁ s₂ t t₁ t₂ u}
@@ -206,7 +206,7 @@ lemma infs_inter_subset_left : (s₁ ∩ s₂) ⊼ t ⊆ s₁ ⊼ t ∩ s₂ ⊼
 lemma infs_inter_subset_right : s ⊼ (t₁ ∩ t₂) ⊆ s ⊼ t₁ ∩ s ⊼ t₂ := image₂_inter_subset_right
 
 lemma subset_infs {s t : set α} :
-  ↑u ⊆ s ⊼ t → ∃ s' t' : finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊼ t' :=
+ ↑u ⊆ s ⊼ t → ∃ s' t' : finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' ⊼ t' :=
 subset_image₂
 
 variables (s t u v)
@@ -227,16 +227,16 @@ image₂_image₂_image₂_comm inf_inf_inf_comm
 variables [@decidable_rel α (≤)]
 
 lemma filter_infs_ge (s t : finset α) (a : α) :
-  (s ⊼ t).filter (λ b, a ≤ b) = s.filter (λ b, a ≤ b) ⊼ t.filter (λ b, a ≤ b) :=
+ (s ⊼ t).filter (λ b, a ≤ b) = s.filter (λ b, a ≤ b) ⊼ t.filter (λ b, a ≤ b) :=
 begin
-  ext b,
-  simp only [mem_filter, mem_infs],
-  split,
-  { rintro ⟨⟨b, hb, c, hc, rfl⟩, ha⟩,
-    rw le_inf_iff at ha,
-    exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩ },
-  { rintro ⟨b, hb, c, hc, _, rfl⟩,
-    exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, le_inf hb.2 hc.2⟩ }
+ ext b,
+ simp only [mem_filter, mem_infs],
+ split,
+ { rintro ⟨⟨b, hb, c, hc, rfl⟩, ha⟩,
+ rw le_inf_iff at ha,
+ exact ⟨_, ⟨hb, ha.1⟩, _, ⟨hc, ha.2⟩, rfl⟩ },
+ { rintro ⟨b, hb, c, hc, _, rfl⟩,
+ exact ⟨⟨_, hb.1, _, hc.1, rfl⟩, le_inf hb.2 hc.2⟩ }
 end
 
 end infs
@@ -262,7 +262,7 @@ end distrib_lattice
 
 section disj_sups
 variables [semilattice_sup α] [order_bot α] [@decidable_rel α disjoint]
-  (s s₁ s₂ t t₁ t₂ u : finset α)
+ (s s₁ s₂ t t₁ t₂ u : finset α)
 
 /-- The finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t` and `a` and `b` are disjoint.
 -/
@@ -278,8 +278,8 @@ by simp [disj_sups, and_assoc]
 
 lemma disj_sups_subset_sups : s ○ t ⊆ s ⊻ t :=
 begin
-  simp_rw [subset_iff, mem_sups, mem_disj_sups],
-  exact λ c ⟨a, b, ha, hb, h, hc⟩, ⟨a, b, ha, hb, hc⟩,
+ simp_rw [subset_iff, mem_sups, mem_disj_sups],
+ exact λ c ⟨a, b, ha, hb, h, hc⟩, ⟨a, b, ha, hb, hc⟩,
 end
 
 variables (s t)
@@ -296,12 +296,12 @@ lemma disj_sups_subset_left (ht : t₁ ⊆ t₂) : s ○ t₁ ⊆ s ○ t₂ := 
 lemma disj_sups_subset_right (hs : s₁ ⊆ s₂) : s₁ ○ t ⊆ s₂ ○ t := disj_sups_subset hs subset.rfl
 
 lemma forall_disj_sups_iff {p : α → Prop} :
-  (∀ c ∈ s ○ t, p c) ↔ ∀ (a ∈ s) (b ∈ t), disjoint a b → p (a ⊔ b) :=
+ (∀ c ∈ s ○ t, p c) ↔ ∀ (a ∈ s) (b ∈ t), disjoint a b → p (a ⊔ b) :=
 begin
-  simp_rw mem_disj_sups,
-  refine ⟨λ h a ha b hb hab, h _ ⟨_, ha, _, hb, hab, rfl⟩, _⟩,
-  rintro h _ ⟨a, ha, b, hb, hab, rfl⟩,
-  exact h _ ha _ hb hab,
+ simp_rw mem_disj_sups,
+ refine ⟨λ h a ha b hb hab, h _ ⟨_, ha, _, hb, hab, rfl⟩, _⟩,
+ rintro h _ ⟨a, ha, b, hb, hab, rfl⟩,
+ exact h _ ha _ hb hab,
 end
 
 @[simp] lemma disj_sups_subset_iff : s ○ t ⊆ u ↔ ∀ (a ∈ s) (b ∈ t), disjoint a b → a ⊔ b ∈ u :=
@@ -332,7 +332,7 @@ by simpa only [disj_sups, product_inter, filter_inter_distrib] using image_inter
 variables (s t)
 
 lemma disj_sups_comm : s ○ t = t ○ s :=
-by { ext, rw [mem_disj_sups, exists₂_comm], simp [sup_comm, disjoint.comm] }
+by { ext, rw [mem_disj_sups]; rw [ exists₂_comm], simp [sup_comm, disjoint.comm] }
 
 end disj_sups
 
@@ -343,11 +343,11 @@ variables [distrib_lattice α] [order_bot α] [@decidable_rel α disjoint] (s t 
 
 lemma disj_sups_assoc : ∀ s t u : finset α, (s ○ t) ○ u = s ○ (t ○ u) :=
 begin
-  refine associative_of_commutative_of_le disj_sups_comm _,
-  simp only [le_eq_subset, disj_sups_subset_iff, mem_disj_sups],
-  rintro s t u _ ⟨a, ha, b, hb, hab, rfl⟩ c hc habc,
-  rw disjoint_sup_left at habc,
-  exact ⟨a, ha, _, ⟨b, hb, c, hc, habc.2, rfl⟩, hab.sup_right habc.1, sup_assoc.symm⟩,
+ refine associative_of_commutative_of_le disj_sups_comm _,
+ simp only [le_eq_subset, disj_sups_subset_iff, mem_disj_sups],
+ rintro s t u _ ⟨a, ha, b, hb, hab, rfl⟩ c hc habc,
+ rw disjoint_sup_left at habc,
+ exact ⟨a, ha, _, ⟨b, hb, c, hc, habc.2, rfl⟩, hab.sup_right habc.1, sup_assoc.symm⟩,
 end
 
 lemma disj_sups_left_comm : s ○ (t ○ u) = t ○ (s ○ u) :=
@@ -361,3 +361,4 @@ by simp_rw [←disj_sups_assoc, disj_sups_right_comm]
 
 end distrib_lattice
 end finset
+

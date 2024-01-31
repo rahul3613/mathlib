@@ -24,15 +24,16 @@ variables {α : Type u}
 namespace with_zero
 
 instance contravariant_class_mul_lt {α : Type u} [has_mul α] [partial_order α]
-  [contravariant_class α α (*) (<)] :
-  contravariant_class (with_zero α) (with_zero α) (*) (<) :=
+ [contravariant_class α α (*) (<)] :
+ contravariant_class (with_zero α) (with_zero α) (*) (<) :=
 begin
-  refine ⟨λ a b c h, _⟩,
-  have := ((zero_le _).trans_lt h).ne',
-  lift a to α using left_ne_zero_of_mul this,
-  lift c to α using right_ne_zero_of_mul this,
-  induction b using with_zero.rec_zero_coe,
-  exacts [zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' $ coe_lt_coe.mp h)]
+ refine ⟨λ a b c h, _⟩,
+ have := ((zero_le _).trans_lt h).ne',
+ lift a to α using left_ne_zero_of_mul this,
+ lift c to α using right_ne_zero_of_mul this,
+ induction b using with_zero.rec_zero_coe,
+ exacts [zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' $ coe_lt_coe.mp h)]
 end
 
 end with_zero
+

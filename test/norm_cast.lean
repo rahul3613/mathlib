@@ -70,10 +70,10 @@ instance : has_zero (with_zero α) := ⟨none⟩
 instance [has_one α]: has_one (with_zero α) := ⟨some 1⟩
 
 instance [has_mul α] : mul_zero_class (with_zero α) :=
-{ mul       := λ o₁ o₂, o₁.bind (λ a, o₂.map (λ b, a * b)),
-  zero_mul  := λ a, rfl,
-  mul_zero  := λ a, by cases a; refl,
-  ..hidden.with_zero.has_zero }
+{ mul := λ o₁ o₂, o₁.bind (λ a, o₂.map (λ b, a * b)),
+ zero_mul := λ a, rfl,
+ mul_zero := λ a, by cases a; refl,
+ ..hidden.with_zero.has_zero }
 
 @[norm_cast] lemma coe_one [has_one α] : ((1 : α) : with_zero α) = 1 := rfl
 
@@ -81,7 +81,7 @@ instance [has_mul α] : mul_zero_class (with_zero α) :=
 option.some_inj
 
 @[norm_cast] lemma mul_coe {α : Type*} [has_mul α] (a b : α) :
-  ((a * b : α) : with_zero α) = (a : with_zero α) * b := rfl
+ ((a * b : α) : with_zero α) = (a : with_zero α) * b := rfl
 
 example [has_mul α] [has_one α] (x y : α) (h : (x : with_zero α) * y = 1) : x*y = 1 :=
 by exact_mod_cast h
@@ -89,25 +89,25 @@ by exact_mod_cast h
 end hidden
 
 example (k : ℕ) {x y : ℕ} :
-  (x * x + y * y : ℤ) - ↑((x * y + 1) * k) = ↑y * ↑y - ↑k * ↑x * ↑y + (↑x * ↑x - ↑k) :=
+ (x * x + y * y : ℤ) - ↑((x * y + 1) * k) = ↑y * ↑y - ↑k * ↑x * ↑y + (↑x * ↑x - ↑k) :=
 begin
-  push_cast,
-  ring
+ push_cast,
+ ring
 end
 
 example (k : ℕ) {x y : ℕ} (h : ((x + y + k : ℕ) : ℤ) = 0) : x + y + k = 0 :=
 begin
-  push_cast at h,
-  guard_hyp_mod_implicit h : (x : ℤ) + y + k = 0,
-  assumption_mod_cast
+ push_cast at h,
+ guard_hyp_mod_implicit h : (x : ℤ) + y + k = 0,
+ assumption_mod_cast
 end
 
 example (a b : ℕ) (h2 : ((a + b + 0 : ℕ) : ℤ) = 10) :
-  ((a + b : ℕ) : ℤ) = 10 :=
+ ((a + b : ℕ) : ℤ) = 10 :=
 begin
-  push_cast,
-  push_cast [int.add_zero] at h2,
-  exact h2
+ push_cast,
+ push_cast [int.add_zero] at h2,
+ exact h2
 end
 
 example {x : ℚ} : ((x + 42 : ℚ) : ℝ) = x + 42 := by push_cast
@@ -117,12 +117,12 @@ namespace ennreal
 --TODO: debug
 lemma half_lt_self_bis {a : ℝ≥0∞} (hz : a ≠ 0) (ht : a ≠ ⊤) : a / 2 < a :=
 begin
-  lift a to nnreal using ht,
-  have h : (2 : ℝ≥0∞) = ((2 : nnreal) : ℝ≥0∞), from rfl,
-  have h' : (2 : nnreal) ≠ 0, from two_ne_zero' _,
-  rw [h, ← coe_div h', coe_lt_coe], -- `norm_cast` fails to apply `coe_div`
-  norm_cast at hz,
-  exact nnreal.half_lt_self hz
+ lift a to nnreal using ht,
+ have h : (2 : ℝ≥0∞) = ((2 : nnreal) : ℝ≥0∞), from rfl,
+ have h' : (2 : nnreal) ≠ 0, from two_ne_zero' _,
+ rw [h]; rw [ ← coe_div h']; rw [ coe_lt_coe], -- `norm_cast` fails to apply `coe_div`
+ norm_cast at hz,
+ exact nnreal.half_lt_self hz
 end
 
 end ennreal
@@ -135,3 +135,4 @@ begin
 end
 
 example (n : ℤ) (h : n = -1) : (n : ℝ) = -1 := by exact_mod_cast h
+

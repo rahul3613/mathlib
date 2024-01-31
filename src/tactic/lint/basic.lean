@@ -9,14 +9,14 @@ import tactic.core
 # Basic linter types and attributes
 
 This file defines the basic types and attributes used by the linting
-framework.  A linter essentially consists of a function
+framework. A linter essentially consists of a function
 `declaration → tactic (option string)`, this function together with some
 metadata is stored in the `linter` structure. We define two attributes:
 
  * `@[linter]` applies to a declaration of type `linter` and adds it to the default linter set.
 
  * `@[nolint linter_name]` omits the tagged declaration from being checked by
-   the linter with name `linter_name`.
+ the linter with name `linter_name`.
 -/
 
 open tactic
@@ -42,26 +42,26 @@ local attribute [instance] reflect_name_list
 @[user_attribute]
 meta def nolint_attr : user_attribute (name_map (list name)) (list name) :=
 { name := "nolint",
-  descr := "Do not report this declaration in any of the tests of `#lint`",
-  after_set := some $ λ n _ _, (do
-    ls@(_::_) ← parse_name_list <$> nolint_attr.get_param_untyped n
-      | fail "you need to specify at least one linter to disable",
-    skip),
-  cache_cfg :=
-  { dependencies := [],
-    mk_cache := list.mfoldl
-      (λ cache d, native.rb_map.insert cache d <$>
-        parse_name_list <$> nolint_attr.get_param_untyped d)
-      mk_name_map },
-  parser := ident* }
+ descr := "Do not report this declaration in any of the tests of `#lint`",
+ after_set := some $ λ n _ _, (do
+ ls@(_::_) ← parse_name_list <$> nolint_attr.get_param_untyped n
+ | fail "you need to specify at least one linter to disable",
+ skip),
+ cache_cfg :=
+ { dependencies := [],
+ mk_cache := list.mfoldl
+ (λ cache d, native.rb_map.insert cache d <$>
+ parse_name_list <$> nolint_attr.get_param_untyped d)
+ mk_name_map },
+ parser := ident* }
 
 end
 
 add_tactic_doc
-{ name                     := "nolint",
-  category                 := doc_category.attr,
-  decl_names               := [`nolint_attr],
-  tags                     := ["linting"] }
+{ name := "nolint",
+ category := doc_category.attr,
+ decl_names := [`nolint_attr],
+ tags := ["linting"] }
 
 /-- `should_be_linted linter decl` returns true if `decl` should be checked
 using `linter`, i.e., if there is no `nolint` attribute. -/
@@ -93,7 +93,7 @@ meta structure linter :=
 and produces a list of linters. -/
 meta def get_linters (l : list name) : tactic (list (name × linter)) :=
 l.mmap (λ n, prod.mk n.last <$> (mk_const n >>= eval_expr linter)
-  <|> fail format!"invalid linter: {n}")
+ <|> fail format!"invalid linter: {n}")
 
 /-- Defines the user attribute `linter` for adding a linter to the default set.
 Linters should be defined in the `linter` namespace.
@@ -103,12 +103,13 @@ when used in `#lint`.
 @[user_attribute]
 meta def linter_attr : user_attribute unit unit :=
 { name := "linter",
-  descr := "Use this declaration as a linting test in #lint",
-  after_set := some $ λ nm _ _,
-                mk_const nm >>= infer_type >>= unify `(linter) }
+ descr := "Use this declaration as a linting test in #lint",
+ after_set := some $ λ nm _ _,
+ mk_const nm >>= infer_type >>= unify `(linter) }
 
 add_tactic_doc
-{ name                     := "linter",
-  category                 := doc_category.attr,
-  decl_names               := [`linter_attr],
-  tags                     := ["linting"] }
+{ name := "linter",
+ category := doc_category.attr,
+ decl_names := [`linter_attr],
+ tags := ["linting"] }
+

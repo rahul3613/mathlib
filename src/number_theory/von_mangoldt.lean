@@ -61,31 +61,31 @@ noncomputable def von_mangoldt : arithmetic_function ℝ :=
 ⟨λ n, if is_prime_pow n then real.log (min_fac n) else 0, if_neg not_is_prime_pow_zero⟩
 
 localized "notation (name := von_mangoldt)
-  `Λ` := nat.arithmetic_function.von_mangoldt" in arithmetic_function
+ `Λ` := nat.arithmetic_function.von_mangoldt" in arithmetic_function
 
 lemma von_mangoldt_apply {n : ℕ} :
-  Λ n = if is_prime_pow n then real.log (min_fac n) else 0 := rfl
+ Λ n = if is_prime_pow n then real.log (min_fac n) else 0 := rfl
 
 @[simp] lemma von_mangoldt_apply_one : Λ 1 = 0 := by simp [von_mangoldt_apply]
 
 @[simp] lemma von_mangoldt_nonneg {n : ℕ} : 0 ≤ Λ n :=
 begin
-  rw [von_mangoldt_apply],
-  split_ifs,
-  { exact real.log_nonneg (one_le_cast.2 (nat.min_fac_pos n)) },
-  refl
+ rw [von_mangoldt_apply],
+ split_ifs,
+ { exact real.log_nonneg (one_le_cast.2 (nat.min_fac_pos n)) },
+ refl
 end
 
 lemma von_mangoldt_apply_pow {n k : ℕ} (hk : k ≠ 0) : Λ (n ^ k) = Λ n :=
 by simp only [von_mangoldt_apply, is_prime_pow_pow_iff hk, pow_min_fac hk]
 
 lemma von_mangoldt_apply_prime {p : ℕ} (hp : p.prime) : Λ p = real.log p :=
-by rw [von_mangoldt_apply, prime.min_fac_eq hp, if_pos hp.prime.is_prime_pow]
+by rw [von_mangoldt_apply]; rw [ prime.min_fac_eq hp]; rw [ if_pos hp.prime.is_prime_pow]
 
 lemma von_mangoldt_ne_zero_iff {n : ℕ} : Λ n ≠ 0 ↔ is_prime_pow n :=
 begin
-  rcases eq_or_ne n 1 with rfl | hn, { simp [not_is_prime_pow_one] },
-  exact (real.log_pos (one_lt_cast.2 (min_fac_prime hn).one_lt)).ne'.ite_ne_right_iff
+ rcases eq_or_ne n 1 with rfl | hn, { simp [not_is_prime_pow_one] },
+ exact (real.log_pos (one_lt_cast.2 (min_fac_prime hn).one_lt)).ne'.ite_ne_right_iff
 end
 
 lemma von_mangoldt_pos_iff {n : ℕ} : 0 < Λ n ↔ is_prime_pow n :=
@@ -97,62 +97,59 @@ von_mangoldt_ne_zero_iff.not_right
 open_locale big_operators
 
 lemma von_mangoldt_sum {n : ℕ} :
-  ∑ i in n.divisors, Λ i = real.log n :=
+ ∑ i in n.divisors, Λ i = real.log n :=
 begin
-  refine rec_on_prime_coprime _ _ _ n,
-  { simp },
-  { intros p k hp,
-    rw [sum_divisors_prime_pow hp, cast_pow, real.log_pow, finset.sum_range_succ', pow_zero,
-      von_mangoldt_apply_one],
-    simp [von_mangoldt_apply_pow (nat.succ_ne_zero _), von_mangoldt_apply_prime hp] },
-  intros a b ha' hb' hab ha hb,
-  simp only [von_mangoldt_apply, ←sum_filter] at ha hb ⊢,
-  rw [mul_divisors_filter_prime_pow hab, filter_union,
-    sum_union (disjoint_divisors_filter_prime_pow hab), ha, hb, nat.cast_mul,
-    real.log_mul (cast_ne_zero.2 (pos_of_gt ha').ne') (cast_ne_zero.2 (pos_of_gt hb').ne')],
+ refine rec_on_prime_coprime _ _ _ n,
+ { simp },
+ { intros p k hp,
+ rw [sum_divisors_prime_pow hp]; rw [ cast_pow]; rw [ real.log_pow]; rw [ finset.sum_range_succ']; rw [ pow_zero]; rw [ von_mangoldt_apply_one],
+ simp [von_mangoldt_apply_pow (nat.succ_ne_zero _), von_mangoldt_apply_prime hp] },
+ intros a b ha' hb' hab ha hb,
+ simp only [von_mangoldt_apply, ←sum_filter] at ha hb ⊢,
+ rw [mul_divisors_filter_prime_pow hab]; rw [ filter_union]; rw [ sum_union (disjoint_divisors_filter_prime_pow hab)]; rw [ ha]; rw [ hb]; rw [ nat.cast_mul]; rw [ real.log_mul (cast_ne_zero.2 (pos_of_gt ha').ne') (cast_ne_zero.2 (pos_of_gt hb').ne')],
 end
 
 @[simp] lemma von_mangoldt_mul_zeta : Λ * ζ = log :=
-by { ext n, rw [coe_mul_zeta_apply, von_mangoldt_sum], refl }
+by { ext n, rw [coe_mul_zeta_apply]; rw [ von_mangoldt_sum], refl }
 
 @[simp] lemma zeta_mul_von_mangoldt : (ζ : arithmetic_function ℝ) * Λ = log :=
 by { rw [mul_comm], simp }
 
 @[simp] lemma log_mul_moebius_eq_von_mangoldt : log * μ = Λ :=
-by rw [←von_mangoldt_mul_zeta, mul_assoc, coe_zeta_mul_coe_moebius, mul_one]
+by rw [←von_mangoldt_mul_zeta]; rw [ mul_assoc]; rw [ coe_zeta_mul_coe_moebius]; rw [ mul_one]
 
 @[simp] lemma moebius_mul_log_eq_von_mangoldt : (μ : arithmetic_function ℝ) * log = Λ :=
 by { rw [mul_comm], simp }
 
 lemma sum_moebius_mul_log_eq {n : ℕ} :
-  ∑ d in n.divisors, (μ d : ℝ) * log d = - Λ n :=
+ ∑ d in n.divisors, (μ d : ℝ) * log d = - Λ n :=
 begin
-  simp only [←log_mul_moebius_eq_von_mangoldt, mul_comm log, mul_apply, log_apply, int_coe_apply,
-    ←finset.sum_neg_distrib, neg_mul_eq_mul_neg],
-  rw sum_divisors_antidiagonal (λ i j, (μ i : ℝ) * -real.log j),
-  have : ∑ (i : ℕ) in n.divisors, (μ i : ℝ) * -real.log (n / i : ℕ) =
-         ∑ (i : ℕ) in n.divisors, ((μ i : ℝ) * real.log i - μ i * real.log n),
-  { apply sum_congr rfl,
-    simp only [and_imp, int.cast_eq_zero, mul_eq_mul_left_iff, ne.def, neg_inj, mem_divisors],
-    intros m mn hn,
-    have : (m : ℝ) ≠ 0,
-    { rw [cast_ne_zero],
-      rintro rfl,
-      exact hn (by simpa using mn) },
-    rw [nat.cast_div mn this, real.log_div (cast_ne_zero.2 hn) this, neg_sub, mul_sub] },
-  rw [this, sum_sub_distrib, ←sum_mul, ←int.cast_sum, ←coe_mul_zeta_apply, eq_comm, sub_eq_self,
-    moebius_mul_coe_zeta, mul_eq_zero, int.cast_eq_zero],
-  rcases eq_or_ne n 1 with hn | hn;
-  simp [hn],
+ simp only [←log_mul_moebius_eq_von_mangoldt, mul_comm log, mul_apply, log_apply, int_coe_apply,
+ ←finset.sum_neg_distrib, neg_mul_eq_mul_neg],
+ rw sum_divisors_antidiagonal (λ i j, (μ i : ℝ) * -real.log j),
+ have : ∑ (i : ℕ) in n.divisors, (μ i : ℝ) * -real.log (n / i : ℕ) =
+ ∑ (i : ℕ) in n.divisors, ((μ i : ℝ) * real.log i - μ i * real.log n),
+ { apply sum_congr rfl,
+ simp only [and_imp, int.cast_eq_zero, mul_eq_mul_left_iff, ne.def, neg_inj, mem_divisors],
+ intros m mn hn,
+ have : (m : ℝ) ≠ 0,
+ { rw [cast_ne_zero],
+ rintro rfl,
+ exact hn (by simpa using mn) },
+ rw [nat.cast_div mn this]; rw [ real.log_div (cast_ne_zero.2 hn) this]; rw [ neg_sub]; rw [ mul_sub] },
+ rw [this]; rw [ sum_sub_distrib]; rw [ ←sum_mul]; rw [ ←int.cast_sum]; rw [ ←coe_mul_zeta_apply]; rw [ eq_comm]; rw [ sub_eq_self]; rw [ moebius_mul_coe_zeta]; rw [ mul_eq_zero]; rw [ int.cast_eq_zero],
+ rcases eq_or_ne n 1 with hn | hn;
+ simp [hn],
 end
 
 lemma von_mangoldt_le_log : ∀ {n : ℕ}, Λ n ≤ real.log (n : ℝ)
 | 0 := by simp
 | (n+1) :=
-  begin
-    rw ←von_mangoldt_sum,
-    exact single_le_sum (λ _ _, von_mangoldt_nonneg) (mem_divisors_self _ n.succ_ne_zero),
-  end
+ begin
+ rw ←von_mangoldt_sum,
+ exact single_le_sum (λ _ _, von_mangoldt_nonneg) (mem_divisors_self _ n.succ_ne_zero),
+ end
 
 end arithmetic_function
 end nat
+

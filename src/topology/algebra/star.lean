@@ -49,7 +49,7 @@ lemma tendsto_star (a : R) : tendsto star (𝓝 a) (𝓝 (star a)) :=
 continuous_at_star
 
 lemma filter.tendsto.star {f : α → R} {l : filter α} {y : R} (h : tendsto f l (𝓝 y)) :
-  tendsto (λ x, star (f x)) l (𝓝 (star y)) :=
+ tendsto (λ x, star (f x)) l (𝓝 (star y)) :=
 (continuous_star.tendsto y).comp h
 
 variables [topological_space α] {f : α → R} {s : set α} {x : α}
@@ -65,7 +65,7 @@ lemma continuous_on.star (hf : continuous_on f s) : continuous_on (λ x, star (f
 continuous_star.comp_continuous_on hf
 
 lemma continuous_within_at.star (hf : continuous_within_at f s x) :
-  continuous_within_at (λ x, star (f x)) s x :=
+ continuous_within_at (λ x, star (f x)) s x :=
 hf.star
 
 /-- The star operation bundled as a continuous map. -/
@@ -76,18 +76,19 @@ end continuity
 section instances
 
 instance [has_star R] [has_star S] [topological_space R] [topological_space S]
-  [has_continuous_star R] [has_continuous_star S] : has_continuous_star (R × S) :=
+ [has_continuous_star R] [has_continuous_star S] : has_continuous_star (R × S) :=
 ⟨(continuous_star.comp continuous_fst).prod_mk (continuous_star.comp continuous_snd)⟩
 
 instance {C : ι → Type*} [∀ i, topological_space (C i)]
-  [∀ i, has_star (C i)] [∀ i, has_continuous_star (C i)] : has_continuous_star (Π i, C i) :=
+ [∀ i, has_star (C i)] [∀ i, has_continuous_star (C i)] : has_continuous_star (Π i, C i) :=
 { continuous_star := continuous_pi (λ i, continuous.star (continuous_apply i)) }
 
 instance [has_star R] [topological_space R] [has_continuous_star R] : has_continuous_star Rᵐᵒᵖ :=
 ⟨mul_opposite.continuous_op.comp $ mul_opposite.continuous_unop.star⟩
 
 instance [monoid R] [star_semigroup R] [topological_space R] [has_continuous_star R] :
-  has_continuous_star Rˣ :=
+ has_continuous_star Rˣ :=
 ⟨continuous_induced_rng.2 units.continuous_embed_product.star⟩
 
 end instances
+

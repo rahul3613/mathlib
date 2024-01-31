@@ -41,50 +41,51 @@ def extend_from (A : set X) (f : X → Y) : X → Y :=
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
 lemma tendsto_extend_from {A : set X} {f : X → Y} {x : X}
-  (h : ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : tendsto f (𝓝[A] x) (𝓝 $ extend_from A f x) :=
+ (h : ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : tendsto f (𝓝[A] x) (𝓝 $ extend_from A f x) :=
 tendsto_nhds_lim h
 
 lemma extend_from_eq [t2_space Y] {A : set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ closure A)
-  (hf : tendsto f (𝓝[A] x) (𝓝 y)) : extend_from A f x = y :=
+ (hf : tendsto f (𝓝[A] x) (𝓝 y)) : extend_from A f x = y :=
 begin
-  haveI := mem_closure_iff_nhds_within_ne_bot.mp hx,
-  exact tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf,
+ haveI := mem_closure_iff_nhds_within_ne_bot.mp hx,
+ exact tendsto_nhds_unique (tendsto_nhds_lim ⟨y, hf⟩) hf,
 end
 
 lemma extend_from_extends [t2_space Y] {f : X → Y} {A : set X} (hf : continuous_on f A) :
-  ∀ x ∈ A, extend_from A f x = f x :=
+ ∀ x ∈ A, extend_from A f x = f x :=
 λ x x_in, extend_from_eq (subset_closure x_in) (hf x x_in)
 
 /-- If `f` is a function to a T₃ space `Y` which has a limit within `A` at any
 point of a set `B ⊆ closure A`, then `extend_from A f` is continuous on `B`. -/
 lemma continuous_on_extend_from [regular_space Y] {f : X → Y} {A B : set X} (hB : B ⊆ closure A)
-  (hf : ∀ x ∈ B, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : continuous_on (extend_from A f) B :=
+ (hf : ∀ x ∈ B, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : continuous_on (extend_from A f) B :=
 begin
-  set φ := extend_from A f,
-  intros x x_in,
-  suffices : ∀ V' ∈ 𝓝 (φ x), is_closed V' → φ ⁻¹' V' ∈ 𝓝[B] x,
-    by simpa [continuous_within_at, (closed_nhds_basis _).tendsto_right_iff],
-  intros V' V'_in V'_closed,
-  obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, is_open V ∧ V ∩ A ⊆ f ⁻¹' V',
-  { have := tendsto_extend_from (hf x x_in),
-    rcases (nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩,
-    use [V, is_open.mem_nhds V_op hxV, V_op, hV] },
-  suffices : ∀ y ∈ V ∩ B, φ y ∈ V',
-    from mem_of_superset (inter_mem_inf V_in $ mem_principal_self B) this,
-  rintros y ⟨hyV, hyB⟩,
-  haveI := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB),
-  have limy : tendsto f (𝓝[A] y) (𝓝 $ φ y) := tendsto_extend_from (hf y hyB),
-  have hVy : V ∈ 𝓝 y := is_open.mem_nhds V_op hyV,
-  have : V ∩ A ∈ (𝓝[A] y),
-    by simpa [inter_comm] using inter_mem_nhds_within _ hVy,
-  exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
+ set φ := extend_from A f,
+ intros x x_in,
+ suffices : ∀ V' ∈ 𝓝 (φ x), is_closed V' → φ ⁻¹' V' ∈ 𝓝[B] x,
+ by simpa [continuous_within_at, (closed_nhds_basis _).tendsto_right_iff],
+ intros V' V'_in V'_closed,
+ obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, is_open V ∧ V ∩ A ⊆ f ⁻¹' V',
+ { have := tendsto_extend_from (hf x x_in),
+ rcases (nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩,
+ use [V, is_open.mem_nhds V_op hxV, V_op, hV] },
+ suffices : ∀ y ∈ V ∩ B, φ y ∈ V',
+ from mem_of_superset (inter_mem_inf V_in $ mem_principal_self B) this,
+ rintros y ⟨hyV, hyB⟩,
+ haveI := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB),
+ have limy : tendsto f (𝓝[A] y) (𝓝 $ φ y) := tendsto_extend_from (hf y hyB),
+ have hVy : V ∈ 𝓝 y := is_open.mem_nhds V_op hyV,
+ have : V ∩ A ∈ (𝓝[A] y),
+ by simpa [inter_comm] using inter_mem_nhds_within _ hVy,
+ exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)
 end
 
 /-- If a function `f` to a T₃ space `Y` has a limit within a
 dense set `A` for any `x`, then `extend_from A f` is continuous. -/
 lemma continuous_extend_from [regular_space Y] {f : X → Y} {A : set X} (hA : dense A)
-  (hf : ∀ x, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : continuous (extend_from A f) :=
+ (hf : ∀ x, ∃ y, tendsto f (𝓝[A] x) (𝓝 y)) : continuous (extend_from A f) :=
 begin
-  rw continuous_iff_continuous_on_univ,
-  exact continuous_on_extend_from (λ x _, hA x) (by simpa using hf)
+ rw continuous_iff_continuous_on_univ,
+ exact continuous_on_extend_from (λ x _, hA x) (by simpa using hf)
 end
+

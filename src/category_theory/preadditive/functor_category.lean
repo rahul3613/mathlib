@@ -26,24 +26,24 @@ variables {C D : Type*} [category C] [category D] [preadditive D]
 
 instance functor_category_preadditive : preadditive (C ⥤ D) :=
 { hom_group := λ F G,
-  { add := λ α β,
-    { app := λ X, α.app X + β.app X,
-      naturality' := by { intros, rw [comp_add, add_comp, α.naturality, β.naturality] } },
-    zero := { app := λ X, 0, naturality' := by { intros, rw [zero_comp, comp_zero] } },
-    neg := λ α,
-    { app := λ X, -α.app X,
-      naturality' := by { intros, rw [comp_neg, neg_comp, α.naturality] } },
-    sub := λ α β,
-    { app := λ X, α.app X - β.app X,
-      naturality' := by { intros, rw [comp_sub, sub_comp, α.naturality, β.naturality] } },
-    add_assoc := by { intros, ext, apply add_assoc },
-    zero_add := by { intros, ext, apply zero_add },
-    add_zero := by { intros, ext, apply add_zero },
-    sub_eq_add_neg := by { intros, ext, apply sub_eq_add_neg },
-    add_left_neg := by { intros, ext, apply add_left_neg },
-    add_comm := by { intros, ext, apply add_comm } },
-  add_comp' := by { intros, ext, apply add_comp },
-  comp_add' := by { intros, ext, apply comp_add } }
+ { add := λ α β,
+ { app := λ X, α.app X + β.app X,
+ naturality' := by { intros, rw [comp_add]; rw [ add_comp]; rw [ α.naturality]; rw [ β.naturality] } },
+ zero := { app := λ X, 0, naturality' := by { intros, rw [zero_comp]; rw [ comp_zero] } },
+ neg := λ α,
+ { app := λ X, -α.app X,
+ naturality' := by { intros, rw [comp_neg]; rw [ neg_comp]; rw [ α.naturality] } },
+ sub := λ α β,
+ { app := λ X, α.app X - β.app X,
+ naturality' := by { intros, rw [comp_sub]; rw [ sub_comp]; rw [ α.naturality]; rw [ β.naturality] } },
+ add_assoc := by { intros, ext, apply add_assoc },
+ zero_add := by { intros, ext, apply zero_add },
+ add_zero := by { intros, ext, apply add_zero },
+ sub_eq_add_neg := by { intros, ext, apply sub_eq_add_neg },
+ add_left_neg := by { intros, ext, apply add_left_neg },
+ add_comm := by { intros, ext, apply add_comm } },
+ add_comp' := by { intros, ext, apply add_comp },
+ comp_add' := by { intros, ext, apply comp_add } }
 
 namespace nat_trans
 
@@ -53,8 +53,8 @@ variables {F G : C ⥤ D}
 as group homomorphism -/
 @[simps] def app_hom (X : C) : (F ⟶ G) →+ (F.obj X ⟶ G.obj X) :=
 { to_fun := λ α, α.app X,
-  map_zero' := rfl,
-  map_add' := λ _ _, rfl }
+ map_zero' := rfl,
+ map_add' := λ _ _, rfl }
 
 @[simp] lemma app_zero (X : C) : (0 : F ⟶ G).app X = 0 := rfl
 
@@ -71,9 +71,10 @@ as group homomorphism -/
 (app_hom X : (F ⟶ G) →+ (F.obj X ⟶ G.obj X)).map_zsmul α n
 
 @[simp] lemma app_sum {ι : Type*} (s : finset ι) (X : C) (α : ι → (F ⟶ G)) :
-  (∑ i in s, α i).app X = ∑ i in s, ((α i).app X) :=
-by { rw [← app_hom_apply, add_monoid_hom.map_sum], refl }
+ (∑ i in s, α i).app X = ∑ i in s, ((α i).app X) :=
+by { rw [← app_hom_apply]; rw [ add_monoid_hom.map_sum], refl }
 
 end nat_trans
 
 end category_theory
+

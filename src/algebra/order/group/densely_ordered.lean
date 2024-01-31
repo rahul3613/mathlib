@@ -28,7 +28,7 @@ lemma le_of_forall_lt_one_mul_le (h : ∀ ε < 1, a * ε ≤ b) : a ≤ b :=
 @[to_additive]
 lemma le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : a ≤ b :=
 le_of_forall_lt_one_mul_le $ λ ε ε1,
-  by simpa only [div_eq_mul_inv, inv_inv]  using h ε⁻¹ (left.one_lt_inv_iff.2 ε1)
+ by simpa only [div_eq_mul_inv, inv_inv] using h ε⁻¹ (left.one_lt_inv_iff.2 ε1)
 
 @[to_additive]
 lemma le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b * ε :=
@@ -39,3 +39,4 @@ lemma le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀ ε < 1, a * ε ≤ b :=
 @le_iff_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _
 
 end densely_ordered
+

@@ -8,16 +8,16 @@ setup_tactic_parser
 
 /-- version of squeeze_simp that tests whether the output matches the expected output -/
 meta def squeeze_simp_test
-  (key : parse cur_pos)
-  (slow_and_accurate : parse (tk "?")?)
-  (use_iota_eqn : parse (tk "!")?) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-  (attr_names : parse with_ident_list) (locat : parse location)
-  (cfg : parse struct_inst?)
-  (_ : parse (tk "=")) (l : parse simp_arg_list) : tactic unit :=
+ (key : parse cur_pos)
+ (slow_and_accurate : parse (tk "?")?)
+ (use_iota_eqn : parse (tk "!")?) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
+ (attr_names : parse with_ident_list) (locat : parse location)
+ (cfg : parse struct_inst?)
+ (_ : parse (tk "=")) (l : parse simp_arg_list) : tactic unit :=
 do (cfg',c) ← parse_config cfg,
-   squeeze_simp_core slow_and_accurate.is_some no_dflt hs
-     (λ l_no_dft l_args, simp use_iota_eqn none l_no_dft l_args attr_names locat cfg')
-     (λ a, guard (a.map to_string = l.map to_string) <|> fail!"{a.map to_string} expected.")
+ squeeze_simp_core slow_and_accurate.is_some no_dflt hs
+ (λ l_no_dft l_args, simp use_iota_eqn none l_no_dft l_args attr_names locat cfg')
+ (λ a, guard (a.map to_string = l.map to_string) <|> fail!"{a.map to_string} expected.")
 end interactive
 end tactic
 
@@ -68,3 +68,4 @@ def f : ℕ → ℕ := default
 
 -- Test the fix for #3097
 example : f (f a) = c := by { squeeze_simp_test = [k, l] }
+

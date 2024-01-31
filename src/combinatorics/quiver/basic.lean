@@ -58,16 +58,16 @@ namespace prefunctor
 
 @[ext]
 lemma ext {V : Type u} [quiver.{v₁} V] {W : Type u₂} [quiver.{v₂} W]
-  {F G : prefunctor V W}
-  (h_obj : ∀ X, F.obj X = G.obj X)
-  (h_map : ∀ (X Y : V) (f : X ⟶ Y),
-           F.map f = eq.rec_on (h_obj Y).symm (eq.rec_on (h_obj X).symm (G.map f))) : F = G :=
+ {F G : prefunctor V W}
+ (h_obj : ∀ X, F.obj X = G.obj X)
+ (h_map : ∀ (X Y : V) (f : X ⟶ Y),
+ F.map f = eq.rec_on (h_obj Y).symm (eq.rec_on (h_obj X).symm (G.map f))) : F = G :=
 begin
-  cases F with F_obj _, cases G with G_obj _,
-  obtain rfl : F_obj = G_obj, by { ext X, apply h_obj },
-  congr,
-  funext X Y f,
-  simpa using h_map X Y f,
+ cases F with F_obj _, cases G with G_obj _,
+ obtain rfl : F_obj = G_obj, by { ext X, apply h_obj },
+ congr,
+ funext X Y f,
+ simpa using h_map X Y f,
 end
 
 /--
@@ -76,7 +76,7 @@ The identity morphism between quivers.
 @[simps]
 def id (V : Type*) [quiver V] : prefunctor V V :=
 { obj := id,
-  map := λ X Y f, f, }
+ map := λ X Y f, f, }
 
 instance (V : Type*) [quiver V] : inhabited (prefunctor V V) := ⟨id V⟩
 
@@ -85,21 +85,21 @@ Composition of morphisms between quivers.
 -/
 @[simps]
 def comp {U : Type*} [quiver U] {V : Type*} [quiver V] {W : Type*} [quiver W]
-  (F : prefunctor U V) (G : prefunctor V W) : prefunctor U W :=
+ (F : prefunctor U V) (G : prefunctor V W) : prefunctor U W :=
 { obj := λ X, G.obj (F.obj X),
-  map := λ X Y f, G.map (F.map f), }
+ map := λ X Y f, G.map (F.map f), }
 
 @[simp] lemma comp_id {U : Type*} [quiver U] {V : Type*} [quiver V] (F : prefunctor U V) :
-  F.comp (id _) = F := by { cases F, refl, }
+ F.comp (id _) = F := by { cases F, refl, }
 
 @[simp] lemma id_comp {U : Type*} [quiver U] {V : Type*} [quiver V] (F : prefunctor U V) :
-  (id _).comp F = F := by { cases F, refl, }
+ (id _).comp F = F := by { cases F, refl, }
 
 @[simp]
 lemma comp_assoc
-  {U V W Z : Type*} [quiver U] [quiver V] [quiver W] [quiver Z]
-  (F : prefunctor U V) (G : prefunctor V W) (H : prefunctor W Z) :
-  (F.comp G).comp H = F.comp (G.comp H) := rfl
+ {U V W Z : Type*} [quiver U] [quiver V] [quiver W] [quiver Z]
+ (F : prefunctor U V) (G : prefunctor V W) (H : prefunctor W Z) :
+ (F.comp G).comp H = F.comp (G.comp H) := rfl
 
 infix ` ⥤q `:50 := prefunctor
 
@@ -138,3 +138,4 @@ instance empty_quiver (V : Type u) : quiver.{u} (empty V) := ⟨λ a b, pempty�
 @[reducible] def is_thin (V : Type u) [quiver V] := ∀ (a b : V), subsingleton (a ⟶ b)
 
 end quiver
+

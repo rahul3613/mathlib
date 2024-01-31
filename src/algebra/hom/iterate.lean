@@ -32,9 +32,9 @@ variables {M : Type*} {N : Type*} {G : Type*} {H : Type*}
 
 /-- An auxiliary lemma that can be used to prove `⇑(f ^ n) = (⇑f^[n])`. -/
 lemma hom_coe_pow {F : Type*} [monoid F] (c : F → M → M) (h1 : c 1 = id)
-  (hmul : ∀ f g, c (f * g) = c f ∘ c g) (f : F) : ∀ n, c (f ^ n) = (c f^[n])
-| 0 := by { rw [pow_zero, h1], refl }
-| (n + 1) := by rw [pow_succ, iterate_succ', hmul, hom_coe_pow]
+ (hmul : ∀ f g, c (f * g) = c f ∘ c g) (f : F) : ∀ n, c (f ^ n) = (c f^[n])
+| 0 := by { rw [pow_zero]; rw [ h1], refl }
+| (n + 1) := by rw [pow_succ]; rw [ iterate_succ']; rw [ hmul]; rw [ hom_coe_pow]
 
 namespace monoid_hom
 
@@ -48,7 +48,7 @@ iterate_fixed f.map_one n
 
 @[simp, to_additive]
 theorem iterate_map_mul (f : M →* M) (n : ℕ) (x y) :
-  f^[n] (x * y) = (f^[n] x) * (f^[n] y) :=
+ f^[n] (x * y) = (f^[n] x) * (f^[n] y) :=
 semiconj₂.iterate f.map_mul n x y
 
 end
@@ -57,12 +57,12 @@ variables [monoid M] [monoid N] [group G] [group H]
 
 @[simp, to_additive]
 theorem iterate_map_inv (f : G →* G) (n : ℕ) (x) :
-  f^[n] (x⁻¹) = (f^[n] x)⁻¹ :=
+ f^[n] (x⁻¹) = (f^[n] x)⁻¹ :=
 commute.iterate_left f.map_inv n x
 
 @[simp, to_additive]
 theorem iterate_map_div (f : G →* G) (n : ℕ) (x y) :
-  f^[n] (x / y) = (f^[n] x) / (f^[n] y) :=
+ f^[n] (x / y) = (f^[n] x) / (f^[n] y) :=
 semiconj₂.iterate f.map_div n x y
 
 theorem iterate_map_pow (f : M →* M) (n : ℕ) (a) (m : ℕ) : f^[n] (a^m) = (f^[n] a)^m :=
@@ -84,13 +84,13 @@ namespace add_monoid_hom
 variables [add_monoid M] [add_group G]
 
 theorem iterate_map_smul (f : M →+ M) (n m : ℕ) (x : M) :
-  f^[n] (m • x) = m • (f^[n] x) :=
+ f^[n] (m • x) = m • (f^[n] x) :=
 f.to_multiplicative.iterate_map_pow n x m
 
 attribute [to_additive, to_additive_reorder 5] monoid_hom.iterate_map_pow
 
 theorem iterate_map_zsmul (f : G →+ G) (n : ℕ) (m : ℤ) (x : G) :
-  f^[n] (m • x) = m • (f^[n] x) :=
+ f^[n] (m • x) = m • (f^[n] x) :=
 f.to_multiplicative.iterate_map_zpow n x m
 
 attribute [to_additive, to_additive_reorder 5] monoid_hom.iterate_map_zpow
@@ -123,7 +123,7 @@ theorem iterate_map_pow (a) (n m : ℕ) : f^[n] (a^m) = (f^[n] a)^m :=
 f.to_monoid_hom.iterate_map_pow n a m
 
 theorem iterate_map_smul (n m : ℕ) (x : R) :
-  f^[n] (m • x) = m • (f^[n] x) :=
+ f^[n] (m • x) = m • (f^[n] x) :=
 f.to_add_monoid_hom.iterate_map_smul n m x
 
 end semiring
@@ -137,7 +137,7 @@ theorem iterate_map_neg : f^[n] (-x) = -(f^[n] x) :=
 f.to_add_monoid_hom.iterate_map_neg n x
 
 theorem iterate_map_zsmul (n : ℕ) (m : ℤ) (x : R) :
-  f^[n] (m • x) = m • (f^[n] x) :=
+ f^[n] (m • x) = m • (f^[n] x) :=
 f.to_add_monoid_hom.iterate_map_zsmul n m x
 
 end ring_hom
@@ -148,9 +148,9 @@ section monoid
 variables [monoid G] (a : G) (n : ℕ)
 
 @[simp, to_additive] lemma smul_iterate [mul_action G H] :
-  ((•) a : H → H)^[n] = (•) (a^n) :=
-funext (λ b, nat.rec_on n (by rw [iterate_zero, id.def, pow_zero, one_smul])
-  (λ n ih, by rw [iterate_succ', comp_app, ih, pow_succ, mul_smul]))
+ ((•) a : H → H)^[n] = (•) (a^n) :=
+funext (λ b, nat.rec_on n (by rw [iterate_zero]; rw [ id.def]; rw [ pow_zero]; rw [ one_smul])
+ (λ n ih, by rw [iterate_succ']; rw [ comp_app]; rw [ ih]; rw [ pow_succ]; rw [ mul_smul]))
 
 @[simp, to_additive] lemma mul_left_iterate : ((*) a)^[n] = (*) (a^n) :=
 smul_iterate a n
@@ -165,11 +165,11 @@ by simp [mul_right_iterate]
 @[simp, to_additive]
 lemma pow_iterate (n : ℕ) (j : ℕ) : ((λ (x : G), x^n)^[j]) = λ x, x^(n^j) :=
 begin
-  letI : mul_action ℕ G :=
-  { smul := λ n g, g^n,
-    one_smul := pow_one,
-    mul_smul := λ m n g, pow_mul' g m n },
-  exact smul_iterate n j,
+ letI : mul_action ℕ G :=
+ { smul := λ n g, g^n,
+ one_smul := pow_one,
+ mul_smul := λ m n g, pow_mul' g m n },
+ exact smul_iterate n j,
 end
 
 end monoid
@@ -181,11 +181,11 @@ variables [group G]
 @[simp, to_additive]
 lemma zpow_iterate (n : ℤ) (j : ℕ) : ((λ (x : G), x^n)^[j]) = λ x, x^(n^j) :=
 begin
-  letI : mul_action ℤ G :=
-  { smul := λ n g, g^n,
-    one_smul := zpow_one,
-    mul_smul := λ m n g, zpow_mul' g m n },
-  exact smul_iterate n j,
+ letI : mul_action ℤ G :=
+ { smul := λ n g, g^n,
+ one_smul := zpow_one,
+ mul_smul := λ m n g, zpow_mul' g m n },
+ exact smul_iterate n j,
 end
 
 end group
@@ -196,22 +196,23 @@ variables [semigroup G] {a b c : G}
 
 @[to_additive]
 lemma semiconj_by.function_semiconj_mul_left (h : semiconj_by a b c) :
-  function.semiconj ((*)a) ((*)b) ((*)c) :=
-λ j, by rw [← mul_assoc, h.eq, mul_assoc]
+ function.semiconj ((*)a) ((*)b) ((*)c) :=
+λ j, by rw [← mul_assoc]; rw [ h.eq]; rw [ mul_assoc]
 
 @[to_additive]
 lemma commute.function_commute_mul_left (h : commute a b) :
-  function.commute ((*)a) ((*)b) :=
+ function.commute ((*)a) ((*)b) :=
 semiconj_by.function_semiconj_mul_left h
 
 @[to_additive]
 lemma semiconj_by.function_semiconj_mul_right_swap (h : semiconj_by a b c) :
-  function.semiconj (*a) (*c) (*b) :=
+ function.semiconj (*a) (*c) (*b) :=
 λ j, by simp_rw [mul_assoc, ← h.eq]
 
 @[to_additive]
 lemma commute.function_commute_mul_right (h : commute a b) :
-  function.commute (*a) (*b) :=
+ function.commute (*a) (*b) :=
 semiconj_by.function_semiconj_mul_right_swap h
 
 end semigroup
+

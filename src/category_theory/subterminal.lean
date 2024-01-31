@@ -25,7 +25,7 @@ We also construct the subcategory of subterminal objects.
 
 * Define exponential ideals, and show this subcategory is an exponential ideal.
 * Use the above to show that in a locally cartesian closed category, every subobject lattice
-  is cartesian closed (equivalently, a Heyting algebra).
+ is cartesian closed (equivalently, a Heyting algebra).
 
 -/
 universes v₁ v₂ u₁ u₂
@@ -48,7 +48,7 @@ If `A` is subterminal, the unique morphism from it to a terminal object is a mon
 The converse of `is_subterminal_of_mono_is_terminal_from`.
 -/
 lemma is_subterminal.mono_is_terminal_from (hA : is_subterminal A) {T : C} (hT : is_terminal T) :
-  mono (hT.from A) :=
+ mono (hT.from A) :=
 { right_cancellation := λ Z g h _, hA _ _ }
 
 /--
@@ -56,7 +56,7 @@ If `A` is subterminal, the unique morphism from it to the terminal object is a m
 The converse of `is_subterminal_of_mono_terminal_from`.
 -/
 lemma is_subterminal.mono_terminal_from [has_terminal C] (hA : is_subterminal A) :
-  mono (terminal.from A) :=
+ mono (terminal.from A) :=
 hA.mono_is_terminal_from terminal_is_terminal
 
 /--
@@ -64,7 +64,7 @@ If the unique morphism from `A` to a terminal object is a monomorphism, `A` is s
 The converse of `is_subterminal.mono_is_terminal_from`.
 -/
 lemma is_subterminal_of_mono_is_terminal_from {T : C} (hT : is_terminal T) [mono (hT.from A)] :
-  is_subterminal A :=
+ is_subterminal A :=
 λ Z f g, by { rw ← cancel_mono (hT.from A), apply hT.hom_ext }
 
 /--
@@ -72,7 +72,7 @@ If the unique morphism from `A` to the terminal object is a monomorphism, `A` is
 The converse of `is_subterminal.mono_terminal_from`.
 -/
 lemma is_subterminal_of_mono_terminal_from [has_terminal C] [mono (terminal.from A)] :
-  is_subterminal A :=
+ is_subterminal A :=
 λ Z f g, by { rw ← cancel_mono (terminal.from A), apply subsingleton.elim }
 
 lemma is_subterminal_of_is_terminal {T : C} (hT : is_terminal T) : is_subterminal T :=
@@ -86,7 +86,7 @@ If `A` is subterminal, its diagonal morphism is an isomorphism.
 The converse of `is_subterminal_of_is_iso_diag`.
 -/
 lemma is_subterminal.is_iso_diag (hA : is_subterminal A) [has_binary_product A A] :
-  is_iso (diag A) :=
+ is_iso (diag A) :=
 ⟨⟨limits.prod.fst, ⟨by simp, by { rw is_subterminal.def at hA, tidy }⟩⟩⟩
 
 /--
@@ -94,21 +94,21 @@ If the diagonal morphism of `A` is an isomorphism, then it is subterminal.
 The converse of `is_subterminal.is_iso_diag`.
 -/
 lemma is_subterminal_of_is_iso_diag [has_binary_product A A] [is_iso (diag A)] :
-  is_subterminal A :=
+ is_subterminal A :=
 λ Z f g,
 begin
-  have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd,
-  { simp [←cancel_epi (diag A)] },
-  rw [←prod.lift_fst f g, this, prod.lift_snd],
+ have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd,
+ { simp [←cancel_epi (diag A)] },
+ rw [←prod.lift_fst f g]; rw [ this]; rw [ prod.lift_snd],
 end
 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
 @[simps]
 def is_subterminal.iso_diag (hA : is_subterminal A) [has_binary_product A A] :
-  A ⨯ A ≅ A :=
+ A ⨯ A ≅ A :=
 begin
-  letI := is_subterminal.is_iso_diag hA,
-  apply (as_iso (diag A)).symm,
+ letI := is_subterminal.is_iso_diag hA,
+ apply (as_iso (diag A)).symm,
 end
 
 variables (C)
@@ -138,30 +138,31 @@ object (which is in turn equivalent to the subobjects of the terminal object).
 -/
 @[simps]
 def subterminals_equiv_mono_over_terminal [has_terminal C] :
-  subterminals C ≌ mono_over (⊤_ C) :=
+ subterminals C ≌ mono_over (⊤_ C) :=
 { functor :=
-  { obj := λ X, ⟨over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
-    map := λ X Y f, mono_over.hom_mk f (by ext1 ⟨⟨⟩⟩) },
-  inverse :=
-  { obj := λ X, ⟨X.obj.left, λ Z f g, by { rw ← cancel_mono X.arrow, apply subsingleton.elim }⟩,
-    map := λ X Y f, f.1 },
-  unit_iso :=
-  { hom := { app := λ X, 𝟙 _ },
-    inv := { app := λ X, 𝟙 _ } },
-  counit_iso :=
-  { hom := { app := λ X, over.hom_mk (𝟙 _) },
-    inv := { app := λ X, over.hom_mk (𝟙 _) } } }
+ { obj := λ X, ⟨over.mk (terminal.from X.1), X.2.mono_terminal_from⟩,
+ map := λ X Y f, mono_over.hom_mk f (by ext1 ⟨⟨⟩⟩) },
+ inverse :=
+ { obj := λ X, ⟨X.obj.left, λ Z f g, by { rw ← cancel_mono X.arrow, apply subsingleton.elim }⟩,
+ map := λ X Y f, f.1 },
+ unit_iso :=
+ { hom := { app := λ X, 𝟙 _ },
+ inv := { app := λ X, 𝟙 _ } },
+ counit_iso :=
+ { hom := { app := λ X, over.hom_mk (𝟙 _) },
+ inv := { app := λ X, over.hom_mk (𝟙 _) } } }
 
 @[simp]
 lemma subterminals_to_mono_over_terminal_comp_forget [has_terminal C] :
-  (subterminals_equiv_mono_over_terminal C).functor ⋙ mono_over.forget _ ⋙ over.forget _ =
-    subterminal_inclusion C :=
+ (subterminals_equiv_mono_over_terminal C).functor ⋙ mono_over.forget _ ⋙ over.forget _ =
+ subterminal_inclusion C :=
 rfl
 
 @[simp]
 lemma mono_over_terminal_to_subterminals_comp [has_terminal C] :
-  (subterminals_equiv_mono_over_terminal C).inverse ⋙ subterminal_inclusion C =
-    mono_over.forget _ ⋙ over.forget _ :=
+ (subterminals_equiv_mono_over_terminal C).inverse ⋙ subterminal_inclusion C =
+ mono_over.forget _ ⋙ over.forget _ :=
 rfl
 
 end category_theory
+

@@ -19,10 +19,10 @@ This file is preserved as an example of a formal roadmap.
 The actual implementation differs from the roadmap in two aspects:
 
 - it uses a custom `structure` with a `partial_order` instead of a combination
-  of `sigma` and `subtype`;
+ of `sigma` and `subtype`;
 - it provides a version for coverings of a closed set in a normal space. While mathematically it's
-  almost the same (just add `sᶜ` to the covering), it's easier to prove a version for a closed set,
-  then apply it to `univ` than to deal with coverings indexed by `option α`.
+ almost the same (just add `sᶜ` to the covering), it's easier to prove a version for a closed set,
+ then apply it to `univ` than to deal with coverings indexed by `option α`.
 -/
 
 open set
@@ -33,14 +33,14 @@ universes u v
 cover so that the closure of each new open set is contained in the corresponding original open
 set. -/
 lemma roadmap.shrinking_lemma {X : Type u} [topological_space X] [normal_space X]
-  {s : set X} (hs : is_closed s) {α : Type v} (u : α → set X) (uo : ∀ a, is_open (u a))
-  (uf : ∀ x, {a | x ∈ u a}.finite) (su : s ⊆ Union u) :
-  ∃ v : α → set X, s ⊆ Union v ∧ ∀ a, is_open (v a) ∧ closure (v a) ⊆ u a :=
+ {s : set X} (hs : is_closed s) {α : Type v} (u : α → set X) (uo : ∀ a, is_open (u a))
+ (uf : ∀ x, {a | x ∈ u a}.finite) (su : s ⊆ Union u) :
+ ∃ v : α → set X, s ⊆ Union v ∧ ∀ a, is_open (v a) ∧ closure (v a) ⊆ u a :=
 todo
 /-
 Apply Zorn's lemma to
  T = Σ (i : set α), {v : α → set X // s ⊆ Union v ∧ (∀ a, is_open (v a)) ∧
-                                      (∀ a ∈ i, closure (v a) ⊆ u a) ∧ (∀ a ∉ i, v a = u a)}
+ (∀ a ∈ i, closure (v a) ⊆ u a) ∧ (∀ a ∉ i, v a = u a)}
 with the ordering
  ⟨i, v, _⟩ ≤ ⟨i', v', _⟩ ↔ i ⊆ i' ∧ ∀ a ∈ i, v a = v' a
 The hypothesis that `X` is normal implies that a maximal element must have `i = univ`.
@@ -52,3 +52,4 @@ Compare proofs in
 * Bourbaki, General Topology, Chapter IX, §4.3
 * Dugundji, Topology, Chapter VII, Theorem 6.1
 -/
+

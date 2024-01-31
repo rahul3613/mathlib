@@ -14,7 +14,7 @@ import data.list.big_operators.basic
 ## Main definitions
 
 * `free_monoid α`: free monoid over alphabet `α`; defined as a synonym for `list α`
-  with multiplication given by `(++)`.
+ with multiplication given by `(++)`.
 * `free_monoid.of`: embedding `α → free_monoid α` sending each element `x` to `[x]`;
 * `free_monoid.lift`: natural equivalence between `α → M` and `free_monoid α →* M`
 * `free_monoid.map`: embedding of `α → β` into `free_monoid α →* free_monoid β` given by `list.map`.
@@ -48,12 +48,12 @@ def of_list : list α ≃ free_monoid α := equiv.refl _
 @[to_additive]
 instance : cancel_monoid (free_monoid α) :=
 { one := of_list [],
-  mul := λ x y, of_list (x.to_list ++ y.to_list),
-  mul_one := list.append_nil,
-  one_mul := list.nil_append,
-  mul_assoc := list.append_assoc,
-  mul_left_cancel := λ _ _ _, list.append_left_cancel,
-  mul_right_cancel := λ _ _ _, list.append_right_cancel }
+ mul := λ x y, of_list (x.to_list ++ y.to_list),
+ mul_one := list.append_nil,
+ one_mul := list.nil_append,
+ mul_assoc := list.append_assoc,
+ mul_left_cancel := λ _ _ _, list.append_left_cancel,
+ mul_right_cancel := λ _ _ _, list.append_right_cancel }
 
 @[to_additive]
 instance : inhabited (free_monoid α) := ⟨1⟩
@@ -66,7 +66,7 @@ lemma to_list_mul (xs ys : free_monoid α) : (xs * ys).to_list = xs.to_list ++ y
 
 @[simp, to_additive]
 lemma of_list_append (xs ys : list α) :
-  of_list (xs ++ ys) = of_list xs * of_list ys :=
+ of_list (xs ++ ys) = of_list xs * of_list ys :=
 rfl
 
 @[simp, to_additive]
@@ -85,11 +85,11 @@ def of (x : α) : free_monoid α := of_list [x]
 @[to_additive] lemma of_list_singleton (x : α) : of_list [x] = of x := rfl
 
 @[simp, to_additive] lemma of_list_cons (x : α) (xs : list α) :
-  of_list (x :: xs) = of x * of_list xs :=
+ of_list (x :: xs) = of x * of_list xs :=
 rfl
 
 @[to_additive] lemma to_list_of_mul (x : α) (xs : free_monoid α) :
-  to_list (of x * xs) = x :: xs.to_list :=
+ to_list (of x * xs) = x :: xs.to_list :=
 rfl
 
 @[to_additive] lemma of_injective : function.injective (@of α) := list.singleton_injective
@@ -97,44 +97,44 @@ rfl
 /-- Recursor for `free_monoid` using `1` and `free_monoid.of x * xs` instead of `[]` and
 `x :: xs`. -/
 @[elab_as_eliminator, to_additive
-  "Recursor for `free_add_monoid` using `0` and `free_add_monoid.of x + xs` instead of `[]` and
-  `x :: xs`."]
+ "Recursor for `free_add_monoid` using `0` and `free_add_monoid.of x + xs` instead of `[]` and
+ `x :: xs`."]
 def rec_on {C : free_monoid α → Sort*} (xs : free_monoid α) (h0 : C 1)
-  (ih : Π x xs, C xs → C (of x * xs)) : C xs := list.rec_on xs h0 ih
+ (ih : Π x xs, C xs → C (of x * xs)) : C xs := list.rec_on xs h0 ih
 
 @[simp, to_additive] lemma rec_on_one {C : free_monoid α → Sort*} (h0 : C 1)
-  (ih : Π x xs, C xs → C (of x * xs)) :
-  @rec_on α C 1 h0 ih = h0 :=
+ (ih : Π x xs, C xs → C (of x * xs)) :
+ @rec_on α C 1 h0 ih = h0 :=
 rfl
 
 @[simp, to_additive] lemma rec_on_of_mul {C : free_monoid α → Sort*} (x : α) (xs : free_monoid α)
-  (h0 : C 1) (ih : Π x xs, C xs → C (of x * xs)) :
-  @rec_on α C (of x * xs) h0 ih = ih x xs (rec_on xs h0 ih) :=
+ (h0 : C 1) (ih : Π x xs, C xs → C (of x * xs)) :
+ @rec_on α C (of x * xs) h0 ih = ih x xs (rec_on xs h0 ih) :=
 rfl
 
 /-- A version of `list.cases_on` for `free_monoid` using `1` and `free_monoid.of x * xs` instead of
 `[]` and `x :: xs`. -/
 @[elab_as_eliminator, to_additive
-  "A version of `list.cases_on` for `free_add_monoid` using `0` and `free_add_monoid.of x + xs`
-  instead of `[]` and `x :: xs`."]
+ "A version of `list.cases_on` for `free_add_monoid` using `0` and `free_add_monoid.of x + xs`
+ instead of `[]` and `x :: xs`."]
 def cases_on {C : free_monoid α → Sort*} (xs : free_monoid α) (h0 : C 1)
-  (ih : Π x xs, C (of x * xs)) : C xs := list.cases_on xs h0 ih
+ (ih : Π x xs, C (of x * xs)) : C xs := list.cases_on xs h0 ih
 
 @[simp, to_additive] lemma cases_on_one {C : free_monoid α → Sort*} (h0 : C 1)
-  (ih : Π x xs, C (of x * xs)) :
-  @cases_on α C 1 h0 ih = h0 :=
+ (ih : Π x xs, C (of x * xs)) :
+ @cases_on α C 1 h0 ih = h0 :=
 rfl
 
 @[simp, to_additive] lemma cases_on_of_mul {C : free_monoid α → Sort*} (x : α) (xs : free_monoid α)
-  (h0 : C 1) (ih : Π x xs, C (of x * xs)) :
-  @cases_on α C (of x * xs) h0 ih = ih x xs :=
+ (h0 : C 1) (ih : Π x xs, C (of x * xs)) :
+ @cases_on α C (of x * xs) h0 ih = ih x xs :=
 rfl
 
 @[ext, to_additive]
 lemma hom_eq ⦃f g : free_monoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) :
-  f = g :=
+ f = g :=
 monoid_hom.ext $ λ l, rec_on l (f.map_one.trans g.map_one.symm) $
-  λ x xs hxs, by simp only [h, hxs, monoid_hom.map_mul]
+ λ x xs hxs, by simp only [h, hxs, monoid_hom.map_mul]
 
 /-- A variant of `list.prod` that has `[x].prod = x` true definitionally.
 
@@ -155,10 +155,10 @@ lemma prod_aux_eq : ∀ l : list M, free_monoid.prod_aux l = l.prod
 `free_add_monoid α →+ A`."]
 def lift : (α → M) ≃ (free_monoid α →* M) :=
 { to_fun := λ f, ⟨λ l, free_monoid.prod_aux (l.to_list.map f), rfl,
-    λ l₁ l₂, by simp only [prod_aux_eq, to_list_mul, list.map_append, list.prod_append]⟩,
-  inv_fun := λ f x, f (of x),
-  left_inv := λ f, rfl,
-  right_inv := λ f, hom_eq $ λ x, rfl }
+ λ l₁ l₂, by simp only [prod_aux_eq, to_list_mul, list.map_append, list.prod_append]⟩,
+ inv_fun := λ f x, f (of x),
+ left_inv := λ f, rfl,
+ right_inv := λ f, hom_eq $ λ x, rfl }
 
 @[simp, to_additive]
 lemma lift_symm_apply (f : free_monoid α →* M) : lift.symm f = f ∘ of := rfl
@@ -188,19 +188,19 @@ monoid_hom.ext_iff.1 (comp_lift g f) x
 @[to_additive "Define an additive action of `free_add_monoid α` on `β`."]
 def mk_mul_action (f : α → β → β) : mul_action (free_monoid α) β :=
 { smul := λ l b, l.to_list.foldr f b,
-  one_smul := λ x, rfl,
-  mul_smul := λ xs ys b, list.foldr_append _ _ _ _ }
+ one_smul := λ x, rfl,
+ mul_smul := λ xs ys b, list.foldr_append _ _ _ _ }
 
 @[to_additive] lemma smul_def (f : α → β → β) (l : free_monoid α) (b : β) :
-  (by haveI := mk_mul_action f; exact l • b = l.to_list.foldr f b) :=
+ (by haveI := mk_mul_action f; exact l • b = l.to_list.foldr f b) :=
 rfl
 
 @[to_additive] lemma of_list_smul (f : α → β → β) (l : list α) (b : β) :
-  (by haveI := mk_mul_action f; exact (of_list l) • b = l.foldr f b) :=
+ (by haveI := mk_mul_action f; exact (of_list l) • b = l.foldr f b) :=
 rfl
 
 @[simp, to_additive] lemma of_smul (f : α → β → β) (x : α) (y : β) :
-  (by haveI := mk_mul_action f; exact of x • y) = f x y :=
+ (by haveI := mk_mul_action f; exact of x • y) = f x y :=
 rfl
 
 /-- The unique monoid homomorphism `free_monoid α →* free_monoid β` that sends
@@ -209,22 +209,22 @@ each `of x` to `of (f x)`. -/
 that sends each `of x` to `of (f x)`."]
 def map (f : α → β) : free_monoid α →* free_monoid β :=
 { to_fun := λ l, of_list $ l.to_list.map f,
-  map_one' := rfl,
-  map_mul' := λ l₁ l₂, list.map_append _ _ _ }
+ map_one' := rfl,
+ map_mul' := λ l₁ l₂, list.map_append _ _ _ }
 
 @[simp, to_additive] lemma map_of (f : α → β) (x : α) : map f (of x) = of (f x) := rfl
 
 @[to_additive] lemma to_list_map (f : α → β) (xs : free_monoid α) :
-  (map f xs).to_list = xs.to_list.map f :=
+ (map f xs).to_list = xs.to_list.map f :=
 rfl
 
 @[to_additive] lemma of_list_map (f : α → β) (xs : list α) :
-  of_list (xs.map f) = map f (of_list xs) :=
+ of_list (xs.map f) = map f (of_list xs) :=
 rfl
 
 @[to_additive]
 lemma lift_of_comp_eq_map (f : α → β) :
-  lift (λ x, of (f x)) = map f :=
+ lift (λ x, of (f x)) = map f :=
 hom_eq $ λ x, rfl
 
 @[to_additive]
@@ -235,3 +235,4 @@ hom_eq $ λ x, rfl
 hom_eq $ λ x, rfl
 
 end free_monoid
+

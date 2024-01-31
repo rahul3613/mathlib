@@ -6,32 +6,32 @@ def_replacer sneaky
 
 example : true :=
 begin
-  success_if_fail { sneaky },
-  trivial
+ success_if_fail { sneaky },
+ trivial
 end
 
 @[sneaky] meta def sneaky' : tactic unit := `[skip]
 
 example : true :=
 begin
-  sneaky,
-  guard_target true,
-  trivial
+ sneaky,
+ guard_target true,
+ trivial
 end
 
 @[sneaky] meta def sneaky'' := `[trivial]
 
 example : true :=
 begin
-  sneaky
+ sneaky
 end
 
 @[sneaky] meta def sneaky''' (old : tactic unit) := old >> `[trivial]
 
 example : true ∧ true :=
 begin
-  split,
-  sneaky
+ split,
+ sneaky
 end
 
 def_replacer transform : ℕ → tactic ℕ
@@ -52,3 +52,4 @@ run_cmd do n ← transform 2, guard (n = 4)
 do n' ← old, return (n' * n')
 
 run_cmd do n ← transform 2, guard (n = 16)
+

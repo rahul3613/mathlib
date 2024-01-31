@@ -17,7 +17,7 @@ and contains basic properties about them.
 ## Main definition
 
 - `matrix.hadamard`: defines the Hadamard product,
-  which is the pointwise product of two matrices of the same size.
+ which is the pointwise product of two matrices of the same size.
 
 ## Notation
 
@@ -25,7 +25,7 @@ and contains basic properties about them.
 
 ## References
 
-*  <https://en.wikipedia.org/wiki/hadamard_product_(matrices)>
+* <https://en.wikipedia.org/wiki/hadamard_product_(matrices)>
 
 ## Tags
 
@@ -39,14 +39,14 @@ namespace matrix
 open_locale matrix big_operators
 
 /-- `matrix.hadamard` defines the Hadamard product,
-    which is the pointwise product of two matrices of the same size.-/
+ which is the pointwise product of two matrices of the same size.-/
 def hadamard [has_mul α] (A : matrix m n α) (B : matrix m n α) : matrix m n α :=
 of $ λ i j, A i j * B i j
 
 -- TODO: set as an equation lemma for `hadamard`, see mathlib4#3024
 @[simp]
 lemma hadamard_apply [has_mul α] (A : matrix m n α) (B : matrix m n α) (i j) :
-  hadamard A B i j = A i j * B i j := rfl
+ hadamard A B i j = A i j * B i j := rfl
 localized "infix (name := matrix.hadamard) ` ⊙ `:100 := matrix.hadamard" in matrix
 
 section basic_properties
@@ -72,11 +72,11 @@ ext $ λ _ _, right_distrib _ _ _
 section scalar
 
 @[simp] lemma smul_hadamard [has_mul α] [has_smul R α] [is_scalar_tower R α α] (k : R) :
-  (k • A) ⊙ B = k • A ⊙ B :=
+ (k • A) ⊙ B = k • A ⊙ B :=
 ext $ λ _ _, smul_mul_assoc _ _ _
 
 @[simp] lemma hadamard_smul [has_mul α] [has_smul R α] [smul_comm_class R α α] (k : R):
-  A ⊙ (k • B) = k • A ⊙ B :=
+ A ⊙ (k • B) = k • A ⊙ B :=
 ext $ λ _ _, mul_smul_comm _ _ _
 
 end scalar
@@ -111,7 +111,7 @@ section diagonal
 variables [decidable_eq n] [mul_zero_class α]
 
 lemma diagonal_hadamard_diagonal (v : n → α) (w : n → α) :
-  diagonal v ⊙ diagonal w = diagonal (v * w) :=
+ diagonal v ⊙ diagonal w = diagonal (v * w) :=
 ext $ λ _ _, (apply_ite2 _ _ _ _ _ _).trans (congr_arg _ $ zero_mul 0)
 
 end diagonal
@@ -125,10 +125,10 @@ lemma sum_hadamard_eq : ∑ (i : m) (j : n), (A ⊙ B) i j = trace (A ⬝ Bᵀ) 
 rfl
 
 lemma dot_product_vec_mul_hadamard [decidable_eq m] [decidable_eq n] (v : m → α) (w : n → α) :
-  dot_product (vec_mul v (A ⊙ B)) w = trace (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) :=
+ dot_product (vec_mul v (A ⊙ B)) w = trace (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) :=
 begin
-  rw [←sum_hadamard_eq, finset.sum_comm],
-  simp [dot_product, vec_mul, finset.sum_mul, mul_assoc],
+ rw [←sum_hadamard_eq]; rw [ finset.sum_comm],
+ simp [dot_product, vec_mul, finset.sum_mul, mul_assoc],
 end
 
 end trace
@@ -136,3 +136,4 @@ end trace
 end basic_properties
 
 end matrix
+

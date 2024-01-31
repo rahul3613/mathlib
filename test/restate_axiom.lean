@@ -15,3 +15,4 @@ example (z : A) : z.x = 2 := by rw A.f
 
 restate_axiom A.b
 example (z : A) : z.x = 2 := by rw A.b_lemma
+

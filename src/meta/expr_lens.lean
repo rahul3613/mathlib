@@ -30,7 +30,7 @@ fill this hole and turn your lens back into a real `expr`. -/
 meta inductive expr_lens
 | app_fun : expr_lens → expr → expr_lens
 | app_arg : expr_lens → expr → expr_lens
-| entire  : expr_lens
+| entire : expr_lens
 
 namespace expr_lens
 
@@ -56,7 +56,7 @@ open tactic
 
 /-- Fill the function or argument hole in this lens with the given `expr`. -/
 meta def fill : expr_lens → expr → expr
-| entire        e := e
+| entire e := e
 | (app_fun l f) x := l.fill (expr.app f x)
 | (app_arg l x) f := l.fill (expr.app f x)
 
@@ -71,7 +71,7 @@ meta def zoom : expr_lens → list dir → expr → option (expr_lens × expr)
 /-- Convert an `expr_lens` into a list of instructions needed to build it; repeatedly inspecting a
 function or its argument a finite number of times. -/
 meta def to_dirs : expr_lens → list dir
-| expr_lens.entire        := []
+| expr_lens.entire := []
 | (expr_lens.app_fun l _) := l.to_dirs.concat dir.A
 | (expr_lens.app_arg l _) := l.to_dirs.concat dir.F
 
@@ -79,39 +79,39 @@ meta def to_dirs : expr_lens → list dir
 Try to `dsimp` the function first before building the `congr_arg` expression. -/
 meta def mk_congr_arg_using_dsimp (G W : expr) (u : list name) : tactic expr :=
 do s ← simp_lemmas.mk_default,
-   t ← infer_type G,
-   t' ← s.dsimplify u t { fail_if_unchanged := ff },
-   to_expr ```(congr_arg (show %%t', from %%G) %%W)
+ t ← infer_type G,
+ t' ← s.dsimplify u t { fail_if_unchanged := ff },
+ to_expr ```(congr_arg (show %%t', from %%G) %%W)
 
 private meta def trace_congr_error (f : expr) (x_eq : expr) : tactic unit :=
 do pp_f ← pp f,
-   pp_f_t ← (infer_type f >>= λ t, pp t),
-   pp_x_eq ← pp x_eq,
-   pp_x_eq_t ← (infer_type x_eq >>= λ t, pp t),
-   trace format!"expr_lens.congr failed on \n{pp_f} : {pp_f_t}\n{pp_x_eq} : {pp_x_eq_t}"
+ pp_f_t ← (infer_type f >>= λ t, pp t),
+ pp_x_eq ← pp x_eq,
+ pp_x_eq_t ← (infer_type x_eq >>= λ t, pp t),
+ trace format!"expr_lens.congr failed on \n{pp_f} : {pp_f_t}\n{pp_x_eq} : {pp_x_eq_t}"
 
 /-- Turn an `e : expr_lens` and a proof that `a = b` into a series of `congr_arg` or `congr_fun`
 applications showing that the expressions obtained from `e.fill a` and `e.fill b` are equal. -/
 meta def congr : expr_lens → expr → tactic expr
-| entire e_eq        := pure e_eq
+| entire e_eq := pure e_eq
 | (app_fun l f) x_eq := do fx_eq ← try_core $ do
-                           { mk_congr_arg f x_eq
-                             <|> mk_congr_arg_using_dsimp f x_eq [`has_coe_to_fun.F] },
-                           match fx_eq with
-                           | (some fx_eq) := l.congr fx_eq
-                           | none         := trace_congr_error f x_eq >> failed
-                           end
+ { mk_congr_arg f x_eq
+ <|> mk_congr_arg_using_dsimp f x_eq [`has_coe_to_fun.F] },
+ match fx_eq with
+ | (some fx_eq) := l.congr fx_eq
+ | none := trace_congr_error f x_eq >> failed
+ end
 | (app_arg l x) f_eq := mk_congr_fun f_eq x >>= l.congr
 
 /-- Pretty print a lens. -/
 meta def to_tactic_string : expr_lens → tactic string
 | entire := return "(entire)"
 | (app_fun l f) := do pp ← pp f,
-                      rest ← l.to_tactic_string,
-                      return sformat!"(fun \"{pp}\" {rest})"
+ rest ← l.to_tactic_string,
+ return sformat!"(fun \"{pp}\" {rest})"
 | (app_arg l x) := do pp ← pp x,
-                      rest ← l.to_tactic_string,
-                      return sformat!"(arg \"{pp}\" {rest})"
+ rest ← l.to_tactic_string,
+ return sformat!"(arg \"{pp}\" {rest})"
 
 end expr_lens
 
@@ -119,12 +119,12 @@ namespace expr
 
 /-- The private internal function used by `app_map`, which "does the work". -/
 private meta def app_map_aux {α} (F : expr_lens → expr → tactic (list α)) :
-  option (expr_lens × expr) → tactic (list α)
+ option (expr_lens × expr) → tactic (list α)
 | (some (l, e)) := list.join <$> monad.sequence [
-    F l e,
-    app_map_aux $ l.zoom [expr_lens.dir.F] e,
-    app_map_aux $ l.zoom [expr_lens.dir.A] e
-  ] <|> pure []
+ F l e,
+ app_map_aux $ l.zoom [expr_lens.dir.F] e,
+ app_map_aux $ l.zoom [expr_lens.dir.A] e
+ ] <|> pure []
 | none := pure []
 
 /-- `app_map F e` maps a function `F` which understands `expr_lens`es
@@ -140,3 +140,4 @@ meta def app_map {α} (F : expr_lens → expr → tactic (list α)) (e : expr) :
 app_map_aux F (expr_lens.entire, e)
 
 end expr
+

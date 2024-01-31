@@ -86,3 +86,4 @@ example : (∃ x, p x → r) → (∀ x, p x) → r := by finish
 example : (∃ x, r → p x) → (r → ∃ x, p x) := by finish
 
 end
+

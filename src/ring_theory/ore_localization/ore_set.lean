@@ -58,49 +58,50 @@ def ore_condition (r : R) (s : S) : Σ' r' : R, Σ' s' : S, r * s' = s * r' :=
 /-- The trivial submonoid is an Ore set. -/
 instance ore_set_bot : ore_set (⊥ : submonoid R) :=
 { ore_left_cancel := λ _ _ s h,
-    ⟨s, begin
-          rcases s with ⟨s, hs⟩,
-          rw submonoid.mem_bot at hs,
-          subst hs,
-          rw [set_like.coe_mk, one_mul, one_mul] at h,
-          subst h
-        end⟩,
-  ore_num := λ r _, r,
-  ore_denom := λ _ s, s,
-  ore_eq := λ _ s, by { rcases s with ⟨s, hs⟩, rw submonoid.mem_bot at hs, simp [hs] } }
+ ⟨s, begin
+ rcases s with ⟨s, hs⟩,
+ rw submonoid.mem_bot at hs,
+ subst hs,
+ rw [set_like.coe_mk] at h; rw [ one_mul] at h; rw [ one_mul] at h,
+ subst h
+ end⟩,
+ ore_num := λ r _, r,
+ ore_denom := λ _ s, s,
+ ore_eq := λ _ s, by { rcases s with ⟨s, hs⟩, rw submonoid.mem_bot at hs, simp [hs] } }
 
 /-- Every submonoid of a commutative monoid is an Ore set. -/
 @[priority 100]
 instance ore_set_comm {R} [comm_monoid R] (S : submonoid R) : ore_set S :=
-{ ore_left_cancel := λ m n s h, ⟨s, by rw [mul_comm n s, mul_comm m s, h]⟩,
-  ore_num := λ r _, r,
-  ore_denom := λ _ s, s,
-  ore_eq := λ r s, by rw mul_comm }
+{ ore_left_cancel := λ m n s h, ⟨s, by rw [mul_comm n s]; rw [ mul_comm m s]; rw [ h]⟩,
+ ore_num := λ r _, r,
+ ore_denom := λ _ s, s,
+ ore_eq := λ r s, by rw mul_comm }
 
 end monoid
 
 /-- Cancellability in monoids with zeros can act as a replacement for the `ore_left_cancel`
 condition of an ore set. -/
 def ore_set_of_cancel_monoid_with_zero
-  {R : Type*} [cancel_monoid_with_zero R] {S : submonoid R}
-  (ore_num : R → S → R) (ore_denom : R → S → S)
-  (ore_eq : ∀ (r : R) (s : S), r * (ore_denom r s) = s * (ore_num r s)) :
-  ore_set S :=
+ {R : Type*} [cancel_monoid_with_zero R] {S : submonoid R}
+ (ore_num : R → S → R) (ore_denom : R → S → S)
+ (ore_eq : ∀ (r : R) (s : S), r * (ore_denom r s) = s * (ore_num r s)) :
+ ore_set S :=
 { ore_left_cancel := λ r₁ r₂ s h, ⟨s, mul_eq_mul_right_iff.mpr (mul_eq_mul_left_iff.mp h)⟩,
-  ore_num := ore_num,
-  ore_denom := ore_denom,
-  ore_eq := ore_eq }
+ ore_num := ore_num,
+ ore_denom := ore_denom,
+ ore_eq := ore_eq }
 
 /-- In rings without zero divisors, the first (cancellability) condition is always fulfilled,
 it suffices to give a proof for the Ore condition itself. -/
 def ore_set_of_no_zero_divisors
-  {R : Type*} [ring R] [no_zero_divisors R] {S : submonoid R}
-  (ore_num : R → S → R) (ore_denom : R → S → S)
-  (ore_eq : ∀ (r : R) (s : S), r * (ore_denom r s) = s * (ore_num r s)) :
-  ore_set S :=
+ {R : Type*} [ring R] [no_zero_divisors R] {S : submonoid R}
+ (ore_num : R → S → R) (ore_denom : R → S → S)
+ (ore_eq : ∀ (r : R) (s : S), r * (ore_denom r s) = s * (ore_num r s)) :
+ ore_set S :=
 begin
-  letI : cancel_monoid_with_zero R := no_zero_divisors.to_cancel_monoid_with_zero,
-  exact ore_set_of_cancel_monoid_with_zero ore_num ore_denom ore_eq
+ letI : cancel_monoid_with_zero R := no_zero_divisors.to_cancel_monoid_with_zero,
+ exact ore_set_of_cancel_monoid_with_zero ore_num ore_denom ore_eq
 end
 
 end ore_localization
+

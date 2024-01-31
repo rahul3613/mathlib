@@ -13,7 +13,7 @@ meta def interactive_simp := `[simp]
 
 def tidy_test_1 (a : string) : ∀ x : unit, x = unit.star :=
 begin
-  tidy -- intros x, exact dec_trivial
+ tidy -- intros x, exact dec_trivial
 end
 
 structure A :=
@@ -37,11 +37,11 @@ open tactic
 
 def d : D :=
 begin
-  tidy,
+ tidy,
 
-  -- Try this: fsplit, work_on_goal 1 { fsplit, work_on_goal 1 { fsplit }, work_on_goal 2 { refl }
-  -- }, work_on_goal 1 { fsplit, work_on_goal 1 { fsplit }, work_on_goal 2 { fsplit, work_on_goal 1
-  -- { fsplit }, work_on_goal 2 { refl } }, work_on_goal 2 { refl } }, refl
+ -- Try this: fsplit, work_on_goal 1 { fsplit, work_on_goal 1 { fsplit }, work_on_goal 2 { refl }
+ -- }, work_on_goal 1 { fsplit, work_on_goal 1 { fsplit }, work_on_goal 2 { fsplit, work_on_goal 1
+ -- { fsplit }, work_on_goal 2 { refl } }, work_on_goal 2 { refl } }, refl
 end.
 
 def f : unit → unit → unit := by tidy -- intros a a_1, cases a_1, cases a, fsplit
@@ -49,3 +49,4 @@ def f : unit → unit → unit := by tidy -- intros a a_1, cases a_1, cases a, f
 def g (P Q : Prop) (p : P) (h : P ↔ Q) : Q := by tidy
 
 end tidy.test
+

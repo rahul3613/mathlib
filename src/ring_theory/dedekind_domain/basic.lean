@@ -18,8 +18,8 @@ as a Noetherian integrally closed commutative ring of Krull dimension at most on
 ## Main definitions
 
  - `is_dedekind_domain` defines a Dedekind domain as a commutative ring that is
-   Noetherian, integrally closed in its field of fractions and has Krull dimension at most one.
-   `is_dedekind_domain_iff` shows that this does not depend on the choice of field of fractions.
+ Noetherian, integrally closed in its field of fractions and has Krull dimension at most one.
+ `is_dedekind_domain_iff` shows that this does not depend on the choice of field of fractions.
 
 ## Implementation notes
 
@@ -53,30 +53,30 @@ open ideal ring
 namespace ring
 
 lemma dimension_le_one.principal_ideal_ring
-  [is_domain A] [is_principal_ideal_ring A] : dimension_le_one A :=
+ [is_domain A] [is_principal_ideal_ring A] : dimension_le_one A :=
 λ p nonzero prime, by { haveI := prime, exact is_prime.to_maximal_ideal nonzero }
 
 lemma dimension_le_one.is_integral_closure (B : Type*) [comm_ring B] [is_domain B]
-  [nontrivial R] [algebra R A] [algebra R B] [algebra B A] [is_scalar_tower R B A]
-  [is_integral_closure B R A] (h : dimension_le_one R) :
-  dimension_le_one B :=
+ [nontrivial R] [algebra R A] [algebra R B] [algebra B A] [is_scalar_tower R B A]
+ [is_integral_closure B R A] (h : dimension_le_one R) :
+ dimension_le_one B :=
 λ p ne_bot prime, by exactI
-  is_integral_closure.is_maximal_of_is_maximal_comap A p
-    (h _ (is_integral_closure.comap_ne_bot A ne_bot) infer_instance)
+ is_integral_closure.is_maximal_of_is_maximal_comap A p
+ (h _ (is_integral_closure.comap_ne_bot A ne_bot) infer_instance)
 
 lemma dimension_le_one.integral_closure [nontrivial R] [is_domain A] [algebra R A]
-  (h : dimension_le_one R) : dimension_le_one (integral_closure R A) :=
+ (h : dimension_le_one R) : dimension_le_one (integral_closure R A) :=
 h.is_integral_closure R A (integral_closure R A)
 
 variables {R}
 
 lemma dimension_le_one.not_lt_lt (h : ring.dimension_le_one R)
-  (p₀ p₁ p₂ : ideal R) [hp₁ : p₁.is_prime] [hp₂ : p₂.is_prime] :
-  ¬ (p₀ < p₁ ∧ p₁ < p₂)
+ (p₀ p₁ p₂ : ideal R) [hp₁ : p₁.is_prime] [hp₂ : p₂.is_prime] :
+ ¬ (p₀ < p₁ ∧ p₁ < p₂)
 | ⟨h01, h12⟩ := h12.ne ((h p₁ (bot_le.trans_lt h01).ne' hp₁).eq_of_le hp₂.ne_top h12.le)
 
 lemma dimension_le_one.eq_bot_of_lt (h : ring.dimension_le_one R)
-  (p P : ideal R) [hp : p.is_prime] [hP : P.is_prime] (hpP : p < P) : p = ⊥ :=
+ (p P : ideal R) [hp : p.is_prime] [hP : P.is_prime] (hpP : p < P) : p = ⊥ :=
 by_contra (λ hp0, h.not_lt_lt ⊥ p P ⟨ne.bot_lt hp0, hpP⟩)
 
 end ring
@@ -103,20 +103,21 @@ class is_dedekind_domain : Prop :=
 
 -- See library note [lower instance priority]
 attribute [instance, priority 100]
-  is_dedekind_domain.is_noetherian_ring is_dedekind_domain.is_integrally_closed
+ is_dedekind_domain.is_noetherian_ring is_dedekind_domain.is_integrally_closed
 
 /-- An integral domain is a Dedekind domain iff and only if it is
 Noetherian, has dimension ≤ 1, and is integrally closed in a given fraction field.
 In particular, this definition does not depend on the choice of this fraction field. -/
 lemma is_dedekind_domain_iff (K : Type*) [field K] [algebra A K] [is_fraction_ring A K] :
-  is_dedekind_domain A ↔ is_noetherian_ring A ∧ dimension_le_one A ∧
-    (∀ {x : K}, is_integral A x → ∃ y, algebra_map A K y = x) :=
+ is_dedekind_domain A ↔ is_noetherian_ring A ∧ dimension_le_one A ∧
+ (∀ {x : K}, is_integral A x → ∃ y, algebra_map A K y = x) :=
 ⟨λ ⟨hr, hd, hi⟩, ⟨hr, hd, λ x, (is_integrally_closed_iff K).mp hi⟩,
  λ ⟨hr, hd, hi⟩, ⟨hr, hd, (is_integrally_closed_iff K).mpr @hi⟩⟩
 
 @[priority 100] -- See library note [lower instance priority]
 instance is_principal_ideal_ring.is_dedekind_domain [is_principal_ideal_ring A] :
-  is_dedekind_domain A :=
+ is_dedekind_domain A :=
 ⟨principal_ideal_ring.is_noetherian_ring,
  ring.dimension_le_one.principal_ideal_ring A,
  unique_factorization_monoid.is_integrally_closed⟩
+

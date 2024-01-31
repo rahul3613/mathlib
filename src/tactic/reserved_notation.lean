@@ -61,3 +61,4 @@ reserve infix ` ≃ₗ `:25
 
 -- used in `data/matrix/notation.lean`
 reserve notation `!![`
+

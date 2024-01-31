@@ -31,16 +31,16 @@ variables {R : Type*} [add_monoid_with_one R] [char_zero R]
 def cast_embedding : ℕ ↪ R := ⟨coe, cast_injective⟩
 
 @[simp] lemma cast_pow_eq_one {R : Type*} [semiring R] [char_zero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
-  (q : R) ^ n = 1 ↔ q = 1 :=
-by { rw [←cast_pow, cast_eq_one], exact pow_eq_one_iff hn }
+ (q : R) ^ n = 1 ↔ q = 1 :=
+by { rw [←cast_pow]; rw [ cast_eq_one], exact pow_eq_one_iff hn }
 
 @[simp, norm_cast]
 theorem cast_div_char_zero {k : Type*} [division_semiring k] [char_zero k] {m n : ℕ}
-  (n_dvd : n ∣ m) : ((m / n : ℕ) : k) = m / n :=
+ (n_dvd : n ∣ m) : ((m / n : ℕ) : k) = m / n :=
 begin
-  rcases eq_or_ne n 0 with rfl | hn,
-  { simp },
-  { exact cast_div n_dvd (cast_ne_zero.2 hn), },
+ rcases eq_or_ne n 0 with rfl | hn,
+ { simp },
+ { exact cast_div n_dvd (cast_ne_zero.2 hn), },
 end
 
 end nat
@@ -83,8 +83,8 @@ eq_neg_iff_add_eq_zero.trans add_self_eq_zero
 
 lemma nat_mul_inj {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) : n = 0 ∨ a = b :=
 begin
-  rw [←sub_eq_zero, ←mul_sub, mul_eq_zero, sub_eq_zero] at h,
-  exact_mod_cast h,
+ rw [←sub_eq_zero] at h; rw [ ←mul_sub] at h; rw [ mul_eq_zero] at h; rw [ sub_eq_zero] at h,
+ exact_mod_cast h,
 end
 
 lemma nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n ≠ 0) : a = b :=
@@ -92,16 +92,16 @@ by simpa [w] using nat_mul_inj h
 
 lemma bit0_injective : function.injective (bit0 : R → R) :=
 λ a b h, begin
-  dsimp [bit0] at h,
-  simp only [(two_mul a).symm, (two_mul b).symm] at h,
-  refine nat_mul_inj' _ two_ne_zero,
-  exact_mod_cast h,
+ dsimp [bit0] at h,
+ simp only [(two_mul a).symm, (two_mul b).symm] at h,
+ refine nat_mul_inj' _ two_ne_zero,
+ exact_mod_cast h,
 end
 
 lemma bit1_injective : function.injective (bit1 : R → R) :=
 λ a b h, begin
-  simp only [bit1, add_left_inj] at h,
-  exact bit0_injective h,
+ simp only [bit1, add_left_inj] at h,
+ exact bit0_injective h,
 end
 
 @[simp] lemma bit0_eq_bit0 {a b : R} : bit0 a = bit0 b ↔ a = b :=
@@ -112,7 +112,7 @@ bit1_injective.eq_iff
 
 @[simp]
 lemma bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 :=
-by rw [show (1 : R) = bit1 0, by simp, bit1_eq_bit1]
+by rw [show (1 : R) = bit1 0]; rw [ by simp]; rw [ bit1_eq_bit1]
 
 @[simp]
 lemma one_eq_bit1 {a : R} : 1 = bit1 a ↔ a = 0 :=
@@ -124,23 +124,23 @@ section
 variables {R : Type*} [division_ring R] [char_zero R]
 
 @[simp] lemma half_add_self (a : R) : (a + a) / 2 = a :=
-by rw [← mul_two, mul_div_cancel a two_ne_zero]
+by rw [← mul_two]; rw [ mul_div_cancel a two_ne_zero]
 
 @[simp] lemma add_halves' (a : R) : a / 2 + a / 2 = a :=
-by rw [← add_div, half_add_self]
+by rw [← add_div]; rw [ half_add_self]
 
 lemma sub_half (a : R) : a - a / 2 = a / 2 :=
-by rw [sub_eq_iff_eq_add, add_halves']
+by rw [sub_eq_iff_eq_add]; rw [ add_halves']
 
 lemma half_sub (a : R) : a / 2 - a = - (a / 2) :=
-by rw [← neg_sub, sub_half]
+by rw [← neg_sub]; rw [ sub_half]
 
 end
 
 namespace with_top
 
 instance {R : Type*} [add_monoid_with_one R] [char_zero R] : char_zero (with_top R) :=
-{ cast_injective := λ m n h, by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, nat.cast_inj] at h }
+{ cast_injective := λ m n h, by rwa [← coe_nat] at h ; rwa [ ← coe_nat n] at h ; rwa [ coe_eq_coe] at h ; rwa [ nat.cast_inj] at h }
 
 end with_top
 
@@ -149,15 +149,16 @@ section ring_hom
 variables {R S : Type*} [non_assoc_semiring R] [non_assoc_semiring S]
 
 lemma ring_hom.char_zero (ϕ : R →+* S) [hS : char_zero S] : char_zero R :=
-⟨λ a b h, char_zero.cast_injective (by rw [←map_nat_cast ϕ, ←map_nat_cast ϕ, h])⟩
+⟨λ a b h, char_zero.cast_injective (by rw [←map_nat_cast ϕ]; rw [ ←map_nat_cast ϕ]; rw [ h])⟩
 
 lemma ring_hom.char_zero_iff {ϕ : R →+* S} (hϕ : function.injective ϕ) :
-  char_zero R ↔ char_zero S :=
-⟨λ hR, ⟨by introsI a b h; rwa [← @nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
-  λ hS, by exactI ϕ.char_zero⟩
+ char_zero R ↔ char_zero S :=
+⟨λ hR, ⟨by introsI a b h; rwa [← @nat.cast_inj R]; rwa [ ← hϕ.eq_iff]; rwa [ map_nat_cast ϕ]; rwa [ map_nat_cast ϕ]⟩,
+ λ hS, by exactI ϕ.char_zero⟩
 
 lemma ring_hom.injective_nat (f : ℕ →+* R) [char_zero R] :
-  function.injective f :=
+ function.injective f :=
 subsingleton.elim (nat.cast_ring_hom _) f ▸ nat.cast_injective
 
 end ring_hom
+

@@ -48,51 +48,47 @@ variables (D : J ⥤ algebra T) (c : cone (D ⋙ T.forget)) (t : is_limit c)
 /-- (Impl) This new cone is used to construct the algebra structure -/
 @[simps π_app] def new_cone : cone (D ⋙ forget T) :=
 { X := T.obj c.X,
-  π := (functor.const_comp _ _ ↑T).inv ≫ whisker_right c.π T ≫ γ D }
+ π := (functor.const_comp _ _ ↑T).inv ≫ whisker_right c.π T ≫ γ D }
 
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps] def cone_point : algebra T :=
 { A := c.X,
-  a := t.lift (new_cone D c),
-  unit' := t.hom_ext $ λ j,
-  begin
-    rw [category.assoc, t.fac, new_cone_π_app, ←T.η.naturality_assoc, functor.id_map,
-      (D.obj j).unit],
-    dsimp, simp -- See library note [dsimp, simp]
-  end,
-  assoc' := t.hom_ext $ λ j,
-  begin
-    rw [category.assoc, category.assoc, t.fac (new_cone D c), new_cone_π_app,
-      ←functor.map_comp_assoc, t.fac (new_cone D c), new_cone_π_app, ←T.μ.naturality_assoc,
-      (D.obj j).assoc, functor.map_comp, category.assoc],
-    refl,
-  end }
+ a := t.lift (new_cone D c),
+ unit' := t.hom_ext $ λ j,
+ begin
+ rw [category.assoc]; rw [ t.fac]; rw [ new_cone_π_app]; rw [ ←T.η.naturality_assoc]; rw [ functor.id_map]; rw [ (D.obj j).unit],
+ dsimp, simp -- See library note [dsimp, simp]
+ end,
+ assoc' := t.hom_ext $ λ j,
+ begin
+ rw [category.assoc]; rw [ category.assoc]; rw [ t.fac (new_cone D c)]; rw [ new_cone_π_app]; rw [ ←functor.map_comp_assoc]; rw [ t.fac (new_cone D c)]; rw [ new_cone_π_app]; rw [ ←T.μ.naturality_assoc]; rw [ (D.obj j).assoc]; rw [ functor.map_comp]; rw [ category.assoc],
+ refl,
+ end }
 
 /-- (Impl) Construct the lifted cone in `algebra T` which will be limiting. -/
 @[simps] def lifted_cone : cone D :=
 { X := cone_point D c t,
-  π := { app := λ j, { f := c.π.app j },
-         naturality' := λ X Y f, by { ext1, dsimp, erw c.w f, simp } } }
+ π := { app := λ j, { f := c.π.app j },
+ naturality' := λ X Y f, by { ext1, dsimp, erw c.w f, simp } } }
 
 /-- (Impl) Prove that the lifted cone is limiting. -/
 @[simps]
 def lifted_cone_is_limit : is_limit (lifted_cone D c t) :=
 { lift := λ s,
-  { f := t.lift ((forget T).map_cone s),
-    h' := t.hom_ext $ λ j,
-    begin
-      dsimp,
-      rw [category.assoc, category.assoc, t.fac, new_cone_π_app, ←functor.map_comp_assoc, t.fac,
-        functor.map_cone_π_app],
-      apply (s.π.app j).h,
-    end },
-  uniq' := λ s m J,
-  begin
-    ext1,
-    apply t.hom_ext,
-    intro j,
-    simpa [t.fac ((forget T).map_cone s) j] using congr_arg algebra.hom.f (J j),
-  end }
+ { f := t.lift ((forget T).map_cone s),
+ h' := t.hom_ext $ λ j,
+ begin
+ dsimp,
+ rw [category.assoc]; rw [ category.assoc]; rw [ t.fac]; rw [ new_cone_π_app]; rw [ ←functor.map_comp_assoc]; rw [ t.fac]; rw [ functor.map_cone_π_app],
+ apply (s.π.app j).h,
+ end },
+ uniq' := λ s m J,
+ begin
+ ext1,
+ apply t.hom_ext,
+ intro j,
+ simpa [t.fac ((forget T).map_cone s) j] using congr_arg algebra.hom.f (J j),
+ end }
 
 end forget_creates_limits
 
@@ -101,15 +97,15 @@ end forget_creates_limits
 noncomputable
 instance forget_creates_limits : creates_limits_of_size (forget T) :=
 { creates_limits_of_shape := λ J 𝒥, by exactI
-  { creates_limit := λ D,
-    creates_limit_of_reflects_iso (λ c t,
-    { lifted_cone := forget_creates_limits.lifted_cone D c t,
-      valid_lift := cones.ext (iso.refl _) (λ j, (id_comp _).symm),
-      makes_limit := forget_creates_limits.lifted_cone_is_limit _ _ _ } ) } }
+ { creates_limit := λ D,
+ creates_limit_of_reflects_iso (λ c t,
+ { lifted_cone := forget_creates_limits.lifted_cone D c t,
+ valid_lift := cones.ext (iso.refl _) (λ j, (id_comp _).symm),
+ makes_limit := forget_creates_limits.lifted_cone_is_limit _ _ _ } ) } }
 
 /-- `D ⋙ forget T` has a limit, then `D` has a limit. -/
 lemma has_limit_of_comp_forget_has_limit (D : J ⥤ algebra T) [has_limit (D ⋙ forget T)] :
-  has_limit D :=
+ has_limit D :=
 has_limit_of_created D (forget T)
 
 namespace forget_creates_colimits
@@ -143,7 +139,7 @@ with the colimiting cocone for `D ⋙ forget T`.
 @[simps]
 def new_cocone : cocone ((D ⋙ forget T) ⋙ ↑T) :=
 { X := c.X,
-  ι := γ ≫ c.ι }
+ ι := γ ≫ c.ι }
 
 variables [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
 
@@ -173,43 +169,40 @@ our `commuting` lemma.
 @[simps] def cocone_point :
 algebra T :=
 { A := c.X,
-  a := lambda c t,
-  unit' :=
-  begin
-    apply t.hom_ext,
-    intro j,
-    rw [(show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).A ≫ _ ≫ _,
-                  from T.η.naturality_assoc _ _), commuting, algebra.unit_assoc (D.obj j)],
-    dsimp, simp -- See library note [dsimp, simp]
-  end,
-  assoc' :=
-  begin
-    refine (is_colimit_of_preserves _ (is_colimit_of_preserves _ t)).hom_ext (λ j, _),
-    rw [functor.map_cocone_ι_app, functor.map_cocone_ι_app,
-      (show (T : C ⥤ C).map ((T : C ⥤ C).map _) ≫ _ ≫ _ = _, from T.μ.naturality_assoc _ _),
-      ←functor.map_comp_assoc, commuting, functor.map_comp, category.assoc, commuting],
-    apply (D.obj j).assoc_assoc _,
-  end }
+ a := lambda c t,
+ unit' :=
+ begin
+ apply t.hom_ext,
+ intro j,
+ rw [(show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).A ≫ _ ≫ _, from T.η.naturality_assoc _ _)]; rw [ commuting]; rw [ algebra.unit_assoc (D.obj j)],
+ dsimp, simp -- See library note [dsimp, simp]
+ end,
+ assoc' :=
+ begin
+ refine (is_colimit_of_preserves _ (is_colimit_of_preserves _ t)).hom_ext (λ j, _),
+ rw [functor.map_cocone_ι_app]; rw [ functor.map_cocone_ι_app]; rw [ (show (T : C ⥤ C).map ((T : C ⥤ C).map _) ≫ _ ≫ _ = _, from T.μ.naturality_assoc _ _)]; rw [ ←functor.map_comp_assoc]; rw [ commuting]; rw [ functor.map_comp]; rw [ category.assoc]; rw [ commuting],
+ apply (D.obj j).assoc_assoc _,
+ end }
 
 /-- (Impl) Construct the lifted cocone in `algebra T` which will be colimiting. -/
 @[simps] def lifted_cocone : cocone D :=
 { X := cocone_point c t,
-  ι := { app := λ j, { f := c.ι.app j, h' := commuting _ _ _ },
-         naturality' := λ A B f, by { ext1, dsimp, rw [comp_id], apply c.w } } }
+ ι := { app := λ j, { f := c.ι.app j, h' := commuting _ _ _ },
+ naturality' := λ A B f, by { ext1, dsimp, rw [comp_id], apply c.w } } }
 
 /-- (Impl) Prove that the lifted cocone is colimiting. -/
 @[simps]
 def lifted_cocone_is_colimit : is_colimit (lifted_cocone c t) :=
 { desc := λ s,
-  { f := t.desc ((forget T).map_cocone s),
-    h' := (is_colimit_of_preserves (T : C ⥤ C) t).hom_ext $ λ j,
-    begin
-      dsimp,
-      rw [←functor.map_comp_assoc, ←category.assoc, t.fac, commuting, category.assoc, t.fac],
-      apply algebra.hom.h,
-    end },
-  uniq' := λ s m J,
-  by { ext1, apply t.hom_ext, intro j, simpa using congr_arg algebra.hom.f (J j) } }
+ { f := t.desc ((forget T).map_cocone s),
+ h' := (is_colimit_of_preserves (T : C ⥤ C) t).hom_ext $ λ j,
+ begin
+ dsimp,
+ rw [←functor.map_comp_assoc]; rw [ ←category.assoc]; rw [ t.fac]; rw [ commuting]; rw [ category.assoc]; rw [ t.fac],
+ apply algebra.hom.h,
+ end },
+ uniq' := λ s m J,
+ by { ext1, apply t.hom_ext, intro j, simpa using congr_arg algebra.hom.f (J j) } }
 
 end forget_creates_colimits
 
@@ -222,28 +215,28 @@ which the monad itself preserves.
 -/
 noncomputable
 instance forget_creates_colimit (D : J ⥤ algebra T)
-  [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
-  [preserves_colimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] :
-  creates_colimit D (forget T) :=
+ [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
+ [preserves_colimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] :
+ creates_colimit D (forget T) :=
 creates_colimit_of_reflects_iso $ λ c t,
 { lifted_cocone :=
-  { X := cocone_point c t,
-    ι :=
-    { app := λ j, { f := c.ι.app j, h' := commuting _ _ _ },
-      naturality' := λ A B f, by { ext1, dsimp, erw [comp_id, c.w] } } },
-  valid_lift := cocones.ext (iso.refl _) (by tidy),
-  makes_colimit := lifted_cocone_is_colimit _ _ }
+ { X := cocone_point c t,
+ ι :=
+ { app := λ j, { f := c.ι.app j, h' := commuting _ _ _ },
+ naturality' := λ A B f, by { ext1, dsimp, erw [comp_id]; erw [ c.w] } } },
+ valid_lift := cocones.ext (iso.refl _) (by tidy),
+ makes_colimit := lifted_cocone_is_colimit _ _ }
 
 noncomputable
 instance forget_creates_colimits_of_shape
-  [preserves_colimits_of_shape J (T : C ⥤ C)] :
-  creates_colimits_of_shape J (forget T) :=
+ [preserves_colimits_of_shape J (T : C ⥤ C)] :
+ creates_colimits_of_shape J (forget T) :=
 { creates_colimit := λ K, by apply_instance }
 
 noncomputable
 instance forget_creates_colimits
-  [preserves_colimits_of_size.{v u} (T : C ⥤ C)] :
-  creates_colimits_of_size.{v u} (forget T) :=
+ [preserves_colimits_of_size.{v u} (T : C ⥤ C)] :
+ creates_colimits_of_size.{v u} (forget T) :=
 { creates_colimits_of_shape := λ J 𝒥₁, by apply_instance }
 
 /--
@@ -251,7 +244,7 @@ For `D : J ⥤ algebra T`, `D ⋙ forget T` has a colimit, then `D` has a colimi
 of shape `J` are preserved by `T`.
 -/
 lemma forget_creates_colimits_of_monad_preserves
-  [preserves_colimits_of_shape J (T : C ⥤ C)] (D : J ⥤ algebra T) [has_colimit (D ⋙ forget T)] :
+ [preserves_colimits_of_shape J (T : C ⥤ C)] (D : J ⥤ algebra T) [has_colimit (D ⋙ forget T)] :
 has_colimit D :=
 has_colimit_of_created D (forget T)
 
@@ -261,20 +254,20 @@ variables {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D
 variables {J : Type u} [category.{v} J]
 
 instance comp_comparison_forget_has_limit
-  (F : J ⥤ D) (R : D ⥤ C) [monadic_right_adjoint R] [has_limit (F ⋙ R)] :
-  has_limit ((F ⋙ monad.comparison (adjunction.of_right_adjoint R)) ⋙ monad.forget _) :=
+ (F : J ⥤ D) (R : D ⥤ C) [monadic_right_adjoint R] [has_limit (F ⋙ R)] :
+ has_limit ((F ⋙ monad.comparison (adjunction.of_right_adjoint R)) ⋙ monad.forget _) :=
 @has_limit_of_iso _ _ _ _ (F ⋙ R) _ _
-  (iso_whisker_left F (monad.comparison_forget (adjunction.of_right_adjoint R)).symm)
+ (iso_whisker_left F (monad.comparison_forget (adjunction.of_right_adjoint R)).symm)
 
 instance comp_comparison_has_limit
-  (F : J ⥤ D) (R : D ⥤ C) [monadic_right_adjoint R] [has_limit (F ⋙ R)] :
-  has_limit (F ⋙ monad.comparison (adjunction.of_right_adjoint R)) :=
+ (F : J ⥤ D) (R : D ⥤ C) [monadic_right_adjoint R] [has_limit (F ⋙ R)] :
+ has_limit (F ⋙ monad.comparison (adjunction.of_right_adjoint R)) :=
 monad.has_limit_of_comp_forget_has_limit (F ⋙ monad.comparison (adjunction.of_right_adjoint R))
 
 /-- Any monadic functor creates limits. -/
 noncomputable
 def monadic_creates_limits (R : D ⥤ C) [monadic_right_adjoint R] :
-  creates_limits_of_size.{v u} R :=
+ creates_limits_of_size.{v u} R :=
 creates_limits_of_nat_iso (monad.comparison_forget (adjunction.of_right_adjoint R))
 
 /--
@@ -283,75 +276,75 @@ which the monad itself preserves.
 -/
 noncomputable
 def monadic_creates_colimit_of_preserves_colimit (R : D ⥤ C) (K : J ⥤ D)
-  [monadic_right_adjoint R]
-  [preserves_colimit (K ⋙ R) (left_adjoint R ⋙ R)]
-  [preserves_colimit ((K ⋙ R) ⋙ left_adjoint R ⋙ R) (left_adjoint R ⋙ R)] :
-  creates_colimit K R :=
+ [monadic_right_adjoint R]
+ [preserves_colimit (K ⋙ R) (left_adjoint R ⋙ R)]
+ [preserves_colimit ((K ⋙ R) ⋙ left_adjoint R ⋙ R) (left_adjoint R ⋙ R)] :
+ creates_colimit K R :=
 begin
-  apply creates_colimit_of_nat_iso (monad.comparison_forget (adjunction.of_right_adjoint R)),
-  apply category_theory.comp_creates_colimit _ _,
-  apply_instance,
-  let i : ((K ⋙ monad.comparison (adjunction.of_right_adjoint R)) ⋙ monad.forget _) ≅ K ⋙ R :=
-    functor.associator _ _ _ ≪≫
-      iso_whisker_left K (monad.comparison_forget (adjunction.of_right_adjoint R)),
-  apply category_theory.monad.forget_creates_colimit _,
-  { dsimp,
-    refine preserves_colimit_of_iso_diagram _ i.symm },
-  { dsimp,
-    refine preserves_colimit_of_iso_diagram _ (iso_whisker_right i (left_adjoint R ⋙ R)).symm },
+ apply creates_colimit_of_nat_iso (monad.comparison_forget (adjunction.of_right_adjoint R)),
+ apply category_theory.comp_creates_colimit _ _,
+ apply_instance,
+ let i : ((K ⋙ monad.comparison (adjunction.of_right_adjoint R)) ⋙ monad.forget _) ≅ K ⋙ R :=
+ functor.associator _ _ _ ≪≫
+ iso_whisker_left K (monad.comparison_forget (adjunction.of_right_adjoint R)),
+ apply category_theory.monad.forget_creates_colimit _,
+ { dsimp,
+ refine preserves_colimit_of_iso_diagram _ i.symm },
+ { dsimp,
+ refine preserves_colimit_of_iso_diagram _ (iso_whisker_right i (left_adjoint R ⋙ R)).symm },
 end
 
 /-- A monadic functor creates any colimits of shapes it preserves. -/
 noncomputable
 def monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape (R : D ⥤ C)
-  [monadic_right_adjoint R] [preserves_colimits_of_shape J R] : creates_colimits_of_shape J R :=
+ [monadic_right_adjoint R] [preserves_colimits_of_shape J R] : creates_colimits_of_shape J R :=
 begin
-  have : preserves_colimits_of_shape J (left_adjoint R ⋙ R),
-  { apply category_theory.limits.comp_preserves_colimits_of_shape _ _,
-    apply (adjunction.left_adjoint_preserves_colimits (adjunction.of_right_adjoint R)).1,
-    apply_instance },
-  exactI ⟨λ K, monadic_creates_colimit_of_preserves_colimit _ _⟩,
+ have : preserves_colimits_of_shape J (left_adjoint R ⋙ R),
+ { apply category_theory.limits.comp_preserves_colimits_of_shape _ _,
+ apply (adjunction.left_adjoint_preserves_colimits (adjunction.of_right_adjoint R)).1,
+ apply_instance },
+ exactI ⟨λ K, monadic_creates_colimit_of_preserves_colimit _ _⟩,
 end
 
 /-- A monadic functor creates colimits if it preserves colimits. -/
 noncomputable
 def monadic_creates_colimits_of_preserves_colimits (R : D ⥤ C) [monadic_right_adjoint R]
-  [preserves_colimits_of_size.{v u} R] : creates_colimits_of_size.{v u} R :=
+ [preserves_colimits_of_size.{v u} R] : creates_colimits_of_size.{v u} R :=
 { creates_colimits_of_shape := λ J 𝒥₁,
-    by exactI monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape _ }
+ by exactI monadic_creates_colimits_of_shape_of_preserves_colimits_of_shape _ }
 
 section
 
 lemma has_limit_of_reflective (F : J ⥤ D) (R : D ⥤ C) [has_limit (F ⋙ R)] [reflective R] :
-  has_limit F :=
+ has_limit F :=
 by { haveI := monadic_creates_limits.{v u} R, exact has_limit_of_created F R }
 
 /-- If `C` has limits of shape `J` then any reflective subcategory has limits of shape `J`. -/
 lemma has_limits_of_shape_of_reflective [has_limits_of_shape J C] (R : D ⥤ C) [reflective R] :
-  has_limits_of_shape J D :=
+ has_limits_of_shape J D :=
 { has_limit := λ F, has_limit_of_reflective F R }
 
 /-- If `C` has limits then any reflective subcategory has limits. -/
 lemma has_limits_of_reflective (R : D ⥤ C) [has_limits_of_size.{v u} C] [reflective R] :
-  has_limits_of_size.{v u} D :=
+ has_limits_of_size.{v u} D :=
 { has_limits_of_shape := λ J 𝒥₁, by exactI has_limits_of_shape_of_reflective R }
 
 /-- If `C` has colimits of shape `J` then any reflective subcategory has colimits of shape `J`. -/
 lemma has_colimits_of_shape_of_reflective (R : D ⥤ C)
-  [reflective R] [has_colimits_of_shape J C] : has_colimits_of_shape J D :=
+ [reflective R] [has_colimits_of_shape J C] : has_colimits_of_shape J D :=
 { has_colimit := λ F,
 begin
-  let c := (left_adjoint R).map_cocone (colimit.cocone (F ⋙ R)),
-  letI : preserves_colimits_of_shape J _ :=
-    (adjunction.of_right_adjoint R).left_adjoint_preserves_colimits.1,
-  let t : is_colimit c := is_colimit_of_preserves (left_adjoint R) (colimit.is_colimit _),
-  apply has_colimit.mk ⟨_, (is_colimit.precompose_inv_equiv _ _).symm t⟩,
-  apply (iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _) ≪≫ F.right_unitor,
+ let c := (left_adjoint R).map_cocone (colimit.cocone (F ⋙ R)),
+ letI : preserves_colimits_of_shape J _ :=
+ (adjunction.of_right_adjoint R).left_adjoint_preserves_colimits.1,
+ let t : is_colimit c := is_colimit_of_preserves (left_adjoint R) (colimit.is_colimit _),
+ apply has_colimit.mk ⟨_, (is_colimit.precompose_inv_equiv _ _).symm t⟩,
+ apply (iso_whisker_left F (as_iso (adjunction.of_right_adjoint R).counit) : _) ≪≫ F.right_unitor,
 end }
 
 /-- If `C` has colimits then any reflective subcategory has colimits. -/
 lemma has_colimits_of_reflective (R : D ⥤ C) [reflective R] [has_colimits_of_size.{v u} C] :
-  has_colimits_of_size.{v u} D :=
+ has_colimits_of_size.{v u} D :=
 { has_colimits_of_shape := λ J 𝒥, by exactI has_colimits_of_shape_of_reflective R }
 
 
@@ -361,19 +354,20 @@ The reflector always preserves terminal objects. Note this in general doesn't ap
 limit.
 -/
 noncomputable def left_adjoint_preserves_terminal_of_reflective (R : D ⥤ C) [reflective R] :
-  preserves_limits_of_shape (discrete.{v} pempty) (left_adjoint R) :=
+ preserves_limits_of_shape (discrete.{v} pempty) (left_adjoint R) :=
 { preserves_limit := λ K, let F := functor.empty.{v} D in
-  begin
-    apply preserves_limit_of_iso_diagram _ (functor.empty_ext (F ⋙ R) _),
-    fsplit, intros c h, haveI : has_limit (F ⋙ R) := ⟨⟨⟨c,h⟩⟩⟩,
-    haveI : has_limit F := has_limit_of_reflective F R,
-    apply is_limit_change_empty_cone D (limit.is_limit F),
-    apply (as_iso ((adjunction.of_right_adjoint R).counit.app _)).symm.trans,
-    { apply (left_adjoint R).map_iso, letI := monadic_creates_limits.{v v} R,
-      let := (category_theory.preserves_limit_of_creates_limit_and_has_limit F R).preserves,
-      apply (this (limit.is_limit F)).cone_point_unique_up_to_iso h },
-    apply_instance,
-  end }
+ begin
+ apply preserves_limit_of_iso_diagram _ (functor.empty_ext (F ⋙ R) _),
+ fsplit, intros c h, haveI : has_limit (F ⋙ R) := ⟨⟨⟨c,h⟩⟩⟩,
+ haveI : has_limit F := has_limit_of_reflective F R,
+ apply is_limit_change_empty_cone D (limit.is_limit F),
+ apply (as_iso ((adjunction.of_right_adjoint R).counit.app _)).symm.trans,
+ { apply (left_adjoint R).map_iso, letI := monadic_creates_limits.{v v} R,
+ let := (category_theory.preserves_limit_of_creates_limit_and_has_limit F R).preserves,
+ apply (this (limit.is_limit F)).cone_point_unique_up_to_iso h },
+ apply_instance,
+ end }
 
 end
 end category_theory
+

@@ -7,7 +7,7 @@ open tactic.decl_reducibility
 
 meta def guard_decl_reducibility (n : name) (r : decl_reducibility) :=
 do x ← get_decl_reducibility n,
-   guard (x = r)
+ guard (x = r)
 
 -- Test declarations
 
@@ -38,29 +38,30 @@ end
 -- Test set_decl_reducibility
 
 run_cmd do
-  set_decl_reducibility ``wlr_red semireducible,
-  guard_decl_reducibility ``wlr_red semireducible,
-  set_decl_reducibility ``wlr_red irreducible,
-  guard_decl_reducibility ``wlr_red irreducible,
-  set_decl_reducibility ``wlr_red reducible,
-  guard_decl_reducibility ``wlr_red reducible
+ set_decl_reducibility ``wlr_red semireducible,
+ guard_decl_reducibility ``wlr_red semireducible,
+ set_decl_reducibility ``wlr_red irreducible,
+ guard_decl_reducibility ``wlr_red irreducible,
+ set_decl_reducibility ``wlr_red reducible,
+ guard_decl_reducibility ``wlr_red reducible
 
 -- Test with_local_reducibility: normal exit
 
 run_cmd do
-  with_local_reducibility ``wlr_semired reducible
-    (do guard_decl_reducibility ``wlr_semired reducible,
-        with_local_reducibility ``wlr_semired irreducible
-          (guard_decl_reducibility ``wlr_semired irreducible),
-        guard_decl_reducibility ``wlr_semired reducible),
-  guard_decl_reducibility ``wlr_semired semireducible
+ with_local_reducibility ``wlr_semired reducible
+ (do guard_decl_reducibility ``wlr_semired reducible,
+ with_local_reducibility ``wlr_semired irreducible
+ (guard_decl_reducibility ``wlr_semired irreducible),
+ guard_decl_reducibility ``wlr_semired reducible),
+ guard_decl_reducibility ``wlr_semired semireducible
 
 -- Test with_local_reducibility: abnormal exit
 
 run_cmd do
-  try (with_local_reducibility ``wlr_semired reducible
-    (do guard_decl_reducibility ``wlr_semired reducible,
-        (fail "" : tactic unit))),
-  guard_decl_reducibility ``wlr_semired semireducible
+ try (with_local_reducibility ``wlr_semired reducible
+ (do guard_decl_reducibility ``wlr_semired reducible,
+ (fail "" : tactic unit))),
+ guard_decl_reducibility ``wlr_semired semireducible
 
 end test
+

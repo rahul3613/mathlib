@@ -14,3 +14,4 @@ ds ← doc_string ``foo,
 guard $ ds = "ok"
 
 end bar
+

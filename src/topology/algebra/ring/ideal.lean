@@ -21,14 +21,14 @@ variables {R : Type*} [topological_space R] [ring R] [topological_ring R]
 
 /-- The closure of an ideal in a topological ring as an ideal. -/
 protected def ideal.closure (I : ideal R) : ideal R :=
-{ carrier   := closure I,
-  smul_mem' := λ c x hx, map_mem_closure (mul_left_continuous _) hx $ λ a, I.mul_mem_left c,
-  ..(add_submonoid.topological_closure I.to_add_submonoid) }
+{ carrier := closure I,
+ smul_mem' := λ c x hx, map_mem_closure (mul_left_continuous _) hx $ λ a, I.mul_mem_left c,
+ ..(add_submonoid.topological_closure I.to_add_submonoid) }
 
 @[simp] lemma ideal.coe_closure (I : ideal R) : (I.closure : set R) = closure I := rfl
 
 @[simp] lemma ideal.closure_eq_of_is_closed (I : ideal R) [hI : is_closed (I : set R)] :
-  I.closure = I :=
+ I.closure = I :=
 set_like.ext' hI.closure_eq
 
 end ring
@@ -46,10 +46,10 @@ variable [topological_ring R]
 
 lemma quotient_ring.is_open_map_coe : is_open_map (mk N) :=
 begin
-  intros s s_op,
-  change is_open (mk N ⁻¹' (mk N '' s)),
-  rw quotient_ring_saturate,
-  exact is_open_Union (λ ⟨n, _⟩, is_open_map_add_left n s s_op)
+ intros s s_op,
+ change is_open (mk N ⁻¹' (mk N '' s)),
+ rw quotient_ring_saturate,
+ exact is_open_Union (λ ⟨n, _⟩, is_open_map_add_left n s s_op)
 end
 
 lemma quotient_ring.quotient_map_coe_coe : quotient_map (λ p : R × R, (mk N p.1, mk N p.2)) :=
@@ -61,12 +61,13 @@ is_open_map.to_quotient_map
 instance topological_ring_quotient : topological_ring (R ⧸ N) :=
 topological_semiring.to_topological_ring
 { continuous_add :=
-    have cont : continuous (mk N ∘ (λ (p : R × R), p.fst + p.snd)) :=
-      continuous_quot_mk.comp continuous_add,
-    (quotient_map.continuous_iff (quotient_ring.quotient_map_coe_coe N)).mpr cont,
-  continuous_mul :=
-    have cont : continuous (mk N ∘ (λ (p : R × R), p.fst * p.snd)) :=
-      continuous_quot_mk.comp continuous_mul,
-    (quotient_map.continuous_iff (quotient_ring.quotient_map_coe_coe N)).mpr cont }
+ have cont : continuous (mk N ∘ (λ (p : R × R), p.fst + p.snd)) :=
+ continuous_quot_mk.comp continuous_add,
+ (quotient_map.continuous_iff (quotient_ring.quotient_map_coe_coe N)).mpr cont,
+ continuous_mul :=
+ have cont : continuous (mk N ∘ (λ (p : R × R), p.fst * p.snd)) :=
+ continuous_quot_mk.comp continuous_mul,
+ (quotient_map.continuous_iff (quotient_ring.quotient_map_coe_coe N)).mpr cont }
 
 end comm_ring
+

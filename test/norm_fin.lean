@@ -26,17 +26,17 @@ example : ¬ fin.cast_succ (fin.cast_succ (3 : fin 5)) ≠ 10 := by norm_num
 
 example : equiv.swap (0 : fin 3) 1 (fin.succ 1) = 2 :=
 begin
-  success_if_fail {guard_target ((equiv.swap (0 : fin 3) 1) 2 = 2)},
-  norm_fin,
-  guard_target_mod_implicit (equiv.swap (0 : fin 3) 1 2 = 2),
-  exact equiv.swap_apply_of_ne_of_ne dec_trivial dec_trivial
+ success_if_fail {guard_target ((equiv.swap (0 : fin 3) 1) 2 = 2)},
+ norm_fin,
+ guard_target_mod_implicit (equiv.swap (0 : fin 3) 1 2 = 2),
+ exact equiv.swap_apply_of_ne_of_ne dec_trivial dec_trivial
 end
 example : equiv.swap (0 : fin (1 + 2)) (1 : fin (nat.succ (1 + 1))) (fin.succ 1) = 2 :=
 begin
-  success_if_fail {guard_target ((equiv.swap (0 : fin 3) 1) 2 = 2)},
-  norm_fin,
-  guard_target' (equiv.swap (0 : fin 3) 1 2 = 2),
-  exact equiv.swap_apply_of_ne_of_ne dec_trivial dec_trivial
+ success_if_fail {guard_target ((equiv.swap (0 : fin 3) 1) 2 = 2)},
+ norm_fin,
+ guard_target' (equiv.swap (0 : fin 3) 1 2 = 2),
+ exact equiv.swap_apply_of_ne_of_ne dec_trivial dec_trivial
 end
 example : equiv.swap (0 : fin 3) 1 (fin.cast_succ 1) = 0 := by norm_fin
 
@@ -84,6 +84,7 @@ example : fin.cast_succ (fin.cast_succ (3 : fin 5)) ≠ fin.succ (fin.cast_succ 
 
 example : (5 : fin 7) ≠ fin.succ (fin.succ 9) :=
 begin
-  intro H,
-  norm_num at H,
+ intro H,
+ norm_num at H,
 end
+

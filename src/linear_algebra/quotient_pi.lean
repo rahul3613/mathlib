@@ -34,67 +34,65 @@ variables {Ns : ι → Type*} [∀ i, add_comm_group (Ns i)] [∀ i, module R (N
 
 /-- Lift a family of maps to the direct sum of quotients. -/
 def pi_quotient_lift [fintype ι] [decidable_eq ι]
-  (p : ∀ i, submodule R (Ms i)) (q : submodule R N)
-  (f : Π i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) :
-  (Π i, (Ms i ⧸ p i)) →ₗ[R] (N ⧸ q) :=
+ (p : ∀ i, submodule R (Ms i)) (q : submodule R N)
+ (f : Π i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) :
+ (Π i, (Ms i ⧸ p i)) →ₗ[R] (N ⧸ q) :=
 lsum R (λ i, (Ms i ⧸ (p i))) R (λ i, (p i).mapq q (f i) (hf i))
 
 @[simp] lemma pi_quotient_lift_mk [fintype ι] [decidable_eq ι]
-  (p : ∀ i, submodule R (Ms i)) (q : submodule R N)
-  (f : Π i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (x : Π i, Ms i) :
-  pi_quotient_lift p q f hf (λ i, quotient.mk (x i)) =
-    quotient.mk (lsum _ _ R f x) :=
-by rw [pi_quotient_lift, lsum_apply, sum_apply, ← mkq_apply, lsum_apply, sum_apply, _root_.map_sum];
-   simp only [coe_proj, mapq_apply, mkq_apply, comp_apply]
+ (p : ∀ i, submodule R (Ms i)) (q : submodule R N)
+ (f : Π i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (x : Π i, Ms i) :
+ pi_quotient_lift p q f hf (λ i, quotient.mk (x i)) =
+ quotient.mk (lsum _ _ R f x) :=
+by rw [pi_quotient_lift]; rw [ lsum_apply]; rw [ sum_apply]; rw [ ← mkq_apply]; rw [ lsum_apply]; rw [ sum_apply]; rw [ _root_.map_sum];
+ simp only [coe_proj, mapq_apply, mkq_apply, comp_apply]
 
 @[simp] lemma pi_quotient_lift_single [fintype ι] [decidable_eq ι]
-  (p : ∀ i, submodule R (Ms i)) (q : submodule R N)
-  (f : Π i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (i) (x : Ms i ⧸ p i) :
-  pi_quotient_lift p q f hf (pi.single i x) =
-    mapq _ _ (f i) (hf i) x :=
+ (p : ∀ i, submodule R (Ms i)) (q : submodule R N)
+ (f : Π i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (i) (x : Ms i ⧸ p i) :
+ pi_quotient_lift p q f hf (pi.single i x) =
+ mapq _ _ (f i) (hf i) x :=
 begin
-  simp_rw [pi_quotient_lift, lsum_apply, sum_apply,
-           comp_apply, proj_apply],
-  rw finset.sum_eq_single i,
-  { rw pi.single_eq_same },
-  { rintros j - hj, rw [pi.single_eq_of_ne hj, _root_.map_zero] },
-  { intros, have := finset.mem_univ i, contradiction },
+ simp_rw [pi_quotient_lift, lsum_apply, sum_apply, comp_apply, proj_apply],
+ rw finset.sum_eq_single i,
+ { rw pi.single_eq_same },
+ { rintros j - hj, rw [pi.single_eq_of_ne hj]; rw [ _root_.map_zero] },
+ { intros, have := finset.mem_univ i, contradiction },
 end
 
 /-- Lift a family of maps to a quotient of direct sums. -/
 def quotient_pi_lift
-  (p : ∀ i, submodule R (Ms i))
-  (f : Π i, Ms i →ₗ[R] Ns i) (hf : ∀ i, p i ≤ ker (f i)) :
-  ((Π i, Ms i) ⧸ pi set.univ p) →ₗ[R] Π i, Ns i :=
+ (p : ∀ i, submodule R (Ms i))
+ (f : Π i, Ms i →ₗ[R] Ns i) (hf : ∀ i, p i ≤ ker (f i)) :
+ ((Π i, Ms i) ⧸ pi set.univ p) →ₗ[R] Π i, Ns i :=
 (pi set.univ p).liftq (linear_map.pi (λ i, (f i).comp (proj i))) $
 λ x hx, mem_ker.mpr $
 by { ext i, simpa using hf i (mem_pi.mp hx i (set.mem_univ i)) }
 
 @[simp] lemma quotient_pi_lift_mk
-  (p : ∀ i, submodule R (Ms i))
-  (f : Π i, Ms i →ₗ[R] Ns i) (hf : ∀ i, p i ≤ ker (f i)) (x : Π i, Ms i) :
-  quotient_pi_lift p f hf (quotient.mk x) = λ i, f i (x i) :=
+ (p : ∀ i, submodule R (Ms i))
+ (f : Π i, Ms i →ₗ[R] Ns i) (hf : ∀ i, p i ≤ ker (f i)) (x : Π i, Ms i) :
+ quotient_pi_lift p f hf (quotient.mk x) = λ i, f i (x i) :=
 rfl
 
 /-- The quotient of a direct sum is the direct sum of quotients. -/
 @[simps] def quotient_pi [fintype ι] [decidable_eq ι]
-  (p : ∀ i, submodule R (Ms i)) :
-  ((Π i, Ms i) ⧸ pi set.univ p) ≃ₗ[R] Π i, Ms i ⧸ p i :=
+ (p : ∀ i, submodule R (Ms i)) :
+ ((Π i, Ms i) ⧸ pi set.univ p) ≃ₗ[R] Π i, Ms i ⧸ p i :=
 { to_fun := quotient_pi_lift p (λ i, (p i).mkq) (λ i, by simp),
-  inv_fun := pi_quotient_lift p (pi set.univ p)
-    single (λ i, le_comap_single_pi p),
-  left_inv := λ x, quotient.induction_on' x (λ x',
-    by simp_rw [quotient.mk'_eq_mk, quotient_pi_lift_mk, mkq_apply,
-                pi_quotient_lift_mk, lsum_single, id_apply]),
-  right_inv := begin
-    rw [function.right_inverse_iff_comp, ← coe_comp, ← @id_coe R],
-    refine congr_arg _ (pi_ext (λ i x, quotient.induction_on' x (λ x', funext $ λ j, _))),
-    rw [comp_apply, pi_quotient_lift_single, quotient.mk'_eq_mk, mapq_apply,
-        quotient_pi_lift_mk, id_apply],
-    by_cases hij : i = j; simp only [mkq_apply, coe_single],
-    { subst hij, simp only [pi.single_eq_same] },
-    { simp only [pi.single_eq_of_ne (ne.symm hij), quotient.mk_zero] },
-  end,
-  .. quotient_pi_lift p (λ i, (p i).mkq) (λ i, by simp) }
+ inv_fun := pi_quotient_lift p (pi set.univ p)
+ single (λ i, le_comap_single_pi p),
+ left_inv := λ x, quotient.induction_on' x (λ x',
+ by simp_rw [quotient.mk'_eq_mk, quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk, lsum_single, id_apply]),
+ right_inv := begin
+ rw [function.right_inverse_iff_comp]; rw [ ← coe_comp]; rw [ ← @id_coe R],
+ refine congr_arg _ (pi_ext (λ i x, quotient.induction_on' x (λ x', funext $ λ j, _))),
+ rw [comp_apply]; rw [ pi_quotient_lift_single]; rw [ quotient.mk'_eq_mk]; rw [ mapq_apply]; rw [ quotient_pi_lift_mk]; rw [ id_apply],
+ by_cases hij : i = j; simp only [mkq_apply, coe_single],
+ { subst hij, simp only [pi.single_eq_same] },
+ { simp only [pi.single_eq_of_ne (ne.symm hij), quotient.mk_zero] },
+ end,
+ .. quotient_pi_lift p (λ i, (p i).mkq) (λ i, by simp) }
 
 end submodule
+

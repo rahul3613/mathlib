@@ -31,9 +31,9 @@ open verts
 These are ordered pairs, but the data becomes symmetric in `konigsberg.adj`. -/
 def edges : list (verts × verts) :=
 [ (V1, B1), (V1, B2), (V1, B3), (V1, B4), (V1, B5),
-  (B1, V2), (B2, V2), (B3, V4), (B4, V3), (B5, V3),
-  (V2, B6), (B6, V4),
-  (V3, B7), (B7, V4) ]
+ (B1, V2), (B2, V2), (B3, V4), (B4, V3), (B5, V3),
+ (V2, B6), (B6, V4),
+ (V3, B7), (B7, V4) ]
 
 /-- The adjacency relation for the Königsberg graph. -/
 def adj (v w : verts) : bool := ((v, w) ∈ edges) || ((w, v) ∈ edges)
@@ -48,14 +48,14 @@ Eulerian property or switch this file to use multigraphs. -/
 @[simps]
 def graph : simple_graph verts :=
 { adj := λ v w, adj v w,
-  symm := begin
-    dsimp [symmetric, adj],
-    dec_trivial,
-  end,
-  loopless := begin
-    dsimp [irreflexive, adj],
-    dec_trivial
-  end }
+ symm := begin
+ dsimp [symmetric, adj],
+ dec_trivial,
+ end,
+ loopless := begin
+ dsimp [irreflexive, adj],
+ dec_trivial
+ end }
 
 instance : decidable_rel graph.adj := λ a b, decidable_of_bool (adj a b) iff.rfl
 
@@ -71,14 +71,15 @@ def degree : verts → ℕ
 /-- The Königsberg graph is not Eulerian. -/
 theorem not_is_eulerian {u v : verts} (p : graph.walk u v) (h : p.is_eulerian) : false :=
 begin
-  have : {v | odd (graph.degree v)} = {verts.V1, verts.V2, verts.V3, verts.V4},
-  { ext w,
-    simp only [degree_eq_degree, nat.odd_iff_not_even, set.mem_set_of_eq, set.mem_insert_iff,
-      set.mem_singleton_iff],
-    cases w; simp, },
-  have h := h.card_odd_degree,
-  simp_rw [this] at h,
-  norm_num at h,
+ have : {v | odd (graph.degree v)} = {verts.V1, verts.V2, verts.V3, verts.V4},
+ { ext w,
+ simp only [degree_eq_degree, nat.odd_iff_not_even, set.mem_set_of_eq, set.mem_insert_iff,
+ set.mem_singleton_iff],
+ cases w; simp, },
+ have h := h.card_odd_degree,
+ simp_rw [this] at h,
+ norm_num at h,
 end
 
 end konigsberg
+

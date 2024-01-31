@@ -17,13 +17,13 @@ variables {α : Type*}
 
 section has_exists_add_of_le
 variables [add_comm_semigroup α] [partial_order α] [has_exists_add_of_le α]
-  [covariant_class α α (+) (≤)] [has_sub α] [has_ordered_sub α] {a b c d : α}
+ [covariant_class α α (+) (≤)] [has_sub α] [has_ordered_sub α] {a b c d : α}
 
 @[simp] lemma add_tsub_cancel_of_le (h : a ≤ b) : a + (b - a) = b :=
 begin
-  refine le_antisymm _ le_add_tsub,
-  obtain ⟨c, rfl⟩ := exists_add_of_le h,
-  exact add_le_add_left add_tsub_le_left a,
+ refine le_antisymm _ le_add_tsub,
+ obtain ⟨c, rfl⟩ := exists_add_of_le h,
+ exact add_le_add_left add_tsub_le_left a,
 end
 
 lemma tsub_add_cancel_of_le (h : a ≤ b) : b - a + a = b :=
@@ -36,7 +36,7 @@ lemma add_le_of_le_tsub_left_of_le (h : a ≤ c) (h2 : b ≤ c - a) : a + b ≤ 
 (add_le_add_left h2 a).trans_eq $ add_tsub_cancel_of_le h
 
 lemma tsub_le_tsub_iff_right (h : c ≤ b) : a - c ≤ b - c ↔ a ≤ b :=
-by rw [tsub_le_iff_right, tsub_add_cancel_of_le h]
+by rw [tsub_le_iff_right]; rw [ tsub_add_cancel_of_le h]
 
 lemma tsub_left_inj (h1 : c ≤ a) (h2 : c ≤ b) : a - c = b - c ↔ a = b :=
 by simp_rw [le_antisymm_iff, tsub_le_tsub_iff_right h1, tsub_le_tsub_iff_right h2]
@@ -49,41 +49,40 @@ by { refine ((tsub_le_tsub_iff_right h).mp h2.le).lt_of_ne _, rintro rfl, exact 
 
 lemma tsub_add_tsub_cancel (hab : b ≤ a) (hcb : c ≤ b) : (a - b) + (b - c) = a - c :=
 begin
-  convert tsub_add_cancel_of_le (tsub_le_tsub_right hab c) using 2,
-  rw [tsub_tsub, add_tsub_cancel_of_le hcb],
+ convert tsub_add_cancel_of_le (tsub_le_tsub_right hab c) using 2,
+ rw [tsub_tsub]; rw [ add_tsub_cancel_of_le hcb],
 end
 
 lemma tsub_tsub_tsub_cancel_right (h : c ≤ b) : (a - c) - (b - c) = a - b :=
-by rw [tsub_tsub, add_tsub_cancel_of_le h]
+by rw [tsub_tsub]; rw [ add_tsub_cancel_of_le h]
 
 /-! #### Lemmas that assume that an element is `add_le_cancellable`. -/
 
 namespace add_le_cancellable
 
 protected lemma eq_tsub_iff_add_eq_of_le (hc : add_le_cancellable c) (h : c ≤ b) :
-  a = b - c ↔ a + c = b :=
+ a = b - c ↔ a + c = b :=
 ⟨by { rintro rfl, exact tsub_add_cancel_of_le h }, hc.eq_tsub_of_add_eq⟩
 
 protected lemma tsub_eq_iff_eq_add_of_le (hb : add_le_cancellable b) (h : b ≤ a) :
-  a - b = c ↔ a = c + b :=
-by rw [eq_comm, hb.eq_tsub_iff_add_eq_of_le h, eq_comm]
+ a - b = c ↔ a = c + b :=
+by rw [eq_comm]; rw [ hb.eq_tsub_iff_add_eq_of_le h]; rw [ eq_comm]
 
 protected lemma add_tsub_assoc_of_le (hc : add_le_cancellable c) (h : c ≤ b) (a : α) :
-  a + b - c = a + (b - c) :=
-by conv_lhs { rw [← add_tsub_cancel_of_le h, add_comm c, ← add_assoc,
-  hc.add_tsub_cancel_right] }
+ a + b - c = a + (b - c) :=
+by conv_lhs { rw [← add_tsub_cancel_of_le h]; rw [ add_comm c]; rw [ ← add_assoc]; rw [ hc.add_tsub_cancel_right] }
 
 protected lemma tsub_add_eq_add_tsub (hb : add_le_cancellable b) (h : b ≤ a) :
-  a - b + c = a + c - b :=
-by rw [add_comm a, hb.add_tsub_assoc_of_le h, add_comm]
+ a - b + c = a + c - b :=
+by rw [add_comm a]; rw [ hb.add_tsub_assoc_of_le h]; rw [ add_comm]
 
 protected lemma tsub_tsub_assoc (hbc : add_le_cancellable (b - c)) (h₁ : b ≤ a) (h₂ : c ≤ b) :
-  a - (b - c) = a - b + c :=
-hbc.tsub_eq_of_eq_add $ by rw [add_assoc, add_tsub_cancel_of_le h₂, tsub_add_cancel_of_le h₁]
+ a - (b - c) = a - b + c :=
+hbc.tsub_eq_of_eq_add $ by rw [add_assoc]; rw [ add_tsub_cancel_of_le h₂]; rw [ tsub_add_cancel_of_le h₁]
 
 protected lemma tsub_add_tsub_comm (hb : add_le_cancellable b) (hd : add_le_cancellable d)
-  (hba : b ≤ a) (hdc : d ≤ c) : a - b + (c - d) = a + c - (b + d) :=
-by rw [hb.tsub_add_eq_add_tsub hba, ←hd.add_tsub_assoc_of_le hdc, tsub_tsub, add_comm d]
+ (hba : b ≤ a) (hdc : d ≤ c) : a - b + (c - d) = a + c - (b + d) :=
+by rw [hb.tsub_add_eq_add_tsub hba]; rw [ ←hd.add_tsub_assoc_of_le hdc]; rw [ tsub_tsub]; rw [ add_comm d]
 
 protected lemma le_tsub_iff_left (ha : add_le_cancellable a) (h : a ≤ c) : b ≤ c - a ↔ a + b ≤ c :=
 ⟨add_le_of_le_tsub_left_of_le h, ha.le_tsub_of_add_le_left⟩
@@ -92,72 +91,72 @@ protected lemma le_tsub_iff_right (ha : add_le_cancellable a) (h : a ≤ c) : b 
 by { rw [add_comm], exact ha.le_tsub_iff_left h }
 
 protected lemma tsub_lt_iff_left (hb : add_le_cancellable b) (hba : b ≤ a) :
-  a - b < c ↔ a < b + c :=
+ a - b < c ↔ a < b + c :=
 begin
-  refine ⟨hb.lt_add_of_tsub_lt_left, _⟩,
-  intro h, refine (tsub_le_iff_left.mpr h.le).lt_of_ne _,
-  rintro rfl, exact h.ne' (add_tsub_cancel_of_le hba)
+ refine ⟨hb.lt_add_of_tsub_lt_left, _⟩,
+ intro h, refine (tsub_le_iff_left.mpr h.le).lt_of_ne _,
+ rintro rfl, exact h.ne' (add_tsub_cancel_of_le hba)
 end
 
 protected lemma tsub_lt_iff_right (hb : add_le_cancellable b) (hba : b ≤ a) :
-  a - b < c ↔ a < c + b :=
+ a - b < c ↔ a < c + b :=
 by { rw [add_comm], exact hb.tsub_lt_iff_left hba }
 
 protected lemma tsub_lt_iff_tsub_lt (hb : add_le_cancellable b) (hc : add_le_cancellable c)
-  (h₁ : b ≤ a) (h₂ : c ≤ a) : a - b < c ↔ a - c < b :=
-by rw [hb.tsub_lt_iff_left h₁, hc.tsub_lt_iff_right h₂]
+ (h₁ : b ≤ a) (h₂ : c ≤ a) : a - b < c ↔ a - c < b :=
+by rw [hb.tsub_lt_iff_left h₁]; rw [ hc.tsub_lt_iff_right h₂]
 
 protected lemma le_tsub_iff_le_tsub (ha : add_le_cancellable a) (hc : add_le_cancellable c)
-  (h₁ : a ≤ b) (h₂ : c ≤ b) : a ≤ b - c ↔ c ≤ b - a :=
-by rw [ha.le_tsub_iff_left h₁, hc.le_tsub_iff_right h₂]
+ (h₁ : a ≤ b) (h₂ : c ≤ b) : a ≤ b - c ↔ c ≤ b - a :=
+by rw [ha.le_tsub_iff_left h₁]; rw [ hc.le_tsub_iff_right h₂]
 
 protected lemma lt_tsub_iff_right_of_le (hc : add_le_cancellable c) (h : c ≤ b) :
-  a < b - c ↔ a + c < b :=
+ a < b - c ↔ a + c < b :=
 begin
-  refine ⟨λ h', (add_le_of_le_tsub_right_of_le h h'.le).lt_of_ne _, hc.lt_tsub_of_add_lt_right⟩,
-  rintro rfl,
-  exact h'.ne' hc.add_tsub_cancel_right,
+ refine ⟨λ h', (add_le_of_le_tsub_right_of_le h h'.le).lt_of_ne _, hc.lt_tsub_of_add_lt_right⟩,
+ rintro rfl,
+ exact h'.ne' hc.add_tsub_cancel_right,
 end
 
 protected lemma lt_tsub_iff_left_of_le (hc : add_le_cancellable c) (h : c ≤ b) :
-  a < b - c ↔ c + a < b :=
+ a < b - c ↔ c + a < b :=
 by { rw [add_comm], exact hc.lt_tsub_iff_right_of_le h }
 
 protected lemma tsub_inj_right (hab : add_le_cancellable (a - b)) (h₁ : b ≤ a) (h₂ : c ≤ a)
-  (h₃ : a - b = a - c) : b = c :=
-by { rw ← hab.inj, rw [tsub_add_cancel_of_le h₁, h₃, tsub_add_cancel_of_le h₂] }
+ (h₃ : a - b = a - c) : b = c :=
+by { rw ← hab.inj, rw [tsub_add_cancel_of_le h₁]; rw [ h₃]; rw [ tsub_add_cancel_of_le h₂] }
 
 protected lemma lt_of_tsub_lt_tsub_left_of_le [contravariant_class α α (+) (<)]
-  (hb : add_le_cancellable b) (hca : c ≤ a) (h : a - b < a - c) : c < b :=
+ (hb : add_le_cancellable b) (hca : c ≤ a) (h : a - b < a - c) : c < b :=
 begin
-  conv_lhs at h { rw [← tsub_add_cancel_of_le hca] },
-  exact lt_of_add_lt_add_left (hb.lt_add_of_tsub_lt_right h),
+ conv_lhs at h { rw [← tsub_add_cancel_of_le hca] },
+ exact lt_of_add_lt_add_left (hb.lt_add_of_tsub_lt_right h),
 end
 
 protected lemma tsub_lt_tsub_left_of_le (hab : add_le_cancellable (a - b)) (h₁ : b ≤ a)
-  (h : c < b) : a - b < a - c :=
+ (h : c < b) : a - b < a - c :=
 (tsub_le_tsub_left h.le _).lt_of_ne $ λ h', h.ne' $ hab.tsub_inj_right h₁ (h.le.trans h₁) h'
 
 protected lemma tsub_lt_tsub_right_of_le (hc : add_le_cancellable c) (h : c ≤ a) (h2 : a < b) :
-  a - c < b - c :=
+ a - c < b - c :=
 by { apply hc.lt_tsub_of_add_lt_left, rwa [add_tsub_cancel_of_le h] }
 
 protected lemma tsub_lt_tsub_iff_left_of_le_of_le [contravariant_class α α (+) (<)]
-  (hb : add_le_cancellable b) (hab : add_le_cancellable (a - b)) (h₁ : b ≤ a) (h₂ : c ≤ a) :
-  a - b < a - c ↔ c < b :=
+ (hb : add_le_cancellable b) (hab : add_le_cancellable (a - b)) (h₁ : b ≤ a) (h₂ : c ≤ a) :
+ a - b < a - c ↔ c < b :=
 ⟨hb.lt_of_tsub_lt_tsub_left_of_le h₂, hab.tsub_lt_tsub_left_of_le h₁⟩
 
 @[simp] protected lemma add_tsub_tsub_cancel (hac : add_le_cancellable (a - c)) (h : c ≤ a) :
-  (a + b) - (a - c) = b + c :=
-hac.tsub_eq_of_eq_add $ by rw [add_assoc, add_tsub_cancel_of_le h, add_comm]
+ (a + b) - (a - c) = b + c :=
+hac.tsub_eq_of_eq_add $ by rw [add_assoc]; rw [ add_tsub_cancel_of_le h]; rw [ add_comm]
 
 protected lemma tsub_tsub_cancel_of_le (hba : add_le_cancellable (b - a)) (h : a ≤ b) :
-  b - (b - a) = a :=
+ b - (b - a) = a :=
 hba.tsub_eq_of_eq_add (add_tsub_cancel_of_le h).symm
 
 protected lemma tsub_tsub_tsub_cancel_left (hab : add_le_cancellable (a - b)) (h : b ≤ a) :
-  a - c - (a - b) = b - c :=
-by rw [tsub_right_comm, hab.tsub_tsub_cancel_of_le h]
+ a - c - (a - b) = b - c :=
+by rw [tsub_right_comm]; rw [ hab.tsub_tsub_cancel_of_le h]
 
 end add_le_cancellable
 
@@ -211,8 +210,8 @@ lemma lt_tsub_iff_left_of_le (h : c ≤ b) : a < b - c ↔ c + a < b :=
 contravariant.add_le_cancellable.lt_tsub_iff_left_of_le h
 
 /-- See `lt_of_tsub_lt_tsub_left` for a stronger statement in a linear order. -/
-lemma lt_of_tsub_lt_tsub_left_of_le  [contravariant_class α α (+) (<)]
-  (hca : c ≤ a) (h : a - b < a - c) : c < b :=
+lemma lt_of_tsub_lt_tsub_left_of_le [contravariant_class α α (+) (<)]
+ (hca : c ≤ a) (h : a - b < a - c) : c < b :=
 contravariant.add_le_cancellable.lt_of_tsub_lt_tsub_left_of_le hca h
 
 lemma tsub_lt_tsub_left_of_le : b ≤ a → c < b → a - b < a - c :=
@@ -225,10 +224,10 @@ lemma tsub_inj_right (h₁ : b ≤ a) (h₂ : c ≤ a) (h₃ : a - b = a - c) : 
 contravariant.add_le_cancellable.tsub_inj_right h₁ h₂ h₃
 
 /-- See `tsub_lt_tsub_iff_left_of_le` for a stronger statement in a linear order. -/
-lemma tsub_lt_tsub_iff_left_of_le_of_le  [contravariant_class α α (+) (<)]
-  (h₁ : b ≤ a) (h₂ : c ≤ a) : a - b < a - c ↔ c < b :=
+lemma tsub_lt_tsub_iff_left_of_le_of_le [contravariant_class α α (+) (<)]
+ (h₁ : b ≤ a) (h₂ : c ≤ a) : a - b < a - c ↔ c < b :=
 contravariant.add_le_cancellable.tsub_lt_tsub_iff_left_of_le_of_le
-  contravariant.add_le_cancellable h₁ h₂
+ contravariant.add_le_cancellable h₁ h₂
 
 @[simp] lemma add_tsub_tsub_cancel (h : c ≤ a) : (a + b) - (a - c) = b + c :=
 contravariant.add_le_cancellable.add_tsub_tsub_cancel h
@@ -255,7 +254,7 @@ lemma tsub_add_cancel_iff_le : b - a + a = b ↔ a ≤ b :=
 by { rw [add_comm], exact add_tsub_cancel_iff_le }
 
 @[simp] lemma tsub_eq_zero_iff_le : a - b = 0 ↔ a ≤ b :=
-by rw [← nonpos_iff_eq_zero, tsub_le_iff_left, add_zero]
+by rw [← nonpos_iff_eq_zero]; rw [ tsub_le_iff_left]; rw [ add_zero]
 
 alias tsub_eq_zero_iff_le ↔ _ tsub_eq_zero_of_le
 
@@ -270,7 +269,7 @@ attribute [simp] tsub_eq_zero_of_le
 lemma tsub_self_add (a b : α) : a - (a + b) = 0 := tsub_eq_zero_of_le $ self_le_add_right _ _
 
 lemma tsub_pos_iff_not_le : 0 < a - b ↔ ¬ a ≤ b :=
-by rw [pos_iff_ne_zero, ne.def, tsub_eq_zero_iff_le]
+by rw [pos_iff_ne_zero]; rw [ ne.def]; rw [ tsub_eq_zero_iff_le]
 
 lemma tsub_pos_of_lt (h : a < b) : 0 < b - a := tsub_pos_iff_not_le.mpr h.not_le
 
@@ -279,18 +278,16 @@ lemma tsub_lt_of_lt (h : a < b) : a - c < b := lt_of_le_of_lt tsub_le_self h
 namespace add_le_cancellable
 
 protected lemma tsub_le_tsub_iff_left (ha : add_le_cancellable a) (hc : add_le_cancellable c)
-  (h : c ≤ a) : a - b ≤ a - c ↔ c ≤ b :=
+ (h : c ≤ a) : a - b ≤ a - c ↔ c ≤ b :=
 begin
-  refine ⟨_, λ h, tsub_le_tsub_left h a⟩,
-  rw [tsub_le_iff_left, ← hc.add_tsub_assoc_of_le h, hc.le_tsub_iff_right (h.trans le_add_self),
-    add_comm b],
-  apply ha,
+ refine ⟨_, λ h, tsub_le_tsub_left h a⟩,
+ rw [tsub_le_iff_left]; rw [ ← hc.add_tsub_assoc_of_le h]; rw [ hc.le_tsub_iff_right (h.trans le_add_self)]; rw [ add_comm b],
+ apply ha,
 end
 
 protected lemma tsub_right_inj (ha : add_le_cancellable a) (hb : add_le_cancellable b)
-  (hc : add_le_cancellable c) (hba : b ≤ a) (hca : c ≤ a) : a - b = a - c ↔ b = c :=
-by simp_rw [le_antisymm_iff, ha.tsub_le_tsub_iff_left hb hba, ha.tsub_le_tsub_iff_left hc hca,
-  and_comm]
+ (hc : add_le_cancellable c) (hba : b ≤ a) (hca : c ≤ a) : a - b = a - c ↔ b = c :=
+by simp_rw [le_antisymm_iff, ha.tsub_le_tsub_iff_left hb hba, ha.tsub_le_tsub_iff_left hc hca, and_comm]
 
 end add_le_cancellable
 
@@ -304,7 +301,7 @@ contravariant.add_le_cancellable.tsub_le_tsub_iff_left contravariant.add_le_canc
 
 lemma tsub_right_inj (hba : b ≤ a) (hca : c ≤ a) : a - b = a - c ↔ b = c :=
 contravariant.add_le_cancellable.tsub_right_inj contravariant.add_le_cancellable
-  contravariant.add_le_cancellable hba hca
+ contravariant.add_le_cancellable hba hca
 
 variables (α)
 
@@ -315,7 +312,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 def canonically_ordered_add_monoid.to_add_cancel_comm_monoid : add_cancel_comm_monoid α :=
 { add_left_cancel := λ a b c h, by simpa only [add_tsub_cancel_left] using congr_arg (λ x, x - a) h,
-  ..(by apply_instance : add_comm_monoid α) }
+ ..(by apply_instance : add_comm_monoid α) }
 
 end contra
 
@@ -327,13 +324,13 @@ section canonically_linear_ordered_add_monoid
 variables [canonically_linear_ordered_add_monoid α] [has_sub α] [has_ordered_sub α] {a b c d : α}
 
 @[simp] lemma tsub_pos_iff_lt : 0 < a - b ↔ b < a :=
-by rw [tsub_pos_iff_not_le, not_le]
+by rw [tsub_pos_iff_not_le]; rw [ not_le]
 
 lemma tsub_eq_tsub_min (a b : α) : a - b = a - min a b :=
 begin
-  cases le_total a b with h h,
-  { rw [min_eq_left h, tsub_self, tsub_eq_zero_of_le h] },
-  { rw [min_eq_right h] },
+ cases le_total a b with h h,
+ { rw [min_eq_left h]; rw [ tsub_self]; rw [ tsub_eq_zero_of_le h] },
+ { rw [min_eq_right h] },
 end
 
 namespace add_le_cancellable
@@ -345,27 +342,27 @@ protected lemma lt_tsub_iff_left (hc : add_le_cancellable c) : a < b - c ↔ c +
 ⟨lt_imp_lt_of_le_imp_le tsub_le_iff_left.mpr, hc.lt_tsub_of_add_lt_left⟩
 
 protected lemma tsub_lt_tsub_iff_right (hc : add_le_cancellable c) (h : c ≤ a) :
-  a - c < b - c ↔ a < b :=
-by rw [hc.lt_tsub_iff_left, add_tsub_cancel_of_le h]
+ a - c < b - c ↔ a < b :=
+by rw [hc.lt_tsub_iff_left]; rw [ add_tsub_cancel_of_le h]
 
 protected lemma tsub_lt_self (ha : add_le_cancellable a) (h₁ : 0 < a) (h₂ : 0 < b) : a - b < a :=
 begin
-  refine tsub_le_self.lt_of_ne (λ h, _),
-  rw [← h, tsub_pos_iff_lt] at h₁,
-  exact h₂.not_le (ha.add_le_iff_nonpos_left.1 $ add_le_of_le_tsub_left_of_le h₁.le h.ge),
+ refine tsub_le_self.lt_of_ne (λ h, _),
+ rw [← h] at h₁; rw [ tsub_pos_iff_lt] at h₁,
+ exact h₂.not_le (ha.add_le_iff_nonpos_left.1 $ add_le_of_le_tsub_left_of_le h₁.le h.ge),
 end
 
 protected lemma tsub_lt_self_iff (ha : add_le_cancellable a) : a - b < a ↔ 0 < a ∧ 0 < b :=
 begin
-  refine ⟨λ h, ⟨(zero_le _).trans_lt h, (zero_le b).lt_of_ne _⟩, λ h, ha.tsub_lt_self h.1 h.2⟩,
-  rintro rfl,
-  rw [tsub_zero] at h,
-  exact h.false
+ refine ⟨λ h, ⟨(zero_le _).trans_lt h, (zero_le b).lt_of_ne _⟩, λ h, ha.tsub_lt_self h.1 h.2⟩,
+ rintro rfl,
+ rw [tsub_zero] at h,
+ exact h.false
 end
 
 /-- See `lt_tsub_iff_left_of_le_of_le` for a weaker statement in a partial order. -/
 protected lemma tsub_lt_tsub_iff_left_of_le (ha : add_le_cancellable a) (hb : add_le_cancellable b)
-  (h : b ≤ a) : a - b < a - c ↔ c < b :=
+ (h : b ≤ a) : a - b < a - c ↔ c < b :=
 lt_iff_lt_of_le_iff_le $ ha.tsub_le_tsub_iff_left hb h
 
 end add_le_cancellable
@@ -392,22 +389,23 @@ end contra
 
 lemma tsub_add_eq_max : a - b + b = max a b :=
 begin
-  cases le_total a b with h h,
-  { rw [max_eq_right h, tsub_eq_zero_of_le h, zero_add] },
-  { rw [max_eq_left h, tsub_add_cancel_of_le h] }
+ cases le_total a b with h h,
+ { rw [max_eq_right h]; rw [ tsub_eq_zero_of_le h]; rw [ zero_add] },
+ { rw [max_eq_left h]; rw [ tsub_add_cancel_of_le h] }
 end
 
 lemma add_tsub_eq_max : a + (b - a) = max a b :=
-by rw [add_comm, max_comm, tsub_add_eq_max]
+by rw [add_comm]; rw [ max_comm]; rw [ tsub_add_eq_max]
 
 lemma tsub_min : a - min a b = a - b :=
 begin
-  cases le_total a b with h h,
-  { rw [min_eq_left h, tsub_self, tsub_eq_zero_of_le h] },
-  { rw [min_eq_right h] }
+ cases le_total a b with h h,
+ { rw [min_eq_left h]; rw [ tsub_self]; rw [ tsub_eq_zero_of_le h] },
+ { rw [min_eq_right h] }
 end
 
 lemma tsub_add_min : a - b + min a b = a :=
-by { rw [← tsub_min, tsub_add_cancel_of_le], apply min_le_left }
+by { rw [← tsub_min]; rw [ tsub_add_cancel_of_le], apply min_le_left }
 
 end canonically_linear_ordered_add_monoid
+

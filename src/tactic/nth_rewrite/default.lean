@@ -36,13 +36,13 @@ namespace tactic
 /-- Returns the target of the goal when passed `none`,
 otherwise, return the type of `h` in `some h`. -/
 meta def target_or_hyp_type : option expr → tactic expr
-| none     := target
+| none := target
 | (some h) := infer_type h
 
 /-- Replace the target, or a hypothesis, depending on whether `none` or `some h` is given as the
 first argument. -/
 meta def replace_in_state : option expr → expr → expr → tactic unit
-| none     := tactic.replace_target
+| none := tactic.replace_target
 | (some h) := λ e p, tactic.replace_hyp h e p >> skip
 
 open nth_rewrite nth_rewrite.congr nth_rewrite.tracked_rewrite
@@ -51,35 +51,35 @@ open tactic.interactive
 /-- Preprocess a rewrite rule for use in `get_nth_rewrite`. -/
 private meta def unpack_rule (p : rw_rule) : tactic (expr × bool) :=
 do r ← to_expr p.rule tt ff,
-   return (r, p.symm)
+ return (r, p.symm)
 
 /-- Get the `n`th rewrite of rewrite rules `q` in expression `e`,
 or fail if there are not enough such rewrites. -/
 meta def get_nth_rewrite (n : ℕ) (q : rw_rules_t) (e : expr) : tactic tracked_rewrite :=
 do rewrites ← q.rules.mmap $ λ r, unpack_rule r >>= all_rewrites e,
-   rewrites.join.nth n <|> fail "failed: not enough rewrites found"
+ rewrites.join.nth n <|> fail "failed: not enough rewrites found"
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` of (optionally after zooming into) a
 hypothesis or target `h` which is an application of a relation. -/
 meta def get_nth_rewrite_with_zoom
-  (n : ℕ) (q : rw_rules_t) (path : list expr_lens.dir) (h : option expr) : tactic tracked_rewrite :=
+ (n : ℕ) (q : rw_rules_t) (path : list expr_lens.dir) (h : option expr) : tactic tracked_rewrite :=
 do e ← target_or_hyp_type h,
-   (ln, new_e) ← expr_lens.entire.zoom path e,
-   rw ← get_nth_rewrite n q new_e,
-   return ⟨ln.fill rw.exp, rw.proof >>= ln.congr, rw.addr.map $ λ l, path ++ l⟩
+ (ln, new_e) ← expr_lens.entire.zoom path e,
+ rw ← get_nth_rewrite n q new_e,
+ return ⟨ln.fill rw.exp, rw.proof >>= ln.congr, rw.addr.map $ λ l, path ++ l⟩
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)
 at all the locations `loc`. -/
 meta def nth_rewrite_core (path : list expr_lens.dir) (n : parse small_nat) (q : parse rw_rules)
-  (l : parse location) : tactic unit :=
+ (l : parse location) : tactic unit :=
 do let fn := λ h, get_nth_rewrite_with_zoom n q path h
-                    >>= λ rw, (rw.proof >>= replace_in_state h rw.exp),
-   match l with
-   | loc.wildcard := l.try_apply (fn ∘ some) (fn none)
-   | _            := l.apply     (fn ∘ some) (fn none)
-   end,
-   tactic.try (tactic.reflexivity reducible),
-   (returnopt q.end_pos >>= save_info <|> skip)
+ >>= λ rw, (rw.proof >>= replace_in_state h rw.exp),
+ match l with
+ | loc.wildcard := l.try_apply (fn ∘ some) (fn none)
+ | _ := l.apply (fn ∘ some) (fn none)
+ end,
+ tactic.try (tactic.reflexivity reducible),
+ (returnopt q.end_pos >>= save_info <|> skip)
 
 namespace interactive
 
@@ -104,25 +104,26 @@ The core `rewrite` has a `occs` configuration setting intended to achieve a simi
 purpose, but this doesn't really work. (If a rule matches twice, but with different
 values of arguments, the second match will not be identified.) -/
 meta def nth_rewrite
-  (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic unit :=
+ (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic unit :=
 nth_rewrite_core [] n q l
 
 meta def nth_rewrite_lhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
-  tactic unit :=
+ tactic unit :=
 nth_rewrite_core [dir.F, dir.A] n q l
 
 meta def nth_rewrite_rhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
-  tactic unit :=
+ tactic unit :=
 nth_rewrite_core [dir.A] n q l
 
 copy_doc_string nth_rewrite → nth_rewrite_lhs nth_rewrite_rhs
 
 add_tactic_doc
-{ name       := "nth_rewrite / nth_rewrite_lhs / nth_rewrite_rhs",
-  category   := doc_category.tactic,
-  inherit_description_from := ``nth_rewrite,
-  decl_names := [``nth_rewrite, ``nth_rewrite_lhs, ``nth_rewrite_rhs],
-  tags       := ["rewriting"] }
+{ name := "nth_rewrite / nth_rewrite_lhs / nth_rewrite_rhs",
+ category := doc_category.tactic,
+ inherit_description_from := ``nth_rewrite,
+ decl_names := [``nth_rewrite, ``nth_rewrite_lhs, ``nth_rewrite_rhs],
+ tags := ["rewriting"] }
 
 end interactive
 end tactic
+
