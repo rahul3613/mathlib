@@ -22,16 +22,16 @@ underlying spaces are normed.
 
 * `linear_pmap.is_closed`: An unbounded operator is closed iff its graph is closed.
 * `linear_pmap.is_closable`: An unbounded operator is closable iff the closure of its graph is a
-  graph.
+ graph.
 * `linear_pmap.closure`: For a closable unbounded operator `f : linear_pmap R E F` the closure is
-  the smallest closed extension of `f`. If `f` is not closable, then `f.closure` is defined as `f`.
+ the smallest closed extension of `f`. If `f` is not closable, then `f.closure` is defined as `f`.
 * `linear_pmap.has_core`: a submodule contained in the domain is a core if restricting to the core
-  does not lose information about the unbounded operator.
+ does not lose information about the unbounded operator.
 
 ## Main statements
 
 * `linear_pmap.closable_iff_exists_closed_extension`: an unbounded operator is closable iff it has a
-  closed extension.
+ closed extension.
 * `linear_pmap.closable.exists_unique`: there exists a unique closure
 * `linear_pmap.closure_has_core`: the domain of `f` is a core of its closure
 
@@ -74,24 +74,24 @@ lemma is_closed.is_closable {f : E →ₗ.[R] F} (hf : f.is_closed) : f.is_closa
 
 /-- If `g` has a closable extension `f`, then `g` itself is closable. -/
 lemma is_closable.le_is_closable {f g : E →ₗ.[R] F} (hf : f.is_closable) (hfg : g ≤ f) :
-  g.is_closable :=
+ g.is_closable :=
 begin
-  cases hf with f' hf,
-  have : g.graph.topological_closure ≤ f'.graph :=
-  by { rw ←hf, exact submodule.topological_closure_mono (le_graph_of_le hfg) },
-  refine ⟨g.graph.topological_closure.to_linear_pmap _, _⟩,
-  { intros x hx hx',
-    cases x,
-    exact f'.graph_fst_eq_zero_snd (this hx) hx' },
-  rw [submodule.to_linear_pmap_graph_eq],
+ cases hf with f' hf,
+ have : g.graph.topological_closure ≤ f'.graph :=
+ by { rw ←hf, exact submodule.topological_closure_mono (le_graph_of_le hfg) },
+ refine ⟨g.graph.topological_closure.to_linear_pmap _, _⟩,
+ { intros x hx hx',
+ cases x,
+ exact f'.graph_fst_eq_zero_snd (this hx) hx' },
+ rw [submodule.to_linear_pmap_graph_eq],
 end
 
 /-- The closure is unique. -/
 lemma is_closable.exists_unique {f : E →ₗ.[R] F} (hf : f.is_closable) :
-  ∃! (f' : E →ₗ.[R] F), f.graph.topological_closure = f'.graph :=
+ ∃! (f' : E →ₗ.[R] F), f.graph.topological_closure = f'.graph :=
 begin
-  refine exists_unique_of_exists_of_unique hf (λ _ _ hy₁ hy₂, eq_of_eq_graph _),
-  rw [←hy₁, ←hy₂],
+ refine exists_unique_of_exists_of_unique hf (λ _ _ hy₁ hy₂, eq_of_eq_graph _),
+ rw [←hy₁]; rw [ ←hy₂],
 end
 
 open_locale classical
@@ -103,56 +103,56 @@ def closure (f : E →ₗ.[R] F) : E →ₗ.[R] F :=
 if hf : f.is_closable then hf.some else f
 
 lemma closure_def {f : E →ₗ.[R] F} (hf : f.is_closable) :
-  f.closure = hf.some :=
+ f.closure = hf.some :=
 by simp [closure, hf]
 
 lemma closure_def' {f : E →ₗ.[R] F} (hf : ¬f.is_closable) :
-  f.closure = f :=
+ f.closure = f :=
 by simp [closure, hf]
 
 /-- The closure (as a submodule) of the graph is equal to the graph of the closure
-  (as a `linear_pmap`). -/
+ (as a `linear_pmap`). -/
 lemma is_closable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.is_closable) :
-  f.graph.topological_closure = f.closure.graph :=
+ f.graph.topological_closure = f.closure.graph :=
 begin
-  rw closure_def hf,
-  exact hf.some_spec,
+ rw closure_def hf,
+ exact hf.some_spec,
 end
 
 /-- A `linear_pmap` is contained in its closure. -/
 lemma le_closure (f : E →ₗ.[R] F) : f ≤ f.closure :=
 begin
-  by_cases hf : f.is_closable,
-  { refine le_of_le_graph _,
-    rw ←hf.graph_closure_eq_closure_graph,
-    exact (graph f).le_topological_closure },
-  rw closure_def' hf,
+ by_cases hf : f.is_closable,
+ { refine le_of_le_graph _,
+ rw ←hf.graph_closure_eq_closure_graph,
+ exact (graph f).le_topological_closure },
+ rw closure_def' hf,
 end
 
 lemma is_closable.closure_mono {f g : E →ₗ.[R] F} (hg : g.is_closable) (h : f ≤ g) :
-  f.closure ≤ g.closure :=
+ f.closure ≤ g.closure :=
 begin
-  refine le_of_le_graph _,
-  rw ←(hg.le_is_closable h).graph_closure_eq_closure_graph,
-  rw ←hg.graph_closure_eq_closure_graph,
-  exact submodule.topological_closure_mono (le_graph_of_le h),
+ refine le_of_le_graph _,
+ rw ←(hg.le_is_closable h).graph_closure_eq_closure_graph,
+ rw ←hg.graph_closure_eq_closure_graph,
+ exact submodule.topological_closure_mono (le_graph_of_le h),
 end
 
 /-- If `f` is closable, then the closure is closed. -/
 lemma is_closable.closure_is_closed {f : E →ₗ.[R] F} (hf : f.is_closable) :
-  f.closure.is_closed :=
+ f.closure.is_closed :=
 begin
-  rw [is_closed, ←hf.graph_closure_eq_closure_graph],
-  exact f.graph.is_closed_topological_closure,
+ rw [is_closed]; rw [ ←hf.graph_closure_eq_closure_graph],
+ exact f.graph.is_closed_topological_closure,
 end
 
 /-- If `f` is closable, then the closure is closable. -/
 lemma is_closable.closure_is_closable {f : E →ₗ.[R] F} (hf : f.is_closable) :
-  f.closure.is_closable :=
+ f.closure.is_closable :=
 hf.closure_is_closed.is_closable
 
 lemma is_closable_iff_exists_closed_extension {f : E →ₗ.[R] F} : f.is_closable ↔
-  ∃ (g : E →ₗ.[R] F) (hg : g.is_closed), f ≤ g :=
+ ∃ (g : E →ₗ.[R] F) (hg : g.is_closed), f ≤ g :=
 ⟨λ h, ⟨f.closure, h.closure_is_closed, f.le_closure⟩, λ ⟨_, hg, h⟩, hg.is_closable.le_is_closable h⟩
 
 /-! ### The core of a linear operator -/
@@ -170,17 +170,18 @@ lemma has_core_def {f : E →ₗ.[R] F} {S : submodule R E} (h : f.has_core S) :
 Note that we don't require that `f` is closable, due to the definition of the closure. -/
 lemma closure_has_core (f : E →ₗ.[R] F) : f.closure.has_core f.domain :=
 begin
-  refine ⟨f.le_closure.1, _⟩,
-  congr,
-  ext,
-  { simp only [dom_restrict_domain, submodule.mem_inf, and_iff_left_iff_imp],
-    intro hx,
-    exact f.le_closure.1 hx },
-  intros x y hxy,
-  let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩,
-  have hyz : (y : E) = z := by simp,
-  rw f.le_closure.2 hyz,
-  exact dom_restrict_apply (hxy.trans hyz),
+ refine ⟨f.le_closure.1, _⟩,
+ congr,
+ ext,
+ { simp only [dom_restrict_domain, submodule.mem_inf, and_iff_left_iff_imp],
+ intro hx,
+ exact f.le_closure.1 hx },
+ intros x y hxy,
+ let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩,
+ have hyz : (y : E) = z := by simp,
+ rw f.le_closure.2 hyz,
+ exact dom_restrict_apply (hxy.trans hyz),
 end
 
 end linear_pmap
+

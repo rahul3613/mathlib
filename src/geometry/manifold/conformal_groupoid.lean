@@ -28,10 +28,11 @@ variables {X : Type*} [normed_add_comm_group X] [normed_space ℝ X]
 /-- The pregroupoid of conformal maps. -/
 def conformal_pregroupoid : pregroupoid X :=
 { property := λ f u, ∀ x, x ∈ u → conformal_at f x,
-  comp := λ f g u v hf hg hu hv huv x hx, (hg (f x) hx.2).comp x (hf x hx.1),
-  id_mem := λ x hx, conformal_at_id x,
-  locality := λ f u hu h x hx, let ⟨v, h₁, h₂, h₃⟩ := h x hx in h₃ x ⟨hx, h₂⟩,
-  congr := λ f g u hu h hf x hx, (hf x hx).congr hx hu h, }
+ comp := λ f g u v hf hg hu hv huv x hx, (hg (f x) hx.2).comp x (hf x hx.1),
+ id_mem := λ x hx, conformal_at_id x,
+ locality := λ f u hu h x hx, let ⟨v, h₁, h₂, h₃⟩ := h x hx in h₃ x ⟨hx, h₂⟩,
+ congr := λ f g u hu h hf x hx, (hf x hx).congr hx hu h, }
 
 /-- The groupoid of conformal maps. -/
 def conformal_groupoid : structure_groupoid X := conformal_pregroupoid.groupoid
+

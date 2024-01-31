@@ -36,10 +36,10 @@ namespace ring_of_integers
 
 open function_field
 
-noncomputable instance  : fintype (class_group (ring_of_integers Fq F)) :=
+noncomputable instance : fintype (class_group (ring_of_integers Fq F)) :=
 class_group.fintype_of_admissible_of_finite (ratfunc Fq) F
-  (polynomial.card_pow_degree_is_admissible : absolute_value.is_admissible
-    (polynomial.card_pow_degree : absolute_value Fq[X] ℤ))
+ (polynomial.card_pow_degree_is_admissible : absolute_value.is_admissible
+ (polynomial.card_pow_degree : absolute_value Fq[X] ℤ))
 
 end ring_of_integers
 
@@ -48,7 +48,8 @@ noncomputable def class_number : ℕ := fintype.card (class_group (ring_of_integ
 
 /-- The class number of a function field is `1` iff the ring of integers is a PID. -/
 theorem class_number_eq_one_iff :
-  class_number Fq F = 1 ↔ is_principal_ideal_ring (ring_of_integers Fq F) :=
+ class_number Fq F = 1 ↔ is_principal_ideal_ring (ring_of_integers Fq F) :=
 card_class_group_eq_one_iff
 
 end function_field
+

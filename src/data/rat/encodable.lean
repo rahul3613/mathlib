@@ -20,7 +20,8 @@ This is kept separate from `data.rat.defs` in order to minimize imports.
 namespace rat
 
 instance : encodable ℚ := encodable.of_equiv (Σ n : ℤ, {d : ℕ // 0 < d ∧ n.nat_abs.coprime d})
-  ⟨λ ⟨a, b, c, d⟩, ⟨a, b, c, d⟩, λ⟨a, b, c, d⟩, ⟨a, b, c, d⟩,
-   λ ⟨a, b, c, d⟩, rfl, λ⟨a, b, c, d⟩, rfl⟩
+ ⟨λ ⟨a, b, c, d⟩, ⟨a, b, c, d⟩, λ⟨a, b, c, d⟩, ⟨a, b, c, d⟩,
+ λ ⟨a, b, c, d⟩, rfl, λ⟨a, b, c, d⟩, rfl⟩
 
 end rat
+

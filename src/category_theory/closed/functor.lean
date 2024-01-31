@@ -50,7 +50,7 @@ noncomputable theory
 /--
 The Frobenius morphism for an adjunction `L ⊣ F` at `A` is given by the morphism
 
-    L(FA ⨯ B) ⟶ LFA ⨯ LB ⟶ A ⨯ LB
+ L(FA ⨯ B) ⟶ LFA ⨯ LB ⟶ A ⨯ LB
 
 natural in `B`, where the first morphism is the product comparison and the latter uses the counit
 of the adjunction.
@@ -59,7 +59,7 @@ We will show that if `C` and `D` are cartesian closed, then this morphism is an 
 `A` iff `F` is a cartesian closed functor, i.e. it preserves exponentials.
 -/
 def frobenius_morphism (h : L ⊣ F) (A : C) :
-  prod.functor.obj (F.obj A) ⋙ L ⟶ L ⋙ prod.functor.obj A :=
+ prod.functor.obj (F.obj A) ⋙ L ⟶ L ⋙ prod.functor.obj A :=
 prod_comparison_nat_trans L (F.obj A) ≫ whisker_left _ (prod.functor.map (h.counit.app _))
 
 /--
@@ -67,13 +67,13 @@ If `F` is full and faithful and has a left adjoint `L` which preserves binary pr
 Frobenius morphism is an isomorphism.
 -/
 instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : C)
-  [preserves_limits_of_shape (discrete walking_pair) L] [full F] [faithful F] :
+ [preserves_limits_of_shape (discrete walking_pair) L] [full F] [faithful F] :
 is_iso (frobenius_morphism F h A) :=
 begin
-  apply nat_iso.is_iso_of_is_iso_app _,
-  intro B,
-  dsimp [frobenius_morphism],
-  apply_instance,
+ apply nat_iso.is_iso_of_is_iso_app _,
+ intro B,
+ dsimp [frobenius_morphism],
+ apply_instance,
 end
 
 variables [cartesian_closed C] [cartesian_closed D]
@@ -84,45 +84,42 @@ The exponential comparison map.
 `F` is a cartesian closed functor if this is an iso for all `A`.
 -/
 def exp_comparison (A : C) :
-  exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
+ exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
 transfer_nat_trans (exp.adjunction A) (exp.adjunction (F.obj A)) (prod_comparison_nat_iso F A).inv
 
 lemma exp_comparison_ev (A B : C) :
-  limits.prod.map (𝟙 (F.obj A)) ((exp_comparison F A).app B) ≫ (exp.ev (F.obj A)).app (F.obj B) =
-    inv (prod_comparison F _ _) ≫ F.map ((exp.ev _).app _) :=
+ limits.prod.map (𝟙 (F.obj A)) ((exp_comparison F A).app B) ≫ (exp.ev (F.obj A)).app (F.obj B) =
+ inv (prod_comparison F _ _) ≫ F.map ((exp.ev _).app _) :=
 begin
-  convert transfer_nat_trans_counit _ _ (prod_comparison_nat_iso F A).inv B,
-  ext,
-  simp,
+ convert transfer_nat_trans_counit _ _ (prod_comparison_nat_iso F A).inv B,
+ ext,
+ simp,
 end
 
 lemma coev_exp_comparison (A B : C) :
-  F.map ((exp.coev A).app B) ≫ (exp_comparison F A).app (A ⨯ B) =
-      (exp.coev _).app (F.obj B) ≫ (exp (F.obj A)).map (inv (prod_comparison F A B)) :=
+ F.map ((exp.coev A).app B) ≫ (exp_comparison F A).app (A ⨯ B) =
+ (exp.coev _).app (F.obj B) ≫ (exp (F.obj A)).map (inv (prod_comparison F A B)) :=
 begin
-  convert unit_transfer_nat_trans _ _ (prod_comparison_nat_iso F A).inv B,
-  ext,
-  dsimp,
-  simp,
+ convert unit_transfer_nat_trans _ _ (prod_comparison_nat_iso F A).inv B,
+ ext,
+ dsimp,
+ simp,
 end
 
 lemma uncurry_exp_comparison (A B : C) :
-  cartesian_closed.uncurry ((exp_comparison F A).app B) =
-    inv (prod_comparison F _ _) ≫ F.map ((exp.ev _).app _) :=
-by rw [uncurry_eq, exp_comparison_ev]
+ cartesian_closed.uncurry ((exp_comparison F A).app B) =
+ inv (prod_comparison F _ _) ≫ F.map ((exp.ev _).app _) :=
+by rw [uncurry_eq]; rw [ exp_comparison_ev]
 
 /-- The exponential comparison map is natural in `A`. -/
 lemma exp_comparison_whisker_left {A A' : C} (f : A' ⟶ A) :
-  exp_comparison F A ≫ whisker_left _ (pre (F.map f)) =
-  whisker_right (pre f) _ ≫ exp_comparison F A' :=
+ exp_comparison F A ≫ whisker_left _ (pre (F.map f)) =
+ whisker_right (pre f) _ ≫ exp_comparison F A' :=
 begin
-  ext B,
-  dsimp,
-  apply uncurry_injective,
-  rw [uncurry_natural_left, uncurry_natural_left, uncurry_exp_comparison, uncurry_pre,
-    prod.map_swap_assoc, ←F.map_id, exp_comparison_ev, ←F.map_id,
-    ←prod_comparison_inv_natural_assoc, ←prod_comparison_inv_natural_assoc, ←F.map_comp,
-    ←F.map_comp, prod_map_pre_app_comp_ev],
+ ext B,
+ dsimp,
+ apply uncurry_injective,
+ rw [uncurry_natural_left]; rw [ uncurry_natural_left]; rw [ uncurry_exp_comparison]; rw [ uncurry_pre]; rw [ prod.map_swap_assoc]; rw [ ←F.map_id]; rw [ exp_comparison_ev]; rw [ ←F.map_id]; rw [ ←prod_comparison_inv_natural_assoc]; rw [ ←prod_comparison_inv_natural_assoc]; rw [ ←F.map_comp]; rw [ ←F.map_comp]; rw [ prod_map_pre_app_comp_ev],
 end
 
 /--
@@ -135,37 +132,33 @@ class cartesian_closed_functor :=
 attribute [instance] cartesian_closed_functor.comparison_iso
 
 lemma frobenius_morphism_mate (h : L ⊣ F) (A : C) :
-  transfer_nat_trans_self
-    (h.comp (exp.adjunction A))
-    ((exp.adjunction (F.obj A)).comp h)
-    (frobenius_morphism F h A) = exp_comparison F A :=
-  begin
-    rw ←equiv.eq_symm_apply,
-    ext B : 2,
-    dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp],
-    simp only [id_comp, comp_id],
-    rw [←L.map_comp_assoc, prod.map_id_comp, assoc, exp_comparison_ev, prod.map_id_comp, assoc,
-      ← F.map_id, ← prod_comparison_inv_natural_assoc, ← F.map_comp, exp.ev_coev,
-      F.map_id (A ⨯ L.obj B), comp_id],
-    apply prod.hom_ext,
-    { rw [assoc, assoc, ←h.counit_naturality, ←L.map_comp_assoc, assoc,
-        inv_prod_comparison_map_fst],
-      simp },
-    { rw [assoc, assoc, ←h.counit_naturality, ←L.map_comp_assoc, assoc,
-        inv_prod_comparison_map_snd],
-      simp },
-  end
+ transfer_nat_trans_self
+ (h.comp (exp.adjunction A))
+ ((exp.adjunction (F.obj A)).comp h)
+ (frobenius_morphism F h A) = exp_comparison F A :=
+ begin
+ rw ←equiv.eq_symm_apply,
+ ext B : 2,
+ dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp],
+ simp only [id_comp, comp_id],
+ rw [←L.map_comp_assoc]; rw [ prod.map_id_comp]; rw [ assoc]; rw [ exp_comparison_ev]; rw [ prod.map_id_comp]; rw [ assoc]; rw [ ← F.map_id]; rw [ ← prod_comparison_inv_natural_assoc]; rw [ ← F.map_comp]; rw [ exp.ev_coev]; rw [ F.map_id (A ⨯ L.obj B)]; rw [ comp_id],
+ apply prod.hom_ext,
+ { rw [assoc]; rw [ assoc]; rw [ ←h.counit_naturality]; rw [ ←L.map_comp_assoc]; rw [ assoc]; rw [ inv_prod_comparison_map_fst],
+ simp },
+ { rw [assoc]; rw [ assoc]; rw [ ←h.counit_naturality]; rw [ ←L.map_comp_assoc]; rw [ assoc]; rw [ inv_prod_comparison_map_snd],
+ simp },
+ end
 
 /--
 If the exponential comparison transformation (at `A`) is an isomorphism, then the Frobenius morphism
 at `A` is an isomorphism.
 -/
 lemma frobenius_morphism_iso_of_exp_comparison_iso (h : L ⊣ F) (A : C)
-  [i : is_iso (exp_comparison F A)] :
-  is_iso (frobenius_morphism F h A) :=
+ [i : is_iso (exp_comparison F A)] :
+ is_iso (frobenius_morphism F h A) :=
 begin
-  rw ←frobenius_morphism_mate F h at i,
-  exact @@transfer_nat_trans_self_of_iso _ _ _ _ _ i,
+ rw ←frobenius_morphism_mate F h at i,
+ exact @@transfer_nat_trans_self_of_iso _ _ _ _ _ i,
 end
 
 /--
@@ -173,8 +166,8 @@ If the Frobenius morphism at `A` is an isomorphism, then the exponential compari
 (at `A`) is an isomorphism.
 -/
 lemma exp_comparison_iso_of_frobenius_morphism_iso (h : L ⊣ F) (A : C)
-  [i : is_iso (frobenius_morphism F h A)] :
-  is_iso (exp_comparison F A) :=
+ [i : is_iso (frobenius_morphism F h A)] :
+ is_iso (exp_comparison F A) :=
 by { rw ← frobenius_morphism_mate F h, apply_instance }
 
 /--
@@ -185,8 +178,9 @@ TODO: Show the converse, that if `F` is cartesian closed and its left adjoint pr
 products, then it is full and faithful.
 -/
 def cartesian_closed_functor_of_left_adjoint_preserves_binary_products (h : L ⊣ F)
-  [full F] [faithful F] [preserves_limits_of_shape (discrete walking_pair) L] :
-  cartesian_closed_functor F :=
+ [full F] [faithful F] [preserves_limits_of_shape (discrete walking_pair) L] :
+ cartesian_closed_functor F :=
 { comparison_iso := λ A, exp_comparison_iso_of_frobenius_morphism_iso F h _ }
 
 end category_theory
+

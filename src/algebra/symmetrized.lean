@@ -108,13 +108,13 @@ instance (R : Type*) [has_smul R α] : has_smul R αˢʸᵐ :=
 @[simp] lemma unsym_neg [has_neg α] (a : αˢʸᵐ) : unsym (-a) = -unsym a := rfl
 
 lemma mul_def [has_add α] [has_mul α] [has_one α] [invertible (2 : α)] (a b : αˢʸᵐ) :
-  a * b = sym (⅟2*(unsym a * unsym b + unsym b * unsym a)) := by refl
+ a * b = sym (⅟2*(unsym a * unsym b + unsym b * unsym a)) := by refl
 
 lemma unsym_mul [has_mul α] [has_add α] [has_one α] [invertible (2 : α)] (a b : αˢʸᵐ) :
-  unsym (a * b) = ⅟2*(unsym a * unsym b + unsym b * unsym a) := by refl
+ unsym (a * b) = ⅟2*(unsym a * unsym b + unsym b * unsym a) := by refl
 
 lemma sym_mul_sym [has_mul α] [has_add α] [has_one α] [invertible (2 : α)] (a b : α) :
-  sym a * sym b = sym (⅟2*(a * b + b * a)) :=
+ sym a * sym b = sym (⅟2*(a * b + b * a)) :=
 rfl
 
 @[simp, to_additive] lemma sym_inv [has_inv α] (a : α) : sym (a⁻¹) = (sym a)⁻¹ := rfl
@@ -122,7 +122,7 @@ rfl
 
 @[simp] lemma sym_smul {R : Type*} [has_smul R α] (c : R) (a : α) : sym (c • a) = c • sym a := rfl
 @[simp] lemma unsym_smul {R : Type*} [has_smul R α] (c : R) (a : αˢʸᵐ) :
-  unsym (c • a) = c • unsym a := rfl
+ unsym (c • a) = c • unsym a := rfl
 
 @[simp, to_additive] lemma unsym_eq_one_iff [has_one α] (a : αˢʸᵐ) : a.unsym = 1 ↔ a = 1 :=
 unsym_injective.eq_iff' rfl
@@ -144,7 +144,7 @@ unsym_injective.add_monoid _ unsym_zero unsym_add (λ _ _, rfl)
 
 instance [add_group α] : add_group (αˢʸᵐ) :=
 unsym_injective.add_group _ unsym_zero
-  unsym_add unsym_neg unsym_sub (λ _ _, rfl) (λ _ _, rfl)
+ unsym_add unsym_neg unsym_sub (λ _ _, rfl) (λ _ _, rfl)
 
 instance [add_comm_monoid α] : add_comm_monoid (αˢʸᵐ) :=
 { ..sym_alg.add_comm_semigroup, ..sym_alg.add_monoid }
@@ -156,87 +156,80 @@ instance {R : Type*} [semiring R] [add_comm_monoid α] [module R α] : module R 
 function.injective.module R ⟨unsym, unsym_zero, unsym_add⟩ unsym_injective unsym_smul
 
 instance [has_mul α] [has_add α] [has_one α] [invertible (2 : α)] (a : α) [invertible a] :
-  invertible (sym a) :=
+ invertible (sym a) :=
 { inv_of := sym (⅟a),
-  inv_of_mul_self := begin
-    rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ←bit0, inv_of_mul_self, sym_one],
-  end,
-  mul_inv_of_self := begin
-    rw [sym_mul_sym, mul_inv_of_self, inv_of_mul_self, ←bit0, inv_of_mul_self, sym_one],
-  end }
+ inv_of_mul_self := begin
+ rw [sym_mul_sym]; rw [ mul_inv_of_self]; rw [ inv_of_mul_self]; rw [ ←bit0]; rw [ inv_of_mul_self]; rw [ sym_one],
+ end,
+ mul_inv_of_self := begin
+ rw [sym_mul_sym]; rw [ mul_inv_of_self]; rw [ inv_of_mul_self]; rw [ ←bit0]; rw [ inv_of_mul_self]; rw [ sym_one],
+ end }
 
 @[simp] lemma inv_of_sym [has_mul α] [has_add α] [has_one α] [invertible (2 : α)] (a : α)
-  [invertible a] : ⅟(sym a) = sym (⅟a) := rfl
+ [invertible a] : ⅟(sym a) = sym (⅟a) := rfl
 
 instance [semiring α] [invertible (2 : α)] : non_assoc_semiring (αˢʸᵐ) :=
 { one := 1,
-  mul := (*),
-  zero := (0),
-  zero_mul := λ _, by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero],
-  mul_zero := λ _, by rw [mul_def, unsym_zero, zero_mul, mul_zero, add_zero, mul_zero, sym_zero],
-  mul_one := λ _, by rw [mul_def, unsym_one, mul_one, one_mul, ←two_mul, inv_of_mul_self_assoc,
-                         sym_unsym],
-  one_mul := λ _, by rw [mul_def, unsym_one, mul_one, one_mul, ←two_mul, inv_of_mul_self_assoc,
-                         sym_unsym],
-  left_distrib := λ a b c, match a, b, c with
-    | sym a, sym b, sym c := begin
-      rw [sym_mul_sym, sym_mul_sym, ←sym_add, sym_mul_sym, ←sym_add, mul_add a, add_mul _ _ a,
-        add_add_add_comm, mul_add],
-    end
-  end,
-  right_distrib := λ a b c, match a, b, c with
-    | sym a, sym b, sym c := begin
-      rw [sym_mul_sym, sym_mul_sym, ←sym_add, sym_mul_sym, ←sym_add, mul_add c, add_mul _ _ c,
-        add_add_add_comm, mul_add],
-    end
-  end,
-  ..sym_alg.add_comm_monoid, }
+ mul := (*),
+ zero := (0),
+ zero_mul := λ _, by rw [mul_def]; rw [ unsym_zero]; rw [ zero_mul]; rw [ mul_zero]; rw [ add_zero]; rw [ mul_zero]; rw [ sym_zero],
+ mul_zero := λ _, by rw [mul_def]; rw [ unsym_zero]; rw [ zero_mul]; rw [ mul_zero]; rw [ add_zero]; rw [ mul_zero]; rw [ sym_zero],
+ mul_one := λ _, by rw [mul_def]; rw [ unsym_one]; rw [ mul_one]; rw [ one_mul]; rw [ ←two_mul]; rw [ inv_of_mul_self_assoc]; rw [ sym_unsym],
+ one_mul := λ _, by rw [mul_def]; rw [ unsym_one]; rw [ mul_one]; rw [ one_mul]; rw [ ←two_mul]; rw [ inv_of_mul_self_assoc]; rw [ sym_unsym],
+ left_distrib := λ a b c, match a, b, c with
+ | sym a, sym b, sym c := begin
+ rw [sym_mul_sym]; rw [ sym_mul_sym]; rw [ ←sym_add]; rw [ sym_mul_sym]; rw [ ←sym_add]; rw [ mul_add a]; rw [ add_mul _ _ a]; rw [ add_add_add_comm]; rw [ mul_add],
+ end
+ end,
+ right_distrib := λ a b c, match a, b, c with
+ | sym a, sym b, sym c := begin
+ rw [sym_mul_sym]; rw [ sym_mul_sym]; rw [ ←sym_add]; rw [ sym_mul_sym]; rw [ ←sym_add]; rw [ mul_add c]; rw [ add_mul _ _ c]; rw [ add_add_add_comm]; rw [ mul_add],
+ end
+ end,
+ ..sym_alg.add_comm_monoid, }
 
 /-- The symmetrization of a real (unital, associative) algebra is a non-associative ring. -/
 instance [ring α] [invertible (2 : α)] : non_assoc_ring (αˢʸᵐ) :=
 { ..sym_alg.non_assoc_semiring,
-  ..sym_alg.add_comm_group, }
+ ..sym_alg.add_comm_group, }
 
 /-! The squaring operation coincides for both multiplications -/
 
 lemma unsym_mul_self [semiring α] [invertible (2 : α)] (a : αˢʸᵐ) :
-  unsym (a*a) = unsym a * unsym a :=
-by rw [mul_def, unsym_sym, ←two_mul, inv_of_mul_self_assoc]
+ unsym (a*a) = unsym a * unsym a :=
+by rw [mul_def]; rw [ unsym_sym]; rw [ ←two_mul]; rw [ inv_of_mul_self_assoc]
 
 lemma sym_mul_self [semiring α] [invertible (2 : α)] (a : α) : sym (a*a) = sym a * sym a :=
-by rw [sym_mul_sym, ←two_mul, inv_of_mul_self_assoc]
+by rw [sym_mul_sym]; rw [ ←two_mul]; rw [ inv_of_mul_self_assoc]
 
 lemma mul_comm [has_mul α] [add_comm_semigroup α] [has_one α] [invertible (2 : α)] (a b : αˢʸᵐ) :
-  a * b = b * a :=
-by rw [mul_def, mul_def, add_comm]
+ a * b = b * a :=
+by rw [mul_def]; rw [ mul_def]; rw [ add_comm]
 
 
 instance [ring α] [invertible (2 : α)] : is_comm_jordan αˢʸᵐ :=
 { mul_comm := sym_alg.mul_comm,
-  lmul_comm_rmul_rmul := λ a b, begin
-    -- Rearrange LHS
-    have commute_half_left := λ a : α, (commute.one_left a).bit0_left.inv_of_left.eq,
-    rw [mul_def, mul_def a b, unsym_sym, ← mul_assoc, ← commute_half_left (unsym (a*a)), mul_assoc,
-      mul_assoc, ← mul_add, ← mul_assoc, add_mul, mul_add (unsym (a * a)), ← add_assoc, ← mul_assoc,
-      ← mul_assoc],
+ lmul_comm_rmul_rmul := λ a b, begin
+ -- Rearrange LHS
+ have commute_half_left := λ a : α, (commute.one_left a).bit0_left.inv_of_left.eq,
+ rw [mul_def]; rw [ mul_def a b]; rw [ unsym_sym]; rw [ ← mul_assoc]; rw [ ← commute_half_left (unsym (a*a))]; rw [ mul_assoc]; rw [ mul_assoc]; rw [ ← mul_add]; rw [ ← mul_assoc]; rw [ add_mul]; rw [ mul_add (unsym (a * a))]; rw [ ← add_assoc]; rw [ ← mul_assoc]; rw [ ← mul_assoc],
 
-    -- Rearrange RHS
-    nth_rewrite_rhs 0 [mul_def],
-    nth_rewrite_rhs 0 [mul_def],
-    nth_rewrite_rhs 2 [mul_def],
+ -- Rearrange RHS
+ nth_rewrite_rhs 0 [mul_def],
+ nth_rewrite_rhs 0 [mul_def],
+ nth_rewrite_rhs 2 [mul_def],
 
-    rw [unsym_sym, sym_inj, ← mul_assoc, ← commute_half_left (unsym a), mul_assoc (⅟2) (unsym a),
-      mul_assoc (⅟2) _ (unsym a), ← mul_add, ← mul_assoc],
+ rw [unsym_sym]; rw [ sym_inj]; rw [ ← mul_assoc]; rw [ ← commute_half_left (unsym a)]; rw [ mul_assoc (⅟2) (unsym a)]; rw [ mul_assoc (⅟2) _ (unsym a)]; rw [ ← mul_add]; rw [ ← mul_assoc],
 
-    nth_rewrite_rhs 0 mul_add (unsym a),
-    rw [add_mul, ← add_assoc, ← mul_assoc, ← mul_assoc],
+ nth_rewrite_rhs 0 mul_add (unsym a),
+ rw [add_mul]; rw [ ← add_assoc]; rw [ ← mul_assoc]; rw [ ← mul_assoc],
 
-    rw unsym_mul_self,
-    rw [← mul_assoc, ← mul_assoc, ← mul_assoc, ← mul_assoc, ← sub_eq_zero, ← mul_sub],
+ rw unsym_mul_self,
+ rw [← mul_assoc]; rw [ ← mul_assoc]; rw [ ← mul_assoc]; rw [ ← mul_assoc]; rw [ ← sub_eq_zero]; rw [ ← mul_sub],
 
-    convert mul_zero (⅟(2:α) * ⅟(2:α)),
-    rw [add_sub_add_right_eq_sub, add_assoc, add_assoc, add_sub_add_left_eq_sub, add_comm,
-      add_sub_add_right_eq_sub, sub_eq_zero],
-  end }
+ convert mul_zero (⅟(2:α) * ⅟(2:α)),
+ rw [add_sub_add_right_eq_sub]; rw [ add_assoc]; rw [ add_assoc]; rw [ add_sub_add_left_eq_sub]; rw [ add_comm]; rw [ add_sub_add_right_eq_sub]; rw [ sub_eq_zero],
+ end }
 
 end sym_alg
+

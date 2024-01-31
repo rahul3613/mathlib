@@ -38,10 +38,10 @@ local notation (name := complex.abs) `|` x `|` := complex.abs x
 rotation. -/
 def rotation : circle →* (ℂ ≃ₗᵢ[ℝ] ℂ) :=
 { to_fun := λ a,
-  { norm_map' := λ x, show |a * x| = |x|, by rw [map_mul, abs_coe_circle, one_mul],
-    ..distrib_mul_action.to_linear_equiv ℝ ℂ a },
-  map_one' := linear_isometry_equiv.ext $ one_smul _,
-  map_mul' := λ _ _, linear_isometry_equiv.ext $ mul_smul _ _ }
+ { norm_map' := λ x, show |a * x| = |x|, by rw [map_mul]; rw [ abs_coe_circle]; rw [ one_mul],
+ ..distrib_mul_action.to_linear_equiv ℝ ℂ a },
+ map_one' := linear_isometry_equiv.ext $ one_smul _,
+ map_mul' := λ _ _, linear_isometry_equiv.ext $ mul_smul _ _ }
 
 @[simp] lemma rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z := rfl
 
@@ -49,17 +49,17 @@ def rotation : circle →* (ℂ ≃ₗᵢ[ℝ] ℂ) :=
 linear_isometry_equiv.ext $ λ x, rfl
 
 @[simp] lemma rotation_trans (a b : circle) :
-  (rotation a).trans (rotation b) = rotation (b * a) :=
+ (rotation a).trans (rotation b) = rotation (b * a) :=
 by { ext1, simp }
 
 lemma rotation_ne_conj_lie (a : circle) : rotation a ≠ conj_lie :=
 begin
-  intro h,
-  have h1 : rotation a 1 = conj 1 := linear_isometry_equiv.congr_fun h 1,
-  have hI : rotation a I = conj I := linear_isometry_equiv.congr_fun h I,
-  rw [rotation_apply, ring_hom.map_one, mul_one] at h1,
-  rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI,
-  exact one_ne_zero hI,
+ intro h,
+ have h1 : rotation a 1 = conj 1 := linear_isometry_equiv.congr_fun h 1,
+ have hI : rotation a I = conj I := linear_isometry_equiv.congr_fun h I,
+ rw [rotation_apply] at h1; rw [ ring_hom.map_one] at h1; rw [ mul_one] at h1,
+ rw [rotation_apply] at hI; rw [ conj_I] at hI; rw [ ← neg_one_mul] at hI; rw [ mul_left_inj' I_ne_zero] at hI; rw [ h1] at hI; rw [ eq_neg_self_iff] at hI,
+ exact one_ne_zero hI,
 end
 
 /-- Takes an element of `ℂ ≃ₗᵢ[ℝ] ℂ` and checks if it is a rotation, returns an element of the
@@ -76,91 +76,91 @@ lemma rotation_injective : function.injective rotation :=
 function.left_inverse.injective rotation_of_rotation
 
 lemma linear_isometry.re_apply_eq_re_of_add_conj_eq (f : ℂ →ₗᵢ[ℝ] ℂ)
-  (h₃ : ∀ z, z + conj z = f z + conj (f z)) (z : ℂ) : (f z).re = z.re :=
+ (h₃ : ∀ z, z + conj z = f z + conj (f z)) (z : ℂ) : (f z).re = z.re :=
 by simpa [ext_iff, add_re, add_im, conj_re, conj_im, ←two_mul,
-         (show (2 : ℝ) ≠ 0, by simp [two_ne_zero])] using (h₃ z).symm
+ (show (2 : ℝ) ≠ 0, by simp [two_ne_zero])] using (h₃ z).symm
 
 lemma linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ}
-  (h₂ : ∀ z, (f z).re = z.re) (z : ℂ) :
-  (f z).im = z.im ∨ (f z).im = -z.im :=
+ (h₂ : ∀ z, (f z).re = z.re) (z : ℂ) :
+ (f z).im = z.im ∨ (f z).im = -z.im :=
 begin
-  have h₁ := f.norm_map z,
-  simp only [complex.abs_def, norm_eq_abs] at h₁,
-  rwa [real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _), norm_sq_apply (f z), norm_sq_apply z,
-    h₂, add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁,
+ have h₁ := f.norm_map z,
+ simp only [complex.abs_def, norm_eq_abs] at h₁,
+ rwa [real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _)] at h₁; rwa [ norm_sq_apply (f z)] at h₁; rwa [ norm_sq_apply z] at h₁; rwa [ h₂] at h₁; rwa [ add_left_cancel_iff] at h₁; rwa [ mul_self_eq_mul_self_iff] at h₁,
 end
 
 lemma linear_isometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) :
-  z + conj z = f z + conj (f z) :=
+ z + conj z = f z + conj (f z) :=
 begin
-  have : ‖f z - 1‖ = ‖z - 1‖ := by rw [← f.norm_map (z - 1), f.map_sub, h],
-  apply_fun λ x, x ^ 2 at this,
-  simp only [norm_eq_abs, ←norm_sq_eq_abs] at this,
-  rw [←of_real_inj, ←mul_conj, ←mul_conj] at this,
-  rw [ring_hom.map_sub, ring_hom.map_sub] at this,
-  simp only [sub_mul, mul_sub, one_mul, mul_one] at this,
-  rw [mul_conj, norm_sq_eq_abs, ←norm_eq_abs, linear_isometry.norm_map] at this,
-  rw [mul_conj, norm_sq_eq_abs, ←norm_eq_abs] at this,
-  simp only [sub_sub, sub_right_inj, mul_one, of_real_pow, ring_hom.map_one, norm_eq_abs] at this,
-  simp only [add_sub, sub_left_inj] at this,
-  rw [add_comm, ←this, add_comm],
+ have : ‖f z - 1‖ = ‖z - 1‖ := by rw [← f.norm_map (z - 1)]; rw [ f.map_sub]; rw [ h],
+ apply_fun λ x, x ^ 2 at this,
+ simp only [norm_eq_abs, ←norm_sq_eq_abs] at this,
+ rw [←of_real_inj] at this; rw [ ←mul_conj] at this; rw [ ←mul_conj] at this,
+ rw [ring_hom.map_sub] at this; rw [ ring_hom.map_sub] at this,
+ simp only [sub_mul, mul_sub, one_mul, mul_one] at this,
+ rw [mul_conj] at this; rw [ norm_sq_eq_abs] at this; rw [ ←norm_eq_abs] at this; rw [ linear_isometry.norm_map] at this,
+ rw [mul_conj] at this; rw [ norm_sq_eq_abs] at this; rw [ ←norm_eq_abs] at this,
+ simp only [sub_sub, sub_right_inj, mul_one, of_real_pow, ring_hom.map_one, norm_eq_abs] at this,
+ simp only [add_sub, sub_left_inj] at this,
+ rw [add_comm]; rw [ ←this]; rw [ add_comm],
 end
 
 lemma linear_isometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : (f z).re = z.re :=
 begin
-  apply linear_isometry.re_apply_eq_re_of_add_conj_eq,
-  intro z,
-  apply linear_isometry.im_apply_eq_im h,
+ apply linear_isometry.re_apply_eq_re_of_add_conj_eq,
+ intro z,
+ apply linear_isometry.im_apply_eq_im h,
 end
 
 lemma linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
-  f = linear_isometry_equiv.refl ℝ ℂ ∨ f = conj_lie :=
+ f = linear_isometry_equiv.refl ℝ ℂ ∨ f = conj_lie :=
 begin
-  have h0 : f I = I ∨ f I = -I,
-  { have : |f I| = 1 := by simpa using f.norm_map complex.I,
-    simp only [ext_iff, ←and_or_distrib_left, neg_re, I_re, neg_im, neg_zero],
-    split,
-    { rw ←I_re,
-      exact @linear_isometry.re_apply_eq_re f.to_linear_isometry h I, },
-    { apply @linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry,
-      intro z, rw @linear_isometry.re_apply_eq_re f.to_linear_isometry h } },
-  refine h0.imp (λ h' : f I = I, _) (λ h' : f I = -I, _);
-  { apply linear_isometry_equiv.to_linear_equiv_injective,
-    apply complex.basis_one_I.ext',
-    intros i,
-    fin_cases i; simp [h, h'] }
+ have h0 : f I = I ∨ f I = -I,
+ { have : |f I| = 1 := by simpa using f.norm_map complex.I,
+ simp only [ext_iff, ←and_or_distrib_left, neg_re, I_re, neg_im, neg_zero],
+ split,
+ { rw ←I_re,
+ exact @linear_isometry.re_apply_eq_re f.to_linear_isometry h I, },
+ { apply @linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry,
+ intro z, rw @linear_isometry.re_apply_eq_re f.to_linear_isometry h } },
+ refine h0.imp (λ h' : f I = I, _) (λ h' : f I = -I, _);
+ { apply linear_isometry_equiv.to_linear_equiv_injective,
+ apply complex.basis_one_I.ext',
+ intros i,
+ fin_cases i; simp [h, h'] }
 end
 
 lemma linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) :
-  ∃ a : circle, f = rotation a ∨ f = conj_lie.trans (rotation a) :=
+ ∃ a : circle, f = rotation a ∨ f = conj_lie.trans (rotation a) :=
 begin
-  let a : circle := ⟨f 1, by simpa using f.norm_map 1⟩,
-  use a,
-  have : (f.trans (rotation a).symm) 1 = 1,
-  { simpa using rotation_apply a⁻¹ (f 1) },
-  refine (linear_isometry_complex_aux this).imp (λ h₁, _) (λ h₂, _),
-  { simpa using eq_mul_of_inv_mul_eq h₁ },
-  { exact eq_mul_of_inv_mul_eq h₂ }
+ let a : circle := ⟨f 1, by simpa using f.norm_map 1⟩,
+ use a,
+ have : (f.trans (rotation a).symm) 1 = 1,
+ { simpa using rotation_apply a⁻¹ (f 1) },
+ refine (linear_isometry_complex_aux this).imp (λ h₁, _) (λ h₂, _),
+ { simpa using eq_mul_of_inv_mul_eq h₁ },
+ { exact eq_mul_of_inv_mul_eq h₂ }
 end
 
 /-- The matrix representation of `rotation a` is equal to the conformal matrix
 `!![re a, -im a; im a, re a]`. -/
 lemma to_matrix_rotation (a : circle) :
-  linear_map.to_matrix basis_one_I basis_one_I (rotation a).to_linear_equiv =
-    matrix.plane_conformal_matrix (re a) (im a) (by simp [pow_two, ←norm_sq_apply]) :=
+ linear_map.to_matrix basis_one_I basis_one_I (rotation a).to_linear_equiv =
+ matrix.plane_conformal_matrix (re a) (im a) (by simp [pow_two, ←norm_sq_apply]) :=
 begin
-  ext i j,
-  simp [linear_map.to_matrix_apply],
-  fin_cases i; fin_cases j; simp
+ ext i j,
+ simp [linear_map.to_matrix_apply],
+ fin_cases i; fin_cases j; simp
 end
 
 /-- The determinant of `rotation` (as a linear map) is equal to `1`. -/
 @[simp] lemma det_rotation (a : circle) : ((rotation a).to_linear_equiv : ℂ →ₗ[ℝ] ℂ).det = 1 :=
 begin
-  rw [←linear_map.det_to_matrix basis_one_I, to_matrix_rotation, matrix.det_fin_two],
-  simp [←norm_sq_apply]
+ rw [←linear_map.det_to_matrix basis_one_I]; rw [ to_matrix_rotation]; rw [ matrix.det_fin_two],
+ simp [←norm_sq_apply]
 end
 
 /-- The determinant of `rotation` (as a linear equiv) is equal to `1`. -/
 @[simp] lemma linear_equiv_det_rotation (a : circle) : (rotation a).to_linear_equiv.det = 1 :=
-by rw [←units.eq_iff, linear_equiv.coe_det, det_rotation, units.coe_one]
+by rw [←units.eq_iff]; rw [ linear_equiv.coe_det]; rw [ det_rotation]; rw [ units.coe_one]
+

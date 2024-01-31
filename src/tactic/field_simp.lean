@@ -18,11 +18,11 @@ namespace tactic
 /-- Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
 a numeral. -/
 meta def field_simp.ne_zero : tactic unit := do
-  goal ← tactic.target,
-  match goal with
-  | `(%%e ≠ 0) := assumption <|> do n ← e.to_rat, `[norm_num1]
-  | _ := tactic.fail "goal should be of the form `x ≠ 0`"
-  end
+ goal ← tactic.target,
+ match goal with
+ | `(%%e ≠ 0) := assumption <|> do n ← e.to_rat, `[norm_num1]
+ | _ := tactic.fail "goal should be of the form `x ≠ 0`"
+ end
 
 namespace interactive
 setup_tactic_parser
@@ -36,7 +36,7 @@ iterating the following steps:
 - write an inverse as a division
 - in any product, move the division to the right
 - if there are several divisions in a product, group them together at the end and write them as a
-  single division
+ single division
 - reduce a sum to a common denominator
 
 If the goal is an equality, this simpset will also clear the denominators, so that the proof
@@ -69,10 +69,10 @@ creating two goals instead of a disjunction.
 For example,
 ```lean
 example (a b c d x y : ℂ) (hx : x ≠ 0) (hy : y ≠ 0) :
-  a + b / x + c / x^2 + d / x^3 = a + x⁻¹ * (y * b / y + (d / x + c) / x) :=
+ a + b / x + c / x^2 + d / x^3 = a + x⁻¹ * (y * b / y + (d / x + c) / x) :=
 begin
-  field_simp,
-  ring
+ field_simp,
+ ring
 end
 ```
 
@@ -90,19 +90,20 @@ The tactics are not related: `cancel_denoms` will only handle numeric denominato
 entirely remove (numeric) division from the expression by multiplying by a factor.
 -/
 meta def field_simp (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-  (attr_names : parse with_ident_list)
-  (locat : parse location)
-  (cfg : simp_config_ext := {discharger := field_simp.ne_zero}) : tactic unit :=
+ (attr_names : parse with_ident_list)
+ (locat : parse location)
+ (cfg : simp_config_ext := {discharger := field_simp.ne_zero}) : tactic unit :=
 let attr_names := `field_simps :: attr_names,
-    hs := simp_arg_type.except `one_div :: simp_arg_type.except `mul_eq_zero ::
-          simp_arg_type.except `one_divp :: hs in
+ hs := simp_arg_type.except `one_div :: simp_arg_type.except `mul_eq_zero ::
+ simp_arg_type.except `one_divp :: hs in
 propagate_tags (simp_core cfg.to_simp_config cfg.discharger no_dflt hs attr_names locat >> skip)
 
 add_tactic_doc
-{ name       := "field_simp",
-  category   := doc_category.tactic,
-  decl_names := [`tactic.interactive.field_simp],
-  tags       := ["simplification", "arithmetic"] }
+{ name := "field_simp",
+ category := doc_category.tactic,
+ decl_names := [`tactic.interactive.field_simp],
+ tags := ["simplification", "arithmetic"] }
 
 end interactive
 end tactic
+

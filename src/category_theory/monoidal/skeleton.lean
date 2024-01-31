@@ -28,16 +28,16 @@ See note [reducible non-instances]. -/
 @[reducible]
 def monoid_of_skeletal_monoidal (hC : skeletal C) : monoid C :=
 { mul := λ X Y, (X ⊗ Y : C),
-  one := (𝟙_ C : C),
-  one_mul := λ X, hC ⟨λ_ X⟩,
-  mul_one := λ X, hC ⟨ρ_ X⟩,
-  mul_assoc := λ X Y Z, hC ⟨α_ X Y Z⟩ }
+ one := (𝟙_ C : C),
+ one_mul := λ X, hC ⟨λ_ X⟩,
+ mul_one := λ X, hC ⟨ρ_ X⟩,
+ mul_assoc := λ X Y Z, hC ⟨α_ X Y Z⟩ }
 
 /-- If `C` is braided and skeletal, it is a commutative monoid. -/
 def comm_monoid_of_skeletal_braided [braided_category C] (hC : skeletal C) :
-  comm_monoid C :=
+ comm_monoid C :=
 { mul_comm := λ X Y, hC ⟨β_ X Y⟩,
-  ..monoid_of_skeletal_monoidal hC }
+ ..monoid_of_skeletal_monoidal hC }
 
 /--
 The skeleton of a monoidal category has a monoidal structure itself, induced by the equivalence.
@@ -56,3 +56,4 @@ monoid_of_skeletal_monoidal (skeleton_is_skeleton _).skel
 -- the skeleton is a commutative monoid.
 
 end category_theory
+

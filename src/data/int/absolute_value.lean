@@ -27,23 +27,24 @@ variables {R S : Type*} [ring R] [linear_ordered_comm_ring S]
 
 @[simp]
 lemma absolute_value.map_units_int (abv : absolute_value ℤ S) (x : ℤˣ) :
-  abv x = 1 :=
+ abv x = 1 :=
 by rcases int.units_eq_one_or x with (rfl | rfl); simp
 
 @[simp]
 lemma absolute_value.map_units_int_cast [nontrivial R] (abv : absolute_value R S) (x : ℤˣ) :
-  abv ((x : ℤ) : R) = 1 :=
+ abv ((x : ℤ) : R) = 1 :=
 by rcases int.units_eq_one_or x with (rfl | rfl); simp
 
 @[simp]
 lemma absolute_value.map_units_int_smul (abv : absolute_value R S) (x : ℤˣ) (y : R) :
-  abv (x • y) = abv y :=
+ abv (x • y) = abv y :=
 by rcases int.units_eq_one_or x with (rfl | rfl); simp
 
 /-- `int.nat_abs` as a bundled monoid with zero hom. -/
 @[simps]
 def int.nat_abs_hom : ℤ →*₀ ℕ :=
 { to_fun := int.nat_abs,
-  map_mul' := int.nat_abs_mul,
-  map_one' := int.nat_abs_one,
-  map_zero' := int.nat_abs_zero }
+ map_mul' := int.nat_abs_mul,
+ map_one' := int.nat_abs_one,
+ map_zero' := int.nat_abs_zero }
+

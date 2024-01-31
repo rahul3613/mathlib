@@ -21,11 +21,11 @@ then `g b` is `option.some a`.
 ## Main results
 
 - `pequiv.of_set`: creates a `pequiv` from a set `s`,
-  which sends an element to itself if it is in `s`.
+ which sends an element to itself if it is in `s`.
 - `pequiv.single`: given two elements `a : α` and `b : β`, create a `pequiv` that sends them to
-  each other, and ignores all other elements.
+ each other, and ignores all other elements.
 - `pequiv.injective_of_forall_ne_is_some`/`injective_of_forall_is_some`: If the domain of a `pequiv`
-  is all of `α` (except possibly one point), its `to_fun` is injective.
+ is all of `α` (except possibly one point), its `to_fun` is injective.
 
 ## Canonical order
 
@@ -43,7 +43,7 @@ pequiv, partial equivalence
 universes u v w x
 
 /-- A `pequiv` is a partial equivalence, a representation of a bijection between a subset
-  of `α` and a subset of `β`. See also `local_equiv` for a version that requires `to_fun` and
+ of `α` and a subset of `β`. See also `local_equiv` for a version that requires `to_fun` and
 `inv_fun` to be globally defined functions and has `source` and `target` sets as extra fields. -/
 structure pequiv (α : Type u) (β : Type v) :=
 (to_fun : α → option β)
@@ -58,15 +58,15 @@ open function option
 
 instance fun_like : fun_like (α ≃. β) α (λ _, option β) :=
 { coe := to_fun,
-  coe_injective' :=
-    begin
-      rintro ⟨f₁, f₂, hf⟩ ⟨g₁, g₂, hg⟩ (rfl : f₁ = g₁),
-      congr' with y x,
-      simp only [hf, hg]
-    end }
+ coe_injective' :=
+ begin
+ rintro ⟨f₁, f₂, hf⟩ ⟨g₁, g₂, hg⟩ (rfl : f₁ = g₁),
+ congr' with y x,
+ simp only [hf, hg]
+ end }
 
 @[simp] lemma coe_mk_apply (f₁ : α → option β) (f₂ : β → option α) (h) (x : α) :
-  (pequiv.mk f₁ f₂ h : α → option β) x = f₁ x := rfl
+ (pequiv.mk f₁ f₂ h : α → option β) x = f₁ x := rfl
 
 @[ext] lemma ext {f g : α ≃. β} (h : ∀ x, f x = g x) : f = g :=
 fun_like.ext f g h
@@ -76,14 +76,14 @@ lemma ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x := fun_like.ext_if
 /-- The identity map as a partial equivalence. -/
 @[refl] protected def refl (α : Type*) : α ≃. α :=
 { to_fun := some,
-  inv_fun := some,
-  inv := λ _ _, eq_comm }
+ inv_fun := some,
+ inv := λ _ _, eq_comm }
 
 /-- The inverse partial equivalence. -/
 @[symm] protected def symm (f : α ≃. β) : β ≃. α :=
 { to_fun := f.2,
-  inv_fun := f.1,
-  inv := λ _ _, (f.inv _ _).symm }
+ inv_fun := f.1,
+ inv := λ _ _, (f.inv _ _).symm }
 
 lemma mem_iff_mem (f : α ≃. β) : ∀ {a : α} {b : β}, a ∈ f.symm b ↔ b ∈ f a := f.3
 
@@ -92,8 +92,8 @@ lemma eq_some_iff (f : α ≃. β) : ∀ {a : α} {b : β}, f.symm b = some a �
 /-- Composition of partial equivalences `f : α ≃. β` and `g : β ≃. γ`. -/
 @[trans] protected def trans (f : α ≃. β) (g : β ≃. γ) : α ≃. γ :=
 { to_fun := λ a, (f a).bind g,
-  inv_fun := λ a, (g.symm a).bind f.symm,
-  inv := λ a b, by simp [*, and.comm, eq_some_iff f, eq_some_iff g] at * }
+ inv_fun := λ a, (g.symm a).bind f.symm,
+ inv := λ a b, by simp [*, and.comm, eq_some_iff f, eq_some_iff g] at * }
 
 @[simp] lemma refl_apply (a : α) : pequiv.refl α a = some a := rfl
 
@@ -105,20 +105,20 @@ lemma symm_injective : function.injective (@pequiv.symm α β) :=
 left_inverse.injective symm_symm
 
 lemma trans_assoc (f : α ≃. β) (g : β ≃. γ) (h : γ ≃. δ) :
-  (f.trans g).trans h = f.trans (g.trans h) :=
+ (f.trans g).trans h = f.trans (g.trans h) :=
 ext (λ _, option.bind_assoc _ _ _)
 
 lemma mem_trans (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
-  c ∈ f.trans g a ↔ ∃ b, b ∈ f a ∧ c ∈ g b := option.bind_eq_some'
+ c ∈ f.trans g a ↔ ∃ b, b ∈ f a ∧ c ∈ g b := option.bind_eq_some'
 
 lemma trans_eq_some (f : α ≃. β) (g : β ≃. γ) (a : α) (c : γ) :
-  f.trans g a = some c ↔ ∃ b, f a = some b ∧ g b = some c := option.bind_eq_some'
+ f.trans g a = some c ↔ ∃ b, f a = some b ∧ g b = some c := option.bind_eq_some'
 
 lemma trans_eq_none (f : α ≃. β) (g : β ≃. γ) (a : α) :
-  f.trans g a = none ↔ (∀ b c, b ∉ f a ∨ c ∉ g b) :=
+ f.trans g a = none ↔ (∀ b c, b ∉ f a ∨ c ∉ g b) :=
 begin
-  simp only [eq_none_iff_forall_not_mem, mem_trans, imp_iff_not_or.symm],
-  push_neg, tauto
+ simp only [eq_none_iff_forall_not_mem, mem_trans, imp_iff_not_or.symm],
+ push_neg, tauto
 end
 
 @[simp] lemma refl_trans (f : α ≃. β) : (pequiv.refl α).trans f = f :=
@@ -132,23 +132,23 @@ by rw ← mem_iff_mem at *; cases h : f.symm b; simp * at *
 
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
 lemma injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α)
-  (h : ∀ (a₁ : α), a₁ ≠ a₂ → is_some (f a₁)) : injective f :=
+ (h : ∀ (a₁ : α), a₁ ≠ a₂ → is_some (f a₁)) : injective f :=
 has_left_inverse.injective
-  ⟨λ b, option.rec_on b a₂ (λ b', option.rec_on (f.symm b') a₂ id),
-    λ x, begin
-      classical,
-      cases hfx : f x,
-      { have : x = a₂, from not_imp_comm.1 (h x) (hfx.symm ▸ by simp), simp [this] },
-      { dsimp only, rw [(eq_some_iff f).2 hfx], refl }
-    end⟩
+ ⟨λ b, option.rec_on b a₂ (λ b', option.rec_on (f.symm b') a₂ id),
+ λ x, begin
+ classical,
+ cases hfx : f x,
+ { have : x = a₂, from not_imp_comm.1 (h x) (hfx.symm ▸ by simp), simp [this] },
+ { dsimp only, rw [(eq_some_iff f).2 hfx], refl }
+ end⟩
 
 /-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
 lemma injective_of_forall_is_some {f : α ≃. β}
-  (h : ∀ (a : α), is_some (f a)) : injective f :=
+ (h : ∀ (a : α), is_some (f a)) : injective f :=
 (classical.em (nonempty α)).elim
-  (λ hn, injective_of_forall_ne_is_some f (classical.choice hn)
-    (λ a _, h a))
-  (λ hn x, (hn ⟨x⟩).elim)
+ (λ hn, injective_of_forall_ne_is_some f (classical.choice hn)
+ (λ a _, h a))
+ (λ hn x, (hn ⟨x⟩).elim)
 
 section of_set
 variables (s : set α) [decidable_pred (∈ s)]
@@ -156,47 +156,47 @@ variables (s : set α) [decidable_pred (∈ s)]
 /-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
 def of_set (s : set α) [decidable_pred (∈ s)] : α ≃. α :=
 { to_fun := λ a, if a ∈ s then some a else none,
-  inv_fun := λ a, if a ∈ s then some a else none,
-  inv := λ a b, by
-  { split_ifs with hb ha ha,
-    { simp [eq_comm] },
-    { simp [ne_of_mem_of_not_mem hb ha] },
-    { simp [ne_of_mem_of_not_mem ha hb] },
-    { simp } } }
+ inv_fun := λ a, if a ∈ s then some a else none,
+ inv := λ a b, by
+ { split_ifs with hb ha ha,
+ { simp [eq_comm] },
+ { simp [ne_of_mem_of_not_mem hb ha] },
+ { simp [ne_of_mem_of_not_mem ha hb] },
+ { simp } } }
 
 lemma mem_of_set_self_iff {s : set α} [decidable_pred (∈ s)] {a : α} : a ∈ of_set s a ↔ a ∈ s :=
 by dsimp [of_set]; split_ifs; simp *
 
 lemma mem_of_set_iff {s : set α} [decidable_pred (∈ s)] {a b : α} :
-  a ∈ of_set s b ↔ a = b ∧ a ∈ s :=
+ a ∈ of_set s b ↔ a = b ∧ a ∈ s :=
 begin
-  dsimp [of_set],
-  split_ifs,
-  { simp only [iff_self_and, eq_comm],
-    rintro rfl,
-    exact h, },
-  { simp only [false_iff, not_and],
-    rintro rfl,
-    exact h, }
+ dsimp [of_set],
+ split_ifs,
+ { simp only [iff_self_and, eq_comm],
+ rintro rfl,
+ exact h, },
+ { simp only [false_iff, not_and],
+ rintro rfl,
+ exact h, }
 end
 
 @[simp] lemma of_set_eq_some_iff {s : set α} {h : decidable_pred (∈ s)} {a b : α} :
-  of_set s b = some a ↔ a = b ∧ a ∈ s := mem_of_set_iff
+ of_set s b = some a ↔ a = b ∧ a ∈ s := mem_of_set_iff
 
 @[simp] lemma of_set_eq_some_self_iff {s : set α} {h : decidable_pred (∈ s)} {a : α} :
-  of_set s a = some a ↔ a ∈ s := mem_of_set_self_iff
+ of_set s a = some a ↔ a ∈ s := mem_of_set_self_iff
 
 @[simp] lemma of_set_symm : (of_set s).symm = of_set s := rfl
 
 @[simp] lemma of_set_univ : of_set set.univ = pequiv.refl α := rfl
 
 @[simp] lemma of_set_eq_refl {s : set α} [decidable_pred (∈ s)] :
-  of_set s = pequiv.refl α ↔ s = set.univ :=
+ of_set s = pequiv.refl α ↔ s = set.univ :=
 ⟨λ h, begin
-  rw [set.eq_univ_iff_forall],
-  intro,
-  rw [← mem_of_set_self_iff, h],
-  exact rfl
+ rw [set.eq_univ_iff_forall],
+ intro,
+ rw [← mem_of_set_self_iff]; rw [ h],
+ exact rfl
 end, λ h, by simp only [← of_set_univ, h]⟩
 
 end of_set
@@ -205,27 +205,27 @@ lemma symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.sy
 
 lemma self_trans_symm (f : α ≃. β) : f.trans f.symm = of_set {a | (f a).is_some} :=
 begin
-  ext,
-  dsimp [pequiv.trans],
-  simp only [eq_some_iff f, option.is_some_iff_exists, option.mem_def, bind_eq_some',
-    of_set_eq_some_iff],
-  split,
-  { rintros ⟨b, hb₁, hb₂⟩,
-    exact ⟨pequiv.inj _ hb₂ hb₁, b, hb₂⟩ },
-  { simp {contextual := tt} }
+ ext,
+ dsimp [pequiv.trans],
+ simp only [eq_some_iff f, option.is_some_iff_exists, option.mem_def, bind_eq_some',
+ of_set_eq_some_iff],
+ split,
+ { rintros ⟨b, hb₁, hb₂⟩,
+ exact ⟨pequiv.inj _ hb₂ hb₁, b, hb₂⟩ },
+ { simp {contextual := tt} }
 end
 
 lemma symm_trans_self (f : α ≃. β) : f.symm.trans f = of_set {b | (f.symm b).is_some} :=
 symm_injective $ by simp [symm_trans_rev, self_trans_symm, -symm_symm]
 
 lemma trans_symm_eq_iff_forall_is_some {f : α ≃. β} :
-  f.trans f.symm = pequiv.refl α ↔ ∀ a, is_some (f a) :=
-by rw [self_trans_symm, of_set_eq_refl, set.eq_univ_iff_forall]; refl
+ f.trans f.symm = pequiv.refl α ↔ ∀ a, is_some (f a) :=
+by rw [self_trans_symm]; rw [ of_set_eq_refl]; rw [ set.eq_univ_iff_forall]; refl
 
 instance : has_bot (α ≃. β) :=
 ⟨{ to_fun := λ _, none,
-   inv_fun := λ _, none,
-   inv := by simp }⟩
+ inv_fun := λ _, none,
+ inv := by simp }⟩
 
 instance : inhabited (α ≃. β) := ⟨⊥⟩
 
@@ -240,8 +240,8 @@ by ext; dsimp [pequiv.trans]; simp
 by ext; dsimp [pequiv.trans]; simp
 
 lemma is_some_symm_get (f : α ≃. β) {a : α} (h : is_some (f a)) :
-  is_some (f.symm (option.get h)) :=
-is_some_iff_exists.2 ⟨a, by rw [f.eq_some_iff, some_get]⟩
+ is_some (f.symm (option.get h)) :=
+is_some_iff_exists.2 ⟨a, by rw [f.eq_some_iff]; rw [ some_get]⟩
 
 section single
 variables [decidable_eq α] [decidable_eq β] [decidable_eq γ]
@@ -249,8 +249,8 @@ variables [decidable_eq α] [decidable_eq β] [decidable_eq γ]
 /-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
 def single (a : α) (b : β) : α ≃. β :=
 { to_fun := λ x, if x = a then some b else none,
-  inv_fun := λ x, if x = b then some a else none,
-  inv := λ _ _, by simp; split_ifs; cc }
+ inv_fun := λ x, if x = b then some a else none,
+ inv := λ _ _, by simp; split_ifs; cc }
 
 lemma mem_single (a : α) (b : β) : b ∈ single a b a := if_pos rfl
 
@@ -264,15 +264,15 @@ by dsimp [single]; split_ifs; simp [*, eq_comm]
 lemma single_apply_of_ne {a₁ a₂ : α} (h : a₁ ≠ a₂) (b : β) : single a₁ b a₂ = none := if_neg h.symm
 
 lemma single_trans_of_mem (a : α) {b : β} {c : γ} {f : β ≃. γ} (h : c ∈ f b) :
-  (single a b).trans f = single a c :=
+ (single a b).trans f = single a c :=
 begin
-  ext,
-  dsimp [single, pequiv.trans],
-  split_ifs; simp * at *
+ ext,
+ dsimp [single, pequiv.trans],
+ split_ifs; simp * at *
 end
 
 lemma trans_single_of_mem {a : α} {b : β} (c : γ) {f : α ≃. β} (h : b ∈ f a) :
-  f.trans (single b c) = single a c :=
+ f.trans (single b c) = single a c :=
 symm_injective $ single_trans_of_mem _ ((mem_iff_mem f).2 h)
 
 @[simp]
@@ -281,29 +281,29 @@ single_trans_of_mem _ (mem_single _ _)
 
 @[simp] lemma single_subsingleton_eq_refl [subsingleton α] (a b : α) : single a b = pequiv.refl α :=
 begin
-  ext i j,
-  dsimp [single],
-  rw [if_pos (subsingleton.elim i a), subsingleton.elim i j, subsingleton.elim b j]
+ ext i j,
+ dsimp [single],
+ rw [if_pos (subsingleton.elim i a)]; rw [ subsingleton.elim i j]; rw [ subsingleton.elim b j]
 end
 
 lemma trans_single_of_eq_none {b : β} (c : γ) {f : δ ≃. β} (h : f.symm b = none) :
-  f.trans (single b c) = ⊥ :=
+ f.trans (single b c) = ⊥ :=
 begin
-  ext,
-  simp only [eq_none_iff_forall_not_mem, option.mem_def, f.eq_some_iff] at h,
-  dsimp [pequiv.trans, single],
-  simp,
-  intros,
-  split_ifs;
-  simp * at *
+ ext,
+ simp only [eq_none_iff_forall_not_mem, option.mem_def, f.eq_some_iff] at h,
+ dsimp [pequiv.trans, single],
+ simp,
+ intros,
+ split_ifs;
+ simp * at *
 end
 
 lemma single_trans_of_eq_none (a : α) {b : β} {f : β ≃. δ} (h : f b = none) :
-  (single a b).trans f = ⊥ :=
+ (single a b).trans f = ⊥ :=
 symm_injective $ trans_single_of_eq_none _ h
 
 lemma single_trans_single_of_ne {b₁ b₂ : β} (h : b₁ ≠ b₂) (a : α) (c : γ) :
-  (single a b₁).trans (single b₂ c) = ⊥ :=
+ (single a b₁).trans (single b₂ c) = ⊥ :=
 single_trans_of_eq_none _ (single_apply_of_ne h.symm _)
 
 end single
@@ -312,51 +312,51 @@ section order
 
 instance : partial_order (α ≃. β) :=
 { le := λ f g, ∀ (a : α) (b : β), b ∈ f a → b ∈ g a,
-  le_refl := λ _ _ _, id,
-  le_trans := λ f g h fg gh a b, (gh a b) ∘ (fg a b),
-  le_antisymm := λ f g fg gf, ext begin
-    assume a,
-    cases h : g a with b,
-    { exact eq_none_iff_forall_not_mem.2
-       (λ b hb, option.not_mem_none b $ h ▸ fg a b hb) },
-    { exact gf _ _ h }
-  end }
+ le_refl := λ _ _ _, id,
+ le_trans := λ f g h fg gh a b, (gh a b) ∘ (fg a b),
+ le_antisymm := λ f g fg gf, ext begin
+ assume a,
+ cases h : g a with b,
+ { exact eq_none_iff_forall_not_mem.2
+ (λ b hb, option.not_mem_none b $ h ▸ fg a b hb) },
+ { exact gf _ _ h }
+ end }
 
 lemma le_def {f g : α ≃. β} : f ≤ g ↔ (∀ (a : α) (b : β), b ∈ f a → b ∈ g a) := iff.rfl
 
 instance : order_bot (α ≃. β) :=
-{ bot_le := λ _ _  _ h, (not_mem_none _ h).elim,
-  ..pequiv.has_bot }
+{ bot_le := λ _ _ _ h, (not_mem_none _ h).elim,
+ ..pequiv.has_bot }
 
 instance [decidable_eq α] [decidable_eq β] : semilattice_inf (α ≃. β) :=
 { inf := λ f g,
-  { to_fun := λ a, if f a = g a then f a else none,
-    inv_fun := λ b, if f.symm b = g.symm b then f.symm b else none,
-    inv := λ a b, begin
-      have hf := @mem_iff_mem _ _ f a b,
-      have hg := @mem_iff_mem _ _ g a b, -- `split_ifs; finish` closes this goal from here
-      split_ifs with h1 h2 h2; try { simp [hf] },
-      { contrapose! h2,
-        rw h2,
-        rw [←h1,hf,h2] at hg,
-        simp only [mem_def, true_iff, eq_self_iff_true] at hg,
-        rw [hg] },
-      { contrapose! h1,
-        rw h1 at *,
-        rw ←h2 at hg,
-        simp only [mem_def, eq_self_iff_true, iff_true] at hf hg,
-        rw [hf,hg] },
-    end },
-  inf_le_left := λ _ _ _ _, by simp; split_ifs; cc,
-  inf_le_right := λ _ _ _ _, by simp; split_ifs; cc,
-  le_inf := λ f g h fg gh a b, begin
-    intro H,
-    have hf := fg a b H,
-    have hg := gh a b H,
-    simp only [option.mem_def, pequiv.coe_mk_apply],
-    split_ifs with h1, { exact hf }, { exact h1 (hf.trans hg.symm) },
-  end,
-  ..pequiv.partial_order }
+ { to_fun := λ a, if f a = g a then f a else none,
+ inv_fun := λ b, if f.symm b = g.symm b then f.symm b else none,
+ inv := λ a b, begin
+ have hf := @mem_iff_mem _ _ f a b,
+ have hg := @mem_iff_mem _ _ g a b, -- `split_ifs; finish` closes this goal from here
+ split_ifs with h1 h2 h2; try { simp [hf] },
+ { contrapose! h2,
+ rw h2,
+ rw [←h1] at hg; rw [hf] at hg; rw [h2] at hg,
+ simp only [mem_def, true_iff, eq_self_iff_true] at hg,
+ rw [hg] },
+ { contrapose! h1,
+ rw h1 at *,
+ rw ←h2 at hg,
+ simp only [mem_def, eq_self_iff_true, iff_true] at hf hg,
+ rw [hf]; rw [hg] },
+ end },
+ inf_le_left := λ _ _ _ _, by simp; split_ifs; cc,
+ inf_le_right := λ _ _ _ _, by simp; split_ifs; cc,
+ le_inf := λ f g h fg gh a b, begin
+ intro H,
+ have hf := fg a b H,
+ have hg := gh a b H,
+ simp only [option.mem_def, pequiv.coe_mk_apply],
+ split_ifs with h1, { exact hf }, { exact h1 (hf.trans hg.symm) },
+ end,
+ ..pequiv.partial_order }
 
 end order
 
@@ -368,16 +368,17 @@ variables {α : Type*} {β : Type*} {γ : Type*}
 /-- Turns an `equiv` into a `pequiv` of the whole type. -/
 def to_pequiv (f : α ≃ β) : α ≃. β :=
 { to_fun := some ∘ f,
-  inv_fun := some ∘ f.symm,
-  inv := by simp [equiv.eq_symm_apply, eq_comm] }
+ inv_fun := some ∘ f.symm,
+ inv := by simp [equiv.eq_symm_apply, eq_comm] }
 
 @[simp] lemma to_pequiv_refl : (equiv.refl α).to_pequiv = pequiv.refl α := rfl
 
 lemma to_pequiv_trans (f : α ≃ β) (g : β ≃ γ) : (f.trans g).to_pequiv =
-  f.to_pequiv.trans g.to_pequiv := rfl
+ f.to_pequiv.trans g.to_pequiv := rfl
 
 lemma to_pequiv_symm (f : α ≃ β) : f.symm.to_pequiv = f.to_pequiv.symm := rfl
 
 lemma to_pequiv_apply (f : α ≃ β) (x : α) : f.to_pequiv x = some (f x) := rfl
 
 end equiv
+

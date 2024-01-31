@@ -44,8 +44,9 @@ local attribute [instance] is_iso_of_mono_of_epi
 
 lemma balanced_opposite [balanced C] : balanced Cᵒᵖ :=
 { is_iso_of_mono_of_epi := λ X Y f fmono fepi,
-    by { rw ← quiver.hom.op_unop f, exactI is_iso_of_op _ } }
+ by { rw ← quiver.hom.op_unop f, exactI is_iso_of_op _ } }
 
 end
 
 end category_theory
+

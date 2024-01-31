@@ -32,6 +32,7 @@ variables [topological_ring R] [complete_space R] [t2_space R]
 exp_inr _ _
 
 @[simp] lemma exp_smul_eps (r : R) : exp 𝕜 (r • eps : dual_number R) = 1 + r • eps :=
-by rw [eps, ←inr_smul, exp_inr]
+by rw [eps]; rw [ ←inr_smul]; rw [ exp_inr]
 
 end dual_number
+

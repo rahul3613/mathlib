@@ -24,11 +24,11 @@ preorder.lift (coe : αˣ → α)
 
 @[simp, norm_cast, to_additive]
 theorem coe_le_coe [monoid α] [preorder α] {a b : αˣ} :
-  (a : α) ≤ b ↔ a ≤ b := iff.rfl
+ (a : α) ≤ b ↔ a ≤ b := iff.rfl
 
 @[simp, norm_cast, to_additive]
 theorem coe_lt_coe [monoid α] [preorder α] {a b : αˣ} :
-  (a : α) < b ↔ a < b := iff.rfl
+ (a : α) < b ↔ a < b := iff.rfl
 
 @[to_additive]
 instance [monoid α] [partial_order α] : partial_order αˣ :=
@@ -44,12 +44,13 @@ def order_embedding_coe [monoid α] [linear_order α] : αˣ ↪o α := ⟨⟨co
 
 @[simp, norm_cast, to_additive]
 theorem max_coe [monoid α] [linear_order α] {a b : αˣ} :
-  (↑(max a b) : α) = max a b :=
+ (↑(max a b) : α) = max a b :=
 monotone.map_max order_embedding_coe.monotone
 
 @[simp, norm_cast, to_additive]
 theorem min_coe [monoid α] [linear_order α] {a b : αˣ} :
-  (↑(min a b) : α) = min a b :=
+ (↑(min a b) : α) = min a b :=
 monotone.map_min order_embedding_coe.monotone
 
 end units
+

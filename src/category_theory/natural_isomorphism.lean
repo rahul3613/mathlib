@@ -20,8 +20,8 @@ and building natural isomorphisms from components:
 *
 ```
 nat_iso.of_components
-  (app : ∀ X : C, F.obj X ≅ G.obj X)
-  (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).hom = (app X).hom ≫ G.map f) :
+ (app : ∀ X : C, F.obj X ≅ G.obj X)
+ (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).hom = (app X).hom ≫ G.map f) :
 F ≅ G
 ```
 only needing to check naturality in one direction.
@@ -42,7 +42,7 @@ namespace category_theory
 open nat_trans
 
 variables {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
-  {E : Type u₃} [category.{v₃} E]
+ {E : Type u₃} [category.{v₃} E]
 
 namespace iso
 
@@ -50,18 +50,18 @@ namespace iso
 namespace, so that we can use `α.app` -/
 @[simps] def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X :=
 { hom := α.hom.app X,
-  inv := α.inv.app X,
-  hom_inv_id' := begin rw [← comp_app, iso.hom_inv_id], refl end,
-  inv_hom_id' := begin rw [← comp_app, iso.inv_hom_id], refl end }
+ inv := α.inv.app X,
+ hom_inv_id' := begin rw [← comp_app]; rw [ iso.hom_inv_id], refl end,
+ inv_hom_id' := begin rw [← comp_app]; rw [ iso.inv_hom_id], refl end }
 
 @[simp, reassoc]
 lemma hom_inv_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) :
-  α.hom.app X ≫ α.inv.app X = 𝟙 (F.obj X) :=
+ α.hom.app X ≫ α.inv.app X = 𝟙 (F.obj X) :=
 congr_fun (congr_arg nat_trans.app α.hom_inv_id) X
 
 @[simp, reassoc]
 lemma inv_hom_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) :
-  α.inv.app X ≫ α.hom.app X = 𝟙 (G.obj X) :=
+ α.inv.app X ≫ α.hom.app X = 𝟙 (G.obj X) :=
 congr_fun (congr_arg nat_trans.app α.inv_hom_id) X
 
 end iso
@@ -71,7 +71,7 @@ namespace nat_iso
 open category_theory.category category_theory.functor
 
 @[simp] lemma trans_app {F G H : C ⥤ D} (α : F ≅ G) (β : G ≅ H) (X : C) :
-  (α ≪≫ β).app X = α.app X ≪≫ β.app X := rfl
+ (α ≪≫ β).app X = α.app X ≪≫ β.app X := rfl
 
 lemma app_hom {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).hom = α.hom.app X := rfl
 lemma app_inv {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).inv = α.inv.app X := rfl
@@ -80,11 +80,11 @@ variables {F G : C ⥤ D}
 
 instance hom_app_is_iso (α : F ≅ G) (X : C) : is_iso (α.hom.app X) :=
 ⟨⟨α.inv.app X,
-  ⟨by rw [←comp_app, iso.hom_inv_id, ←id_app], by rw [←comp_app, iso.inv_hom_id, ←id_app]⟩⟩⟩
+ ⟨by rw [←comp_app]; rw [ iso.hom_inv_id]; rw [ ←id_app], by rw [←comp_app]; rw [ iso.inv_hom_id]; rw [ ←id_app]⟩⟩⟩
 
 instance inv_app_is_iso (α : F ≅ G) (X : C) : is_iso (α.inv.app X) :=
 ⟨⟨α.hom.app X,
-  ⟨by rw [←comp_app, iso.inv_hom_id, ←id_app], by rw [←comp_app, iso.hom_inv_id, ←id_app]⟩⟩⟩
+ ⟨by rw [←comp_app]; rw [ iso.inv_hom_id]; rw [ ←id_app], by rw [←comp_app]; rw [ iso.hom_inv_id]; rw [ ←id_app]⟩⟩⟩
 
 section
 /-!
@@ -101,65 +101,65 @@ but for now it breaks too many proofs.
 variables (α : F ≅ G)
 
 @[simp] lemma cancel_nat_iso_hom_left {X : C} {Z : D} (g g' : G.obj X ⟶ Z) :
-  α.hom.app X ≫ g = α.hom.app X ≫ g' ↔ g = g' :=
+ α.hom.app X ≫ g = α.hom.app X ≫ g' ↔ g = g' :=
 by simp only [cancel_epi]
 
 @[simp] lemma cancel_nat_iso_inv_left {X : C} {Z : D} (g g' : F.obj X ⟶ Z) :
-  α.inv.app X ≫ g = α.inv.app X ≫ g' ↔ g = g' :=
+ α.inv.app X ≫ g = α.inv.app X ≫ g' ↔ g = g' :=
 by simp only [cancel_epi]
 
 @[simp] lemma cancel_nat_iso_hom_right {X : D} {Y : C} (f f' : X ⟶ F.obj Y) :
-  f ≫ α.hom.app Y = f' ≫ α.hom.app Y ↔ f = f' :=
+ f ≫ α.hom.app Y = f' ≫ α.hom.app Y ↔ f = f' :=
 by simp only [cancel_mono]
 
 @[simp] lemma cancel_nat_iso_inv_right {X : D} {Y : C} (f f' : X ⟶ G.obj Y) :
-  f ≫ α.inv.app Y = f' ≫ α.inv.app Y ↔ f = f' :=
+ f ≫ α.inv.app Y = f' ≫ α.inv.app Y ↔ f = f' :=
 by simp only [cancel_mono]
 
 @[simp] lemma cancel_nat_iso_hom_right_assoc {W X X' : D} {Y : C}
-  (f : W ⟶ X) (g : X ⟶ F.obj Y) (f' : W ⟶ X') (g' : X' ⟶ F.obj Y)  :
-  f ≫ g ≫ α.hom.app Y = f' ≫ g' ≫ α.hom.app Y ↔ f ≫ g = f' ≫ g' :=
+ (f : W ⟶ X) (g : X ⟶ F.obj Y) (f' : W ⟶ X') (g' : X' ⟶ F.obj Y) :
+ f ≫ g ≫ α.hom.app Y = f' ≫ g' ≫ α.hom.app Y ↔ f ≫ g = f' ≫ g' :=
 by simp only [←category.assoc, cancel_mono]
 
 @[simp] lemma cancel_nat_iso_inv_right_assoc {W X X' : D} {Y : C}
-  (f : W ⟶ X) (g : X ⟶ G.obj Y) (f' : W ⟶ X') (g' : X' ⟶ G.obj Y)  :
-  f ≫ g ≫ α.inv.app Y = f' ≫ g' ≫ α.inv.app Y ↔ f ≫ g = f' ≫ g' :=
+ (f : W ⟶ X) (g : X ⟶ G.obj Y) (f' : W ⟶ X') (g' : X' ⟶ G.obj Y) :
+ f ≫ g ≫ α.inv.app Y = f' ≫ g' ≫ α.inv.app Y ↔ f ≫ g = f' ≫ g' :=
 by simp only [←category.assoc, cancel_mono]
 
 @[simp] lemma inv_inv_app {F G : C ⥤ D} (e : F ≅ G) (X : C) :
-  inv (e.inv.app X) = e.hom.app X := by { ext, simp }
+ inv (e.inv.app X) = e.hom.app X := by { ext, simp }
 
 end
 
 variables {X Y : C}
 
 lemma naturality_1 (α : F ≅ G) (f : X ⟶ Y) :
-  α.inv.app X ≫ F.map f ≫ α.hom.app Y = G.map f :=
+ α.inv.app X ≫ F.map f ≫ α.hom.app Y = G.map f :=
 by simp
 lemma naturality_2 (α : F ≅ G) (f : X ⟶ Y) :
-  α.hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f :=
+ α.hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f :=
 by simp
 
 lemma naturality_1' (α : F ⟶ G) (f : X ⟶ Y) [is_iso (α.app X)] :
-  inv (α.app X) ≫ F.map f ≫ α.app Y = G.map f :=
+ inv (α.app X) ≫ F.map f ≫ α.app Y = G.map f :=
 by simp
 @[simp, reassoc] lemma naturality_2' (α : F ⟶ G) (f : X ⟶ Y) [is_iso (α.app Y)] :
-  α.app X ≫ G.map f ≫ inv (α.app Y) = F.map f :=
-by rw [←category.assoc, ←naturality, category.assoc, is_iso.hom_inv_id, category.comp_id]
+ α.app X ≫ G.map f ≫ inv (α.app Y) = F.map f :=
+by rw [←category.assoc]; rw [ ←naturality]; rw [ category.assoc]; rw [ is_iso.hom_inv_id]; rw [ category.comp_id]
 
 /--
 The components of a natural isomorphism are isomorphisms.
 -/
 instance is_iso_app_of_is_iso (α : F ⟶ G) [is_iso α] (X) : is_iso (α.app X) :=
 ⟨⟨(inv α).app X,
-  ⟨congr_fun (congr_arg nat_trans.app (is_iso.hom_inv_id α)) X,
-   congr_fun (congr_arg nat_trans.app (is_iso.inv_hom_id α)) X⟩⟩⟩
+ ⟨congr_fun (congr_arg nat_trans.app (is_iso.hom_inv_id α)) X,
+ congr_fun (congr_arg nat_trans.app (is_iso.inv_hom_id α)) X⟩⟩⟩
 
 @[simp] lemma is_iso_inv_app (α : F ⟶ G) [is_iso α] (X) : (inv α).app X = inv (α.app X) :=
 by { ext, rw ←nat_trans.comp_app, simp, }
 
 @[simp] lemma inv_map_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-  inv ((F.map e.inv).app Z) = (F.map e.hom).app Z :=
+ inv ((F.map e.inv).app Z) = (F.map e.hom).app Z :=
 by { ext, simp, }
 
 /--
@@ -167,20 +167,20 @@ Construct a natural isomorphism between functors by giving object level isomorph
 and checking naturality only in the forward direction.
 -/
 @[simps] def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
-  (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).hom = (app X).hom ≫ G.map f) :
-  F ≅ G :=
+ (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).hom = (app X).hom ≫ G.map f) :
+ F ≅ G :=
 { hom := { app := λ X, (app X).hom },
-  inv :=
-  { app := λ X, (app X).inv,
-    naturality' := λ X Y f,
-    begin
-      have h := congr_arg (λ f, (app X).inv ≫ (f ≫ (app Y).inv)) (naturality f).symm,
-      simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h,
-      exact h
-    end }, }
+ inv :=
+ { app := λ X, (app X).inv,
+ naturality' := λ X Y f,
+ begin
+ have h := congr_arg (λ f, (app X).inv ≫ (f ≫ (app Y).inv)) (naturality f).symm,
+ simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h,
+ exact h
+ end }, }
 
 @[simp] lemma of_components.app (app' : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (X) :
-  (of_components app' naturality).app X = app' X :=
+ (of_components app' naturality).app X = app' X :=
 by tidy
 
 /--
@@ -194,23 +194,24 @@ lemma is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, is_iso (α.app X)] : is_is
 @[simps]
 def hcomp {F G : C ⥤ D} {H I : D ⥤ E} (α : F ≅ G) (β : H ≅ I) : F ⋙ H ≅ G ⋙ I :=
 begin
-  refine ⟨α.hom ◫ β.hom, α.inv ◫ β.inv, _, _⟩,
-  { ext, rw [←nat_trans.exchange], simp, refl },
-  ext, rw [←nat_trans.exchange], simp, refl
+ refine ⟨α.hom ◫ β.hom, α.inv ◫ β.inv, _, _⟩,
+ { ext, rw [←nat_trans.exchange], simp, refl },
+ ext, rw [←nat_trans.exchange], simp, refl
 end
 
 lemma is_iso_map_iff {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) {X Y : C} (f : X ⟶ Y) :
-  is_iso (F₁.map f) ↔ is_iso (F₂.map f) :=
+ is_iso (F₁.map f) ↔ is_iso (F₂.map f) :=
 begin
-  revert F₁ F₂,
-  suffices : ∀ {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) (hf : is_iso (F₁.map f)), is_iso (F₂.map f),
-  { exact λ F₁ F₂ e, ⟨this e, this e.symm⟩, },
-  introsI F₁ F₂ e hf,
-  refine is_iso.mk ⟨e.inv.app Y ≫ inv (F₁.map f) ≫ e.hom.app X, _, _⟩,
-  { simp only [nat_trans.naturality_assoc, is_iso.hom_inv_id_assoc, iso.inv_hom_id_app], },
-  { simp only [assoc, ← e.hom.naturality, is_iso.inv_hom_id_assoc, iso.inv_hom_id_app], },
+ revert F₁ F₂,
+ suffices : ∀ {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) (hf : is_iso (F₁.map f)), is_iso (F₂.map f),
+ { exact λ F₁ F₂ e, ⟨this e, this e.symm⟩, },
+ introsI F₁ F₂ e hf,
+ refine is_iso.mk ⟨e.inv.app Y ≫ inv (F₁.map f) ≫ e.hom.app X, _, _⟩,
+ { simp only [nat_trans.naturality_assoc, is_iso.hom_inv_id_assoc, iso.inv_hom_id_app], },
+ { simp only [assoc, ← e.hom.naturality, is_iso.inv_hom_id_assoc, iso.inv_hom_id_app], },
 end
 
 end nat_iso
 
 end category_theory
+

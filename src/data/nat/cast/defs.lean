@@ -13,7 +13,7 @@ import algebra.ne_zero
 > Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the *canonical* homomorphism from the natural numbers into an
-`add_monoid` with a one.  In additive monoids with one, there exists a unique
+`add_monoid` with a one. In additive monoids with one, there exists a unique
 such homomorphism and we store it in the `nat_cast : ℕ → R` field.
 
 Preferentially, the homomorphism is written as a coercion.
@@ -52,7 +52,7 @@ class add_monoid_with_one (R : Type u) extends has_nat_cast R, add_monoid R, has
 /-- Canonical homomorphism from `ℕ` to a additive monoid `R` with a `1`. -/
 protected def nat.cast {R : Type u} [has_nat_cast R] : ℕ → R := has_nat_cast.nat_cast
 
-/-- An `add_comm_monoid_with_one` is an `add_monoid_with_one` satisfying `a + b = b + a`.  -/
+/-- An `add_comm_monoid_with_one` is an `add_monoid_with_one` satisfying `a + b = b + a`. -/
 @[protect_proj, ancestor add_monoid_with_one add_comm_monoid]
 class add_comm_monoid_with_one (R : Type*) extends add_monoid_with_one R, add_comm_monoid R
 
@@ -102,7 +102,7 @@ theorem cast_succ (n : ℕ) : ((succ n : ℕ) : R) = n + 1 := add_monoid_with_on
 theorem cast_add_one (n : ℕ) : ((n + 1 : ℕ) : R) = n + 1 := cast_succ _
 
 @[simp, norm_cast] theorem cast_ite (P : Prop) [decidable P] (m n : ℕ) :
-  (((ite P m n) : ℕ) : R) = ite P (m : R) (n : R) :=
+ (((ite P m n) : ℕ) : R) = ite P (m : R) (n : R) :=
 by { split_ifs; refl, }
 
 end nat
@@ -113,7 +113,7 @@ namespace nat
 variables {R : Type*}
 
 @[simp, norm_cast] theorem cast_one [add_monoid_with_one R] : ((1 : ℕ) : R) = 1 :=
-by rw [cast_succ, cast_zero, zero_add]
+by rw [cast_succ]; rw [ cast_zero]; rw [ zero_add]
 
 @[simp, norm_cast] theorem cast_add [add_monoid_with_one R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n :=
 by induction n; simp [add_succ, add_assoc, nat.add_zero, *]
@@ -124,24 +124,24 @@ protected def bin_cast [has_zero R] [has_one R] [has_add R] (n : ℕ) : R :=
 
 @[simp] lemma bin_cast_eq [add_monoid_with_one R] (n : ℕ) : (nat.bin_cast n : R) = ((n : ℕ) : R) :=
 begin
-  rw nat.bin_cast,
-  apply binary_rec _ _ n,
-  { rw [binary_rec_zero, cast_zero] },
-  { intros b k h,
-    rw [binary_rec_eq, h],
-    { cases b; simp [bit, bit0, bit1] },
-    { simp } },
+ rw nat.bin_cast,
+ apply binary_rec _ _ n,
+ { rw [binary_rec_zero]; rw [ cast_zero] },
+ { intros b k h,
+ rw [binary_rec_eq]; rw [ h],
+ { cases b; simp [bit, bit0, bit1] },
+ { simp } },
 end
 
 @[simp, norm_cast] theorem cast_bit0 [add_monoid_with_one R] (n : ℕ) :
-  ((bit0 n : ℕ) : R) = bit0 n := cast_add _ _
+ ((bit0 n : ℕ) : R) = bit0 n := cast_add _ _
 
 @[simp, norm_cast] theorem cast_bit1 [add_monoid_with_one R] (n : ℕ) :
-  ((bit1 n : ℕ) : R) = bit1 n :=
-by rw [bit1, cast_add_one, cast_bit0]; refl
+ ((bit1 n : ℕ) : R) = bit1 n :=
+by rw [bit1]; rw [ cast_add_one]; rw [ cast_bit0]; refl
 
 lemma cast_two [add_monoid_with_one R] : ((2 : ℕ) : R) = 2 :=
-by rw [cast_add_one, cast_one, bit0]
+by rw [cast_add_one]; rw [ cast_one]; rw [ bit0]
 
 attribute [simp, norm_cast] int.nat_abs_of_nat
 
@@ -149,26 +149,26 @@ end nat
 
 /-- `add_monoid_with_one` implementation using unary recursion. -/
 @[reducible] protected def add_monoid_with_one.unary {R : Type*} [add_monoid R] [has_one R] :
-  add_monoid_with_one R :=
+ add_monoid_with_one R :=
 { .. ‹has_one R›, .. ‹add_monoid R› }
 
 /-- `add_monoid_with_one` implementation using binary recursion. -/
 @[reducible] protected def add_monoid_with_one.binary {R : Type*} [add_monoid R] [has_one R] :
-  add_monoid_with_one R :=
+ add_monoid_with_one R :=
 { nat_cast := nat.bin_cast,
-  nat_cast_zero := by simp [nat.bin_cast, nat.cast],
-  nat_cast_succ := λ n, begin
-    simp only [nat.cast],
-    letI : add_monoid_with_one R := add_monoid_with_one.unary,
-    erw [nat.bin_cast_eq, nat.bin_cast_eq, nat.cast_succ],
-    refl,
-  end,
-  .. ‹has_one R›, .. ‹add_monoid R› }
+ nat_cast_zero := by simp [nat.bin_cast, nat.cast],
+ nat_cast_succ := λ n, begin
+ simp only [nat.cast],
+ letI : add_monoid_with_one R := add_monoid_with_one.unary,
+ erw [nat.bin_cast_eq]; erw [ nat.bin_cast_eq]; erw [ nat.cast_succ],
+ refl,
+ end,
+ .. ‹has_one R›, .. ‹add_monoid R› }
 
 namespace ne_zero
 
 lemma nat_cast_ne (n : ℕ) (R) [add_monoid_with_one R] [h : ne_zero (n : R)] :
-  (n : R) ≠ 0 := h.out
+ (n : R) ≠ 0 := h.out
 
 lemma of_ne_zero_coe (R) [add_monoid_with_one R] {n : ℕ} [h : ne_zero (n : R)] : ne_zero n :=
 ⟨by {casesI h, rintro rfl, by simpa using h}⟩
@@ -177,3 +177,4 @@ lemma pos_of_ne_zero_coe (R) [add_monoid_with_one R] {n : ℕ} [ne_zero (n : R)]
 nat.pos_of_ne_zero (of_ne_zero_coe R).out
 
 end ne_zero
+

@@ -46,3 +46,4 @@ tactic.tidy <|>
 tactic.fail (
 "`obviously` failed to solve a subgoal.\n" ++
 "You may need to explicitly provide a proof of the corresponding structure field.")
+

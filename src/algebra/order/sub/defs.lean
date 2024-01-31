@@ -41,7 +41,7 @@ TODO: maybe we should make a multiplicative version of this, so that we can repl
 lemmas about subtraction/division in `ordered_[add_]comm_group` with these.
 
 TODO: generalize `nat.le_of_le_of_sub_le_sub_right`, `nat.sub_le_sub_right_iff`,
-  `nat.mul_self_sub_mul_self_eq`
+ `nat.mul_self_sub_mul_self_eq`
 -/
 
 variables {α β : Type*}
@@ -82,7 +82,7 @@ section add_comm_semigroup
 variables [add_comm_semigroup α] [has_sub α] [has_ordered_sub α] {a b c d : α}
 
 lemma tsub_le_iff_left : a - b ≤ c ↔ a ≤ b + c :=
-by rw [tsub_le_iff_right, add_comm]
+by rw [tsub_le_iff_right]; rw [ add_comm]
 
 lemma le_add_tsub : a ≤ b + (a - b) :=
 tsub_le_iff_left.mp le_rfl
@@ -95,7 +95,7 @@ lemma tsub_le_tsub_right (h : a ≤ b) (c : α) : a - c ≤ b - c :=
 tsub_le_iff_left.mpr $ h.trans le_add_tsub
 
 lemma tsub_le_iff_tsub_le : a - b ≤ c ↔ a - c ≤ b :=
-by rw [tsub_le_iff_left, tsub_le_iff_right]
+by rw [tsub_le_iff_left]; rw [ tsub_le_iff_right]
 
 /-- See `tsub_tsub_cancel_of_le` for the equality. -/
 lemma tsub_tsub_le : b - (b - a) ≤ a :=
@@ -115,52 +115,52 @@ lemma antitone_const_tsub : antitone (λ x, c - x) :=
 
 /-- See `add_tsub_assoc_of_le` for the equality. -/
 lemma add_tsub_le_assoc : a + b - c ≤ a + (b - c) :=
-by { rw [tsub_le_iff_left, add_left_comm], exact add_le_add_left le_add_tsub a }
+by { rw [tsub_le_iff_left]; rw [ add_left_comm], exact add_le_add_left le_add_tsub a }
 
 /-- See `tsub_add_eq_add_tsub` for the equality. -/
 lemma add_tsub_le_tsub_add : a + b - c ≤ a - c + b :=
-by { rw [add_comm, add_comm _ b], exact add_tsub_le_assoc }
+by { rw [add_comm]; rw [ add_comm _ b], exact add_tsub_le_assoc }
 
 lemma add_le_add_add_tsub : a + b ≤ (a + c) + (b - c) :=
 by { rw [add_assoc], exact add_le_add_left le_add_tsub a }
 
 lemma le_tsub_add_add : a + b ≤ (a - c) + (b + c) :=
-by { rw [add_comm a, add_comm (a - c)], exact add_le_add_add_tsub }
+by { rw [add_comm a]; rw [ add_comm (a - c)], exact add_le_add_add_tsub }
 
 lemma tsub_le_tsub_add_tsub : a - c ≤ (a - b) + (b - c) :=
 begin
-  rw [tsub_le_iff_left, ← add_assoc, add_right_comm],
-  exact le_add_tsub.trans (add_le_add_right le_add_tsub _),
+ rw [tsub_le_iff_left]; rw [ ← add_assoc]; rw [ add_right_comm],
+ exact le_add_tsub.trans (add_le_add_right le_add_tsub _),
 end
 
 lemma tsub_tsub_tsub_le_tsub : (c - a) - (c - b) ≤ b - a :=
 begin
-  rw [tsub_le_iff_left, tsub_le_iff_left, add_left_comm],
-  exact le_tsub_add.trans (add_le_add_left le_add_tsub _),
+ rw [tsub_le_iff_left]; rw [ tsub_le_iff_left]; rw [ add_left_comm],
+ exact le_tsub_add.trans (add_le_add_left le_add_tsub _),
 end
 
 lemma tsub_tsub_le_tsub_add {a b c : α} : a - (b - c) ≤ a - b + c :=
 tsub_le_iff_right.2 $ calc
-    a ≤ a - b + b : le_tsub_add
-  ... ≤ a - b + (c + (b - c)) : add_le_add_left le_add_tsub _
-  ... = a - b + c + (b - c) : (add_assoc _ _ _).symm
+ a ≤ a - b + b : le_tsub_add
+ ... ≤ a - b + (c + (b - c)) : add_le_add_left le_add_tsub _
+ ... = a - b + c + (b - c) : (add_assoc _ _ _).symm
 
 /-- See `tsub_add_tsub_comm` for the equality. -/
 lemma add_tsub_add_le_tsub_add_tsub : a + b - (c + d) ≤ a - c + (b - d) :=
 begin
-  rw [add_comm c, tsub_le_iff_left, add_assoc, ←tsub_le_iff_left, ←tsub_le_iff_left],
-  refine (tsub_le_tsub_right add_tsub_le_assoc c).trans _,
-  rw [add_comm a, add_comm (a - c)],
-  exact add_tsub_le_assoc,
+ rw [add_comm c]; rw [ tsub_le_iff_left]; rw [ add_assoc]; rw [ ←tsub_le_iff_left]; rw [ ←tsub_le_iff_left],
+ refine (tsub_le_tsub_right add_tsub_le_assoc c).trans _,
+ rw [add_comm a]; rw [ add_comm (a - c)],
+ exact add_tsub_le_assoc,
 end
 
 /-- See `add_tsub_add_eq_tsub_left` for the equality. -/
 lemma add_tsub_add_le_tsub_left : a + b - (a + c) ≤ b - c :=
-by { rw [tsub_le_iff_left, add_assoc], exact add_le_add_left le_add_tsub _ }
+by { rw [tsub_le_iff_left]; rw [ add_assoc], exact add_le_add_left le_add_tsub _ }
 
 /-- See `add_tsub_add_eq_tsub_right` for the equality. -/
 lemma add_tsub_add_le_tsub_right : a + c - (b + c) ≤ a - b :=
-by { rw [tsub_le_iff_left, add_right_comm], exact add_le_add_right le_add_tsub c }
+by { rw [tsub_le_iff_left]; rw [ add_right_comm], exact add_le_add_right le_add_tsub c }
 
 end cov
 
@@ -202,7 +202,7 @@ end add_comm_semigroup
 
 variables [add_comm_monoid α] [has_sub α] [has_ordered_sub α] {a b c d : α}
 
-lemma tsub_nonpos : a - b ≤ 0 ↔ a ≤ b := by rw [tsub_le_iff_left, add_zero]
+lemma tsub_nonpos : a - b ≤ 0 ↔ a ≤ b := by rw [tsub_le_iff_left]; rw [ add_zero]
 
 alias tsub_nonpos ↔ _ tsub_nonpos_of_le
 
@@ -214,9 +214,9 @@ variables [partial_order α] [add_comm_semigroup α] [has_sub α] [has_ordered_s
 
 lemma tsub_tsub (b a c : α) : b - a - c = b - (a + c) :=
 begin
-  apply le_antisymm,
-  { rw [tsub_le_iff_left, tsub_le_iff_left, ← add_assoc, ← tsub_le_iff_left] },
-  { rw [tsub_le_iff_left, add_assoc, ← tsub_le_iff_left, ← tsub_le_iff_left] }
+ apply le_antisymm,
+ { rw [tsub_le_iff_left]; rw [ tsub_le_iff_left]; rw [ ← add_assoc]; rw [ ← tsub_le_iff_left] },
+ { rw [tsub_le_iff_left]; rw [ add_assoc]; rw [ ← tsub_le_iff_left]; rw [ ← tsub_le_iff_left] }
 end
 
 lemma tsub_add_eq_tsub_tsub (a b c : α) : a - (b + c) = a - b - c := (tsub_tsub _ _ _).symm
@@ -233,13 +233,13 @@ namespace add_le_cancellable
 
 protected lemma tsub_eq_of_eq_add (hb : add_le_cancellable b) (h : a = c + b) : a - b = c :=
 le_antisymm (tsub_le_iff_right.mpr h.le) $
-  by { rw h, exact hb.le_add_tsub }
+ by { rw h, exact hb.le_add_tsub }
 
 protected lemma eq_tsub_of_add_eq (hc : add_le_cancellable c) (h : a + c = b) : a = b - c :=
 (hc.tsub_eq_of_eq_add h.symm).symm
 
 protected theorem tsub_eq_of_eq_add_rev (hb : add_le_cancellable b) (h : a = b + c) : a - b = c :=
-hb.tsub_eq_of_eq_add $ by rw [add_comm, h]
+hb.tsub_eq_of_eq_add $ by rw [add_comm]; rw [ h]
 
 @[simp]
 protected lemma add_tsub_cancel_right (hb : add_le_cancellable b) : a + b - b = a :=
@@ -251,18 +251,18 @@ ha.tsub_eq_of_eq_add $ add_comm a b
 
 protected lemma lt_add_of_tsub_lt_left (hb : add_le_cancellable b) (h : a - b < c) : a < b + c :=
 begin
-  rw [lt_iff_le_and_ne, ← tsub_le_iff_left],
-  refine ⟨h.le, _⟩,
-  rintro rfl,
-  simpa [hb] using h,
+ rw [lt_iff_le_and_ne]; rw [ ← tsub_le_iff_left],
+ refine ⟨h.le, _⟩,
+ rintro rfl,
+ simpa [hb] using h,
 end
 
 protected lemma lt_add_of_tsub_lt_right (hc : add_le_cancellable c) (h : a - c < b) : a < b + c :=
 begin
-  rw [lt_iff_le_and_ne, ← tsub_le_iff_right],
-  refine ⟨h.le, _⟩,
-  rintro rfl,
-  simpa [hc] using h,
+ rw [lt_iff_le_and_ne]; rw [ ← tsub_le_iff_right],
+ refine ⟨h.le, _⟩,
+ rintro rfl,
+ simpa [hc] using h,
 end
 
 protected lemma lt_tsub_of_add_lt_right (hc : add_le_cancellable c) (h : a + c < b) : a < b - c :=
@@ -316,13 +316,13 @@ variables [covariant_class α α (+) (≤)] [contravariant_class α α (+) (≤)
 
 lemma add_tsub_add_eq_tsub_right (a c b : α) : (a + c) - (b + c) = a - b :=
 begin
-  refine add_tsub_add_le_tsub_right.antisymm (tsub_le_iff_right.2 $ le_of_add_le_add_right _), swap,
-  rw add_assoc,
-  exact le_tsub_add,
+ refine add_tsub_add_le_tsub_right.antisymm (tsub_le_iff_right.2 $ le_of_add_le_add_right _), swap,
+ rw add_assoc,
+ exact le_tsub_add,
 end
 
 lemma add_tsub_add_eq_tsub_left (a b c : α) : (a + b) - (a + c) = b - c :=
-by rw [add_comm a b, add_comm a c, add_tsub_add_eq_tsub_right]
+by rw [add_comm a b]; rw [ add_comm a c]; rw [ add_tsub_add_eq_tsub_right]
 
 end both
 
@@ -365,3 +365,4 @@ variables [partial_order α] [add_comm_monoid α] [has_sub α] [has_ordered_sub 
 add_le_cancellable.tsub_eq_of_eq_add add_le_cancellable_zero (add_zero _).symm
 
 end ordered_add_comm_monoid
+

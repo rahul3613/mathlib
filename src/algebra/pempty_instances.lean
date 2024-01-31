@@ -22,4 +22,5 @@ universes u
 @[to_additive]
 instance semigroup_pempty : semigroup pempty.{u+1} :=
 { mul := λ x y, by cases x,
-  mul_assoc := λ x y z, by cases x }
+ mul_assoc := λ x y z, by cases x }
+

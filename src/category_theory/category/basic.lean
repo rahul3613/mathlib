@@ -22,7 +22,7 @@ Introduces notations
 
 Users may like to add `f ⊚ g` for composition in the standard convention, using
 ```lean
-local notation f ` ⊚ `:80 g:80 := category.comp g f    -- type as \oo
+local notation f ` ⊚ `:80 g:80 := category.comp g f -- type as \oo
 ```
 -/
 
@@ -79,8 +79,8 @@ namespace category_theory
 containing the data, but none of the axioms. -/
 class category_struct (obj : Type u)
 extends quiver.{v+1} obj : Type (max u (v+1)) :=
-(id       : Π X : obj, hom X X)
-(comp     : Π {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z))
+(id : Π X : obj, hom X X)
+(comp : Π {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z))
 
 notation `𝟙` := category_struct.id -- type as \b1
 infixr ` ≫ `:80 := category_struct.comp -- type as \gg
@@ -98,8 +98,8 @@ class category (obj : Type u)
 extends category_struct.{v} obj : Type (max u (v+1)) :=
 (id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f . obviously)
 (comp_id' : ∀ {X Y : obj} (f : hom X Y), f ≫ 𝟙 Y = f . obviously)
-(assoc'   : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z),
-  (f ≫ g) ≫ h = f ≫ (g ≫ h) . obviously)
+(assoc' : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z),
+ (f ≫ g) ≫ h = f ≫ (g ≫ h) . obviously)
 
 -- `restate_axiom` is a command that creates a lemma from a structure field,
 -- discarding any auto_param wrappers from the type.
@@ -125,7 +125,7 @@ section
 variables {C : Type u} [category.{v} C] {X Y Z : C}
 
 initialize_simps_projections category
-  (to_category_struct_comp → comp, to_category_struct_id → id, -to_category_struct)
+ (to_category_struct_comp → comp, to_category_struct_id → id, -to_category_struct)
 
 /-- postcompose an equation between morphisms by another morphism -/
 lemma eq_whisker {f g : X ⟶ Y} (w : f = g) (h : Y ⟶ Z) : f ≫ h = g ≫ h :=
@@ -143,10 +143,10 @@ lemma eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ 
 by { convert w (𝟙 Y), tidy }
 
 lemma eq_of_comp_left_eq' (f g : X ⟶ Y)
-  (w : (λ {Z : C} (h : Y ⟶ Z), f ≫ h) = (λ {Z : C} (h : Y ⟶ Z), g ≫ h)) : f = g :=
+ (w : (λ {Z : C} (h : Y ⟶ Z), f ≫ h) = (λ {Z : C} (h : Y ⟶ Z), g ≫ h)) : f = g :=
 eq_of_comp_left_eq (λ Z h, by convert congr_fun (congr_fun w Z) h)
 lemma eq_of_comp_right_eq' (f g : Y ⟶ Z)
-  (w : (λ {X : C} (h : X ⟶ Y), h ≫ f) = (λ {X : C} (h : X ⟶ Y), h ≫ g)) : f = g :=
+ (w : (λ {X : C} (h : X ⟶ Y), h ≫ f) = (λ {X : C} (h : X ⟶ Y), h ≫ g)) : f = g :=
 eq_of_comp_right_eq (λ X h, by convert congr_fun (congr_fun w X) h)
 
 lemma id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X :=
@@ -155,23 +155,23 @@ lemma id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f 
 by { convert w (𝟙 X), tidy }
 
 lemma comp_ite {P : Prop} [decidable P]
-  {X Y Z : C} (f : X ⟶ Y) (g g' : (Y ⟶ Z)) :
-  (f ≫ if P then g else g') = (if P then f ≫ g else f ≫ g') :=
+ {X Y Z : C} (f : X ⟶ Y) (g g' : (Y ⟶ Z)) :
+ (f ≫ if P then g else g') = (if P then f ≫ g else f ≫ g') :=
 by { split_ifs; refl }
 
 lemma ite_comp {P : Prop} [decidable P]
-  {X Y Z : C} (f f' : (X ⟶ Y))  (g : Y ⟶ Z) :
-  (if P then f else f') ≫ g = (if P then f ≫ g else f' ≫ g) :=
+ {X Y Z : C} (f f' : (X ⟶ Y)) (g : Y ⟶ Z) :
+ (if P then f else f') ≫ g = (if P then f ≫ g else f' ≫ g) :=
 by { split_ifs; refl }
 
 lemma comp_dite {P : Prop} [decidable P]
-  {X Y Z : C} (f : X ⟶ Y) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
-  (f ≫ if h : P then g h else g' h) = (if h : P then f ≫ g h else f ≫ g' h) :=
+ {X Y Z : C} (f : X ⟶ Y) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
+ (f ≫ if h : P then g h else g' h) = (if h : P then f ≫ g h else f ≫ g' h) :=
 by { split_ifs; refl }
 
 lemma dite_comp {P : Prop} [decidable P]
-  {X Y Z : C} (f : P → (X ⟶ Y)) (f' : ¬P → (X ⟶ Y)) (g : Y ⟶ Z) :
-  (if h : P then f h else f' h) ≫ g = (if h : P then f h ≫ g else f' h ≫ g) :=
+ {X Y Z : C} (f : P → (X ⟶ Y)) (f' : ¬P → (X ⟶ Y)) (g : Y ⟶ Z) :
+ (if h : P then f h else f' h) ≫ g = (if h : P then f h ≫ g else f' h ≫ g) :=
 by { split_ifs; refl }
 
 /--
@@ -209,43 +209,43 @@ by { convert cancel_mono f, simp, }
 
 lemma epi_comp {X Y Z : C} (f : X ⟶ Y) [epi f] (g : Y ⟶ Z) [epi g] : epi (f ≫ g) :=
 begin
-  split, intros Z a b w,
-  apply (cancel_epi g).1,
-  apply (cancel_epi f).1,
-  simpa using w,
+ split, intros Z a b w,
+ apply (cancel_epi g).1,
+ apply (cancel_epi f).1,
+ simpa using w,
 end
 lemma mono_comp {X Y Z : C} (f : X ⟶ Y) [mono f] (g : Y ⟶ Z) [mono g] : mono (f ≫ g) :=
 begin
-  split, intros Z a b w,
-  apply (cancel_mono f).1,
-  apply (cancel_mono g).1,
-  simpa using w,
+ split, intros Z a b w,
+ apply (cancel_mono f).1,
+ apply (cancel_mono g).1,
+ simpa using w,
 end
 
 lemma mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [mono (f ≫ g)] : mono f :=
 begin
-  split, intros Z a b w,
-  replace w := congr_arg (λ k, k ≫ g) w,
-  dsimp at w,
-  rw [category.assoc, category.assoc] at w,
-  exact (cancel_mono _).1 w,
+ split, intros Z a b w,
+ replace w := congr_arg (λ k, k ≫ g) w,
+ dsimp at w,
+ rw [category.assoc] at w; rw [ category.assoc] at w,
+ exact (cancel_mono _).1 w,
 end
 
 lemma mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [mono h] (w : f ≫ g = h) :
-  mono f :=
+ mono f :=
 by { substI h, exact mono_of_mono f g, }
 
 lemma epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [epi (f ≫ g)] : epi g :=
 begin
-  split, intros Z a b w,
-  replace w := congr_arg (λ k, f ≫ k) w,
-  dsimp at w,
-  rw [←category.assoc, ←category.assoc] at w,
-  exact (cancel_epi _).1 w,
+ split, intros Z a b w,
+ replace w := congr_arg (λ k, f ≫ k) w,
+ dsimp at w,
+ rw [←category.assoc] at w; rw [ ←category.assoc] at w,
+ exact (cancel_epi _).1 w,
 end
 
 lemma epi_of_epi_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [epi h] (w : f ≫ g = h) :
-  epi g :=
+ epi g :=
 by substI h; exact epi_of_epi f g
 end
 
@@ -256,9 +256,9 @@ variable [category.{v} C]
 universe u'
 
 instance ulift_category : category.{v} (ulift.{u'} C) :=
-{ hom  := λ X Y, (X.down ⟶ Y.down),
-  id   := λ X, 𝟙 X.down,
-  comp := λ _ _ _ f g, f ≫ g }
+{ hom := λ X Y, (X.down ⟶ Y.down),
+ id := λ X, 𝟙 X.down,
+ comp := λ _ _ _ f g, f ≫ g }
 
 -- We verify that this previous instance can lift small categories to large categories.
 example (D : Type u) [small_category D] : large_category (ulift.{u+1} D) := by apply_instance
@@ -296,3 +296,4 @@ In practice this does occur, but only rarely, because `simp` tends to shorten ch
 (i.e. not introduce new objects at all).
 -/
 library_note "dsimp, simp"
+

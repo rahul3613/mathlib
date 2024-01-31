@@ -41,8 +41,8 @@ instance : Π [inhabited C], inhabited (locally_discrete C) := id
 
 instance [category_struct.{v} C] : category_struct (locally_discrete C) :=
 { hom := λ (X Y : C), discrete (X ⟶ Y),
-  id := λ X : C, ⟨𝟙 X⟩,
-  comp := λ X Y Z f g, ⟨f.as ≫ g.as⟩ }
+ id := λ X : C, ⟨𝟙 X⟩,
+ comp := λ X Y Z f g, ⟨f.as ≫ g.as⟩ }
 
 variables {C} [category_struct.{v} C]
 
@@ -53,8 +53,8 @@ category_theory.discrete_category (X ⟶ Y)
 /-- Extract the equation from a 2-morphism in a locally discrete 2-category. -/
 lemma eq_of_hom {X Y : locally_discrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f = g :=
 begin
-  have : discrete.mk (f.as) = discrete.mk (g.as) := congr_arg discrete.mk (eq_of_hom η),
-  simpa using this
+ have : discrete.mk (f.as) = discrete.mk (g.as) := congr_arg discrete.mk (eq_of_hom η),
+ simpa using this
 end
 
 end locally_discrete
@@ -67,17 +67,17 @@ The locally discrete bicategory on a category is a bicategory in which the objec
 equalities between 1-morphisms.
 -/
 instance locally_discrete_bicategory : bicategory (locally_discrete C) :=
-{ whisker_left  := λ X Y Z f g h η, eq_to_hom (congr_arg2 (≫) rfl (locally_discrete.eq_of_hom η)),
-  whisker_right := λ X Y Z f g η h, eq_to_hom (congr_arg2 (≫) (locally_discrete.eq_of_hom η) rfl),
-  associator := λ W X Y Z f g h, eq_to_iso $ by { unfold_projs, simp only [category.assoc] },
-  left_unitor  := λ X Y f, eq_to_iso $ by { unfold_projs, simp only [category.id_comp, mk_as] },
-  right_unitor := λ X Y f, eq_to_iso $ by { unfold_projs, simp only [category.comp_id, mk_as] } }
+{ whisker_left := λ X Y Z f g h η, eq_to_hom (congr_arg2 (≫) rfl (locally_discrete.eq_of_hom η)),
+ whisker_right := λ X Y Z f g η h, eq_to_hom (congr_arg2 (≫) (locally_discrete.eq_of_hom η) rfl),
+ associator := λ W X Y Z f g h, eq_to_iso $ by { unfold_projs, simp only [category.assoc] },
+ left_unitor := λ X Y f, eq_to_iso $ by { unfold_projs, simp only [category.id_comp, mk_as] },
+ right_unitor := λ X Y f, eq_to_iso $ by { unfold_projs, simp only [category.comp_id, mk_as] } }
 
 /-- A locally discrete bicategory is strict. -/
 instance locally_discrete_bicategory.strict : strict (locally_discrete C) :=
 { id_comp' := by { intros, ext1, unfold_projs, apply category.id_comp },
-  comp_id' := by { intros, ext1, unfold_projs, apply category.comp_id },
-  assoc' := by { intros, ext1, unfold_projs, apply category.assoc } }
+ comp_id' := by { intros, ext1, unfold_projs, apply category.comp_id },
+ assoc' := by { intros, ext1, unfold_projs, apply category.assoc } }
 
 variables {I : Type u₁} [category.{v₁} I] {B : Type u₂} [bicategory.{w₂ v₂} B] [strict B]
 
@@ -88,9 +88,10 @@ be promoted to an oplax functor from `locally_discrete I` to `B`.
 @[simps]
 def functor.to_oplax_functor (F : I ⥤ B) : oplax_functor (locally_discrete I) B :=
 { obj := F.obj,
-  map := λ X Y f, F.map f.as,
-  map₂ := λ i j f g η, eq_to_hom (congr_arg _ (eq_of_hom η)),
-  map_id := λ i, eq_to_hom (F.map_id i),
-  map_comp := λ i j k f g, eq_to_hom (F.map_comp f.as g.as) }
+ map := λ X Y f, F.map f.as,
+ map₂ := λ i j f g η, eq_to_hom (congr_arg _ (eq_of_hom η)),
+ map_id := λ i, eq_to_hom (F.map_id i),
+ map_comp := λ i j k f g, eq_to_hom (F.map_comp f.as g.as) }
 
 end category_theory
+

@@ -25,11 +25,11 @@ open nat
 namespace int
 
 lemma le_coe_nat_sub (m n : ℕ) :
-  (m - n : ℤ) ≤ ↑(m - n : ℕ) :=
+ (m - n : ℤ) ≤ ↑(m - n : ℕ) :=
 begin
-  by_cases h: m ≥ n,
-  { exact le_of_eq (int.coe_nat_sub h).symm },
-  { simp [le_of_not_ge h, coe_nat_le] }
+ by_cases h: m ≥ n,
+ { exact le_of_eq (int.coe_nat_sub h).symm },
+ { simp [le_of_not_ge h, coe_nat_le] }
 end
 
 /-! ### succ and pred -/
@@ -42,33 +42,33 @@ lt_add_one_iff.mpr (by simp)
 variables {a b : ℤ} {n : ℕ}
 
 lemma nat_abs_eq_iff_sq_eq {a b : ℤ} : a.nat_abs = b.nat_abs ↔ a ^ 2 = b ^ 2 :=
-by { rw [sq, sq], exact nat_abs_eq_iff_mul_self_eq }
+by { rw [sq]; rw [ sq], exact nat_abs_eq_iff_mul_self_eq }
 
 lemma nat_abs_lt_iff_sq_lt {a b : ℤ} : a.nat_abs < b.nat_abs ↔ a ^ 2 < b ^ 2 :=
-by { rw [sq, sq], exact nat_abs_lt_iff_mul_self_lt }
+by { rw [sq]; rw [ sq], exact nat_abs_lt_iff_mul_self_lt }
 
 lemma nat_abs_le_iff_sq_le {a b : ℤ} : a.nat_abs ≤ b.nat_abs ↔ a ^ 2 ≤ b ^ 2 :=
-by { rw [sq, sq], exact nat_abs_le_iff_mul_self_le }
+by { rw [sq]; rw [ sq], exact nat_abs_le_iff_mul_self_le }
 
 lemma nat_abs_inj_of_nonneg_of_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-  nat_abs a = nat_abs b ↔ a = b :=
-by rw [←sq_eq_sq ha hb, ←nat_abs_eq_iff_sq_eq]
+ nat_abs a = nat_abs b ↔ a = b :=
+by rw [←sq_eq_sq ha hb]; rw [ ←nat_abs_eq_iff_sq_eq]
 
 lemma nat_abs_inj_of_nonpos_of_nonpos {a b : ℤ} (ha : a ≤ 0) (hb : b ≤ 0) :
-  nat_abs a = nat_abs b ↔ a = b :=
+ nat_abs a = nat_abs b ↔ a = b :=
 by simpa only [int.nat_abs_neg, neg_inj]
  using nat_abs_inj_of_nonneg_of_nonneg
-  (neg_nonneg_of_nonpos ha) (neg_nonneg_of_nonpos hb)
+ (neg_nonneg_of_nonpos ha) (neg_nonneg_of_nonpos hb)
 
 lemma nat_abs_inj_of_nonneg_of_nonpos {a b : ℤ} (ha : 0 ≤ a) (hb : b ≤ 0) :
-  nat_abs a = nat_abs b ↔ a = -b :=
+ nat_abs a = nat_abs b ↔ a = -b :=
 by simpa only [int.nat_abs_neg]
-  using nat_abs_inj_of_nonneg_of_nonneg ha (neg_nonneg_of_nonpos hb)
+ using nat_abs_inj_of_nonneg_of_nonneg ha (neg_nonneg_of_nonpos hb)
 
 lemma nat_abs_inj_of_nonpos_of_nonneg {a b : ℤ} (ha : a ≤ 0) (hb : 0 ≤ b) :
-  nat_abs a = nat_abs b ↔ -a = b :=
+ nat_abs a = nat_abs b ↔ -a = b :=
 by simpa only [int.nat_abs_neg]
-  using nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) hb
+ using nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) hb
 
 section intervals
 open set
@@ -78,7 +78,7 @@ lemma strict_mono_on_nat_abs : strict_mono_on nat_abs (Ici 0) :=
 
 lemma strict_anti_on_nat_abs : strict_anti_on nat_abs (Iic 0) :=
 λ a ha b hb hab, by simpa [int.nat_abs_neg]
-  using nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
+ using nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
 
 lemma inj_on_nat_abs_Ici : inj_on nat_abs (Ici 0) := strict_mono_on_nat_abs.inj_on
 
@@ -89,9 +89,9 @@ end intervals
 /-! ### to_nat -/
 
 lemma to_nat_of_nonpos : ∀ {z : ℤ}, z ≤ 0 → z.to_nat = 0
-| 0           _ := rfl
+| 0 _ := rfl
 | (n + 1 : ℕ) h := (h.not_lt (by simp)).elim
-| -[1+ n]     _ := rfl
+| -[1+ n] _ := rfl
 
 
 /-! ### bitwise ops
@@ -103,11 +103,12 @@ local attribute [simp] int.zero_div
 
 @[simp] lemma div2_bit (b n) : div2 (bit b n) = n :=
 begin
-  rw [bit_val, div2_val, add_comm, int.add_mul_div_left, (_ : (_/2:ℤ) = 0), zero_add],
-  cases b,
-  { simp },
-  { show of_nat _ = _, rw nat.div_eq_zero; simp },
-  { cc }
+ rw [bit_val]; rw [ div2_val]; rw [ add_comm]; rw [ int.add_mul_div_left]; rw [ (_ : (_/2:ℤ) = 0)]; rw [ zero_add],
+ cases b,
+ { simp },
+ { show of_nat _ = _, rw nat.div_eq_zero; simp },
+ { cc }
 end
 
 end int
+

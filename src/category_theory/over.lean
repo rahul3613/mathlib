@@ -16,9 +16,9 @@ import category_theory.functor.epi_mono
 
 Over (and under) categories are special cases of comma categories.
 * If `L` is the identity functor and `R` is a constant functor, then `comma L R` is the "slice" or
-  "over" category over the object `R` maps to.
+ "over" category over the object `R` maps to.
 * Conversely, if `L` is a constant functor and `R` is the identity functor, then `comma L R` is the
-  "coslice" or "under" category under the object `L` maps to.
+ "coslice" or "under" category under the object `L` maps to.
 
 ## Tags
 
@@ -42,23 +42,23 @@ def over (X : T) := costructured_arrow (𝟭 T) X
 -- Satisfying the inhabited linter
 instance over.inhabited [inhabited T] : inhabited (over (default : T)) :=
 { default :=
-  { left := default,
-    right := default,
-    hom := 𝟙 _ } }
+ { left := default,
+ right := default,
+ hom := 𝟙 _ } }
 
 namespace over
 
 variables {X : T}
 
 @[ext] lemma over_morphism.ext {X : T} {U V : over X} {f g : U ⟶ V}
-  (h : f.left = g.left) : f = g :=
+ (h : f.left = g.left) : f = g :=
 by tidy
 
 @[simp] lemma over_right (U : over X) : U.right = ⟨⟨⟩⟩ := by tidy
 
 @[simp] lemma id_left (U : over X) : comma_morphism.left (𝟙 U) = 𝟙 U.left := rfl
 @[simp] lemma comp_left (a b c : over X) (f : a ⟶ b) (g : b ⟶ c) :
-  (f ≫ g).left = f.left ≫ g.left := rfl
+ (f ≫ g).left = f.left ≫ g.left := rfl
 
 @[simp, reassoc] lemma w {A B : over X} (f : A ⟶ B) : f.left ≫ B.hom = A.hom :=
 by have := f.w; tidy
@@ -69,7 +69,7 @@ def mk {X Y : T} (f : Y ⟶ X) : over X :=
 costructured_arrow.mk f
 
 /-- We can set up a coercion from arrows with codomain `X` to `over X`. This most likely should not
-    be a global instance, but it is sometimes useful. -/
+ be a global instance, but it is sometimes useful. -/
 def coe_from_hom {X Y : T} : has_coe (Y ⟶ X) (over X) :=
 { coe := mk }
 
@@ -80,10 +80,10 @@ local attribute [instance] coe_from_hom
 end
 
 /-- To give a morphism in the over category, it suffices to give an arrow fitting in a commutative
-    triangle. -/
+ triangle. -/
 @[simps]
 def hom_mk {U V : over X} (f : U.left ⟶ V.left) (w : f ≫ V.hom = U.hom . obviously) :
-  U ⟶ V :=
+ U ⟶ V :=
 costructured_arrow.hom_mk f w
 
 /--
@@ -92,7 +92,7 @@ direction gives a commutative triangle.
 -/
 @[simps]
 def iso_mk {f g : over X} (hl : f.left ≅ g.left) (hw : hl.hom ≫ g.hom = f.hom . obviously) :
-  f ≅ g :=
+ f ≅ g :=
 costructured_arrow.iso_mk hl hw
 
 section
@@ -123,7 +123,7 @@ def map {Y : T} (f : X ⟶ Y) : over X ⥤ over Y := comma.map_right _ $ discret
 section
 variables {Y : T} {f : X ⟶ Y} {U V : over X} {g : U ⟶ V}
 @[simp] lemma map_obj_left : ((map f).obj U).left = U.left := rfl
-@[simp] lemma map_obj_hom  : ((map f).obj U).hom  = U.hom ≫ f := rfl
+@[simp] lemma map_obj_hom : ((map f).obj U).hom = U.hom ≫ f := rfl
 @[simp] lemma map_map_left : ((map f).map g).left = g.left := rfl
 
 /-- Mapping by the identity morphism is just the identity functor. -/
@@ -138,9 +138,9 @@ end
 
 instance forget_reflects_iso : reflects_isomorphisms (forget X) :=
 { reflects := λ Y Z f t, by exactI
-  ⟨⟨over.hom_mk (inv ((forget X).map f))
-      ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm),
-    by tidy⟩⟩ }
+ ⟨⟨over.hom_mk (inv ((forget X).map f))
+ ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm),
+ by tidy⟩⟩ }
 
 instance forget_faithful : faithful (forget X) := {}.
 
@@ -171,13 +171,13 @@ The converse of `category_theory.over.mono_of_mono_left`.
 -/
 instance mono_left_of_mono {f g : over X} (k : f ⟶ g) [mono k] : mono k.left :=
 begin
-  refine ⟨λ (Y : T) l m a, _⟩,
-  let l' : mk (m ≫ f.hom) ⟶ f := hom_mk l (by { dsimp, rw [←over.w k, reassoc_of a] }),
-  suffices : l' = hom_mk m,
-  { apply congr_arg comma_morphism.left this },
-  rw ← cancel_mono k,
-  ext,
-  apply a,
+ refine ⟨λ (Y : T) l m a, _⟩,
+ let l' : mk (m ≫ f.hom) ⟶ f := hom_mk l (by { dsimp, rw [←over.w k]; rw [ reassoc_of a] }),
+ suffices : l' = hom_mk m,
+ { apply congr_arg comma_morphism.left this },
+ rw ← cancel_mono k,
+ ext,
+ apply a,
 end
 
 section iterated_slice
@@ -187,34 +187,34 @@ variables (f : over X)
 @[simps]
 def iterated_slice_forward : over f ⥤ over f.left :=
 { obj := λ α, over.mk α.hom.left,
-  map := λ α β κ, over.hom_mk κ.left.left (by { rw auto_param_eq, rw ← over.w κ, refl }) }
+ map := λ α β κ, over.hom_mk κ.left.left (by { rw auto_param_eq, rw ← over.w κ, refl }) }
 
 /-- Given f : Y ⟶ X, this is the obvious functor from T/Y to (T/X)/f -/
 @[simps]
 def iterated_slice_backward : over f.left ⥤ over f :=
 { obj := λ g, mk (hom_mk g.hom : mk (g.hom ≫ f.hom) ⟶ f),
-  map := λ g h α, hom_mk (hom_mk α.left (w_assoc α f.hom)) (over_morphism.ext (w α)) }
+ map := λ g h α, hom_mk (hom_mk α.left (w_assoc α f.hom)) (over_morphism.ext (w α)) }
 
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
 @[simps]
 def iterated_slice_equiv : over f ≌ over f.left :=
 { functor := iterated_slice_forward f,
-  inverse := iterated_slice_backward f,
-  unit_iso :=
-    nat_iso.of_components
-    (λ g, over.iso_mk (over.iso_mk (iso.refl _) (by tidy)) (by tidy))
-    (λ X Y g, by { ext, dsimp, simp }),
-  counit_iso :=
-    nat_iso.of_components
-    (λ g, over.iso_mk (iso.refl _) (by tidy))
-    (λ X Y g, by { ext, dsimp, simp }) }
+ inverse := iterated_slice_backward f,
+ unit_iso :=
+ nat_iso.of_components
+ (λ g, over.iso_mk (over.iso_mk (iso.refl _) (by tidy)) (by tidy))
+ (λ X Y g, by { ext, dsimp, simp }),
+ counit_iso :=
+ nat_iso.of_components
+ (λ g, over.iso_mk (iso.refl _) (by tidy))
+ (λ X Y g, by { ext, dsimp, simp }) }
 
 lemma iterated_slice_forward_forget :
-  iterated_slice_forward f ⋙ forget f.left = forget f ⋙ forget X :=
+ iterated_slice_forward f ⋙ forget f.left = forget f ⋙ forget X :=
 rfl
 
 lemma iterated_slice_backward_forget_forget :
-  iterated_slice_backward f ⋙ forget f ⋙ forget X = forget f.left :=
+ iterated_slice_backward f ⋙ forget f ⋙ forget X = forget f.left :=
 rfl
 
 end iterated_slice
@@ -226,37 +226,37 @@ variables {D : Type u₂} [category.{v₂} D]
 @[simps]
 def post (F : T ⥤ D) : over X ⥤ over (F.obj X) :=
 { obj := λ Y, mk $ F.map Y.hom,
-  map := λ Y₁ Y₂ f, over.hom_mk (F.map f.left) (by tidy; erw [← F.map_comp, w]) }
+ map := λ Y₁ Y₂ f, over.hom_mk (F.map f.left) (by tidy; erw [← F.map_comp]; erw [ w]) }
 
 end
 
 end over
 
 /-- The under category has as objects arrows with domain `X` and as morphisms commutative
-    triangles. -/
+ triangles. -/
 @[derive category]
 def under (X : T) := structured_arrow X (𝟭 T)
 
 -- Satisfying the inhabited linter
 instance under.inhabited [inhabited T] : inhabited (under (default : T)) :=
 { default :=
-  { left := default,
-    right := default,
-    hom := 𝟙 _ } }
+ { left := default,
+ right := default,
+ hom := 𝟙 _ } }
 
 namespace under
 
 variables {X : T}
 
 @[ext] lemma under_morphism.ext {X : T} {U V : under X} {f g : U ⟶ V}
-  (h : f.right = g.right) : f = g :=
+ (h : f.right = g.right) : f = g :=
 by tidy
 
 @[simp] lemma under_left (U : under X) : U.left = ⟨⟨⟩⟩ := by tidy
 
 @[simp] lemma id_right (U : under X) : comma_morphism.right (𝟙 U) = 𝟙 U.right := rfl
 @[simp] lemma comp_right (a b c : under X) (f : a ⟶ b) (g : b ⟶ c) :
-  (f ≫ g).right = f.right ≫ g.right := rfl
+ (f ≫ g).right = f.right ≫ g.right := rfl
 
 @[simp, reassoc] lemma w {A B : under X} (f : A ⟶ B) : A.hom ≫ f.right = B.hom :=
 by have := f.w; tidy
@@ -267,10 +267,10 @@ def mk {X Y : T} (f : X ⟶ Y) : under X :=
 structured_arrow.mk f
 
 /-- To give a morphism in the under category, it suffices to give a morphism fitting in a
-    commutative triangle. -/
+ commutative triangle. -/
 @[simps]
 def hom_mk {U V : under X} (f : U.right ⟶ V.right) (w : U.hom ≫ f = V.hom . obviously) :
-  U ⟶ V :=
+ U ⟶ V :=
 structured_arrow.hom_mk f w
 
 /--
@@ -282,11 +282,11 @@ structured_arrow.iso_mk hr hw
 
 @[simp]
 lemma iso_mk_hom_right {f g : under X} (hr : f.right ≅ g.right) (hw : f.hom ≫ hr.hom = g.hom) :
-  (iso_mk hr hw).hom.right = hr.hom := rfl
+ (iso_mk hr hw).hom.right = hr.hom := rfl
 
 @[simp]
 lemma iso_mk_inv_right {f g : under X} (hr : f.right ≅ g.right) (hw : f.hom ≫ hr.hom = g.hom) :
-  (iso_mk hr hw).inv.right = hr.inv := rfl
+ (iso_mk hr hw).inv.right = hr.inv := rfl
 
 section
 variables (X)
@@ -308,7 +308,7 @@ def map {Y : T} (f : X ⟶ Y) : under Y ⥤ under X := comma.map_left _ $ discre
 section
 variables {Y : T} {f : X ⟶ Y} {U V : under Y} {g : U ⟶ V}
 @[simp] lemma map_obj_right : ((map f).obj U).right = U.right := rfl
-@[simp] lemma map_obj_hom   : ((map f).obj U).hom   = f ≫ U.hom := rfl
+@[simp] lemma map_obj_hom : ((map f).obj U).hom = f ≫ U.hom := rfl
 @[simp] lemma map_map_right : ((map f).map g).right = g.right := rfl
 
 /-- Mapping by the identity morphism is just the identity functor. -/
@@ -323,8 +323,8 @@ end
 
 instance forget_reflects_iso : reflects_isomorphisms (forget X) :=
 { reflects := λ Y Z f t, by exactI
-  ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm),
-    by tidy⟩⟩ }
+ ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm),
+ by tidy⟩⟩ }
 
 instance forget_faithful : faithful (forget X) := {}.
 
@@ -355,14 +355,14 @@ The converse of `category_theory.under.epi_of_epi_right`.
 -/
 instance epi_right_of_epi {f g : under X} (k : f ⟶ g) [epi k] : epi k.right :=
 begin
-  refine ⟨λ (Y : T) l m a, _⟩,
-  let l' : g ⟶ mk (g.hom ≫ m) := hom_mk l
-    (by { dsimp, rw [←under.w k, category.assoc, a, category.assoc] }),
-  suffices : l' = hom_mk m,
-  { apply congr_arg comma_morphism.right this },
-  rw ← cancel_epi k,
-  ext,
-  apply a,
+ refine ⟨λ (Y : T) l m a, _⟩,
+ let l' : g ⟶ mk (g.hom ≫ m) := hom_mk l
+ (by { dsimp, rw [←under.w k]; rw [ category.assoc]; rw [ a]; rw [ category.assoc] }),
+ suffices : l' = hom_mk m,
+ { apply congr_arg comma_morphism.right this },
+ rw ← cancel_epi k,
+ ext,
+ apply a,
 end
 
 section
@@ -372,10 +372,11 @@ variables {D : Type u₂} [category.{v₂} D]
 @[simps]
 def post {X : T} (F : T ⥤ D) : under X ⥤ under (F.obj X) :=
 { obj := λ Y, mk $ F.map Y.hom,
-  map := λ Y₁ Y₂ f, under.hom_mk (F.map f.right) (by tidy; erw [← F.map_comp, w]), }
+ map := λ Y₁ Y₂ f, under.hom_mk (F.map f.right) (by tidy; erw [← F.map_comp]; erw [ w]), }
 
 end
 
 end under
 
 end category_theory
+

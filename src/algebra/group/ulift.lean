@@ -56,7 +56,7 @@ The multiplicative equivalence between `ulift α` and `α`.
 @[to_additive "The additive equivalence between `ulift α` and `α`."]
 def _root_.mul_equiv.ulift [has_mul α] : ulift α ≃* α :=
 { map_mul' := λ x y, rfl,
-  .. equiv.ulift }
+ .. equiv.ulift }
 
 @[to_additive]
 instance semigroup [semigroup α] : semigroup (ulift α) :=
@@ -91,11 +91,11 @@ instance [has_int_cast α] : has_int_cast (ulift α) := ⟨λ n, up n⟩
 
 instance add_monoid_with_one [add_monoid_with_one α] : add_monoid_with_one (ulift α) :=
 { nat_cast_zero := congr_arg ulift.up nat.cast_zero,
-  nat_cast_succ := λ n, congr_arg ulift.up (nat.cast_succ _),
-  .. ulift.has_one, .. ulift.add_monoid, ..ulift.has_nat_cast }
+ nat_cast_succ := λ n, congr_arg ulift.up (nat.cast_succ _),
+ .. ulift.has_one, .. ulift.add_monoid, ..ulift.has_nat_cast }
 
 instance add_comm_monoid_with_one [add_comm_monoid_with_one α] :
-  add_comm_monoid_with_one (ulift α) :=
+ add_comm_monoid_with_one (ulift α) :=
 { ..ulift.add_monoid_with_one, .. ulift.add_comm_monoid }
 
 instance monoid_with_zero [monoid_with_zero α] : monoid_with_zero (ulift α) :=
@@ -107,63 +107,63 @@ equiv.ulift.injective.comm_monoid_with_zero _ rfl rfl (λ _ _, rfl) (λ _ _, rfl
 @[to_additive]
 instance div_inv_monoid [div_inv_monoid α] : div_inv_monoid (ulift α) :=
 equiv.ulift.injective.div_inv_monoid _ rfl (λ _ _, rfl) (λ _, rfl)
-  (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+ (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 @[to_additive]
 instance group [group α] : group (ulift α) :=
 equiv.ulift.injective.group _ rfl (λ _ _, rfl) (λ _, rfl)
-  (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+ (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 @[to_additive]
 instance comm_group [comm_group α] : comm_group (ulift α) :=
 equiv.ulift.injective.comm_group _ rfl (λ _ _, rfl) (λ _, rfl)
-  (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
+ (λ _ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
 
 instance add_group_with_one [add_group_with_one α] : add_group_with_one (ulift α) :=
 { int_cast := λ n, ⟨n⟩,
-  int_cast_of_nat := λ n, congr_arg ulift.up (int.cast_of_nat _),
-  int_cast_neg_succ_of_nat := λ n, congr_arg ulift.up (int.cast_neg_succ_of_nat _),
-  .. ulift.add_monoid_with_one, .. ulift.add_group }
+ int_cast_of_nat := λ n, congr_arg ulift.up (int.cast_of_nat _),
+ int_cast_neg_succ_of_nat := λ n, congr_arg ulift.up (int.cast_neg_succ_of_nat _),
+ .. ulift.add_monoid_with_one, .. ulift.add_group }
 
 instance add_comm_group_with_one [add_comm_group_with_one α] : add_comm_group_with_one (ulift α) :=
 { ..ulift.add_group_with_one, .. ulift.add_comm_group }
 
 instance group_with_zero [group_with_zero α] : group_with_zero (ulift α) :=
 equiv.ulift.injective.group_with_zero _ rfl rfl (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl) (λ _ _, rfl)
-  (λ _ _, rfl)
+ (λ _ _, rfl)
 
 instance comm_group_with_zero [comm_group_with_zero α] : comm_group_with_zero (ulift α) :=
 equiv.ulift.injective.comm_group_with_zero _ rfl rfl (λ _ _, rfl) (λ _, rfl) (λ _ _, rfl)
-  (λ _ _, rfl) (λ _ _, rfl)
+ (λ _ _, rfl) (λ _ _, rfl)
 
 @[to_additive add_left_cancel_semigroup]
 instance left_cancel_semigroup [left_cancel_semigroup α] :
-  left_cancel_semigroup (ulift α) :=
+ left_cancel_semigroup (ulift α) :=
 equiv.ulift.injective.left_cancel_semigroup _ (λ _ _, rfl)
 
 @[to_additive add_right_cancel_semigroup]
 instance right_cancel_semigroup [right_cancel_semigroup α] :
-  right_cancel_semigroup (ulift α) :=
+ right_cancel_semigroup (ulift α) :=
 equiv.ulift.injective.right_cancel_semigroup _ (λ _ _, rfl)
 
 @[to_additive add_left_cancel_monoid]
 instance left_cancel_monoid [left_cancel_monoid α] :
-  left_cancel_monoid (ulift α) :=
+ left_cancel_monoid (ulift α) :=
 equiv.ulift.injective.left_cancel_monoid _ rfl (λ _ _, rfl) (λ _ _, rfl)
 
 @[to_additive add_right_cancel_monoid]
 instance right_cancel_monoid [right_cancel_monoid α] :
-  right_cancel_monoid (ulift α) :=
+ right_cancel_monoid (ulift α) :=
 equiv.ulift.injective.right_cancel_monoid _ rfl (λ _ _, rfl) (λ _ _, rfl)
 
 @[to_additive add_cancel_monoid]
 instance cancel_monoid [cancel_monoid α] :
-  cancel_monoid (ulift α) :=
+ cancel_monoid (ulift α) :=
 equiv.ulift.injective.cancel_monoid _ rfl (λ _ _, rfl) (λ _ _, rfl)
 
 @[to_additive add_cancel_comm_monoid]
 instance cancel_comm_monoid [cancel_comm_monoid α] :
-  cancel_comm_monoid (ulift α) :=
+ cancel_comm_monoid (ulift α) :=
 equiv.ulift.injective.cancel_comm_monoid _ rfl (λ _ _, rfl) (λ _ _, rfl)
 
 instance nontrivial [nontrivial α] : nontrivial (ulift α) :=
@@ -173,3 +173,4 @@ equiv.ulift.symm.injective.nontrivial
 -- We'd need to add instances for `ulift` in `order.basic`.
 
 end ulift
+

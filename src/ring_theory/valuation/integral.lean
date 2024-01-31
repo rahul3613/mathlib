@@ -34,14 +34,14 @@ open polynomial
 
 lemma mem_of_integral {x : R} (hx : is_integral O x) : x ∈ v.integer :=
 let ⟨p, hpm, hpx⟩ := hx in le_of_not_lt $ λ (hvx : 1 < v x), begin
-  rw [hpm.as_sum, eval₂_add, eval₂_pow, eval₂_X, eval₂_finset_sum, add_eq_zero_iff_eq_neg] at hpx,
-  replace hpx := congr_arg v hpx, refine ne_of_gt _ hpx,
-  rw [v.map_neg, v.map_pow],
-  refine v.map_sum_lt' (zero_lt_one.trans_le (one_le_pow_of_one_le' hvx.le _)) (λ i hi, _),
-  rw [eval₂_mul, eval₂_pow, eval₂_C, eval₂_X, v.map_mul, v.map_pow, ← one_mul (v x ^ p.nat_degree)],
-  cases (hv.2 $ p.coeff i).lt_or_eq with hvpi hvpi,
-  { exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx $ finset.mem_range.1 hi) },
-  { erw hvpi, rw [one_mul, one_mul], exact pow_lt_pow₀ hvx (finset.mem_range.1 hi) }
+ rw [hpm.as_sum] at hpx; rw [ eval₂_add] at hpx; rw [ eval₂_pow] at hpx; rw [ eval₂_X] at hpx; rw [ eval₂_finset_sum] at hpx; rw [ add_eq_zero_iff_eq_neg] at hpx,
+ replace hpx := congr_arg v hpx, refine ne_of_gt _ hpx,
+ rw [v.map_neg]; rw [ v.map_pow],
+ refine v.map_sum_lt' (zero_lt_one.trans_le (one_le_pow_of_one_le' hvx.le _)) (λ i hi, _),
+ rw [eval₂_mul]; rw [ eval₂_pow]; rw [ eval₂_C]; rw [ eval₂_X]; rw [ v.map_mul]; rw [ v.map_pow]; rw [ ← one_mul (v x ^ p.nat_degree)],
+ cases (hv.2 $ p.coeff i).lt_or_eq with hvpi hvpi,
+ { exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx $ finset.mem_range.1 hi) },
+ { erw hvpi, rw [one_mul]; rw [ one_mul], exact pow_lt_pow₀ hvx (finset.mem_range.1 hi) }
 end
 
 protected lemma integral_closure : integral_closure O R = ⊥ :=
@@ -64,3 +64,4 @@ end fraction_field
 end integers
 
 end valuation
+

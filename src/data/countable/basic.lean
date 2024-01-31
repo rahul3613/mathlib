@@ -51,9 +51,9 @@ variables {α : Type u} {β : Type v} {π : α → Type w}
 
 instance [countable α] [countable β] : countable (α ⊕ β) :=
 begin
-  rcases exists_injective_nat α with ⟨f, hf⟩,
-  rcases exists_injective_nat β with ⟨g, hg⟩,
-  exact (equiv.nat_sum_nat_equiv_nat.injective.comp $ hf.sum_map hg).countable
+ rcases exists_injective_nat α with ⟨f, hf⟩,
+ rcases exists_injective_nat β with ⟨g, hg⟩,
+ exact (equiv.nat_sum_nat_equiv_nat.injective.comp $ hf.sum_map hg).countable
 end
 
 instance [countable α] : countable (option α) :=
@@ -61,16 +61,16 @@ countable.of_equiv _ (equiv.option_equiv_sum_punit α).symm
 
 instance [countable α] [countable β] : countable (α × β) :=
 begin
-  rcases exists_injective_nat α with ⟨f, hf⟩,
-  rcases exists_injective_nat β with ⟨g, hg⟩,
-  exact (nat.mkpair_equiv.injective.comp $ hf.prod_map hg).countable
+ rcases exists_injective_nat α with ⟨f, hf⟩,
+ rcases exists_injective_nat β with ⟨g, hg⟩,
+ exact (nat.mkpair_equiv.injective.comp $ hf.prod_map hg).countable
 end
 
 instance [countable α] [Π a, countable (π a)] : countable (sigma π) :=
 begin
-  rcases exists_injective_nat α with ⟨f, hf⟩,
-  choose g hg using λ a, exists_injective_nat (π a),
-  exact ((equiv.sigma_equiv_prod ℕ ℕ).injective.comp $ hf.sigma_map hg).countable
+ rcases exists_injective_nat α with ⟨f, hf⟩,
+ choose g hg using λ a, exists_injective_nat (π a),
+ exact ((equiv.sigma_equiv_prod ℕ ℕ).injective.comp $ hf.sigma_map hg).countable
 end
 
 end type
@@ -97,13 +97,14 @@ countable.of_equiv (Σ a : plift α, plift (π a.down)) (equiv.psigma_equiv_sigm
 
 instance [finite α] [Π a, countable (π a)] : countable (Π a, π a) :=
 begin
-  haveI : ∀ n, countable (fin n → ℕ),
-  { intro n, induction n with n ihn,
-    { apply_instance },
-    { exactI countable.of_equiv _ (equiv.pi_fin_succ _ _).symm } },
-  rcases finite.exists_equiv_fin α with ⟨n, ⟨e⟩⟩,
-  have f := λ a, (nonempty_embedding_nat (π a)).some,
-  exact ((embedding.Pi_congr_right f).trans (equiv.Pi_congr_left' _ e).to_embedding).countable
+ haveI : ∀ n, countable (fin n → ℕ),
+ { intro n, induction n with n ihn,
+ { apply_instance },
+ { exactI countable.of_equiv _ (equiv.pi_fin_succ _ _).symm } },
+ rcases finite.exists_equiv_fin α with ⟨n, ⟨e⟩⟩,
+ have f := λ a, (nonempty_embedding_nat (π a)).some,
+ exact ((embedding.Pi_congr_right f).trans (equiv.Pi_congr_left' _ e).to_embedding).countable
 end
 
 end sort
+

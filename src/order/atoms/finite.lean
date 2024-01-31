@@ -15,8 +15,8 @@ import order.atoms
 This module contains some results on atoms and simple lattices in the finite context.
 
 ## Main results
-  * `finite.to_is_atomic`, `finite.to_is_coatomic`: Finite partial orders with bottom resp. top
-    are atomic resp. coatomic.
+ * `finite.to_is_atomic`, `finite.to_is_coatomic`: Finite partial orders with bottom resp. top
+ are atomic resp. coatomic.
 
 -/
 
@@ -40,10 +40,10 @@ variables [partial_order α] [bounded_order α] [is_simple_order α] [decidable_
 
 lemma univ : (finset.univ : finset α) = {⊤, ⊥} :=
 begin
-  change finset.map _ (finset.univ : finset bool) = _,
-  rw fintype.univ_bool,
-  simp only [finset.map_insert, function.embedding.coe_fn_mk, finset.map_singleton],
-  refl,
+ change finset.map _ (finset.univ : finset bool) = _,
+ rw fintype.univ_bool,
+ simp only [finset.map_insert, function.embedding.coe_fn_mk, finset.map_singleton],
+ refl,
 end
 
 lemma card : fintype.card α = 2 :=
@@ -56,9 +56,8 @@ namespace bool
 
 instance : is_simple_order bool :=
 ⟨λ a, begin
-  rw [← finset.mem_singleton, or.comm, ← finset.mem_insert,
-      top_eq_tt, bot_eq_ff, ← fintype.univ_bool],
-  apply finset.mem_univ,
+ rw [← finset.mem_singleton]; rw [ or.comm]; rw [ ← finset.mem_insert]; rw [ top_eq_tt]; rw [ bot_eq_ff]; rw [ ← fintype.univ_bool],
+ apply finset.mem_univ,
 end⟩
 
 end bool
@@ -67,20 +66,21 @@ section fintype
 
 open finset
 
-@[priority 100]  -- see Note [lower instance priority]
+@[priority 100] -- see Note [lower instance priority]
 instance finite.to_is_coatomic [partial_order α] [order_top α] [finite α] : is_coatomic α :=
 begin
-  refine is_coatomic.mk (λ b, or_iff_not_imp_left.2 (λ ht, _)),
-  obtain ⟨c, hc, hmax⟩ := set.finite.exists_maximal_wrt id { x : α | b ≤ x ∧ x ≠ ⊤ }
-    (set.to_finite _) ⟨b, le_rfl, ht⟩,
-  refine ⟨c, ⟨hc.2, λ y hcy, _⟩, hc.1⟩,
-  by_contra hyt,
-  obtain rfl : c = y := hmax y ⟨hc.1.trans hcy.le, hyt⟩ hcy.le,
-  exact (lt_self_iff_false _).mp hcy
+ refine is_coatomic.mk (λ b, or_iff_not_imp_left.2 (λ ht, _)),
+ obtain ⟨c, hc, hmax⟩ := set.finite.exists_maximal_wrt id { x : α | b ≤ x ∧ x ≠ ⊤ }
+ (set.to_finite _) ⟨b, le_rfl, ht⟩,
+ refine ⟨c, ⟨hc.2, λ y hcy, _⟩, hc.1⟩,
+ by_contra hyt,
+ obtain rfl : c = y := hmax y ⟨hc.1.trans hcy.le, hyt⟩ hcy.le,
+ exact (lt_self_iff_false _).mp hcy
 end
 
-@[priority 100]  -- see Note [lower instance priority]
+@[priority 100] -- see Note [lower instance priority]
 instance finite.to_is_atomic [partial_order α] [order_bot α] [finite α] : is_atomic α :=
 is_coatomic_dual_iff_is_atomic.mp finite.to_is_coatomic
 
 end fintype
+

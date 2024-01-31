@@ -20,3 +20,4 @@ variables [canonically_linear_ordered_semifield α] [has_sub α] [has_ordered_su
 lemma tsub_div (a b c : α) : (a - b) / c = a / c - b / c := by simp_rw [div_eq_mul_inv, tsub_mul]
 
 end canonically_linear_ordered_semifield
+

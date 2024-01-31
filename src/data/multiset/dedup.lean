@@ -22,7 +22,7 @@ variables {α β : Type*} [decidable_eq α]
 /-- `dedup s` removes duplicates from `s`, yielding a `nodup` multiset. -/
 def dedup (s : multiset α) : multiset α :=
 quot.lift_on s (λ l, (l.dedup : multiset α))
-  (λ s t p, quot.sound p.dedup)
+ (λ s t p, quot.sound p.dedup)
 
 @[simp] theorem coe_dedup (l : list α) : @dedup α _ l = l.dedup := rfl
 
@@ -32,11 +32,11 @@ quot.lift_on s (λ l, (l.dedup : multiset α))
 quot.induction_on s $ λ l, mem_dedup
 
 @[simp] theorem dedup_cons_of_mem {a : α} {s : multiset α} : a ∈ s →
-  dedup (a ::ₘ s) = dedup s :=
+ dedup (a ::ₘ s) = dedup s :=
 quot.induction_on s $ λ l m, @congr_arg _ _ _ _ coe $ dedup_cons_of_mem m
 
 @[simp] theorem dedup_cons_of_not_mem {a : α} {s : multiset α} : a ∉ s →
-  dedup (a ::ₘ s) = a ::ₘ dedup s :=
+ dedup (a ::ₘ s) = a ::ₘ dedup s :=
 quot.induction_on s $ λ l m, congr_arg coe $ dedup_cons_of_not_mem m
 
 theorem dedup_le (s : multiset α) : dedup s ≤ s :=
@@ -64,15 +64,15 @@ theorem dedup_eq_self {s : multiset α} : dedup s = s ↔ nodup s :=
 alias dedup_eq_self ↔ _ nodup.dedup
 
 lemma count_dedup (m : multiset α) (a : α) :
-  m.dedup.count a = if a ∈ m then 1 else 0 :=
+ m.dedup.count a = if a ∈ m then 1 else 0 :=
 quot.induction_on m $ λ l, count_dedup _ _
 
 @[simp] lemma dedup_idempotent {m : multiset α} :
-  m.dedup.dedup = m.dedup :=
+ m.dedup.dedup = m.dedup :=
 quot.induction_on m $ λ l, @congr_arg _ _ _ _ coe dedup_idempotent
 
 @[simp] lemma dedup_bind_dedup [decidable_eq β] (m : multiset α) (f : α → multiset β) :
-  (m.dedup.bind f).dedup = (m.bind f).dedup :=
+ (m.dedup.bind f).dedup = (m.bind f).dedup :=
 by { ext x, simp_rw [count_dedup, mem_bind, mem_dedup], }
 
 theorem dedup_eq_zero {s : multiset α} : dedup s = 0 ↔ s = 0 :=
@@ -87,34 +87,35 @@ theorem le_dedup {s t : multiset α} : s ≤ dedup t ↔ s ≤ t ∧ nodup s :=
  λ ⟨l, d⟩, (le_iff_subset d).2 $ subset.trans (subset_of_le l) (subset_dedup _)⟩
 
 theorem le_dedup_self {s : multiset α} : s ≤ dedup s ↔ nodup s :=
-by rw [le_dedup, and_iff_right le_rfl]
+by rw [le_dedup]; rw [ and_iff_right le_rfl]
 
 theorem dedup_ext {s t : multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t :=
 by simp [nodup.ext]
 
 theorem dedup_map_dedup_eq [decidable_eq β] (f : α → β) (s : multiset α) :
-  dedup (map f (dedup s)) = dedup (map f s) := by simp [dedup_ext]
+ dedup (map f (dedup s)) = dedup (map f s) := by simp [dedup_ext]
 
 @[simp]
 lemma dedup_nsmul {s : multiset α} {n : ℕ} (h0 : n ≠ 0) :
-  (n • s).dedup = s.dedup :=
+ (n • s).dedup = s.dedup :=
 begin
-  ext a,
-  by_cases h : a ∈ s;
-  simp [h,h0]
+ ext a,
+ by_cases h : a ∈ s;
+ simp [h,h0]
 end
 
 lemma nodup.le_dedup_iff_le {s t : multiset α} (hno : s.nodup) :
-  s ≤ t.dedup ↔ s ≤ t :=
+ s ≤ t.dedup ↔ s ≤ t :=
 by simp [le_dedup, hno]
 
 end multiset
 
 lemma multiset.nodup.le_nsmul_iff_le {α : Type*} {s t : multiset α}
-  {n : ℕ} (h : s.nodup) (hn : n ≠ 0) :
-  s ≤ n • t ↔ s ≤ t :=
+ {n : ℕ} (h : s.nodup) (hn : n ≠ 0) :
+ s ≤ n • t ↔ s ≤ t :=
 begin
-  classical,
-  rw [← h.le_dedup_iff_le, iff.comm, ← h.le_dedup_iff_le],
-  simp [hn]
+ classical,
+ rw [← h.le_dedup_iff_le]; rw [ iff.comm]; rw [ ← h.le_dedup_iff_le],
+ simp [hn]
 end
+

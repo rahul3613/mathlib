@@ -33,20 +33,19 @@ open_locale interval
 variables {E : Type*} [normed_add_comm_group E] [normed_space ℝ E] [complete_space E]
 
 notation `⨍` binders ` in ` a `..` b `, `
-  r:(scoped:60 f, average (measure.restrict volume (Ι a b)) f) := r
+ r:(scoped:60 f, average (measure.restrict volume (Ι a b)) f) := r
 
 lemma interval_average_symm (f : ℝ → E) (a b : ℝ) : ⨍ x in a..b, f x = ⨍ x in b..a, f x :=
-by rw [set_average_eq, set_average_eq, uIoc_swap]
+by rw [set_average_eq]; rw [ set_average_eq]; rw [ uIoc_swap]
 
 lemma interval_average_eq (f : ℝ → E) (a b : ℝ) : ⨍ x in a..b, f x = (b - a)⁻¹ • ∫ x in a..b, f x :=
 begin
-  cases le_or_lt a b with h h,
-  { rw [set_average_eq, uIoc_of_le h, real.volume_Ioc, interval_integral.integral_of_le h,
-      ennreal.to_real_of_real (sub_nonneg.2 h)] },
-  { rw [set_average_eq, uIoc_of_lt h, real.volume_Ioc, interval_integral.integral_of_ge h.le,
-     ennreal.to_real_of_real (sub_nonneg.2 h.le), smul_neg, ← neg_smul, ← inv_neg, neg_sub] }
+ cases le_or_lt a b with h h,
+ { rw [set_average_eq]; rw [ uIoc_of_le h]; rw [ real.volume_Ioc]; rw [ interval_integral.integral_of_le h]; rw [ ennreal.to_real_of_real (sub_nonneg.2 h)] },
+ { rw [set_average_eq]; rw [ uIoc_of_lt h]; rw [ real.volume_Ioc]; rw [ interval_integral.integral_of_ge h.le]; rw [ ennreal.to_real_of_real (sub_nonneg.2 h.le)]; rw [ smul_neg]; rw [ ← neg_smul]; rw [ ← inv_neg]; rw [ neg_sub] }
 end
 
 lemma interval_average_eq_div (f : ℝ → ℝ) (a b : ℝ) :
-  ⨍ x in a..b, f x = (∫ x in a..b, f x) / (b - a) :=
-by rw [interval_average_eq, smul_eq_mul, div_eq_inv_mul]
+ ⨍ x in a..b, f x = (∫ x in a..b, f x) / (b - a) :=
+by rw [interval_average_eq]; rw [ smul_eq_mul]; rw [ div_eq_inv_mul]
+

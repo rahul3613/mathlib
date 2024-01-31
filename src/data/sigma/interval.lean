@@ -32,29 +32,25 @@ variables [decidable_eq ι] [Π i, preorder (α i)] [Π i, locally_finite_order 
 
 instance : locally_finite_order (Σ i, α i) :=
 { finset_Icc := sigma_lift (λ _, Icc),
-  finset_Ico := sigma_lift (λ _, Ico),
-  finset_Ioc := sigma_lift (λ _, Ioc),
-  finset_Ioo := sigma_lift (λ _, Ioo),
-  finset_mem_Icc := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
-    simp_rw [mem_sigma_lift, le_def, mem_Icc, exists_and_distrib_left, ←exists_and_distrib_right,
-      ←exists_prop],
-    exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
-  end,
-  finset_mem_Ico := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
-    simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ico, exists_and_distrib_left,
-      ←exists_and_distrib_right, ←exists_prop],
-    exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
-  end,
-  finset_mem_Ioc := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
-    simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ioc, exists_and_distrib_left,
-      ←exists_and_distrib_right, ←exists_prop],
-    exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
-  end,
-  finset_mem_Ioo := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
-    simp_rw [mem_sigma_lift, lt_def, mem_Ioo, exists_and_distrib_left, ←exists_and_distrib_right,
-      ←exists_prop],
-    exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
-  end }
+ finset_Ico := sigma_lift (λ _, Ico),
+ finset_Ioc := sigma_lift (λ _, Ioc),
+ finset_Ioo := sigma_lift (λ _, Ioo),
+ finset_mem_Icc := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
+ simp_rw [mem_sigma_lift, le_def, mem_Icc, exists_and_distrib_left, ←exists_and_distrib_right, ←exists_prop],
+ exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
+ end,
+ finset_mem_Ico := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
+ simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ico, exists_and_distrib_left, ←exists_and_distrib_right, ←exists_prop],
+ exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
+ end,
+ finset_mem_Ioc := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
+ simp_rw [mem_sigma_lift, le_def, lt_def, mem_Ioc, exists_and_distrib_left, ←exists_and_distrib_right, ←exists_prop],
+ exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
+ end,
+ finset_mem_Ioo := λ ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩, begin
+ simp_rw [mem_sigma_lift, lt_def, mem_Ioo, exists_and_distrib_left, ←exists_and_distrib_right, ←exists_prop],
+ exact bex_congr (λ _ _, by split; rintro ⟨⟨⟩, ht⟩; exact ⟨rfl, ht⟩),
+ end }
 
 section
 variables (a b : Σ i, α i)
@@ -89,3 +85,4 @@ dif_pos rfl
 
 end disjoint
 end sigma
+

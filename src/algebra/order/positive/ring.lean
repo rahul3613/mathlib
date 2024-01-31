@@ -33,44 +33,44 @@ instance : has_add {x : M // 0 < x} := ⟨λ x y, ⟨x + y, add_pos x.2 y.2⟩�
 instance : add_semigroup {x : M // 0 < x} := subtype.coe_injective.add_semigroup _ coe_add
 
 instance {M : Type*} [add_comm_monoid M] [preorder M] [covariant_class M M (+) (<)] :
-  add_comm_semigroup {x : M // 0 < x} :=
+ add_comm_semigroup {x : M // 0 < x} :=
 subtype.coe_injective.add_comm_semigroup _ coe_add
 
 instance {M : Type*} [add_left_cancel_monoid M] [preorder M] [covariant_class M M (+) (<)] :
-  add_left_cancel_semigroup {x : M // 0 < x} :=
+ add_left_cancel_semigroup {x : M // 0 < x} :=
 subtype.coe_injective.add_left_cancel_semigroup _ coe_add
 
 instance {M : Type*} [add_right_cancel_monoid M] [preorder M] [covariant_class M M (+) (<)] :
-  add_right_cancel_semigroup {x : M // 0 < x} :=
+ add_right_cancel_semigroup {x : M // 0 < x} :=
 subtype.coe_injective.add_right_cancel_semigroup _ coe_add
 
 instance covariant_class_add_lt : covariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (<) :=
 ⟨λ x y z hyz, subtype.coe_lt_coe.1 $ add_lt_add_left hyz _⟩
 
 instance covariant_class_swap_add_lt [covariant_class M M (swap (+)) (<)] :
-  covariant_class {x : M // 0 < x} {x : M // 0 < x} (swap (+)) (<) :=
+ covariant_class {x : M // 0 < x} {x : M // 0 < x} (swap (+)) (<) :=
 ⟨λ x y z hyz, subtype.coe_lt_coe.1 $ add_lt_add_right hyz _⟩
 
 instance contravariant_class_add_lt [contravariant_class M M (+) (<)] :
-  contravariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (<) :=
+ contravariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (<) :=
 ⟨λ x y z h, subtype.coe_lt_coe.1 $ lt_of_add_lt_add_left h⟩
 
 instance contravariant_class_swap_add_lt [contravariant_class M M (swap (+)) (<)] :
-  contravariant_class {x : M // 0 < x} {x : M // 0 < x} (swap (+)) (<) :=
+ contravariant_class {x : M // 0 < x} {x : M // 0 < x} (swap (+)) (<) :=
 ⟨λ x y z h, subtype.coe_lt_coe.1 $ lt_of_add_lt_add_right h⟩
 
 instance contravariant_class_add_le [contravariant_class M M (+) (≤)] :
-  contravariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (≤) :=
+ contravariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (≤) :=
 ⟨λ x y z h, subtype.coe_le_coe.1 $ le_of_add_le_add_left h⟩
 
 instance contravariant_class_swap_add_le [contravariant_class M M (swap (+)) (≤)] :
-  contravariant_class {x : M // 0 < x} {x : M // 0 < x} (swap (+)) (≤) :=
+ contravariant_class {x : M // 0 < x} {x : M // 0 < x} (swap (+)) (≤) :=
 ⟨λ x y z h, subtype.coe_le_coe.1 $ le_of_add_le_add_right h⟩
 
 end add_basic
 
 instance covariant_class_add_le [add_monoid M] [partial_order M] [covariant_class M M (+) (<)] :
-  covariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (≤) :=
+ covariant_class {x : M // 0 < x} {x : M // 0 < x} (+) (≤) :=
 ⟨λ x, strict_mono.monotone $ λ _ _ h, add_lt_add_left h _⟩
 
 section mul
@@ -102,15 +102,16 @@ section mul_comm
 
 instance [strict_ordered_comm_semiring R] [nontrivial R] : ordered_comm_monoid {x : R // 0 < x} :=
 { mul_le_mul_left := λ x y hxy c, subtype.coe_le_coe.1 $ mul_le_mul_of_nonneg_left hxy c.2.le,
-  .. subtype.partial_order _,
-  .. subtype.coe_injective.comm_monoid (coe : {x : R // 0 < x} → R) coe_one coe_mul coe_pow }
+ .. subtype.partial_order _,
+ .. subtype.coe_injective.comm_monoid (coe : {x : R // 0 < x} → R) coe_one coe_mul coe_pow }
 
 /-- If `R` is a nontrivial linear ordered commutative semiring, then `{x : R // 0 < x}` is a linear
 ordered cancellative commutative monoid. -/
 instance [linear_ordered_comm_semiring R] : linear_ordered_cancel_comm_monoid {x : R // 0 < x} :=
 { le_of_mul_le_mul_left := λ a b c h, subtype.coe_le_coe.1 $ (mul_le_mul_left a.2).1 h,
-  .. subtype.linear_order _, .. positive.subtype.ordered_comm_monoid  }
+ .. subtype.linear_order _, .. positive.subtype.ordered_comm_monoid }
 
 end mul_comm
 
 end positive
+

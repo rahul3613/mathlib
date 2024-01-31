@@ -5,7 +5,7 @@ Authors: Damiano Testa
 -/
 import algebra.group_power.lemmas
 
-/-!  # Squares, even and odd elements
+/-! # Squares, even and odd elements
 
 > THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
 > Any changes to this file require a corresponding PR to mathlib4.
@@ -13,7 +13,7 @@ import algebra.group_power.lemmas
 This file proves some general facts about squares, even and odd elements of semirings.
 
 In the implementation, we define `is_square` and we let `even` be the notion transported by
-`to_additive`.  The definition are therefore as follows:
+`to_additive`. The definition are therefore as follows:
 ```lean
 is_square a ↔ ∃ r, a = r * r
 even a ↔ ∃ r, a = r + r
@@ -24,12 +24,12 @@ Odd elements are not unified with a multiplicative notion.
 ## Future work
 
 * TODO: Try to generalize further the typeclass assumptions on `is_square/even`.
-  For instance, in some cases, there are `semiring` assumptions that I (DT) am not convinced are
-  necessary.
+ For instance, in some cases, there are `semiring` assumptions that I (DT) am not convinced are
+ necessary.
 * TODO: Consider moving the definition and lemmas about `odd` to a separate file.
 * TODO: The "old" definition of `even a` asked for the existence of an element `c` such that
-  `a = 2 * c`.  For this reason, several fixes introduce an extra `two_mul` or `← two_mul`.
-  It might be the case that by making a careful choice of `simp` lemma, this can be avoided.
+ `a = 2 * c`. For this reason, several fixes introduce an extra `two_mul` or `← two_mul`.
+ It might be the case that by making a careful choice of `simp` lemma, this can be avoided.
  -/
 
 open mul_opposite
@@ -38,7 +38,7 @@ variables {F α β R : Type*}
 section has_mul
 variables [has_mul α]
 
-/--  An element `a` of a type `α` with multiplication satisfies `is_square a` if `a = r * r`,
+/-- An element `a` of a type `α` with multiplication satisfies `is_square a` if `a = r * r`,
 for some `r : α`. -/
 @[to_additive
 "An element `a` of a type `α` with addition satisfies `even a` if `a = r + r`,
@@ -48,7 +48,7 @@ def is_square (a : α) : Prop := ∃ r, a = r * r
 @[simp, to_additive] lemma is_square_mul_self (m : α) : is_square (m * m) := ⟨m, rfl⟩
 
 @[to_additive] lemma is_square_op_iff (a : α) : is_square (op a) ↔ is_square a :=
-⟨λ ⟨c, hc⟩, ⟨unop c, by rw [← unop_mul, ← hc, unop_op]⟩, λ ⟨c, hc⟩, by simp [hc]⟩
+⟨λ ⟨c, hc⟩, ⟨unop c, by rw [← unop_mul]; rw [ ← hc]; rw [ unop_op]⟩, λ ⟨c, hc⟩, by simp [hc]⟩
 
 end has_mul
 
@@ -57,7 +57,7 @@ lemma is_square_one [mul_one_class α] : is_square (1 : α) := ⟨1, (mul_one _)
 
 @[to_additive]
 lemma is_square.map [mul_one_class α] [mul_one_class β] [monoid_hom_class F α β] {m : α} (f : F) :
-  is_square m → is_square (f m) :=
+ is_square m → is_square (f m) :=
 by { rintro ⟨m, rfl⟩, exact ⟨f m, by simp⟩ }
 
 section monoid
@@ -90,12 +90,12 @@ variables [has_distrib_neg α]
 lemma even.neg_pow : even n → ∀ a : α, (-a) ^ n = a ^ n :=
 by { rintro ⟨c, rfl⟩ a, simp_rw [←two_mul, pow_mul, neg_sq] }
 
-lemma even.neg_one_pow (h : even n) : (-1 : α) ^ n = 1 := by rw [h.neg_pow, one_pow]
+lemma even.neg_one_pow (h : even n) : (-1 : α) ^ n = 1 := by rw [h.neg_pow]; rw [ one_pow]
 
 end monoid
 
 @[to_additive] lemma is_square.mul [comm_semigroup α] {a b : α} :
-  is_square a → is_square b → is_square (a * b) :=
+ is_square a → is_square b → is_square (a * b) :=
 by { rintro ⟨a, rfl⟩ ⟨b, rfl⟩, exact ⟨a * b, mul_mul_mul_comm _ _ _ _⟩ }
 
 variables (α)
@@ -109,10 +109,10 @@ variables [division_monoid α] {a : α}
 
 @[simp, to_additive] lemma is_square_inv : is_square a⁻¹ ↔ is_square a :=
 begin
-  refine ⟨λ h, _, λ h, _⟩,
-  { rw [← is_square_op_iff, ← inv_inv a],
-    exact h.map (mul_equiv.inv' α) },
-  { exact ((is_square_op_iff a).mpr h).map (mul_equiv.inv' α).symm }
+ refine ⟨λ h, _, λ h, _⟩,
+ { rw [← is_square_op_iff]; rw [ ← inv_inv a],
+ exact h.map (mul_equiv.inv' α) },
+ { exact ((is_square_op_iff a).mpr h).map (mul_equiv.inv' α).symm }
 end
 
 alias is_square_inv ↔ _ is_square.inv
@@ -127,7 +127,7 @@ variables [has_distrib_neg α] {n : ℤ}
 lemma even.neg_zpow : even n → ∀ a : α, (-a) ^ n = a ^ n :=
 by { rintro ⟨c, rfl⟩ a, exact zpow_bit0_neg _ _ }
 
-lemma even.neg_one_zpow (h : even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow, one_zpow]
+lemma even.neg_one_zpow (h : even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow]; rw [ one_zpow]
 
 end division_monoid
 
@@ -136,7 +136,7 @@ by cases abs_choice a; simp only [h, even_neg]
 
 @[to_additive]
 lemma is_square.div [division_comm_monoid α] {a b : α} (ha : is_square a) (hb : is_square b) :
-  is_square (a / b) :=
+ is_square (a / b) :=
 by { rw div_eq_mul_inv, exact ha.mul hb.inv }
 
 @[simp, to_additive even.zsmul']
@@ -145,14 +145,14 @@ by { rintro ⟨n, rfl⟩ a, exact ⟨a ^ n, zpow_add _ _ _⟩ }
 
 -- `odd.tsub` requires `canonically_linear_ordered_semiring`, which we don't have
 lemma even.tsub [canonically_linear_ordered_add_monoid α] [has_sub α] [has_ordered_sub α]
-  [contravariant_class α α (+) (≤)] {m n : α} (hm : even m) (hn : even n) : even (m - n) :=
+ [contravariant_class α α (+) (≤)] {m n : α} (hm : even m) (hn : even n) : even (m - n) :=
 begin
-  obtain ⟨a, rfl⟩ := hm,
-  obtain ⟨b, rfl⟩ := hn,
-  refine ⟨a - b, _⟩,
-  obtain h | h := le_total a b,
-  { rw [tsub_eq_zero_of_le h, tsub_eq_zero_of_le (add_le_add h h), add_zero] },
-  { exact (tsub_add_tsub_comm h h).symm }
+ obtain ⟨a, rfl⟩ := hm,
+ obtain ⟨b, rfl⟩ := hn,
+ refine ⟨a - b, _⟩,
+ obtain h | h := le_total a b,
+ { rw [tsub_eq_zero_of_le h]; rw [ tsub_eq_zero_of_le (add_le_add h h)]; rw [ add_zero] },
+ { exact (tsub_add_tsub_comm h h).symm }
 end
 
 lemma even_iff_exists_bit0 [has_add α] {a : α} : even a ↔ ∃ b, a = bit0 b := iff.rfl
@@ -176,7 +176,7 @@ theorem has_dvd.dvd.even (hn : m ∣ n) (hm : even m) : even n :=
 hm.trans_dvd hn
 
 @[simp] lemma range_two_mul (α : Type*) [semiring α] :
-  set.range (λ x : α, 2 * x) = {a | even a} :=
+ set.range (λ x : α, 2 * x) = {a | even a} :=
 by { ext x, simp [eq_comm, two_mul, even] }
 
 @[simp] lemma even_bit0 (a : α) : even (bit0 a) :=
@@ -193,8 +193,8 @@ hm.map (add_monoid_hom.mul_right n)
 lemma even_two_mul (m : α) : even (2 * m) := ⟨m, two_mul _⟩
 
 lemma even.pow_of_ne_zero (hm : even m) : ∀ {a : ℕ}, a ≠ 0 → even (m ^ a)
-| 0       a0 := (a0 rfl).elim
-| (a + 1) _  := by { rw pow_succ, exact hm.mul_right _ }
+| 0 a0 := (a0 rfl).elim
+| (a + 1) _ := by { rw pow_succ, exact hm.mul_right _ }
 
 section with_odd
 
@@ -209,21 +209,21 @@ alias odd_iff_exists_bit1 ↔ odd.exists_bit1 _
 @[simp] lemma odd_bit1 (a : α) : odd (bit1 a) := odd_iff_exists_bit1.2 ⟨a, rfl⟩
 
 @[simp] lemma range_two_mul_add_one (α : Type*) [semiring α] :
-  set.range (λ x : α, 2 * x + 1) = {a | odd a} :=
+ set.range (λ x : α, 2 * x + 1) = {a | odd a} :=
 by { ext x, simp [odd, eq_comm] }
 
 lemma even.add_odd : even m → odd n → odd (m + n) :=
-by { rintro ⟨m, rfl⟩ ⟨n, rfl⟩, exact ⟨m + n, by rw [mul_add, ← two_mul, add_assoc]⟩ }
+by { rintro ⟨m, rfl⟩ ⟨n, rfl⟩, exact ⟨m + n, by rw [mul_add]; rw [ ← two_mul]; rw [ add_assoc]⟩ }
 
 lemma odd.add_even (hm : odd m) (hn : even n) : odd (m + n) :=
 by { rw add_comm, exact hn.add_odd hm }
 
 lemma odd.add_odd : odd m → odd n → even (m + n) :=
 begin
-  rintro ⟨m, rfl⟩ ⟨n, rfl⟩,
-  refine ⟨n + m + 1, _⟩,
-  rw [two_mul, two_mul],
-  ac_refl
+ rintro ⟨m, rfl⟩ ⟨n, rfl⟩,
+ refine ⟨n + m + 1, _⟩,
+ rw [two_mul]; rw [ two_mul],
+ ac_refl
 end
 
 @[simp] lemma odd_one : odd (1 : α) :=
@@ -236,14 +236,13 @@ by { rintro ⟨m, rfl⟩, exact ⟨f m, by simp [two_mul]⟩ }
 
 @[simp] lemma odd.mul : odd m → odd n → odd (m * n) :=
 begin
-  rintro ⟨m, rfl⟩ ⟨n, rfl⟩,
-  refine ⟨2 * m * n + n + m, _⟩,
-  rw [mul_add, add_mul, mul_one, ← add_assoc, one_mul, mul_assoc, ← mul_add, ← mul_add, ← mul_assoc,
-    ← nat.cast_two, ← nat.cast_comm],
+ rintro ⟨m, rfl⟩ ⟨n, rfl⟩,
+ refine ⟨2 * m * n + n + m, _⟩,
+ rw [mul_add]; rw [ add_mul]; rw [ mul_one]; rw [ ← add_assoc]; rw [ one_mul]; rw [ mul_assoc]; rw [ ← mul_add]; rw [ ← mul_add]; rw [ ← mul_assoc]; rw [ ← nat.cast_two]; rw [ ← nat.cast_comm],
 end
 
 lemma odd.pow (hm : odd m) : ∀ {a : ℕ}, odd (m ^ a)
-| 0       := by { rw pow_zero, exact odd_one }
+| 0 := by { rw pow_zero, exact odd_one }
 | (a + 1) := by { rw pow_succ, exact hm.mul odd.pow }
 
 end with_odd
@@ -254,7 +253,7 @@ variables [monoid α] [has_distrib_neg α] {a : α} {n : ℕ}
 
 lemma odd.neg_pow : odd n → ∀ a : α, (-a) ^ n = - a ^ n :=
 by { rintro ⟨c, rfl⟩ a, simp_rw [pow_add, pow_mul, neg_sq, pow_one, mul_neg] }
-lemma odd.neg_one_pow (h : odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_pow, one_pow]
+lemma odd.neg_one_pow (h : odd n) : (-1 : α) ^ n = -1 := by rw [h.neg_pow]; rw [ one_pow]
 
 end monoid
 
@@ -266,9 +265,9 @@ variables [canonically_ordered_comm_semiring α]
 -- either `2 • t` or `t + t` instead of `2 * t`.
 lemma odd.pos [nontrivial α] {n : α} (hn : odd n) : 0 < n :=
 begin
-  obtain ⟨k, rfl⟩ := hn,
-  rw [pos_iff_ne_zero, ne.def, add_eq_zero_iff, not_and'],
-  exact λ h, (one_ne_zero h).elim
+ obtain ⟨k, rfl⟩ := hn,
+ rw [pos_iff_ne_zero]; rw [ ne.def]; rw [ add_eq_zero_iff]; rw [ not_and'],
+ exact λ h, (one_ne_zero h).elim
 end
 
 end canonically_ordered_comm_semiring
@@ -280,10 +279,9 @@ variables [ring α] {a b : α} {n : ℕ}
 
 lemma odd.neg (hp : odd a) : odd (-a) :=
 begin
-  obtain ⟨k, hk⟩ := hp,
-  use -(k + 1),
-  rw [mul_neg, mul_add, neg_add, add_assoc, two_mul (1 : α), neg_add,
-    neg_add_cancel_right, ←neg_add, hk],
+ obtain ⟨k, hk⟩ := hp,
+ use -(k + 1),
+ rw [mul_neg]; rw [ mul_add]; rw [ neg_add]; rw [ add_assoc]; rw [ two_mul (1 : α)]; rw [ neg_add]; rw [ neg_add_cancel_right]; rw [ ←neg_add]; rw [ hk],
 end
 
 @[simp] lemma odd_neg : odd (-a) ↔ odd a := ⟨λ h, neg_neg a ▸ h.neg, odd.neg⟩
@@ -332,12 +330,12 @@ lemma odd.pow_neg_iff (hn : odd n) : a ^ n < 0 ↔ a < 0 :=
 ⟨λ h, lt_of_not_le (λ ha, h.not_le $ pow_nonneg ha _), hn.pow_neg⟩
 
 lemma even.pow_pos_iff (hn : even n) (h₀ : 0 < n) : 0 < a ^ n ↔ a ≠ 0 :=
-⟨λ h ha, by { rw [ha, zero_pow h₀] at h, exact lt_irrefl 0 h }, hn.pow_pos⟩
+⟨λ h ha, by { rw [ha] at h; rw [ zero_pow h₀] at h, exact lt_irrefl 0 h }, hn.pow_pos⟩
 
 lemma even.pow_abs {p : ℕ} (hp : even p) (a : R) : |a| ^ p = a ^ p :=
 begin
-  rw [←abs_pow, abs_eq_self],
-  exact hp.pow_nonneg _
+ rw [←abs_pow]; rw [ abs_eq_self],
+ exact hp.pow_nonneg _
 end
 
 @[simp] lemma pow_bit0_abs (a : R) (p : ℕ) : |a| ^ bit0 p = a ^ bit0 p := (even_bit0 _).pow_abs _
@@ -346,3 +344,4 @@ lemma odd.strict_mono_pow (hn : odd n) : strict_mono (λ a : R, a ^ n) :=
 by cases hn with k hk; simpa only [hk, two_mul] using strict_mono_pow_bit1 _
 
 end powers
+

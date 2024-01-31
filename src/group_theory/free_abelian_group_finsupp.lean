@@ -45,37 +45,34 @@ finsupp.lift_add_hom $ λ x, (smul_add_hom ℤ (free_abelian_group X)).flip (fre
 open finsupp free_abelian_group
 
 @[simp] lemma finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
-  finsupp.to_free_abelian_group.comp (finsupp.single_add_hom x) =
-    (smul_add_hom ℤ (free_abelian_group X)).flip (of x) :=
+ finsupp.to_free_abelian_group.comp (finsupp.single_add_hom x) =
+ (smul_add_hom ℤ (free_abelian_group X)).flip (of x) :=
 begin
-  ext,
-  simp only [add_monoid_hom.coe_comp, finsupp.single_add_hom_apply, function.comp_app,
-    one_smul, to_free_abelian_group, finsupp.lift_add_hom_apply_single]
+ ext,
+ simp only [add_monoid_hom.coe_comp, finsupp.single_add_hom_apply, function.comp_app,
+ one_smul, to_free_abelian_group, finsupp.lift_add_hom_apply_single]
 end
 
 @[simp] lemma free_abelian_group.to_finsupp_comp_to_free_abelian_group :
-  to_finsupp.comp to_free_abelian_group = add_monoid_hom.id (X →₀ ℤ) :=
+ to_finsupp.comp to_free_abelian_group = add_monoid_hom.id (X →₀ ℤ) :=
 begin
-  ext x y, simp only [add_monoid_hom.id_comp],
-  rw [add_monoid_hom.comp_assoc, finsupp.to_free_abelian_group_comp_single_add_hom],
-  simp only [to_finsupp, add_monoid_hom.coe_comp, finsupp.single_add_hom_apply,
-    function.comp_app, one_smul, lift.of, add_monoid_hom.flip_apply,
-    smul_add_hom_apply, add_monoid_hom.id_apply],
+ ext x y, simp only [add_monoid_hom.id_comp],
+ rw [add_monoid_hom.comp_assoc]; rw [ finsupp.to_free_abelian_group_comp_single_add_hom],
+ simp only [to_finsupp, add_monoid_hom.coe_comp, finsupp.single_add_hom_apply,
+ function.comp_app, one_smul, lift.of, add_monoid_hom.flip_apply,
+ smul_add_hom_apply, add_monoid_hom.id_apply],
 end
 
 @[simp] lemma finsupp.to_free_abelian_group_comp_to_finsupp :
-  to_free_abelian_group.comp to_finsupp = add_monoid_hom.id (free_abelian_group X) :=
+ to_free_abelian_group.comp to_finsupp = add_monoid_hom.id (free_abelian_group X) :=
 begin
-  ext,
-  rw [to_free_abelian_group, to_finsupp, add_monoid_hom.comp_apply, lift.of,
-    lift_add_hom_apply_single, add_monoid_hom.flip_apply, smul_add_hom_apply, one_smul,
-    add_monoid_hom.id_apply],
+ ext,
+ rw [to_free_abelian_group]; rw [ to_finsupp]; rw [ add_monoid_hom.comp_apply]; rw [ lift.of]; rw [ lift_add_hom_apply_single]; rw [ add_monoid_hom.flip_apply]; rw [ smul_add_hom_apply]; rw [ one_smul]; rw [ add_monoid_hom.id_apply],
 end
 
 @[simp] lemma finsupp.to_free_abelian_group_to_finsupp {X} (x : free_abelian_group X) :
-  x.to_finsupp.to_free_abelian_group = x :=
-by rw [← add_monoid_hom.comp_apply, finsupp.to_free_abelian_group_comp_to_finsupp,
-  add_monoid_hom.id_apply]
+ x.to_finsupp.to_free_abelian_group = x :=
+by rw [← add_monoid_hom.comp_apply]; rw [ finsupp.to_free_abelian_group_comp_to_finsupp]; rw [ add_monoid_hom.id_apply]
 
 namespace free_abelian_group
 open finsupp
@@ -83,12 +80,12 @@ open finsupp
 variable {X}
 
 @[simp] lemma to_finsupp_of (x : X) :
-  to_finsupp (of x) = finsupp.single x 1 :=
+ to_finsupp (of x) = finsupp.single x 1 :=
 by simp only [to_finsupp, lift.of]
 
 @[simp] lemma to_finsupp_to_free_abelian_group (f : X →₀ ℤ) :
-  f.to_free_abelian_group.to_finsupp = f :=
-by rw [← add_monoid_hom.comp_apply, to_finsupp_comp_to_free_abelian_group, add_monoid_hom.id_apply]
+ f.to_free_abelian_group.to_finsupp = f :=
+by rw [← add_monoid_hom.comp_apply]; rw [ to_finsupp_comp_to_free_abelian_group]; rw [ add_monoid_hom.id_apply]
 
 variable (X)
 
@@ -96,45 +93,45 @@ variable (X)
 @[simps]
 def equiv_finsupp : free_abelian_group X ≃+ (X →₀ ℤ) :=
 { to_fun := to_finsupp,
-  inv_fun := to_free_abelian_group,
-  left_inv := to_free_abelian_group_to_finsupp,
-  right_inv := to_finsupp_to_free_abelian_group,
-  map_add' := to_finsupp.map_add }
+ inv_fun := to_free_abelian_group,
+ left_inv := to_free_abelian_group_to_finsupp,
+ right_inv := to_finsupp_to_free_abelian_group,
+ map_add' := to_finsupp.map_add }
 
 /-- `A` is a basis of the ℤ-module `free_abelian_group A`. -/
 noncomputable def basis (α : Type*) :
-  basis α ℤ (free_abelian_group α) :=
+ basis α ℤ (free_abelian_group α) :=
 ⟨(free_abelian_group.equiv_finsupp α).to_int_linear_equiv ⟩
 
 /-- Isomorphic free ablian groups (as modules) have equivalent bases. -/
 def equiv.of_free_abelian_group_linear_equiv {α β : Type*}
-  (e : free_abelian_group α ≃ₗ[ℤ] free_abelian_group β) :
-  α ≃ β :=
+ (e : free_abelian_group α ≃ₗ[ℤ] free_abelian_group β) :
+ α ≃ β :=
 let t : _root_.basis α ℤ (free_abelian_group β) := (free_abelian_group.basis α).map e
-  in t.index_equiv $ free_abelian_group.basis _
+ in t.index_equiv $ free_abelian_group.basis _
 
 /-- Isomorphic free abelian groups (as additive groups) have equivalent bases. -/
 def equiv.of_free_abelian_group_equiv {α β : Type*}
-  (e : free_abelian_group α ≃+ free_abelian_group β) :
-  α ≃ β :=
+ (e : free_abelian_group α ≃+ free_abelian_group β) :
+ α ≃ β :=
 equiv.of_free_abelian_group_linear_equiv e.to_int_linear_equiv
 
 /-- Isomorphic free groups have equivalent bases. -/
 def equiv.of_free_group_equiv {α β : Type*}
-  (e : free_group α ≃* free_group β) :
-  α ≃ β :=
+ (e : free_group α ≃* free_group β) :
+ α ≃ β :=
 equiv.of_free_abelian_group_equiv e.abelianization_congr.to_additive
 
 open is_free_group
 /-- Isomorphic free groups have equivalent bases (`is_free_group` variant`). -/
 def equiv.of_is_free_group_equiv {G H : Type*}
-  [group G] [group H] [is_free_group G] [is_free_group H]
-  (e : G ≃* H) :
-  generators G ≃ generators H :=
+ [group G] [group H] [is_free_group G] [is_free_group H]
+ (e : G ≃* H) :
+ generators G ≃ generators H :=
 equiv.of_free_group_equiv $
-  mul_equiv.trans ((to_free_group G).symm) $
-  mul_equiv.trans e $
-  to_free_group H
+ mul_equiv.trans ((to_free_group G).symm) $
+ mul_equiv.trans e $
+ to_free_group H
 
 variable {X}
 
@@ -149,12 +146,12 @@ def support (a : free_abelian_group X) : finset X :=
 a.to_finsupp.support
 
 lemma mem_support_iff (x : X) (a : free_abelian_group X) :
-  x ∈ a.support ↔ coeff x a ≠ 0 :=
-by { rw [support, finsupp.mem_support_iff], exact iff.rfl }
+ x ∈ a.support ↔ coeff x a ≠ 0 :=
+by { rw [support]; rw [ finsupp.mem_support_iff], exact iff.rfl }
 
 lemma not_mem_support_iff (x : X) (a : free_abelian_group X) :
-  x ∉ a.support ↔ coeff x a = 0 :=
-by { rw [support, finsupp.not_mem_support_iff], exact iff.rfl }
+ x ∉ a.support ↔ coeff x a = 0 :=
+by { rw [support]; rw [ finsupp.not_mem_support_iff], exact iff.rfl }
 
 @[simp] lemma support_zero : support (0 : free_abelian_group X) = ∅ :=
 by simp only [support, finsupp.support_zero, add_monoid_hom.map_zero]
@@ -166,23 +163,24 @@ by simp only [support, to_finsupp_of, finsupp.support_single_ne_zero _ one_ne_ze
 by simp only [support, add_monoid_hom.map_neg, finsupp.support_neg]
 
 @[simp] lemma support_zsmul (k : ℤ) (h : k ≠ 0) (a : free_abelian_group X) :
-  support (k • a) = support a :=
+ support (k • a) = support a :=
 begin
-  ext x,
-  simp only [mem_support_iff, add_monoid_hom.map_zsmul],
-  simp only [h, zsmul_int_int, false_or, ne.def, mul_eq_zero]
+ ext x,
+ simp only [mem_support_iff, add_monoid_hom.map_zsmul],
+ simp only [h, zsmul_int_int, false_or, ne.def, mul_eq_zero]
 end
 
 @[simp] lemma support_nsmul (k : ℕ) (h : k ≠ 0) (a : free_abelian_group X) :
-  support (k • a) = support a :=
+ support (k • a) = support a :=
 by { apply support_zsmul k _ a, exact_mod_cast h }
 
 open_locale classical
 
 lemma support_add (a b : free_abelian_group X) : (support (a + b)) ⊆ a.support ∪ b.support :=
 begin
-  simp only [support, add_monoid_hom.map_add],
-  apply finsupp.support_add
+ simp only [support, add_monoid_hom.map_add],
+ apply finsupp.support_add
 end
 
 end free_abelian_group
+

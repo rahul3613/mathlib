@@ -51,7 +51,7 @@ kernel.lift (cokernel.π f) f $ cokernel.condition f
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
 @[simp, reassoc] protected lemma image.fac :
-  abelian.factor_thru_image f ≫ image.ι f = f :=
+ abelian.factor_thru_image f ≫ image.ι f = f :=
 kernel.lift_ι _ _ _
 
 instance mono_factor_thru_image [mono f] : mono (abelian.factor_thru_image f) :=
@@ -100,12 +100,13 @@ def coimage_image_comparison' : abelian.coimage f ⟶ abelian.image f :=
 kernel.lift (cokernel.π f) (cokernel.desc (kernel.ι f) f (by simp)) (by { ext, simp, })
 
 lemma coimage_image_comparison_eq_coimage_image_comparison' :
-  coimage_image_comparison f = coimage_image_comparison' f :=
+ coimage_image_comparison f = coimage_image_comparison' f :=
 by { ext, simp [coimage_image_comparison, coimage_image_comparison'], }
 
 @[simp, reassoc]
 lemma coimage_image_factorisation :
-  coimage.π f ≫ coimage_image_comparison f ≫ image.ι f = f :=
+ coimage.π f ≫ coimage_image_comparison f ≫ image.ι f = f :=
 by simp [coimage_image_comparison]
 
 end category_theory.abelian
+

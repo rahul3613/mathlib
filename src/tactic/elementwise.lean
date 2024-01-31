@@ -18,14 +18,14 @@ The `elementwise` attribute can be applied to a lemma
 ```lean
 @[elementwise]
 lemma some_lemma {C : Type*} [category C]
-  {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) : f ≫ g = h := ...
+ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) : f ≫ g = h := ...
 ```
 
 and will produce
 
 ```lean
 lemma some_lemma_apply {C : Type*} [category C] [concrete_category C]
-  {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) (x : X) : g (f x) = h x := ...
+ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) (x : X) : g (f x) = h x := ...
 ```
 
 Here `X` is being coerced to a type via `concrete_category.has_coe_to_sort` and
@@ -55,7 +55,7 @@ extract the expression for `S`.
 -/
 meta def extract_category : expr → tactic expr
 | `(@eq (@quiver.hom ._ (@category_struct.to_quiver _
-     (@category.to_category_struct _ %%S)) _ _) _ _) := pure S
+ (@category.to_category_struct _ %%S)) _ _) _ _) := pure S
 | _ := failed
 
 /-- (internals for `@[elementwise]`)
@@ -72,54 +72,54 @@ and the universe parameter `w` for the `concrete_category` instance, if it was n
 -- This is closely modelled on `reassoc_axiom`.
 meta def prove_elementwise (h : expr) : tactic (expr × expr × option name) :=
 do
-   (vs,t) ← infer_type h >>= open_pis,
-   (f, g) ← match_eq t,
-   S ← extract_category t <|> fail "no morphism equation found in statement",
-   `(@quiver.hom _ %%H %%X %%Y) ← infer_type f,
-   C ← infer_type X,
-   CC_type ← to_expr ``(@concrete_category %%C %%S),
-   (CC, CC_found) ← (do CC ← mk_instance CC_type, pure (CC, tt)) <|>
-     (do CC ← mk_local' `I binder_info.inst_implicit CC_type, pure (CC, ff)),
-   -- This is need to fill in universe levels fixed by `mk_instance`:
-   CC_type ← instantiate_mvars CC_type,
-   x_type ← to_expr ``(@coe_sort %%C _
-     (@category_theory.concrete_category.has_coe_to_sort %%C %%S %%CC) %%X),
-   x ← mk_local_def `x x_type,
-   t' ← to_expr ``(@coe_fn (@quiver.hom %%C %%H %%X %%Y) _
-     (@category_theory.concrete_category.has_coe_to_fun %%C %%S %%CC %%X %%Y) %%f %%x =
-       @coe_fn (@quiver.hom %%C %%H %%X %%Y) _
-         (@category_theory.concrete_category.has_coe_to_fun %%C %%S %%CC %%X %%Y) %%g %%x),
-   let c' := h.mk_app vs,
-   (_,pr) ← solve_aux t' (rewrite_target c'; reflexivity),
-   -- The codomain of forget lives in a new universe, which may be now a universe metavariable
-   -- if we didn't synthesize an instance:
-   [w, _, _] ← pure CC_type.get_app_fn.univ_levels,
-   -- We unify that with a fresh universe parameter.
-   n ← match w with
-   | level.mvar _ := (do
-      n ← get_unused_name_reserved [`w] mk_name_set,
-      unify (expr.sort (level.param n)) (expr.sort w),
-      pure (option.some n))
-   | _ := pure option.none
-   end,
-   t' ← instantiate_mvars t',
-   CC ← instantiate_mvars CC,
-   x ← instantiate_mvars x,
-   -- Now the key step: replace morphism composition with function composition,
-   -- and identity morphisms with nothing.
-   let s := simp_lemmas.mk,
-   s ← s.add_simp ``id_apply,
-   s ← s.add_simp ``comp_apply,
-   (t'', pr', _) ← simplify s [] t' {fail_if_unchanged := ff},
-   pr' ← mk_eq_mp pr' pr,
-   -- Further, if we're in `Type`, get rid of the coercions entirely.
-   let s := simp_lemmas.mk,
-   s ← s.add_simp ``concrete_category.has_coe_to_fun_Type,
-   (t'', pr'', _) ← simplify s [] t'' {fail_if_unchanged := ff},
-   pr'' ← mk_eq_mp pr'' pr',
-   t'' ← pis (vs ++ (if CC_found then [x] else [CC, x])) t'',
-   pr'' ← lambdas (vs ++ (if CC_found then [x] else [CC, x])) pr'',
-   pure (t'', pr'', n)
+ (vs,t) ← infer_type h >>= open_pis,
+ (f, g) ← match_eq t,
+ S ← extract_category t <|> fail "no morphism equation found in statement",
+ `(@quiver.hom _ %%H %%X %%Y) ← infer_type f,
+ C ← infer_type X,
+ CC_type ← to_expr ``(@concrete_category %%C %%S),
+ (CC, CC_found) ← (do CC ← mk_instance CC_type, pure (CC, tt)) <|>
+ (do CC ← mk_local' `I binder_info.inst_implicit CC_type, pure (CC, ff)),
+ -- This is need to fill in universe levels fixed by `mk_instance`:
+ CC_type ← instantiate_mvars CC_type,
+ x_type ← to_expr ``(@coe_sort %%C _
+ (@category_theory.concrete_category.has_coe_to_sort %%C %%S %%CC) %%X),
+ x ← mk_local_def `x x_type,
+ t' ← to_expr ``(@coe_fn (@quiver.hom %%C %%H %%X %%Y) _
+ (@category_theory.concrete_category.has_coe_to_fun %%C %%S %%CC %%X %%Y) %%f %%x =
+ @coe_fn (@quiver.hom %%C %%H %%X %%Y) _
+ (@category_theory.concrete_category.has_coe_to_fun %%C %%S %%CC %%X %%Y) %%g %%x),
+ let c' := h.mk_app vs,
+ (_,pr) ← solve_aux t' (rewrite_target c'; reflexivity),
+ -- The codomain of forget lives in a new universe, which may be now a universe metavariable
+ -- if we didn't synthesize an instance:
+ [w, _, _] ← pure CC_type.get_app_fn.univ_levels,
+ -- We unify that with a fresh universe parameter.
+ n ← match w with
+ | level.mvar _ := (do
+ n ← get_unused_name_reserved [`w] mk_name_set,
+ unify (expr.sort (level.param n)) (expr.sort w),
+ pure (option.some n))
+ | _ := pure option.none
+ end,
+ t' ← instantiate_mvars t',
+ CC ← instantiate_mvars CC,
+ x ← instantiate_mvars x,
+ -- Now the key step: replace morphism composition with function composition,
+ -- and identity morphisms with nothing.
+ let s := simp_lemmas.mk,
+ s ← s.add_simp ``id_apply,
+ s ← s.add_simp ``comp_apply,
+ (t'', pr', _) ← simplify s [] t' {fail_if_unchanged := ff},
+ pr' ← mk_eq_mp pr' pr,
+ -- Further, if we're in `Type`, get rid of the coercions entirely.
+ let s := simp_lemmas.mk,
+ s ← s.add_simp ``concrete_category.has_coe_to_fun_Type,
+ (t'', pr'', _) ← simplify s [] t'' {fail_if_unchanged := ff},
+ pr'' ← mk_eq_mp pr'' pr',
+ t'' ← pis (vs ++ (if CC_found then [x] else [CC, x])) t'',
+ pr'' ← lambdas (vs ++ (if CC_found then [x] else [CC, x])) pr'',
+ pure (t'', pr'', n)
 
 /-- (implementation for `@[elementwise]`)
 Given a declaration named `n` of the form `∀ ..., f = g`, proves a new lemma named `n'`
@@ -127,11 +127,11 @@ of the form `∀ ... [concrete_category V] (x : X), f x = g x`.
 -/
 meta def elementwise_lemma (n : name) (n' : name := n.append_suffix "_apply") : tactic unit :=
 do d ← get_decl n,
-   let c := @expr.const tt n d.univ_levels,
-   (t'',pr',l') ← prove_elementwise c,
-   let params := l'.to_list ++ d.univ_params,
-   add_decl $ declaration.thm n' params t'' (pure pr'),
-   copy_attribute `simp n n'
+ let c := @expr.const tt n d.univ_levels,
+ (t'',pr',l') ← prove_elementwise c,
+ let params := l'.to_list ++ d.univ_params,
+ add_decl $ declaration.thm n' params t'' (pure pr'),
+ copy_attribute `simp n n'
 
 /--
 The `elementwise` attribute can be applied to a lemma
@@ -139,14 +139,14 @@ The `elementwise` attribute can be applied to a lemma
 ```lean
 @[elementwise]
 lemma some_lemma {C : Type*} [category C]
-  {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) : f ≫ g = h := ...
+ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) : f ≫ g = h := ...
 ```
 
 and will produce
 
 ```lean
 lemma some_lemma_apply {C : Type*} [category C] [concrete_category C]
-  {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) (x : X) : g (f x) = h x := ...
+ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : X ⟶ Z) (w : ...) (x : X) : g (f x) = h x := ...
 ```
 
 Here `X` is being coerced to a type via `concrete_category.has_coe_to_sort` and
@@ -163,17 +163,17 @@ If `simp` is added first, the generated lemma will also have the `simp` attribut
 @[user_attribute]
 meta def elementwise_attr : user_attribute unit (option name) :=
 { name := `elementwise,
-  descr := "create a companion lemma for a morphism equation applied to an element",
-  parser := optional ident,
-  after_set := some (λ n _ _,
-    do some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.append_suffix "_apply"),
-       elementwise_lemma n $ n.get_prefix ++ n' ) }
+ descr := "create a companion lemma for a morphism equation applied to an element",
+ parser := optional ident,
+ after_set := some (λ n _ _,
+ do some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.append_suffix "_apply"),
+ elementwise_lemma n $ n.get_prefix ++ n' ) }
 
 add_tactic_doc
-{ name                     := "elementwise",
-  category                 := doc_category.attr,
-  decl_names               := [`tactic.elementwise_attr],
-  tags                     := ["category theory"] }
+{ name := "elementwise",
+ category := doc_category.attr,
+ decl_names := [`tactic.elementwise_attr],
+ tags := ["category theory"] }
 
 namespace interactive
 
@@ -189,19 +189,19 @@ in this way.)
 -/
 meta def elementwise (del : parse (tk "!")?) (ns : parse ident*) : tactic unit :=
 do ns.mmap' (λ n,
-   do h ← get_local n,
-      (t,pr,u) ← prove_elementwise h,
-      assertv n t pr,
-      when del.is_some (tactic.clear h) )
+ do h ← get_local n,
+ (t,pr,u) ← prove_elementwise h,
+ assertv n t pr,
+ when del.is_some (tactic.clear h) )
 
 end interactive
 
 /-- Auxiliary definition for `category_theory.elementwise_of`. -/
 meta def derive_elementwise_proof : tactic unit :=
 do `(calculated_Prop %%v %%h) ← target,
-   (t,pr,n) ← prove_elementwise h,
-   unify v t,
-   exact pr
+ (t,pr,n) ← prove_elementwise h,
+ unify v t,
+ exact pr
 
 end tactic
 
@@ -215,14 +215,14 @@ an expression. The goal is to avoid creating assumptions that are dismissed afte
 
 ```lean
 example (M N K : Mon.{u}) (f : M ⟶ N) (g : N ⟶ K) (h : M ⟶ K) (w : f ≫ g = h) (m : M) :
-  g (f m) = h m :=
+ g (f m) = h m :=
 begin
-  rw elementwise_of w,
+ rw elementwise_of w,
 end
 ```
 -/
 theorem category_theory.elementwise_of {α} (hh : α) {β}
-  (x : tactic.calculated_Prop β hh . tactic.derive_elementwise_proof) : β := x
+ (x : tactic.calculated_Prop β hh . tactic.derive_elementwise_proof) : β := x
 
 /--
 With `w : ∀ ..., f ≫ g = h` (with universal quantifiers tolerated),
@@ -232,7 +232,8 @@ Although `elementwise_of` is not a tactic or a meta program, its type is generat
 through meta-programming to make it usable inside normal expressions.
 -/
 add_tactic_doc
-{ name                     := "category_theory.elementwise_of",
-  category                 := doc_category.tactic,
-  decl_names               := [`category_theory.elementwise_of],
-  tags                     := ["category theory"] }
+{ name := "category_theory.elementwise_of",
+ category := doc_category.tactic,
+ decl_names := [`category_theory.elementwise_of],
+ tags := ["category theory"] }
+

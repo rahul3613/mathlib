@@ -48,17 +48,17 @@ lemma of_injective : function.injective (of : α → free_ring α) :=
 free_abelian_group.of_injective.comp free_monoid.of_injective
 
 @[elab_as_eliminator] protected lemma induction_on
-  {C : free_ring α → Prop} (z : free_ring α)
-  (hn1 : C (-1)) (hb : ∀ b, C (of b))
-  (ha : ∀ x y, C x → C y → C (x + y))
-  (hm : ∀ x y, C x → C y → C (x * y)) : C z :=
+ {C : free_ring α → Prop} (z : free_ring α)
+ (hn1 : C (-1)) (hb : ∀ b, C (of b))
+ (ha : ∀ x y, C x → C y → C (x + y))
+ (hm : ∀ x y, C x → C y → C (x * y)) : C z :=
 have hn : ∀ x, C x → C (-x), from λ x ih, neg_one_mul x ▸ hm _ _ hn1 ih,
 have h1 : C 1, from neg_neg (1 : free_ring α) ▸ hn _ hn1,
 free_abelian_group.induction_on z
-  (add_left_neg (1 : free_ring α) ▸ ha _ _ hn1 h1)
-  (λ m, list.rec_on m h1 $ λ a m ih, hm _ _ (hb a) ih)
-  (λ m ih, hn _ ih)
-  ha
+ (add_left_neg (1 : free_ring α) ▸ ha _ _ hn1 h1)
+ (λ m, list.rec_on m h1 $ λ a m ih, hm _ _ (hb a) ih)
+ (λ m ih, hn _ ih)
+ ha
 
 section lift
 
@@ -76,7 +76,7 @@ lift.right_inv f
 
 @[ext]
 lemma hom_ext ⦃f g : free_ring α →+* R⦄ (h : ∀ x, f (of x) = g (of x)) :
-  f = g :=
+ f = g :=
 lift.symm.injective (funext h)
 
 end lift
@@ -91,3 +91,4 @@ lift $ of ∘ f
 lemma map_of (x : α) : map f (of x) = of (f x) := lift_of _ _
 
 end free_ring
+

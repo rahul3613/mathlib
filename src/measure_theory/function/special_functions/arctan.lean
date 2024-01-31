@@ -29,3 +29,4 @@ variables {α : Type*} {m : measurable_space α} {f : α → ℝ} (hf : measurab
 measurable_arctan.comp hf
 
 end real_composition
+

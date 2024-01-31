@@ -46,11 +46,11 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 instance : group (ring_aut R) :=
 by refine_struct
 { mul := λ g h, ring_equiv.trans h g,
-  one := ring_equiv.refl R,
-  inv := ring_equiv.symm,
-  div := _,
-  npow := @npow_rec _ ⟨ring_equiv.refl R⟩ ⟨λ g h, ring_equiv.trans h g⟩,
-  zpow := @zpow_rec _ ⟨ring_equiv.refl R⟩ ⟨λ g h, ring_equiv.trans h g⟩ ⟨ring_equiv.symm⟩ };
+ one := ring_equiv.refl R,
+ inv := ring_equiv.symm,
+ div := _,
+ npow := @npow_rec _ ⟨ring_equiv.refl R⟩ ⟨λ g h, ring_equiv.trans h g⟩,
+ zpow := @zpow_rec _ ⟨ring_equiv.refl R⟩ ⟨λ g h, ring_equiv.trans h g⟩ ⟨ring_equiv.symm⟩ };
 intros; ext; try { refl }; apply equiv.left_inv
 
 instance : inhabited (ring_aut R) := ⟨1⟩
@@ -76,12 +76,12 @@ variables {G R : Type*} [group G] [semiring R]
 /-- The tautological action by the group of automorphism of a ring `R` on `R`.-/
 instance apply_mul_semiring_action : mul_semiring_action (ring_aut R) R :=
 { smul := ($),
-  smul_zero := ring_equiv.map_zero,
-  smul_add := ring_equiv.map_add,
-  smul_one := ring_equiv.map_one,
-  smul_mul := ring_equiv.map_mul,
-  one_smul := λ _, rfl,
-  mul_smul := λ _ _ _, rfl }
+ smul_zero := ring_equiv.map_zero,
+ smul_add := ring_equiv.map_add,
+ smul_one := ring_equiv.map_one,
+ smul_mul := ring_equiv.map_mul,
+ one_smul := λ _, rfl,
+ mul_smul := λ _ _ _, rfl }
 
 @[simp]
 protected lemma smul_def (f : ring_aut R) (r : R) : f • r = f r := rfl
@@ -96,9 +96,10 @@ This is a stronger version of `distrib_mul_action.to_add_aut` and
 `mul_distrib_mul_action.to_mul_aut`. -/
 @[simps] def _root_.mul_semiring_action.to_ring_aut [mul_semiring_action G R] : G →* ring_aut R :=
 { to_fun := mul_semiring_action.to_ring_equiv G R,
-  map_mul' := λ g h, ring_equiv.ext $ mul_smul g h,
-  map_one' := ring_equiv.ext $ one_smul _, }
+ map_mul' := λ g h, ring_equiv.ext $ mul_smul g h,
+ map_one' := ring_equiv.ext $ one_smul _, }
 
 end semiring
 
 end ring_aut
+

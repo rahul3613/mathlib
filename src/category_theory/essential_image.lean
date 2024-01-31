@@ -49,7 +49,7 @@ classical.choice h.some_spec
 
 /-- Being in the essential image is a "hygenic" property: it is preserved under isomorphism. -/
 lemma ess_image.of_iso {Y Y' : D} (h : Y ≅ Y') (hY : Y ∈ ess_image F) :
-  Y' ∈ ess_image F :=
+ Y' ∈ ess_image F :=
 hY.imp (λ B, nonempty.map (≪≫ h))
 
 /--
@@ -57,12 +57,12 @@ If `Y` is in the essential image of `F` then it is in the essential image of `F'
 `F ≅ F'`.
 -/
 lemma ess_image.of_nat_iso {F' : C ⥤ D} (h : F ≅ F') {Y : D} (hY : Y ∈ ess_image F) :
-  Y ∈ ess_image F' :=
+ Y ∈ ess_image F' :=
 hY.imp (λ X, nonempty.map (λ t, h.symm.app X ≪≫ t))
 
 /-- Isomorphic functors have equal essential images. -/
 lemma ess_image_eq_of_nat_iso {F' : C ⥤ D} (h : F ≅ F') :
-  ess_image F = ess_image F' :=
+ ess_image F = ess_image F' :=
 funext (λ _, propext ⟨ess_image.of_nat_iso h, ess_image.of_nat_iso h.symm⟩)
 
 /-- An object in the image is in the essential image. -/
@@ -91,7 +91,7 @@ surjective and the second is fully faithful.
 -/
 @[simps]
 def to_ess_image_comp_essential_image_inclusion (F : C ⥤ D) :
-  F.to_ess_image ⋙ F.ess_image_inclusion ≅ F :=
+ F.to_ess_image ⋙ F.ess_image_inclusion ≅ F :=
 full_subcategory.lift_comp_inclusion _ _ _
 
 end functor
@@ -111,11 +111,11 @@ instance : ess_surj F.to_ess_image :=
 variables (F) [ess_surj F]
 
 /-- Given an essentially surjective functor, we can find a preimage for every object `Y` in the
-    codomain. Applying the functor to this preimage will yield an object isomorphic to `Y`, see
-    `obj_obj_preimage_iso`. -/
+ codomain. Applying the functor to this preimage will yield an object isomorphic to `Y`, see
+ `obj_obj_preimage_iso`. -/
 def functor.obj_preimage (Y : D) : C := (ess_surj.mem_ess_image F Y).witness
 /-- Applying an essentially surjective functor to a preimage of `Y` yields an object that is
-    isomorphic to `Y`. -/
+ isomorphic to `Y`. -/
 def functor.obj_obj_preimage_iso (Y : D) : F.obj (F.obj_preimage Y) ≅ Y :=
 (ess_surj.mem_ess_image F Y).get_iso
 
@@ -127,9 +127,10 @@ faithful.of_comp_iso F.to_ess_image_comp_essential_image_inclusion
 /-- The induced functor of a full functor is full -/
 instance full.to_ess_image (F : C ⥤ D) [full F] : full F.to_ess_image :=
 begin
-  haveI := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm,
-  exactI full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
+ haveI := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm,
+ exactI full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
 end
 
 
 end category_theory
+

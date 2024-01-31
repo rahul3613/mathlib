@@ -18,24 +18,25 @@ by noncomm_ring
 -/
 meta def noncomm_ring :=
 `[simp only [-- Expand everything out.
-             add_mul, mul_add, sub_eq_add_neg,
-             -- Right associate all products.
-             mul_assoc,
-             -- Expand powers to numerals.
-             pow_bit0, pow_bit1, pow_one,
-             -- Replace multiplication by numerals with `zsmul`.
-             bit0_mul, mul_bit0, bit1_mul, mul_bit1, one_mul, mul_one, zero_mul, mul_zero,
-             -- Pull `zsmul n` out the front so `abel` can see them.
-             mul_smul_comm, smul_mul_assoc,
-             -- Pull out negations.
-             neg_mul, mul_neg] {fail_if_unchanged := ff};
-  abel]
+ add_mul, mul_add, sub_eq_add_neg,
+ -- Right associate all products.
+ mul_assoc,
+ -- Expand powers to numerals.
+ pow_bit0, pow_bit1, pow_one,
+ -- Replace multiplication by numerals with `zsmul`.
+ bit0_mul, mul_bit0, bit1_mul, mul_bit1, one_mul, mul_one, zero_mul, mul_zero,
+ -- Pull `zsmul n` out the front so `abel` can see them.
+ mul_smul_comm, smul_mul_assoc,
+ -- Pull out negations.
+ neg_mul, mul_neg] {fail_if_unchanged := ff};
+ abel]
 
 add_tactic_doc
-{ name       := "noncomm_ring",
-  category   := doc_category.tactic,
-  decl_names := [`tactic.interactive.noncomm_ring],
-  tags       := ["arithmetic", "simplification", "decision procedure"] }
+{ name := "noncomm_ring",
+ category := doc_category.tactic,
+ decl_names := [`tactic.interactive.noncomm_ring],
+ tags := ["arithmetic", "simplification", "decision procedure"] }
 
 end interactive
 end tactic
+

@@ -22,13 +22,13 @@ section conditionally_complete_lattice
 variables [conditionally_complete_lattice α] {s t : set α} {a b : α}
 
 lemma finset.nonempty.sup'_eq_cSup_image {s : finset β} (hs : s.nonempty) (f : β → α) :
-  s.sup' hs f = Sup (f '' s) :=
+ s.sup' hs f = Sup (f '' s) :=
 eq_of_forall_ge_iff $ λ a,
-  by simp [cSup_le_iff (s.finite_to_set.image f).bdd_above (hs.to_set.image f)]
+ by simp [cSup_le_iff (s.finite_to_set.image f).bdd_above (hs.to_set.image f)]
 
 lemma finset.nonempty.sup'_id_eq_cSup {s : finset α} (hs : s.nonempty) :
-  s.sup' hs id = Sup s :=
-by rw [hs.sup'_eq_cSup_image, image_id]
+ s.sup' hs id = Sup s :=
+by rw [hs.sup'_eq_cSup_image]; rw [ image_id]
 
 end conditionally_complete_lattice
 
@@ -71,28 +71,29 @@ non-empty. As a result, we can translate between the two.
 namespace finset
 
 lemma sup'_eq_cSup_image [conditionally_complete_lattice β] (s : finset α) (H) (f : α → β) :
-  s.sup' H f = Sup (f '' s) :=
+ s.sup' H f = Sup (f '' s) :=
 begin
-  apply le_antisymm,
-  { refine (finset.sup'_le _ _ $ λ a ha, _),
-    refine le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩,
-    rintros i ⟨j, hj, rfl⟩,
-    exact finset.le_sup' _ hj },
-  { apply cSup_le ((coe_nonempty.mpr H).image _),
-    rintros _ ⟨a, ha, rfl⟩,
-    exact finset.le_sup' _ ha, }
+ apply le_antisymm,
+ { refine (finset.sup'_le _ _ $ λ a ha, _),
+ refine le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩,
+ rintros i ⟨j, hj, rfl⟩,
+ exact finset.le_sup' _ hj },
+ { apply cSup_le ((coe_nonempty.mpr H).image _),
+ rintros _ ⟨a, ha, rfl⟩,
+ exact finset.le_sup' _ ha, }
 end
 
 lemma inf'_eq_cInf_image [conditionally_complete_lattice β] (s : finset α) (H) (f : α → β) :
-  s.inf' H f = Inf (f '' s) :=
+ s.inf' H f = Inf (f '' s) :=
 @sup'_eq_cSup_image _ βᵒᵈ _ _ H _
 
 lemma sup'_id_eq_cSup [conditionally_complete_lattice α] (s : finset α) (H) :
-  s.sup' H id = Sup s :=
-by rw [sup'_eq_cSup_image s H, set.image_id]
+ s.sup' H id = Sup s :=
+by rw [sup'_eq_cSup_image s H]; rw [ set.image_id]
 
 lemma inf'_id_eq_cInf [conditionally_complete_lattice α] (s : finset α) (H) :
-  s.inf' H id = Inf s :=
+ s.inf' H id = Inf s :=
 @sup'_id_eq_cSup αᵒᵈ _ _ H
 
 end finset
+

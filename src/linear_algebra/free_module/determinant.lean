@@ -19,15 +19,16 @@ free (finite) modules over any commutative ring.
 ## Main results
 
  * `linear_map.det_zero''`: The determinant of the constant zero map is zero, in a finite free
-   nontrivial module.
+ nontrivial module.
 -/
 
 @[simp] lemma linear_map.det_zero'' {R M : Type*} [comm_ring R] [add_comm_group M] [module R M]
-  [module.free R M] [module.finite R M] [nontrivial M] :
-  linear_map.det (0 : M →ₗ[R] M) = 0 :=
+ [module.free R M] [module.finite R M] [nontrivial M] :
+ linear_map.det (0 : M →ₗ[R] M) = 0 :=
 begin
-  letI : nonempty (module.free.choose_basis_index R M) :=
-    (module.free.choose_basis R M).index_nonempty,
-  nontriviality R,
-  exact linear_map.det_zero' (module.free.choose_basis R M)
+ letI : nonempty (module.free.choose_basis_index R M) :=
+ (module.free.choose_basis R M).index_nonempty,
+ nontriviality R,
+ exact linear_map.det_zero' (module.free.choose_basis R M)
 end
+

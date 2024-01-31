@@ -32,7 +32,7 @@ when the `trace.linarith` option is set to true.
 -/
 meta def linarith_trace_proofs (s : string := "") (l : list expr) : tactic unit :=
 tactic.when_tracing `linarith $ do
-  tactic.trace s, l.mmap tactic.infer_type >>= tactic.trace
+ tactic.trace s, l.mmap tactic.infer_type >>= tactic.trace
 
 /-! ### Linear expressions -/
 
@@ -56,9 +56,9 @@ meta def add : linexp → linexp → linexp
 | [] a := a
 | a [] := a
 | (a@(n1,z1)::t1) (b@(n2,z2)::t2) :=
-  if n1 < n2 then b::add (a::t1) t2
-  else if n2 < n1 then a::add t1 (b::t2)
-  else let sum := z1 + z2 in if sum = 0 then add t1 t2 else (n1, sum)::add t1 t2
+ if n1 < n2 then b::add (a::t1) t2
+ else if n2 < n1 then a::add t1 (b::t2)
+ else let sum := z1 + z2 in if sum = 0 then add t1 t2 else (n1, sum)::add t1 t2
 
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : linexp) : linexp :=
@@ -74,9 +74,9 @@ that is, it will return `none` as soon as it finds a key smaller than `n`.
 def get (n : ℕ) : linexp → option ℤ
 | [] := none
 | ((a, b)::t) :=
-  if a < n then none
-  else if a = n then some b
-  else get t
+ if a < n then none
+ else if a = n then some b
+ else get t
 
 /--
 `l.contains n` is true iff `n` is the first element of a pair in `l`.
@@ -104,11 +104,11 @@ def cmp : linexp → linexp → ordering
 | [] _ := ordering.lt
 | _ [] := ordering.gt
 | ((n1,z1)::t1) ((n2,z2)::t2) :=
-  if n1 < n2 then ordering.lt
-  else if n2 < n1 then ordering.gt
-  else if z1 < z2 then ordering.lt
-  else if z2 < z1 then ordering.gt
-  else cmp t1 t2
+ if n1 < n2 then ordering.lt
+ else if n2 < n1 then ordering.gt
+ else if z1 < z2 then ordering.lt
+ else if z2 < z1 then ordering.gt
+ else cmp t1 t2
 
 end linexp
 
@@ -198,11 +198,11 @@ meta def comp.add (c1 c2 : comp) : comp :=
 /-- `comp` has a lex order. First the `ineq`s are compared, then the `coeff`s. -/
 meta def comp.cmp : comp → comp → ordering
 | ⟨str1, coeffs1⟩ ⟨str2, coeffs2⟩ :=
-  match str1.cmp str2 with
-  | ordering.lt := ordering.lt
-  | ordering.gt := ordering.gt
-  | ordering.eq := coeffs1.cmp coeffs2
-  end
+ match str1.cmp str2 with
+ | ordering.lt := ordering.lt
+ | ordering.gt := ordering.gt
+ | ordering.eq := coeffs1.cmp coeffs2
+ end
 
 /--
 A `comp` represents a contradiction if its expression has no coefficients and its strength is <,
@@ -262,35 +262,35 @@ A `preprocessor` lifts to a `global_preprocessor` by folding it over the input l
 -/
 meta def preprocessor.globalize (pp : preprocessor) : global_preprocessor :=
 { name := pp.name,
-  transform := list.mfoldl (λ ret e, do l' ← pp.transform e, return (l' ++ ret)) [] }
+ transform := list.mfoldl (λ ret e, do l' ← pp.transform e, return (l' ++ ret)) [] }
 
 /--
 A `global_preprocessor` lifts to a `global_branching_preprocessor` by producing only one branch.
 -/
 meta def global_preprocessor.branching (pp : global_preprocessor) : global_branching_preprocessor :=
 { name := pp.name,
-  transform := λ l, do g ← tactic.get_goal, singleton <$> prod.mk g <$> pp.transform l }
+ transform := λ l, do g ← tactic.get_goal, singleton <$> prod.mk g <$> pp.transform l }
 
 /--
 `process pp l` runs `pp.transform` on `l` and returns the result,
 tracing the result if `trace.linarith` is on.
 -/
 meta def global_branching_preprocessor.process (pp : global_branching_preprocessor)
-  (l : list expr) :
-  tactic (list branch) :=
+ (l : list expr) :
+ tactic (list branch) :=
 do l ← pp.transform l,
-   when (l.length > 1) $
-     linarith_trace format!"Preprocessing: {pp.name} has branched, with branches:",
-   l.mmap' $ λ l, tactic.set_goals [l.1] >>
-     linarith_trace_proofs (to_string format!"Preprocessing: {pp.name}") l.2,
-   return l
+ when (l.length > 1) $
+ linarith_trace format!"Preprocessing: {pp.name} has branched, with branches:",
+ l.mmap' $ λ l, tactic.set_goals [l.1] >>
+ linarith_trace_proofs (to_string format!"Preprocessing: {pp.name}") l.2,
+ return l
 
 meta instance preprocessor_to_gb_preprocessor :
-  has_coe preprocessor global_branching_preprocessor :=
+ has_coe preprocessor global_branching_preprocessor :=
 ⟨global_preprocessor.branching ∘ preprocessor.globalize⟩
 
 meta instance global_preprocessor_to_gb_preprocessor :
-  has_coe global_preprocessor global_branching_preprocessor :=
+ has_coe global_preprocessor global_branching_preprocessor :=
 ⟨global_preprocessor.branching⟩
 
 
@@ -299,7 +299,7 @@ A `certificate_oracle` is a function `produce_certificate : list comp → ℕ �
 `produce_certificate hyps max_var` tries to derive a contradiction from the comparisons in `hyps`
 by eliminating all variables ≤ `max_var`.
 If successful, it returns a map `coeff : ℕ → ℕ` as a certificate.
-This map represents that we can find a contradiction by taking the sum  `∑ (coeff i) * hyps[i]`.
+This map represents that we can find a contradiction by taking the sum `∑ (coeff i) * hyps[i]`.
 
 The default `certificate_oracle` used by `linarith` is
 `linarith.fourier_motzkin.produce_certificate`.
@@ -325,7 +325,7 @@ meta structure linarith_config : Type :=
 since this is typically needed when using stronger unification.
 -/
 meta def linarith_config.update_reducibility (cfg : linarith_config) (reduce_semi : bool) :
-  linarith_config :=
+ linarith_config :=
 if reduce_semi then { cfg with transparency := semireducible, discharger := `[ring!] }
 else cfg
 
@@ -370,16 +370,17 @@ If `c = 1`, `h'` is the same as `h` -- specifically, it does *not* change the ty
 -/
 meta def mk_single_comp_zero_pf (c : ℕ) (h : expr) : tactic (ineq × expr) :=
 do tp ← infer_type h >>= instantiate_mvars,
-  some (iq, e) ← return $ parse_into_comp_and_expr tp,
-  if c = 0 then
-    do e' ← mk_app ``zero_mul [e], return (ineq.eq, e')
-  else if c = 1 then return (iq, h)
-  else
-    do tp ← (prod.snd <$> (infer_type h >>= instantiate_mvars >>= get_rel_sides)) >>= infer_type,
-       c ← tp.of_nat c,
-       cpos ← to_expr ``(%%c > 0),
-       (_, ex) ← solve_aux cpos `[norm_num, done],
-       e' ← mk_app iq.to_const_mul_nm [h, ex],
-       return (iq, e')
+ some (iq, e) ← return $ parse_into_comp_and_expr tp,
+ if c = 0 then
+ do e' ← mk_app ``zero_mul [e], return (ineq.eq, e')
+ else if c = 1 then return (iq, h)
+ else
+ do tp ← (prod.snd <$> (infer_type h >>= instantiate_mvars >>= get_rel_sides)) >>= infer_type,
+ c ← tp.of_nat c,
+ cpos ← to_expr ``(%%c > 0),
+ (_, ex) ← solve_aux cpos `[norm_num, done],
+ e' ← mk_app iq.to_const_mul_nm [h, ex],
+ return (iq, e')
 
 end linarith
+

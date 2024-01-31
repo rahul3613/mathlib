@@ -42,3 +42,4 @@ end Locale
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHaus_to_Locale.faithful : faithful (CompHaus_to_Top ⋙ Top_to_Locale.{u}) :=
 ⟨λ X Y f g h, by { dsimp at h, exact opens.comap_injective (quiver.hom.op_inj h) }⟩
+

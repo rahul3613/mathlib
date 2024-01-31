@@ -23,7 +23,7 @@ open_locale pointwise
 variables {α β : Type*}
 
 /-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
-  multiplication `*` as "multiplication". -/
+ multiplication `*` as "multiplication". -/
 @[derive [inhabited, partial_order, order_bot]] def set_semiring (α : Type*) : Type* := set α
 
 /-- The identity function `set α → set_semiring α`. -/
@@ -46,11 +46,11 @@ lemma up_lt_up {s t : set α} : s.up < t.up ↔ s ⊂ t := iff.rfl
 
 instance : add_comm_monoid (set_semiring α) :=
 { add := λ s t, (s.down ∪ t.down).up,
-  zero := (∅ : set α).up,
-  add_assoc := union_assoc,
-  zero_add := empty_union,
-  add_zero := union_empty,
-  add_comm := union_comm }
+ zero := (∅ : set α).up,
+ add_assoc := union_assoc,
+ zero_add := empty_union,
+ add_zero := union_empty,
+ add_comm := union_comm }
 
 lemma zero_def : (0 : set_semiring α) = set.up ∅ := rfl
 
@@ -74,12 +74,12 @@ variables [has_mul α]
 
 instance : non_unital_non_assoc_semiring (set_semiring α) :=
 { -- reducibility linter complains if we use `(s.down * t.down).up`
-  mul := λ s t, (image2 (*) s.down t.down).up,
-  zero_mul := λ s, empty_mul,
-  mul_zero := λ s, mul_empty,
-  left_distrib := λ _ _ _, mul_union,
-  right_distrib := λ _ _ _, union_mul,
-  ..set_semiring.add_comm_monoid }
+ mul := λ s t, (image2 (*) s.down t.down).up,
+ zero_mul := λ s, empty_mul,
+ mul_zero := λ s, mul_empty,
+ left_distrib := λ _ _ _, mul_union,
+ right_distrib := λ _ _ _, union_mul,
+ ..set_semiring.add_comm_monoid }
 
 lemma mul_def (s t : set_semiring α) : s * t = (s.down * t.down).up := rfl
 
@@ -89,13 +89,13 @@ lemma mul_def (s t : set_semiring α) : s * t = (s.down * t.down).up := rfl
 
 instance : no_zero_divisors (set_semiring α) :=
 ⟨λ a b ab, a.eq_empty_or_nonempty.imp_right $ λ ha, b.eq_empty_or_nonempty.resolve_right $
-  λ hb, nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
+ λ hb, nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
 
 instance covariant_class_mul_left : covariant_class (set_semiring α) (set_semiring α) (*) (≤) :=
 ⟨λ a b c, mul_subset_mul_left⟩
 
 instance covariant_class_mul_right :
-  covariant_class (set_semiring α) (set_semiring α) (swap (*)) (≤) :=
+ covariant_class (set_semiring α) (set_semiring α) (swap (*)) (≤) :=
 ⟨λ a b c, mul_subset_mul_right⟩
 
 end has_mul
@@ -115,15 +115,15 @@ end has_one
 
 instance [mul_one_class α] : non_assoc_semiring (set_semiring α) :=
 { one := 1,
-  mul := (*),
-  ..set_semiring.non_unital_non_assoc_semiring, ..set.mul_one_class }
+ mul := (*),
+ ..set_semiring.non_unital_non_assoc_semiring, ..set.mul_one_class }
 
 instance [semigroup α] : non_unital_semiring (set_semiring α) :=
 { ..set_semiring.non_unital_non_assoc_semiring, ..set.semigroup }
 
 instance [monoid α] : idem_semiring (set_semiring α) :=
 { ..set_semiring.non_assoc_semiring, ..set_semiring.non_unital_semiring,
-  ..set.complete_boolean_algebra }
+ ..set.complete_boolean_algebra }
 
 instance [comm_semigroup α] : non_unital_comm_semiring (set_semiring α) :=
 { ..set_semiring.non_unital_semiring, ..set.comm_semigroup }
@@ -133,27 +133,28 @@ instance [comm_monoid α] : idem_comm_semiring (set_semiring α) :=
 
 instance [comm_monoid α] : canonically_ordered_comm_semiring (set_semiring α) :=
 { add_le_add_left := λ a b, add_le_add_left,
-  exists_add_of_le := λ a b ab, ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩,
-  le_self_add := subset_union_left,
-  ..set_semiring.idem_semiring, ..set.comm_monoid, ..set_semiring.no_zero_divisors }
+ exists_add_of_le := λ a b ab, ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩,
+ le_self_add := subset_union_left,
+ ..set_semiring.idem_semiring, ..set.comm_monoid, ..set_semiring.no_zero_divisors }
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
 def image_hom [mul_one_class α] [mul_one_class β] (f : α →* β) :
-  set_semiring α →+* set_semiring β :=
+ set_semiring α →+* set_semiring β :=
 { to_fun := λ s, (image f s.down).up,
-  map_zero' := image_empty _,
-  map_one' := by rw [down_one, image_one, map_one, singleton_one, set.up_one],
-  map_add' := image_union _,
-  map_mul' := λ _ _, image_mul f }
+ map_zero' := image_empty _,
+ map_one' := by rw [down_one]; rw [ image_one]; rw [ map_one]; rw [ singleton_one]; rw [ set.up_one],
+ map_add' := image_union _,
+ map_mul' := λ _ _, image_mul f }
 
 lemma image_hom_def [mul_one_class α] [mul_one_class β] (f : α →* β) (s : set_semiring α) :
-  image_hom f s = (image f s.down).up := rfl
+ image_hom f s = (image f s.down).up := rfl
 
 @[simp] lemma down_image_hom [mul_one_class α] [mul_one_class β] (f : α →* β) (s : set_semiring α) :
-  (image_hom f s).down = f '' s.down := rfl
+ (image_hom f s).down = f '' s.down := rfl
 
 @[simp] lemma _root_.set.up_image [mul_one_class α] [mul_one_class β] (f : α →* β) (s : set α) :
-  (f '' s).up = image_hom f s.up := rfl
+ (f '' s).up = image_hom f s.up := rfl
 
 end set_semiring
+

@@ -40,13 +40,13 @@ local attribute [reducible] fundamental_groupoid
 
 /-- Get an isomorphism between the fundamental groups at two points given a path -/
 def fundamental_group_mul_equiv_of_path (p : path x₀ x₁) :
-  fundamental_group X x₀ ≃* fundamental_group X x₁ := Aut.Aut_mul_equiv_of_iso (as_iso ⟦p⟧)
+ fundamental_group X x₀ ≃* fundamental_group X x₁ := Aut.Aut_mul_equiv_of_iso (as_iso ⟦p⟧)
 
 variables (x₀ x₁)
 
 /-- The fundamental group of a path connected space is independent of the choice of basepoint. -/
 def fundamental_group_mul_equiv_of_path_connected [path_connected_space X] :
-  (fundamental_group X x₀) ≃* (fundamental_group X x₁) :=
+ (fundamental_group X x₀) ≃* (fundamental_group X x₁) :=
 fundamental_group_mul_equiv_of_path (path_connected_space.some_path x₀ x₁)
 
 /-- An element of the fundamental group as an arrow in the fundamental groupoid. -/
@@ -55,7 +55,7 @@ p.hom
 
 /-- An element of the fundamental group as a quotient of homotopic paths. -/
 abbreviation to_path {X : Top} {x : X} (p : fundamental_group X x) :
-  path.homotopic.quotient x x := to_arrow p
+ path.homotopic.quotient x x := to_arrow p
 
 /-- An element of the fundamental group, constructed from an arrow in the fundamental groupoid. -/
 abbreviation from_arrow {X : Top} {x : X} (p : x ⟶ x) : fundamental_group X x :=
@@ -63,6 +63,7 @@ abbreviation from_arrow {X : Top} {x : X} (p : x ⟶ x) : fundamental_group X x 
 
 /-- An element of the fundamental gorup, constructed from a quotient of homotopic paths. -/
 abbreviation from_path {X : Top} {x : X} (p : path.homotopic.quotient x x) :
-  fundamental_group X x := from_arrow p
+ fundamental_group X x := from_arrow p
 
 end fundamental_group
+

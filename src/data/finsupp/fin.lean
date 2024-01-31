@@ -25,7 +25,7 @@ noncomputable theory
 namespace finsupp
 
 variables {n : ℕ} (i : fin n) {M : Type*} [has_zero M] (y : M)
-  (t : fin (n + 1) →₀ M) (s : fin n →₀ M)
+ (t : fin (n + 1) →₀ M) (s : fin n →₀ M)
 
 /-- `tail` for maps `fin (n + 1) →₀ M`. See `fin.tail` for more details. -/
 def tail (s : fin (n + 1) →₀ M) : fin n →₀ M :=
@@ -46,41 +46,42 @@ ext $ λ k, by simp only [tail_apply, cons_succ]
 
 @[simp] lemma cons_tail : cons (t 0) (tail t) = t :=
 begin
-  ext,
-  by_cases c_a : a = 0,
-  { rw [c_a, cons_zero] },
-  { rw [←fin.succ_pred a c_a, cons_succ, ←tail_apply] },
+ ext,
+ by_cases c_a : a = 0,
+ { rw [c_a]; rw [ cons_zero] },
+ { rw [←fin.succ_pred a c_a]; rw [ cons_succ]; rw [ ←tail_apply] },
 end
 
 @[simp] lemma cons_zero_zero : cons 0 (0 : fin n →₀ M) = 0 :=
 begin
-  ext,
-  by_cases c : a = 0,
-  { simp [c] },
-  { rw [←fin.succ_pred a c, cons_succ],
-    simp },
+ ext,
+ by_cases c : a = 0,
+ { simp [c] },
+ { rw [←fin.succ_pred a c]; rw [ cons_succ],
+ simp },
 end
 
 variables {s} {y}
 
 lemma cons_ne_zero_of_left (h : y ≠ 0) : cons y s ≠ 0 :=
 begin
-  contrapose! h with c,
-  rw [←cons_zero y s, c, finsupp.coe_zero, pi.zero_apply],
+ contrapose! h with c,
+ rw [←cons_zero y s]; rw [ c]; rw [ finsupp.coe_zero]; rw [ pi.zero_apply],
 end
 
 lemma cons_ne_zero_of_right (h : s ≠ 0) : cons y s ≠ 0 :=
 begin
-  contrapose! h with c,
-  ext,
-  simp [ ← cons_succ a y s, c],
+ contrapose! h with c,
+ ext,
+ simp [ ← cons_succ a y s, c],
 end
 
 lemma cons_ne_zero_iff : cons y s ≠ 0 ↔ y ≠ 0 ∨ s ≠ 0 :=
 begin
-  refine ⟨λ h, _, λ h, h.cases_on cons_ne_zero_of_left cons_ne_zero_of_right⟩,
-  refine imp_iff_not_or.1 (λ h' c, h _),
-  rw [h', c, finsupp.cons_zero_zero],
+ refine ⟨λ h, _, λ h, h.cases_on cons_ne_zero_of_left cons_ne_zero_of_right⟩,
+ refine imp_iff_not_or.1 (λ h' c, h _),
+ rw [h']; rw [ c]; rw [ finsupp.cons_zero_zero],
 end
 
 end finsupp
+

@@ -48,8 +48,8 @@ The Grothendieck construction (often written as `∫ F` in mathematics) for a fu
 gives a category whose
 * objects `X` consist of `X.base : C` and `X.fiber : F.obj base`
 * morphisms `f : X ⟶ Y` consist of
-  `base : X.base ⟶ Y.base` and
-  `f.fiber : (F.map base).obj X.fiber ⟶ Y.fiber`
+ `base : X.base ⟶ Y.base` and
+ `f.fiber : (F.map base).obj X.fiber ⟶ Y.fiber`
 -/
 @[nolint has_nonempty_instance]
 structure grothendieck :=
@@ -69,16 +69,16 @@ structure hom (X Y : grothendieck F) :=
 (fiber : (F.map base).obj X.fiber ⟶ Y.fiber)
 
 @[ext] lemma ext {X Y : grothendieck F} (f g : hom X Y)
-  (w_base : f.base = g.base) (w_fiber : eq_to_hom (by rw w_base) ≫ f.fiber = g.fiber) : f = g :=
+ (w_base : f.base = g.base) (w_fiber : eq_to_hom (by rw w_base) ≫ f.fiber = g.fiber) : f = g :=
 begin
-  cases f; cases g,
-  congr,
-  dsimp at w_base,
-  induction w_base,
-  refl,
-  dsimp at w_base,
-  induction w_base,
-  simpa using w_fiber,
+ cases f; cases g,
+ congr,
+ dsimp at w_base,
+ induction w_base,
+ refl,
+ dsimp at w_base,
+ induction w_base,
+ simpa using w_fiber,
 end
 
 /--
@@ -87,7 +87,7 @@ The identity morphism in the Grothendieck category.
 @[simps]
 def id (X : grothendieck F) : hom X X :=
 { base := 𝟙 X.base,
-  fiber := eq_to_hom (by erw [category_theory.functor.map_id, functor.id_obj X.fiber]), }
+ fiber := eq_to_hom (by erw [category_theory.functor.map_id]; erw [ functor.id_obj X.fiber]), }
 
 instance (X : grothendieck F) : inhabited (hom X X) := ⟨id X⟩
 
@@ -97,43 +97,43 @@ Composition of morphisms in the Grothendieck category.
 @[simps]
 def comp {X Y Z : grothendieck F} (f : hom X Y) (g : hom Y Z) : hom X Z :=
 { base := f.base ≫ g.base,
-  fiber :=
-  eq_to_hom (by erw [functor.map_comp, functor.comp_obj]) ≫
-    (F.map g.base).map f.fiber ≫ g.fiber, }
+ fiber :=
+ eq_to_hom (by erw [functor.map_comp]; erw [ functor.comp_obj]) ≫
+ (F.map g.base).map f.fiber ≫ g.fiber, }
 
 local attribute [simp] eq_to_hom_map
 
 instance : category (grothendieck F) :=
 { hom := λ X Y, grothendieck.hom X Y,
-  id := λ X, grothendieck.id X,
-  comp := λ X Y Z f g, grothendieck.comp f g,
-  comp_id' := λ X Y f,
-  begin
-    ext,
-    { dsimp,
-      -- We need to turn `F.map_id` (which is an equation between functors)
-      -- into a natural isomorphism.
-      rw ← nat_iso.naturality_2 (eq_to_iso (F.map_id Y.base)) f.fiber,
-      simp, },
-    { simp, },
-  end,
-  id_comp' := λ X Y f, by ext; simp,
-  assoc' := λ W X Y Z f g h,
-  begin
-    ext, swap,
-    { simp, },
-    { dsimp,
-      rw ← nat_iso.naturality_2 (eq_to_iso (F.map_comp _ _)) f.fiber,
-      simp,
-      refl, },
-  end, }
+ id := λ X, grothendieck.id X,
+ comp := λ X Y Z f g, grothendieck.comp f g,
+ comp_id' := λ X Y f,
+ begin
+ ext,
+ { dsimp,
+ -- We need to turn `F.map_id` (which is an equation between functors)
+ -- into a natural isomorphism.
+ rw ← nat_iso.naturality_2 (eq_to_iso (F.map_id Y.base)) f.fiber,
+ simp, },
+ { simp, },
+ end,
+ id_comp' := λ X Y f, by ext; simp,
+ assoc' := λ W X Y Z f g h,
+ begin
+ ext, swap,
+ { simp, },
+ { dsimp,
+ rw ← nat_iso.naturality_2 (eq_to_iso (F.map_comp _ _)) f.fiber,
+ simp,
+ refl, },
+ end, }
 
 @[simp] lemma id_fiber' (X : grothendieck F) :
-  hom.fiber (𝟙 X) = eq_to_hom (by erw [category_theory.functor.map_id, functor.id_obj X.fiber]) :=
+ hom.fiber (𝟙 X) = eq_to_hom (by erw [category_theory.functor.map_id]; erw [ functor.id_obj X.fiber]) :=
 id_fiber X
 
 lemma congr {X Y : grothendieck F} {f g : X ⟶ Y} (h : f = g) :
-  f.fiber = eq_to_hom (by subst h) ≫ g.fiber :=
+ f.fiber = eq_to_hom (by subst h) ≫ g.fiber :=
 by { subst h, dsimp, simp, }
 
 section
@@ -143,7 +143,7 @@ variables (F)
 @[simps]
 def forget : grothendieck F ⥤ C :=
 { obj := λ X, X.1,
-  map := λ X Y f, f.1, }
+ map := λ X Y f, f.1, }
 
 end
 
@@ -154,13 +154,13 @@ variables (G : C ⥤ Type w)
 @[simps]
 def grothendieck_Type_to_Cat_functor : grothendieck (G ⋙ Type_to_Cat) ⥤ G.elements :=
 { obj := λ X, ⟨X.1, X.2.as⟩,
-  map := λ X Y f, ⟨f.1, f.2.1.1⟩ }
+ map := λ X Y f, ⟨f.1, f.2.1.1⟩ }
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
 def grothendieck_Type_to_Cat_inverse : G.elements ⥤ grothendieck (G ⋙ Type_to_Cat) :=
 { obj := λ X, ⟨X.1, ⟨X.2⟩⟩,
-  map := λ X Y f, ⟨f.1, ⟨⟨f.2⟩⟩⟩ }
+ map := λ X Y f, ⟨f.1, ⟨⟨f.2⟩⟩⟩ }
 
 /--
 The Grothendieck construction applied to a functor to `Type`
@@ -170,13 +170,14 @@ is the same as the 'category of elements' construction.
 @[simps]
 def grothendieck_Type_to_Cat : grothendieck (G ⋙ Type_to_Cat) ≌ G.elements :=
 { functor := grothendieck_Type_to_Cat_functor G,
-  inverse := grothendieck_Type_to_Cat_inverse G,
-  unit_iso := nat_iso.of_components (λ X, by { rcases X with ⟨_, ⟨⟩⟩, exact iso.refl _, })
-    (by { rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩, dsimp at *, subst f, ext, simp, }),
-  counit_iso := nat_iso.of_components (λ X, by { cases X, exact iso.refl _, })
-    (by { rintro ⟨⟩ ⟨⟩ ⟨f, e⟩, dsimp at *, subst e, ext, simp }),
-  functor_unit_iso_comp' := by { rintro ⟨_, ⟨⟩⟩, dsimp, simp, refl, } }
+ inverse := grothendieck_Type_to_Cat_inverse G,
+ unit_iso := nat_iso.of_components (λ X, by { rcases X with ⟨_, ⟨⟩⟩, exact iso.refl _, })
+ (by { rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩, dsimp at *, subst f, ext, simp, }),
+ counit_iso := nat_iso.of_components (λ X, by { cases X, exact iso.refl _, })
+ (by { rintro ⟨⟩ ⟨⟩ ⟨f, e⟩, dsimp at *, subst e, ext, simp }),
+ functor_unit_iso_comp' := by { rintro ⟨_, ⟨⟩⟩, dsimp, simp, refl, } }
 
 end grothendieck
 
 end category_theory
+

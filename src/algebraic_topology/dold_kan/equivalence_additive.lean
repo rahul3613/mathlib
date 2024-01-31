@@ -21,7 +21,7 @@ of categories `karoubi (simplicial_object C) ≌ karoubi (chain_complex C ℕ)`.
 noncomputable theory
 
 open category_theory category_theory.category category_theory.limits
-  category_theory.idempotents algebraic_topology.dold_kan
+ category_theory.idempotents algebraic_topology.dold_kan
 
 variables {C : Type*} [category C] [preadditive C]
 
@@ -48,20 +48,21 @@ for additive categories. -/
 @[simps]
 def equivalence : karoubi (simplicial_object C) ≌ karoubi (chain_complex C ℕ) :=
 { functor := N,
-  inverse := Γ,
-  unit_iso := Γ₂N₂,
-  counit_iso := N₂Γ₂,
-  functor_unit_iso_comp' := λ P, begin
-    let α := N.map_iso (Γ₂N₂.app P),
-    let β := N₂Γ₂.app (N.obj P),
-    symmetry,
-    change 𝟙 _ = α.hom ≫ β.hom,
-    rw [← iso.inv_comp_eq, comp_id, ← comp_id β.hom, ← iso.inv_comp_eq],
-    exact algebraic_topology.dold_kan.identity_N₂_objectwise P,
-  end }
+ inverse := Γ,
+ unit_iso := Γ₂N₂,
+ counit_iso := N₂Γ₂,
+ functor_unit_iso_comp' := λ P, begin
+ let α := N.map_iso (Γ₂N₂.app P),
+ let β := N₂Γ₂.app (N.obj P),
+ symmetry,
+ change 𝟙 _ = α.hom ≫ β.hom,
+ rw [← iso.inv_comp_eq]; rw [ comp_id]; rw [ ← comp_id β.hom]; rw [ ← iso.inv_comp_eq],
+ exact algebraic_topology.dold_kan.identity_N₂_objectwise P,
+ end }
 
 end dold_kan
 
 end preadditive
 
 end category_theory
+

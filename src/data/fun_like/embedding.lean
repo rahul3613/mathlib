@@ -30,8 +30,8 @@ variables (A B : Type*) [my_class A] [my_class B]
 -- This instance is optional if you follow the "Embedding class" design below:
 instance : embedding_like (my_embedding A B) A B :=
 { coe := my_embedding.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  injective' := my_embedding.injective' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ injective' := my_embedding.injective' }
 
 /-- Helper instance for when there's too many metavariables to directly
 apply `fun_like.to_coe_fn`. -/
@@ -45,8 +45,8 @@ instance : has_coe_to_fun (my_embedding A B) (λ _, A → B) := ⟨my_embedding.
 equalities. -/
 protected def copy (f : my_embedding A B) (f' : A → B) (h : f' = ⇑f) : my_embedding A B :=
 { to_fun := f',
-  injective' := h.symm ▸ f.injective',
-  map_op' := h.symm ▸ f.map_op' }
+ injective' := h.symm ▸ f.injective',
+ map_op' := h.symm ▸ f.map_op' }
 
 end my_embedding
 ```
@@ -68,21 +68,21 @@ set_option old_structure_cmd true
 /-- `my_embedding_class F A B` states that `F` is a type of `my_class.op`-preserving embeddings.
 You should extend this class when you extend `my_embedding`. -/
 class my_embedding_class (F : Type*) (A B : out_param $ Type*) [my_class A] [my_class B]
-  extends embedding_like F A B :=
+ extends embedding_like F A B :=
 (map_op : ∀ (f : F) (x y : A), f (my_class.op x y) = my_class.op (f x) (f y))
 
 end
 
 @[simp] lemma map_op {F A B : Type*} [my_class A] [my_class B] [my_embedding_class F A B]
-  (f : F) (x y : A) : f (my_class.op x y) = my_class.op (f x) (f y) :=
+ (f : F) (x y : A) : f (my_class.op x y) = my_class.op (f x) (f y) :=
 my_embedding_class.map_op
 
 -- You can replace `my_embedding.embedding_like` with the below instance:
 instance : my_embedding_class (my_embedding A B) A B :=
 { coe := my_embedding.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  injective' := my_embedding.injective',
-  map_op := my_embedding.map_op' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ injective' := my_embedding.injective',
+ map_op := my_embedding.map_op' }
 
 -- [Insert `has_coe_to_fun`, `to_fun_eq_coe`, `ext` and `copy` here]
 ```
@@ -93,29 +93,29 @@ Typically, you can just declare a new class analogous to `my_embedding_class`:
 
 ```
 structure cooler_embedding (A B : Type*) [cool_class A] [cool_class B]
-  extends my_embedding A B :=
+ extends my_embedding A B :=
 (map_cool' : to_fun cool_class.cool = cool_class.cool)
 
 section
 set_option old_structure_cmd true
 
 class cooler_embedding_class (F : Type*) (A B : out_param $ Type*) [cool_class A] [cool_class B]
-  extends my_embedding_class F A B :=
+ extends my_embedding_class F A B :=
 (map_cool : ∀ (f : F), f cool_class.cool = cool_class.cool)
 
 end
 
 @[simp] lemma map_cool {F A B : Type*} [cool_class A] [cool_class B] [cooler_embedding_class F A B]
-  (f : F) : f cool_class.cool = cool_class.cool :=
+ (f : F) : f cool_class.cool = cool_class.cool :=
 my_embedding_class.map_op
 
 -- You can also replace `my_embedding.embedding_like` with the below instance:
 instance : cool_embedding_class (cool_embedding A B) A B :=
 { coe := cool_embedding.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  injective' := my_embedding.injective',
-  map_op := cool_embedding.map_op',
-  map_cool := cool_embedding.map_cool' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ injective' := my_embedding.injective',
+ map_op := cool_embedding.map_op',
+ map_cool := cool_embedding.map_cool' }
 
 -- [Insert `has_coe_to_fun`, `to_fun_eq_coe`, `ext` and `copy` here]
 ```
@@ -139,7 +139,7 @@ set_option old_structure_cmd true
 injective coercion to injective functions `α ↪ β`.
 -/
 class embedding_like (F : Sort*) (α β : out_param Sort*)
-  extends fun_like F α (λ _, β) :=
+ extends fun_like F α (λ _, β) :=
 (injective' : ∀ (f : F), @function.injective α β (coe f))
 
 namespace embedding_like
@@ -156,7 +156,8 @@ protected lemma injective (f : F) : function.injective f := injective' f
 omit i
 
 @[simp] lemma comp_injective {F : Sort*} [embedding_like F β γ] (f : α → β) (e : F) :
-  function.injective (e ∘ f) ↔ function.injective f :=
+ function.injective (e ∘ f) ↔ function.injective f :=
 (embedding_like.injective e).of_comp_iff f
 
 end embedding_like
+

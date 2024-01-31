@@ -29,7 +29,7 @@ namespace real
 
 @[measurability] lemma measurable_log : measurable log :=
 measurable_of_measurable_on_compl_singleton 0 $ continuous.measurable $
-  continuous_on_iff_continuous_restrict.1 continuous_on_log
+ continuous_on_iff_continuous_restrict.1 continuous_on_log
 
 @[measurability] lemma measurable_sin : measurable sin := continuous_sin.measurable
 
@@ -66,16 +66,16 @@ continuous_of_real.measurable
 
 @[measurability] lemma measurable_arg : measurable arg :=
 have A : measurable (λ x : ℂ, real.arcsin (x.im / x.abs)),
-  from real.measurable_arcsin.comp (measurable_im.div measurable_norm),
+ from real.measurable_arcsin.comp (measurable_im.div measurable_norm),
 have B : measurable (λ x : ℂ, real.arcsin ((-x).im / x.abs)),
-  from real.measurable_arcsin.comp ((measurable_im.comp measurable_neg).div measurable_norm),
+ from real.measurable_arcsin.comp ((measurable_im.comp measurable_neg).div measurable_norm),
 measurable.ite (is_closed_le continuous_const continuous_re).measurable_set A $
-  measurable.ite (is_closed_le continuous_const continuous_im).measurable_set
-    (B.add_const _) (B.sub_const _)
+ measurable.ite (is_closed_le continuous_const continuous_im).measurable_set
+ (B.add_const _) (B.sub_const _)
 
 @[measurability] lemma measurable_log : measurable log :=
 (measurable_of_real.comp $ real.measurable_log.comp measurable_norm).add $
-  (measurable_of_real.comp measurable_arg).mul_const I
+ (measurable_of_real.comp measurable_arg).mul_const I
 
 end complex
 
@@ -137,27 +137,27 @@ section pow_instances
 
 instance complex.has_measurable_pow : has_measurable_pow ℂ ℂ :=
 ⟨measurable.ite (measurable_fst (measurable_set_singleton 0))
-  (measurable.ite (measurable_snd (measurable_set_singleton 0)) measurable_one measurable_zero)
-  (measurable_fst.clog.mul measurable_snd).cexp⟩
+ (measurable.ite (measurable_snd (measurable_set_singleton 0)) measurable_one measurable_zero)
+ (measurable_fst.clog.mul measurable_snd).cexp⟩
 
 instance real.has_measurable_pow : has_measurable_pow ℝ ℝ :=
 ⟨complex.measurable_re.comp $ ((complex.measurable_of_real.comp measurable_fst).pow
-  (complex.measurable_of_real.comp measurable_snd))⟩
+ (complex.measurable_of_real.comp measurable_snd))⟩
 
 instance nnreal.has_measurable_pow : has_measurable_pow ℝ≥0 ℝ :=
 ⟨(measurable_fst.coe_nnreal_real.pow measurable_snd).subtype_mk⟩
 
 instance ennreal.has_measurable_pow : has_measurable_pow ℝ≥0∞ ℝ :=
 begin
-  refine ⟨ennreal.measurable_of_measurable_nnreal_prod _ _⟩,
-  { simp_rw ennreal.coe_rpow_def,
-    refine measurable.ite _ measurable_const
-      (measurable_fst.pow measurable_snd).coe_nnreal_ennreal,
-    exact measurable_set.inter (measurable_fst (measurable_set_singleton 0))
-      (measurable_snd measurable_set_Iio), },
-  { simp_rw ennreal.top_rpow_def,
-    refine measurable.ite measurable_set_Ioi measurable_const _,
-    exact measurable.ite (measurable_set_singleton 0) measurable_const measurable_const, },
+ refine ⟨ennreal.measurable_of_measurable_nnreal_prod _ _⟩,
+ { simp_rw ennreal.coe_rpow_def,
+ refine measurable.ite _ measurable_const
+ (measurable_fst.pow measurable_snd).coe_nnreal_ennreal,
+ exact measurable_set.inter (measurable_fst (measurable_set_singleton 0))
+ (measurable_snd measurable_set_Iio), },
+ { simp_rw ennreal.top_rpow_def,
+ refine measurable.ite measurable_set_Ioi measurable_const _,
+ exact measurable.ite (measurable_set_singleton 0) measurable_const measurable_const, },
 end
 
 end pow_instances
@@ -166,3 +166,4 @@ end pow_instances
 assert_not_exists inner_product_space
 assert_not_exists real.arctan
 assert_not_exists finite_dimensional.proper
+

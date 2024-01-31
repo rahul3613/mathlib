@@ -19,7 +19,7 @@ height one spectrum of $R$, and for any natural number $n$, the Selmer group $K(
 be the subgroup of the unit group $K^\times$ modulo $n$-th powers where each element has $v$-adic
 valuation divisible by $n$ for all prime ideals $v$ away from $S$. In other words, this is precisely
 $$ K(S, n) := \{x(K^\times)^n \in K^\times / (K^\times)^n \ \mid \
-                \forall v \notin S, \ \mathrm{ord}_v(x) \equiv 0 \pmod n\}. $$
+ \forall v \notin S, \ \mathrm{ord}_v(x) \equiv 0 \pmod n\}. $$
 
 There is a fundamental short exact sequence
 $$ 1 \to R_S^\times / (R_S^\times)^n \to K(S, n) \to \mathrm{Cl}_S(R)[n] \to 0, $$
@@ -75,7 +75,7 @@ open_locale classical discrete_valuation non_zero_divisors
 universes u v
 
 variables {R : Type u} [comm_ring R] [is_domain R] [is_dedekind_domain R] {K : Type v} [field K]
-  [algebra R K] [is_fraction_ring R K] (v : height_one_spectrum R)
+ [algebra R K] [is_fraction_ring R K] (v : height_one_spectrum R)
 
 /-! ### Valuations of non-zero elements -/
 
@@ -84,46 +84,43 @@ namespace height_one_spectrum
 /-- The multiplicative `v`-adic valuation on `Kˣ`. -/
 def valuation_of_ne_zero_to_fun (x : Kˣ) : multiplicative ℤ :=
 let hx := is_localization.sec R⁰ (x : K) in multiplicative.of_add $
-  (-(associates.mk v.as_ideal).count (associates.mk $ ideal.span {hx.fst}).factors : ℤ)
-  - (-(associates.mk v.as_ideal).count (associates.mk $ ideal.span {(hx.snd : R)}).factors : ℤ)
+ (-(associates.mk v.as_ideal).count (associates.mk $ ideal.span {hx.fst}).factors : ℤ)
+ - (-(associates.mk v.as_ideal).count (associates.mk $ ideal.span {(hx.snd : R)}).factors : ℤ)
 
 @[simp] lemma valuation_of_ne_zero_to_fun_eq (x : Kˣ) :
-  (v.valuation_of_ne_zero_to_fun x : ℤₘ₀) = v.valuation (x : K) :=
+ (v.valuation_of_ne_zero_to_fun x : ℤₘ₀) = v.valuation (x : K) :=
 begin
-  change _ = _ * _,
-  rw [units.coe_inv],
-  change _ = ite _ _ _ * (ite (coe _ = _) _ _)⁻¹,
-  rw [is_localization.to_localization_map_sec,
-      if_neg $ is_localization.sec_fst_ne_zero le_rfl x.ne_zero,
-      if_neg $ non_zero_divisors.coe_ne_zero _],
-  any_goals { exact is_domain.to_nontrivial R },
-  refl
+ change _ = _ * _,
+ rw [units.coe_inv],
+ change _ = ite _ _ _ * (ite (coe _ = _) _ _)⁻¹,
+ rw [is_localization.to_localization_map_sec]; rw [ if_neg $ is_localization.sec_fst_ne_zero le_rfl x.ne_zero]; rw [ if_neg $ non_zero_divisors.coe_ne_zero _],
+ any_goals { exact is_domain.to_nontrivial R },
+ refl
 end
 
 /-- The multiplicative `v`-adic valuation on `Kˣ`. -/
 def valuation_of_ne_zero : Kˣ →* multiplicative ℤ :=
-{ to_fun   := v.valuation_of_ne_zero_to_fun,
-  map_one' := by { rw [← with_zero.coe_inj, valuation_of_ne_zero_to_fun_eq], exact map_one _ },
-  map_mul' := λ _ _, by { rw [← with_zero.coe_inj, with_zero.coe_mul],
-                          simp only [valuation_of_ne_zero_to_fun_eq], exact map_mul _ _ _ } }
+{ to_fun := v.valuation_of_ne_zero_to_fun,
+ map_one' := by { rw [← with_zero.coe_inj]; rw [ valuation_of_ne_zero_to_fun_eq], exact map_one _ },
+ map_mul' := λ _ _, by { rw [← with_zero.coe_inj]; rw [ with_zero.coe_mul],
+ simp only [valuation_of_ne_zero_to_fun_eq], exact map_mul _ _ _ } }
 
 @[simp] lemma valuation_of_ne_zero_eq (x : Kˣ) :
-  (v.valuation_of_ne_zero x : ℤₘ₀) = v.valuation (x : K) :=
+ (v.valuation_of_ne_zero x : ℤₘ₀) = v.valuation (x : K) :=
 valuation_of_ne_zero_to_fun_eq v x
 
 @[simp] lemma valuation_of_unit_eq (x : Rˣ) :
-  v.valuation_of_ne_zero (units.map (algebra_map R K : R →* K) x) = 1 :=
+ v.valuation_of_ne_zero (units.map (algebra_map R K : R →* K) x) = 1 :=
 begin
-  rw [← with_zero.coe_inj, valuation_of_ne_zero_eq, units.coe_map, eq_iff_le_not_lt],
-  split,
-  { exact v.valuation_le_one x },
-  { cases x with x _ hx _,
-    change ¬v.valuation (algebra_map R K x) < 1,
-    apply_fun v.int_valuation at hx,
-    rw [map_one, map_mul] at hx,
-    rw [not_lt, ← hx, ← mul_one $ v.valuation _, valuation_of_algebra_map,
-        mul_le_mul_left₀ $ left_ne_zero_of_mul_eq_one hx],
-    exact v.int_valuation_le_one _ }
+ rw [← with_zero.coe_inj]; rw [ valuation_of_ne_zero_eq]; rw [ units.coe_map]; rw [ eq_iff_le_not_lt],
+ split,
+ { exact v.valuation_le_one x },
+ { cases x with x _ hx _,
+ change ¬v.valuation (algebra_map R K x) < 1,
+ apply_fun v.int_valuation at hx,
+ rw [map_one] at hx; rw [ map_mul] at hx,
+ rw [not_lt]; rw [ ← hx]; rw [ ← mul_one $ v.valuation _]; rw [ valuation_of_algebra_map]; rw [ mul_le_mul_left₀ $ left_ne_zero_of_mul_eq_one hx],
+ exact v.int_valuation_le_one _ }
 end
 
 local attribute [semireducible] mul_opposite
@@ -131,17 +128,16 @@ local attribute [semireducible] mul_opposite
 /-- The multiplicative `v`-adic valuation on `Kˣ` modulo `n`-th powers. -/
 def valuation_of_ne_zero_mod (n : ℕ) : K/n →* multiplicative (zmod n) :=
 (int.quotient_zmultiples_nat_equiv_zmod n).to_multiplicative.to_monoid_hom.comp $
-  quotient_group.map (pow_monoid_hom n : Kˣ →* Kˣ).range
-  (add_subgroup.zmultiples (n : ℤ)).to_subgroup v.valuation_of_ne_zero
+ quotient_group.map (pow_monoid_hom n : Kˣ →* Kˣ).range
+ (add_subgroup.zmultiples (n : ℤ)).to_subgroup v.valuation_of_ne_zero
 begin
-  rintro _ ⟨x, rfl⟩,
-  exact ⟨v.valuation_of_ne_zero x, by simpa only [pow_monoid_hom_apply, map_pow, int.to_add_pow]⟩
+ rintro _ ⟨x, rfl⟩,
+ exact ⟨v.valuation_of_ne_zero x, by simpa only [pow_monoid_hom_apply, map_pow, int.to_add_pow]⟩
 end
 
 @[simp] lemma valuation_of_unit_mod_eq (n : ℕ) (x : Rˣ) :
-  v.valuation_of_ne_zero_mod n (units.map (algebra_map R K : R →* K) x : K/n) = 1 :=
-by rw [valuation_of_ne_zero_mod, monoid_hom.comp_apply, ← quotient_group.coe_mk',
-       quotient_group.map_mk', valuation_of_unit_eq, quotient_group.coe_one, map_one]
+ v.valuation_of_ne_zero_mod n (units.map (algebra_map R K : R →* K) x : K/n) = 1 :=
+by rw [valuation_of_ne_zero_mod]; rw [ monoid_hom.comp_apply]; rw [ ← quotient_group.coe_mk']; rw [ quotient_group.map_mk']; rw [ valuation_of_unit_eq]; rw [ quotient_group.coe_one]; rw [ map_one]
 
 end height_one_spectrum
 
@@ -151,10 +147,10 @@ variables {S S' : set $ height_one_spectrum R} {n : ℕ}
 
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmer_group : subgroup $ K/n :=
-{ carrier  := {x : K/n | ∀ v ∉ S, (v : height_one_spectrum R).valuation_of_ne_zero_mod n x = 1},
-  one_mem' := λ _ _, by rw [map_one],
-  mul_mem' := λ _ _ hx hy v hv, by rw [map_mul, hx v hv, hy v hv, one_mul],
-  inv_mem' := λ _ hx v hv, by rw [map_inv, hx v hv, inv_one] }
+{ carrier := {x : K/n | ∀ v ∉ S, (v : height_one_spectrum R).valuation_of_ne_zero_mod n x = 1},
+ one_mem' := λ _ _, by rw [map_one],
+ mul_mem' := λ _ _ hx hy v hv, by rw [map_mul]; rw [ hx v hv]; rw [ hy v hv]; rw [ one_mul],
+ inv_mem' := λ _ hx v hv, by rw [map_inv]; rw [ hx v hv]; rw [ inv_one] }
 
 localized "notation K`⟮`S, n`⟯` := @selmer_group _ _ _ _ K _ _ _ S n" in selmer_group
 
@@ -164,64 +160,65 @@ lemma monotone (hS : S ≤ S') : K⟮S, n⟯ ≤ (K⟮S', n⟯) := λ _ hx v, hx
 
 /-- The multiplicative `v`-adic valuations on `K⟮S, n⟯` for all `v ∈ S`. -/
 def valuation : K⟮S, n⟯ →* S → multiplicative (zmod n) :=
-{ to_fun   := λ x v, (v : height_one_spectrum R).valuation_of_ne_zero_mod n (x : K/n),
-  map_one' := funext $ λ v, map_one _,
-  map_mul' := λ x y, funext $ λ v, map_mul _ x y }
+{ to_fun := λ x v, (v : height_one_spectrum R).valuation_of_ne_zero_mod n (x : K/n),
+ map_one' := funext $ λ v, map_one _,
+ map_mul' := λ x y, funext $ λ v, map_mul _ x y }
 
 lemma valuation_ker_eq :
-  valuation.ker = (K⟮(∅ : set $ height_one_spectrum R), n⟯).subgroup_of (K⟮S, n⟯) :=
+ valuation.ker = (K⟮(∅ : set $ height_one_spectrum R), n⟯).subgroup_of (K⟮S, n⟯) :=
 begin
-  ext ⟨_, hx⟩,
-  split,
-  { intros hx' v _,
-    by_cases hv : v ∈ S,
-    { exact congr_fun hx' ⟨v, hv⟩ },
-    { exact hx v hv } },
-  { exact λ hx', funext $ λ v, hx' v $ set.not_mem_empty v }
+ ext ⟨_, hx⟩,
+ split,
+ { intros hx' v _,
+ by_cases hv : v ∈ S,
+ { exact congr_fun hx' ⟨v, hv⟩ },
+ { exact hx v hv } },
+ { exact λ hx', funext $ λ v, hx' v $ set.not_mem_empty v }
 end
 
 /-- The natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
 def from_unit {n : ℕ} : Rˣ →* K⟮(∅ : set $ height_one_spectrum R), n⟯ :=
-{ to_fun   := λ x, ⟨quotient_group.mk $ units.map (algebra_map R K).to_monoid_hom x,
-                    λ v _, v.valuation_of_unit_mod_eq n x⟩,
-  map_one' := by simpa only [map_one],
-  map_mul' := λ _ _, by simpa only [map_mul] }
+{ to_fun := λ x, ⟨quotient_group.mk $ units.map (algebra_map R K).to_monoid_hom x,
+ λ v _, v.valuation_of_unit_mod_eq n x⟩,
+ map_one' := by simpa only [map_one],
+ map_mul' := λ _ _, by simpa only [map_mul] }
 
 lemma from_unit_ker [hn : fact $ 0 < n] :
-  (@from_unit R _ _ _ K _ _ _ n).ker = (pow_monoid_hom n : Rˣ →* Rˣ).range :=
+ (@from_unit R _ _ _ K _ _ _ n).ker = (pow_monoid_hom n : Rˣ →* Rˣ).range :=
 begin
-  ext ⟨_, _, _, _⟩,
-  split,
-  { intro hx,
-    rcases (quotient_group.eq_one_iff _).mp (subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩,
-    have hv : ↑(_ ^ n : Kˣ) = algebra_map R K _ := congr_arg units.val hx,
-    have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebra_map R K _ := congr_arg units.inv hx,
-    rw [units.coe_pow] at hv,
-    rw [← inv_pow, units.inv_mk, units.coe_pow] at hi,
-    rcases @is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ v _
-      hn.out (hv.symm ▸ is_integral_algebra_map) with ⟨v', rfl⟩,
-    rcases @is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ i _
-      hn.out (hi.symm ▸ is_integral_algebra_map) with ⟨i', rfl⟩,
-    rw [← map_mul, map_eq_one_iff _ $ no_zero_smul_divisors.algebra_map_injective R K] at vi,
-    rw [← map_mul, map_eq_one_iff _ $ no_zero_smul_divisors.algebra_map_injective R K] at iv,
-    rw [units.coe_mk, ← map_pow] at hv,
-    exact ⟨⟨v', i', vi, iv⟩, by simpa only [units.ext_iff, pow_monoid_hom_apply, units.coe_pow]
-                               using no_zero_smul_divisors.algebra_map_injective R K hv⟩ },
-  { rintro ⟨_, hx⟩,
-    rw [← hx],
-    exact subtype.mk_eq_mk.mpr
-      ((quotient_group.eq_one_iff _).mpr ⟨_, by simp only [pow_monoid_hom_apply, map_pow]⟩) }
+ ext ⟨_, _, _, _⟩,
+ split,
+ { intro hx,
+ rcases (quotient_group.eq_one_iff _).mp (subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩,
+ have hv : ↑(_ ^ n : Kˣ) = algebra_map R K _ := congr_arg units.val hx,
+ have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebra_map R K _ := congr_arg units.inv hx,
+ rw [units.coe_pow] at hv,
+ rw [← inv_pow] at hi; rw [ units.inv_mk] at hi; rw [ units.coe_pow] at hi,
+ rcases @is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ v _
+ hn.out (hv.symm ▸ is_integral_algebra_map) with ⟨v', rfl⟩,
+ rcases @is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ i _
+ hn.out (hi.symm ▸ is_integral_algebra_map) with ⟨i', rfl⟩,
+ rw [← map_mul] at vi; rw [ map_eq_one_iff _ $ no_zero_smul_divisors.algebra_map_injective R K] at vi,
+ rw [← map_mul] at iv; rw [ map_eq_one_iff _ $ no_zero_smul_divisors.algebra_map_injective R K] at iv,
+ rw [units.coe_mk] at hv; rw [ ← map_pow] at hv,
+ exact ⟨⟨v', i', vi, iv⟩, by simpa only [units.ext_iff, pow_monoid_hom_apply, units.coe_pow]
+ using no_zero_smul_divisors.algebra_map_injective R K hv⟩ },
+ { rintro ⟨_, hx⟩,
+ rw [← hx],
+ exact subtype.mk_eq_mk.mpr
+ ((quotient_group.eq_one_iff _).mpr ⟨_, by simp only [pow_monoid_hom_apply, map_pow]⟩) }
 end
 
 /-- The injection induced by the natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
 def from_unit_lift [fact $ 0 < n] : R/n →* K⟮(∅ : set $ height_one_spectrum R), n⟯ :=
 (quotient_group.ker_lift _).comp
-  (quotient_group.quotient_mul_equiv_of_eq from_unit_ker).symm.to_monoid_hom
+ (quotient_group.quotient_mul_equiv_of_eq from_unit_ker).symm.to_monoid_hom
 
 lemma from_unit_lift_injective [fact $ 0 < n] :
-  function.injective $ @from_unit_lift R _ _ _ K _ _ _ n _ :=
+ function.injective $ @from_unit_lift R _ _ _ K _ _ _ n _ :=
 function.injective.comp (quotient_group.ker_lift_injective _) (mul_equiv.injective _)
 
 end selmer_group
 
 end is_dedekind_domain
+

@@ -24,11 +24,11 @@ universe u
 namespace Group
 
 @[to_additive] lemma is_zero_of_subsingleton (G : Group) [subsingleton G] :
-  is_zero G :=
+ is_zero G :=
 begin
-  refine ⟨λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩, λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩⟩,
-  { ext, have : x = 1 := subsingleton.elim _ _, rw [this, map_one, map_one], },
-  { ext, apply subsingleton.elim }
+ refine ⟨λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩, λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩⟩,
+ { ext, have : x = 1 := subsingleton.elim _ _, rw [this]; rw [ map_one]; rw [ map_one], },
+ { ext, apply subsingleton.elim }
 end
 
 @[to_additive AddGroup.has_zero_object]
@@ -40,11 +40,11 @@ end Group
 namespace CommGroup
 
 @[to_additive] lemma is_zero_of_subsingleton (G : CommGroup) [subsingleton G] :
-  is_zero G :=
+ is_zero G :=
 begin
-  refine ⟨λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩, λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩⟩,
-  { ext, have : x = 1 := subsingleton.elim _ _, rw [this, map_one, map_one], },
-  { ext, apply subsingleton.elim }
+ refine ⟨λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩, λ X, ⟨⟨⟨1⟩, λ f, _⟩⟩⟩,
+ { ext, have : x = 1 := subsingleton.elim _ _, rw [this]; rw [ map_one]; rw [ map_one], },
+ { ext, apply subsingleton.elim }
 end
 
 @[to_additive AddCommGroup.has_zero_object]
@@ -52,3 +52,4 @@ instance : has_zero_object CommGroup :=
 ⟨⟨of punit, is_zero_of_subsingleton _⟩⟩
 
 end CommGroup
+

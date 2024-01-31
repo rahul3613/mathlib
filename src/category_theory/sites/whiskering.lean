@@ -50,40 +50,40 @@ match t with
 | walking_multicospan.left a := eq_to_iso rfl
 | walking_multicospan.right b := eq_to_iso rfl
 end) begin
-  rintros (a|b) (a|b) (f|f|f),
-  any_goals { dsimp, erw [functor.map_id, functor.map_id, category.id_comp] },
-  any_goals { dsimp, erw [category.comp_id, category.id_comp], refl }
+ rintros (a|b) (a|b) (f|f|f),
+ any_goals { dsimp, erw [functor.map_id]; erw [ functor.map_id]; erw [ category.id_comp] },
+ any_goals { dsimp, erw [category.comp_id]; erw [ category.id_comp], refl }
 end
 
 @[simp] lemma multicospan_comp_app_left (a) :
-  (S.multicospan_comp F P).app (walking_multicospan.left a) = eq_to_iso rfl := rfl
+ (S.multicospan_comp F P).app (walking_multicospan.left a) = eq_to_iso rfl := rfl
 
 @[simp] lemma multicospan_comp_app_right (b) :
-  (S.multicospan_comp F P).app (walking_multicospan.right b) = eq_to_iso rfl := rfl
+ (S.multicospan_comp F P).app (walking_multicospan.right b) = eq_to_iso rfl := rfl
 
 @[simp] lemma multicospan_comp_hom_app_left (a) :
-  (S.multicospan_comp F P).hom.app (walking_multicospan.left a) = eq_to_hom rfl := rfl
+ (S.multicospan_comp F P).hom.app (walking_multicospan.left a) = eq_to_hom rfl := rfl
 
 @[simp] lemma multicospan_comp_hom_app_right (b) :
-  (S.multicospan_comp F P).hom.app (walking_multicospan.right b) = eq_to_hom rfl := rfl
+ (S.multicospan_comp F P).hom.app (walking_multicospan.right b) = eq_to_hom rfl := rfl
 
 @[simp] lemma multicospan_comp_hom_inv_left (P : Cᵒᵖ ⥤ A) {X : C}
-  (S : J.cover X) (a) : (S.multicospan_comp F P).inv.app (walking_multicospan.left a) =
-  eq_to_hom rfl := rfl
+ (S : J.cover X) (a) : (S.multicospan_comp F P).inv.app (walking_multicospan.left a) =
+ eq_to_hom rfl := rfl
 
 @[simp] lemma multicospan_comp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C}
-  (S : J.cover X) (b) : (S.multicospan_comp F P).inv.app (walking_multicospan.right b) =
-  eq_to_hom rfl := rfl
+ (S : J.cover X) (b) : (S.multicospan_comp F P).inv.app (walking_multicospan.right b) =
+ eq_to_hom rfl := rfl
 
 /-- Mapping the multifork associated to a cover `S : J.cover X` and a presheaf `P` with
 respect to a functor `F` is isomorphic (upto a natural isomorphism of the underlying functors)
 to the multifork associated to `S` and `P ⋙ F`. -/
 def map_multifork : F.map_cone (S.multifork P) ≅ (limits.cones.postcompose
-    (S.multicospan_comp F P).hom).obj (S.multifork (P ⋙ F)) :=
+ (S.multicospan_comp F P).hom).obj (S.multifork (P ⋙ F)) :=
 cones.ext (eq_to_iso rfl) begin
-  rintros (a|b),
-  { dsimp, simpa },
-  { dsimp, simp, dsimp [multifork.of_ι], simpa }
+ rintros (a|b),
+ { dsimp, simpa },
+ { dsimp, simp, dsimp [multifork.of_ι], simpa }
 end
 
 end grothendieck_topology.cover
@@ -91,14 +91,14 @@ end grothendieck_topology.cover
 variables [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ A), preserves_limit (S.index P).multicospan F]
 
 lemma presheaf.is_sheaf.comp {P : Cᵒᵖ ⥤ A} (hP : presheaf.is_sheaf J P) :
-  presheaf.is_sheaf J (P ⋙ F) :=
+ presheaf.is_sheaf J (P ⋙ F) :=
 begin
-  rw presheaf.is_sheaf_iff_multifork at ⊢ hP,
-  intros X S,
-  obtain ⟨h⟩ := hP X S,
-  replace h := is_limit_of_preserves F h,
-  replace h := limits.is_limit.of_iso_limit h (S.map_multifork F P),
-  exact ⟨limits.is_limit.postcompose_hom_equiv (S.multicospan_comp F P) _ h⟩,
+ rw presheaf.is_sheaf_iff_multifork at ⊢ hP,
+ intros X S,
+ obtain ⟨h⟩ := hP X S,
+ replace h := is_limit_of_preserves F h,
+ replace h := limits.is_limit.of_iso_limit h (S.map_multifork F P),
+ exact ⟨limits.is_limit.postcompose_hom_equiv (S.multicospan_comp F P) _ h⟩,
 end
 
 variable (J)
@@ -108,8 +108,9 @@ between sheaf categories. -/
 @[simps]
 def Sheaf_compose : Sheaf J A ⥤ Sheaf J B :=
 { obj := λ G, ⟨G.val ⋙ F, presheaf.is_sheaf.comp _ G.2⟩,
-  map := λ G H η, ⟨whisker_right η.val _⟩,
-  map_id' := λ G, Sheaf.hom.ext _ _ $ whisker_right_id _,
-  map_comp' := λ G H W f g, Sheaf.hom.ext _ _ $ whisker_right_comp _ _ _ }
+ map := λ G H η, ⟨whisker_right η.val _⟩,
+ map_id' := λ G, Sheaf.hom.ext _ _ $ whisker_right_id _,
+ map_comp' := λ G H W f g, Sheaf.hom.ext _ _ $ whisker_right_comp _ _ _ }
 
 end category_theory
+

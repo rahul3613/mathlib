@@ -20,9 +20,9 @@ of the closed intervals to infinity.
 
 - `lower_topology.t0_space` - the lower topology on a partial order is T₀
 - `is_topological_basis.is_topological_basis` - the complements of the upper closures of finite
-  subsets form a basis for the lower topology
+ subsets form a basis for the lower topology
 - `lower_topology.to_has_continuous_inf` - the inf map is continuous with respect to the lower
-  topology
+ topology
 
 ## Implementation notes
 
@@ -61,10 +61,10 @@ variables {α β}
 
 namespace with_lower_topology
 
-/-- `to_lower` is the identity function to the `with_lower_topology` of a type.  -/
+/-- `to_lower` is the identity function to the `with_lower_topology` of a type. -/
 @[pattern] def to_lower : α ≃ with_lower_topology α := equiv.refl _
 
-/-- `of_lower` is the identity function from the `with_lower_topology` of a type.  -/
+/-- `of_lower` is the identity function from the `with_lower_topology` of a type. -/
 @[pattern] def of_lower : with_lower_topology α ≃ α := equiv.refl _
 
 @[simp] lemma to_with_lower_topology_symm_eq : (@to_lower α).symm = of_lower := rfl
@@ -77,7 +77,7 @@ iff.rfl
 
 /-- A recursor for `with_lower_topology`. Use as `induction x using with_lower_topology.rec`. -/
 protected def rec {β : with_lower_topology α → Sort*}
-  (h : Π a, β (to_lower a)) : Π a, β a := λ a, h (of_lower a)
+ (h : Π a, β (to_lower a)) : Π a, β a := λ a, h (of_lower a)
 
 instance [nonempty α] : nonempty (with_lower_topology α) := ‹nonempty α›
 instance [inhabited α] : inhabited (with_lower_topology α) := ‹inhabited α›
@@ -89,12 +89,12 @@ instance : preorder (with_lower_topology α) := ‹preorder α›
 instance : topological_space (with_lower_topology α) := generate_from {s | ∃ a, (Ici a)ᶜ = s}
 
 lemma is_open_preimage_of_lower (S : set α) :
-  is_open (with_lower_topology.of_lower ⁻¹' S) ↔
-    (generate_from {s : set α | ∃ (a : α), (Ici a)ᶜ = s}).is_open S := iff.rfl
+ is_open (with_lower_topology.of_lower ⁻¹' S) ↔
+ (generate_from {s : set α | ∃ (a : α), (Ici a)ᶜ = s}).is_open S := iff.rfl
 
 lemma is_open_def (T : set (with_lower_topology α)) :
-  is_open T ↔ (generate_from {s : set α | ∃ (a : α), (Ici a)ᶜ = s}).is_open
-    (with_lower_topology.to_lower ⁻¹' T) := iff.rfl
+ is_open T ↔ (generate_from {s : set α | ∃ (a : α), (Ici a)ᶜ = s}).is_open
+ (with_lower_topology.to_lower ⁻¹' T) := iff.rfl
 
 end with_lower_topology
 
@@ -120,8 +120,8 @@ variables [preorder α] [topological_space α] [lower_topology α] {s : set α}
 -/
 def with_lower_topology_homeomorph : with_lower_topology α ≃ₜ α :=
 { continuous_to_fun := by { convert continuous_id, apply topology_eq_lower_topology },
-  continuous_inv_fun := by { convert ← continuous_id, apply topology_eq_lower_topology },
-  ..with_lower_topology.of_lower }
+ continuous_inv_fun := by { convert ← continuous_id, apply topology_eq_lower_topology },
+ ..with_lower_topology.of_lower }
 
 lemma is_open_iff_generate_Ici_compl : is_open s ↔ generate_open {t | ∃ a, (Ici a)ᶜ = t} s :=
 by rw topology_eq_lower_topology α; refl
@@ -133,19 +133,19 @@ is_open_compl_iff.1 $ is_open_iff_generate_Ici_compl.2 $ generate_open.basic _ �
 /-- The upper closure of a finite set is closed in the lower topology. -/
 lemma is_closed_upper_closure (h : s.finite) : is_closed (upper_closure s : set α) :=
 begin
-  simp only [← upper_set.infi_Ici, upper_set.coe_infi],
-  exact is_closed_bUnion h (λ a h₁, is_closed_Ici a),
+ simp only [← upper_set.infi_Ici, upper_set.coe_infi],
+ exact is_closed_bUnion h (λ a h₁, is_closed_Ici a),
 end
 
 /-- Every set open in the lower topology is a lower set. -/
 lemma is_lower_set_of_is_open (h : is_open s) : is_lower_set s :=
 begin
-  rw is_open_iff_generate_Ici_compl at h,
-  induction h,
-  case generate_open.basic : u h { obtain ⟨a, rfl⟩ := h, exact (is_upper_set_Ici a).compl },
-  case univ : { exact is_lower_set_univ },
-  case inter : u v hu1 hv1 hu2 hv2 { exact hu2.inter hv2 },
-  case sUnion : _ _ ih { exact is_lower_set_sUnion ih },
+ rw is_open_iff_generate_Ici_compl at h,
+ induction h,
+ case generate_open.basic : u h { obtain ⟨a, rfl⟩ := h, exact (is_upper_set_Ici a).compl },
+ case univ : { exact is_lower_set_univ },
+ case inter : u v hu1 hv1 hu2 hv2 { exact hu2.inter hv2 },
+ case sUnion : _ _ ih { exact is_lower_set_sUnion ih },
 end
 
 lemma is_upper_set_of_is_closed (h : is_closed s) : is_upper_set s :=
@@ -157,23 +157,23 @@ The closure of a singleton `{a}` in the lower topology is the left-closed right-
 -/
 @[simp] lemma closure_singleton (a : α) : closure {a} = Ici a :=
 subset_antisymm (closure_minimal (λ b h, h.ge) $ is_closed_Ici a) $
-  (is_upper_set_of_is_closed is_closed_closure).Ici_subset $ subset_closure rfl
+ (is_upper_set_of_is_closed is_closed_closure).Ici_subset $ subset_closure rfl
 
 protected lemma is_topological_basis :
-  is_topological_basis (lower_basis α) :=
+ is_topological_basis (lower_basis α) :=
 begin
-  convert is_topological_basis_of_subbasis (topology_eq_lower_topology α),
-  simp_rw [lower_basis, coe_upper_closure, compl_Union],
-  ext s,
-  split,
-  { rintro ⟨F, hF, rfl⟩,
-    refine ⟨(λ a, (Ici a)ᶜ) '' F, ⟨hF.image _, image_subset_iff.2 $ λ _ _, ⟨_, rfl⟩⟩, _⟩,
-    rw sInter_image },
-  { rintro ⟨F, ⟨hF, hs⟩, rfl⟩,
-    haveI := hF.to_subtype,
-    rw [subset_def, subtype.forall'] at hs,
-    choose f hf using hs,
-    exact ⟨_, finite_range f, by simp_rw [bInter_range, hf, sInter_eq_Inter]⟩ }
+ convert is_topological_basis_of_subbasis (topology_eq_lower_topology α),
+ simp_rw [lower_basis, coe_upper_closure, compl_Union],
+ ext s,
+ split,
+ { rintro ⟨F, hF, rfl⟩,
+ refine ⟨(λ a, (Ici a)ᶜ) '' F, ⟨hF.image _, image_subset_iff.2 $ λ _ _, ⟨_, rfl⟩⟩, _⟩,
+ rw sInter_image },
+ { rintro ⟨F, ⟨hF, hs⟩, rfl⟩,
+ haveI := hF.to_subtype,
+ rw [subset_def] at hs; rw [ subtype.forall'] at hs,
+ choose f hf using hs,
+ exact ⟨_, finite_range f, by simp_rw [bInter_range, hf, sInter_eq_Inter]⟩ }
 end
 
 end preorder
@@ -187,45 +187,43 @@ The lower topology on a partial order is T₀.
 @[priority 90] -- see Note [lower instance priority]
 instance : t0_space α :=
 (t0_space_iff_inseparable α).2 $ λ x y h, Ici_injective $
-  by simpa only [inseparable_iff_closure_eq, closure_singleton] using h
+ by simpa only [inseparable_iff_closure_eq, closure_singleton] using h
 
 end partial_order
 end lower_topology
 
 instance [preorder α] [topological_space α] [lower_topology α] [order_bot α]
-  [preorder β] [topological_space β] [lower_topology β] [order_bot β] : lower_topology (α × β) :=
+ [preorder β] [topological_space β] [lower_topology β] [order_bot β] : lower_topology (α × β) :=
 { topology_eq_lower_topology :=
-  begin
-    refine le_antisymm (le_generate_from _) _,
-    { rintro _ ⟨x, rfl⟩,
-      exact ((lower_topology.is_closed_Ici _).prod $
-        lower_topology.is_closed_Ici _).is_open_compl },
-    rw [(lower_topology.is_topological_basis.prod
-      lower_topology.is_topological_basis).eq_generate_from,
-      le_generate_from_iff_subset_is_open, image2_subset_iff],
-    rintro _ ⟨s, hs, rfl⟩ _ ⟨t, ht, rfl⟩,
-    dsimp,
-    simp_rw [coe_upper_closure, compl_Union, prod_eq, preimage_Inter, preimage_compl],
-    -- Note: `refine` doesn't work here because it tries using `prod.topological_space`.
-    apply (is_open_bInter hs $ λ a _, _).inter (is_open_bInter ht $ λ b _, _),
-    { exact generate_open.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩ },
-    { exact generate_open.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩ },
-    all_goals { apply_instance },
-  end }
+ begin
+ refine le_antisymm (le_generate_from _) _,
+ { rintro _ ⟨x, rfl⟩,
+ exact ((lower_topology.is_closed_Ici _).prod $
+ lower_topology.is_closed_Ici _).is_open_compl },
+ rw [(lower_topology.is_topological_basis.prod lower_topology.is_topological_basis).eq_generate_from]; rw [ le_generate_from_iff_subset_is_open]; rw [ image2_subset_iff],
+ rintro _ ⟨s, hs, rfl⟩ _ ⟨t, ht, rfl⟩,
+ dsimp,
+ simp_rw [coe_upper_closure, compl_Union, prod_eq, preimage_Inter, preimage_compl],
+ -- Note: `refine` doesn't work here because it tries using `prod.topological_space`.
+ apply (is_open_bInter hs $ λ a _, _).inter (is_open_bInter ht $ λ b _, _),
+ { exact generate_open.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩ },
+ { exact generate_open.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩ },
+ all_goals { apply_instance },
+ end }
 
 section complete_lattice
 variables [complete_lattice α] [complete_lattice β] [topological_space α] [lower_topology α]
-  [topological_space β] [lower_topology β]
+ [topological_space β] [lower_topology β]
 
 lemma Inf_hom.continuous (f : Inf_hom α β) : continuous f :=
 begin
-  convert continuous_generated_from _,
-  { exact lower_topology.topology_eq_lower_topology β },
-  rintro _ ⟨b, rfl⟩,
-  rw [preimage_compl, is_open_compl_iff],
-  convert lower_topology.is_closed_Ici (Inf $ f ⁻¹' Ici b),
-  refine subset_antisymm (λ a, Inf_le) (λ a ha, le_trans _ $ order_hom_class.mono f ha),
-  simp [map_Inf],
+ convert continuous_generated_from _,
+ { exact lower_topology.topology_eq_lower_topology β },
+ rintro _ ⟨b, rfl⟩,
+ rw [preimage_compl]; rw [ is_open_compl_iff],
+ convert lower_topology.is_closed_Ici (Inf $ f ⁻¹' Ici b),
+ refine subset_antisymm (λ a, Inf_le) (λ a ha, le_trans _ $ order_hom_class.mono f ha),
+ simp [map_Inf],
 end
 
 @[priority 90] -- see Note [lower instance priority]
@@ -233,3 +231,4 @@ instance lower_topology.to_has_continuous_inf : has_continuous_inf α :=
 ⟨(inf_Inf_hom : Inf_hom (α × α) α).continuous⟩
 
 end complete_lattice
+

@@ -28,81 +28,81 @@ variables {k M N : Type*}
 
 instance [semiring k] [ordered_add_comm_monoid M] [module k M] : module k Mᵒᵈ :=
 { add_smul := λ r s x, order_dual.rec (add_smul _ _) x,
-  zero_smul := λ m, order_dual.rec (zero_smul _) m }
+ zero_smul := λ m, order_dual.rec (zero_smul _) m }
 
 section semiring
 variables [ordered_semiring k] [ordered_add_comm_group M] [module k M] [ordered_smul k M]
-  {a b : M} {c : k}
+ {a b : M} {c : k}
 
 /- can be generalized from `module k M` to `distrib_mul_action_with_zero k M` once it exists.
 where `distrib_mul_action_with_zero k M`is the conjunction of `distrib_mul_action k M` and
 `smul_with_zero k M`.-/
 lemma smul_neg_iff_of_pos (hc : 0 < c) :
-  c • a < 0 ↔ a < 0 :=
+ c • a < 0 ↔ a < 0 :=
 begin
-  rw [←neg_neg a, smul_neg, neg_neg_iff_pos, neg_neg_iff_pos],
-  exact smul_pos_iff_of_pos hc,
+ rw [←neg_neg a]; rw [ smul_neg]; rw [ neg_neg_iff_pos]; rw [ neg_neg_iff_pos],
+ exact smul_pos_iff_of_pos hc,
 end
 
 end semiring
 
 section ring
 variables [ordered_ring k] [ordered_add_comm_group M] [module k M] [ordered_smul k M]
-  {a b : M} {c : k}
+ {a b : M} {c : k}
 
 lemma smul_lt_smul_of_neg (h : a < b) (hc : c < 0) :
-  c • b < c • a :=
+ c • b < c • a :=
 begin
-  rw [←neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff],
-  exact smul_lt_smul_of_pos h (neg_pos_of_neg hc),
+ rw [←neg_neg c]; rw [ neg_smul]; rw [ neg_smul (-c)]; rw [ neg_lt_neg_iff],
+ exact smul_lt_smul_of_pos h (neg_pos_of_neg hc),
 end
 
 lemma smul_le_smul_of_nonpos (h : a ≤ b) (hc : c ≤ 0) :
-  c • b ≤ c • a :=
+ c • b ≤ c • a :=
 begin
-  rw [←neg_neg c, neg_smul, neg_smul (-c), neg_le_neg_iff],
-  exact smul_le_smul_of_nonneg h (neg_nonneg_of_nonpos hc),
+ rw [←neg_neg c]; rw [ neg_smul]; rw [ neg_smul (-c)]; rw [ neg_le_neg_iff],
+ exact smul_le_smul_of_nonneg h (neg_nonneg_of_nonpos hc),
 end
 
 lemma eq_of_smul_eq_smul_of_neg_of_le (hab : c • a = c • b) (hc : c < 0) (h : a ≤ b) :
-  a = b :=
+ a = b :=
 begin
-  rw [←neg_neg c, neg_smul, neg_smul (-c), neg_inj] at hab,
-  exact eq_of_smul_eq_smul_of_pos_of_le hab (neg_pos_of_neg hc) h,
+ rw [←neg_neg c] at hab; rw [ neg_smul] at hab; rw [ neg_smul (-c)] at hab; rw [ neg_inj] at hab,
+ exact eq_of_smul_eq_smul_of_pos_of_le hab (neg_pos_of_neg hc) h,
 end
 
 lemma lt_of_smul_lt_smul_of_nonpos (h : c • a < c • b) (hc : c ≤ 0) :
-  b < a :=
+ b < a :=
 begin
-  rw [←neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff] at h,
-  exact lt_of_smul_lt_smul_of_nonneg h (neg_nonneg_of_nonpos hc),
+ rw [←neg_neg c] at h; rw [ neg_smul] at h; rw [ neg_smul (-c)] at h; rw [ neg_lt_neg_iff] at h,
+ exact lt_of_smul_lt_smul_of_nonneg h (neg_nonneg_of_nonpos hc),
 end
 
 lemma smul_lt_smul_iff_of_neg (hc : c < 0) :
-  c • a < c • b ↔ b < a :=
+ c • a < c • b ↔ b < a :=
 begin
-  rw [←neg_neg c, neg_smul, neg_smul (-c), neg_lt_neg_iff],
-  exact smul_lt_smul_iff_of_pos (neg_pos_of_neg hc),
+ rw [←neg_neg c]; rw [ neg_smul]; rw [ neg_smul (-c)]; rw [ neg_lt_neg_iff],
+ exact smul_lt_smul_iff_of_pos (neg_pos_of_neg hc),
 end
 
 lemma smul_neg_iff_of_neg (hc : c < 0) :
-  c • a < 0 ↔ 0 < a :=
+ c • a < 0 ↔ 0 < a :=
 begin
-  rw [←neg_neg c, neg_smul, neg_neg_iff_pos],
-  exact smul_pos_iff_of_pos (neg_pos_of_neg hc),
+ rw [←neg_neg c]; rw [ neg_smul]; rw [ neg_neg_iff_pos],
+ exact smul_pos_iff_of_pos (neg_pos_of_neg hc),
 end
 
 lemma smul_pos_iff_of_neg (hc : c < 0) :
-  0 < c • a ↔ a < 0 :=
+ 0 < c • a ↔ a < 0 :=
 begin
-  rw [←neg_neg c, neg_smul, neg_pos],
-  exact smul_neg_iff_of_pos (neg_pos_of_neg hc),
+ rw [←neg_neg c]; rw [ neg_smul]; rw [ neg_pos],
+ exact smul_neg_iff_of_pos (neg_pos_of_neg hc),
 end
 
 lemma smul_nonpos_of_nonpos_of_nonneg (hc : c ≤ 0) (ha : 0 ≤ a) : c • a ≤ 0 :=
 calc
-  c • a ≤ c • 0 : smul_le_smul_of_nonpos ha hc
-  ... = 0 : smul_zero c
+ c • a ≤ c • 0 : smul_le_smul_of_nonpos ha hc
+ ... = 0 : smul_zero c
 
 lemma smul_nonneg_of_nonpos_of_nonpos (hc : c ≤ 0) (ha : a ≤ 0) : 0 ≤ c • a :=
 @smul_nonpos_of_nonpos_of_nonneg k Mᵒᵈ _ _ _ _ _ _ hc ha
@@ -119,71 +119,71 @@ lemma strict_anti_smul_left (hc : c < 0) : strict_anti (has_smul.smul c : M → 
 
 /-- Binary **rearrangement inequality**. -/
 lemma smul_add_smul_le_smul_add_smul [contravariant_class M M (+) (≤)] {a b : k} {c d : M}
-  (hab : a ≤ b) (hcd : c ≤ d) :
-  a • d + b • c ≤ a • c + b • d :=
+ (hab : a ≤ b) (hcd : c ≤ d) :
+ a • d + b • c ≤ a • c + b • d :=
 begin
-  obtain ⟨b, rfl⟩ := exists_add_of_le hab,
-  obtain ⟨d, rfl⟩ := exists_add_of_le hcd,
-  rw [smul_add, add_right_comm, smul_add, ←add_assoc, add_smul _ _ d],
-  rw le_add_iff_nonneg_right at hab hcd,
-  exact add_le_add_left (le_add_of_nonneg_right $ smul_nonneg hab hcd) _,
+ obtain ⟨b, rfl⟩ := exists_add_of_le hab,
+ obtain ⟨d, rfl⟩ := exists_add_of_le hcd,
+ rw [smul_add]; rw [ add_right_comm]; rw [ smul_add]; rw [ ←add_assoc]; rw [ add_smul _ _ d],
+ rw le_add_iff_nonneg_right at hab hcd,
+ exact add_le_add_left (le_add_of_nonneg_right $ smul_nonneg hab hcd) _,
 end
 
 /-- Binary **rearrangement inequality**. -/
 lemma smul_add_smul_le_smul_add_smul' [contravariant_class M M (+) (≤)] {a b : k} {c d : M}
-  (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
-by { rw [add_comm (a • d), add_comm (a • c)], exact smul_add_smul_le_smul_add_smul hba hdc }
+ (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
+by { rw [add_comm (a • d)]; rw [ add_comm (a • c)], exact smul_add_smul_le_smul_add_smul hba hdc }
 
 /-- Binary strict **rearrangement inequality**. -/
 lemma smul_add_smul_lt_smul_add_smul [covariant_class M M (+) (<)] [contravariant_class M M (+) (<)]
-  {a b : k} {c d : M} (hab : a < b) (hcd : c < d) : a • d + b • c < a • c + b • d :=
+ {a b : k} {c d : M} (hab : a < b) (hcd : c < d) : a • d + b • c < a • c + b • d :=
 begin
-  obtain ⟨b, rfl⟩ := exists_add_of_le hab.le,
-  obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le,
-  rw [smul_add, add_right_comm, smul_add, ←add_assoc, add_smul _ _ d],
-  rw lt_add_iff_pos_right at hab hcd,
-  exact add_lt_add_left (lt_add_of_pos_right _ $ smul_pos hab hcd) _,
+ obtain ⟨b, rfl⟩ := exists_add_of_le hab.le,
+ obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le,
+ rw [smul_add]; rw [ add_right_comm]; rw [ smul_add]; rw [ ←add_assoc]; rw [ add_smul _ _ d],
+ rw lt_add_iff_pos_right at hab hcd,
+ exact add_lt_add_left (lt_add_of_pos_right _ $ smul_pos hab hcd) _,
 end
 
 /-- Binary strict **rearrangement inequality**. -/
 lemma smul_add_smul_lt_smul_add_smul' [covariant_class M M (+) (<)]
-  [contravariant_class M M (+) (<)] {a b : k} {c d : M} (hba : b < a) (hdc : d < c) :
-  a • d + b • c < a • c + b • d :=
-by { rw [add_comm (a • d), add_comm (a • c)], exact smul_add_smul_lt_smul_add_smul hba hdc }
+ [contravariant_class M M (+) (<)] {a b : k} {c d : M} (hba : b < a) (hdc : d < c) :
+ a • d + b • c < a • c + b • d :=
+by { rw [add_comm (a • d)]; rw [ add_comm (a • c)], exact smul_add_smul_lt_smul_add_smul hba hdc }
 
 end ring
 
 section field
 variables [linear_ordered_field k] [ordered_add_comm_group M] [module k M] [ordered_smul k M]
-  {a b : M} {c : k}
+ {a b : M} {c : k}
 
 lemma smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a :=
 begin
-  rw [←neg_neg c, neg_smul, neg_smul (-c), neg_le_neg_iff],
-  exact smul_le_smul_iff_of_pos (neg_pos_of_neg hc),
+ rw [←neg_neg c]; rw [ neg_smul]; rw [ neg_smul (-c)]; rw [ neg_le_neg_iff],
+ exact smul_le_smul_iff_of_pos (neg_pos_of_neg hc),
 end
 
 lemma inv_smul_le_iff_of_neg (h : c < 0) : c⁻¹ • a ≤ b ↔ c • b ≤ a :=
-by { rw [←smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne], apply_instance }
+by { rw [←smul_le_smul_iff_of_neg h]; rw [ smul_inv_smul₀ h.ne], apply_instance }
 
 lemma inv_smul_lt_iff_of_neg (h : c < 0) : c⁻¹ • a < b ↔ c • b < a :=
-by { rw [←smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne], apply_instance }
+by { rw [←smul_lt_smul_iff_of_neg h]; rw [ smul_inv_smul₀ h.ne], apply_instance }
 
 lemma smul_inv_le_iff_of_neg (h : c < 0) : a ≤ c⁻¹ • b ↔ b ≤ c • a :=
-by { rw [←smul_le_smul_iff_of_neg h, smul_inv_smul₀ h.ne], apply_instance }
+by { rw [←smul_le_smul_iff_of_neg h]; rw [ smul_inv_smul₀ h.ne], apply_instance }
 
 lemma smul_inv_lt_iff_of_neg (h : c < 0) : a < c⁻¹ • b ↔ b < c • a :=
-by { rw [←smul_lt_smul_iff_of_neg h, smul_inv_smul₀ h.ne], apply_instance }
+by { rw [←smul_lt_smul_iff_of_neg h]; rw [ smul_inv_smul₀ h.ne], apply_instance }
 
 variables (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps] def order_iso.smul_left_dual {c : k} (hc : c < 0) : M ≃o Mᵒᵈ :=
 { to_fun := λ b, order_dual.to_dual (c • b),
-  inv_fun := λ b, c⁻¹ • (order_dual.of_dual b),
-  left_inv := inv_smul_smul₀ hc.ne,
-  right_inv := smul_inv_smul₀ hc.ne,
-  map_rel_iff' := λ b₁ b₂, smul_le_smul_iff_of_neg hc }
+ inv_fun := λ b, c⁻¹ • (order_dual.of_dual b),
+ left_inv := inv_smul_smul₀ hc.ne,
+ right_inv := smul_inv_smul₀ hc.ne,
+ map_rel_iff' := λ b₁ b₂, smul_le_smul_iff_of_neg hc }
 
 end field
 
@@ -191,14 +191,14 @@ end field
 
 section ordered_ring
 variables [ordered_ring k] [ordered_add_comm_group M] [module k M] [ordered_smul k M]
-  {s : set M} {c : k}
+ {s : set M} {c : k}
 
 lemma smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) :
-  c • lower_bounds s ⊆ upper_bounds (c • s) :=
+ c • lower_bounds s ⊆ upper_bounds (c • s) :=
 (antitone_smul_left hc).image_lower_bounds_subset_upper_bounds_image
 
 lemma smul_upper_bounds_subset_lower_bounds_smul (hc : c ≤ 0) :
-  c • upper_bounds s ⊆ lower_bounds (c • s) :=
+ c • upper_bounds s ⊆ lower_bounds (c • s) :=
 (antitone_smul_left hc).image_upper_bounds_subset_lower_bounds_image
 
 lemma bdd_below.smul_of_nonpos (hc : c ≤ 0) (hs : bdd_below s) : bdd_above (c • s) :=
@@ -211,7 +211,7 @@ end ordered_ring
 
 section linear_ordered_ring
 variables [linear_ordered_ring k] [linear_ordered_add_comm_group M] [module k M] [ordered_smul k M]
-  {a : k}
+ {a : k}
 
 lemma smul_max_of_nonpos (ha : a ≤ 0) (b₁ b₂ : M) : a • max b₁ b₂ = min (a • b₁) (a • b₂) :=
 (antitone_smul_left ha : antitone (_ : M → M)).map_max
@@ -223,7 +223,7 @@ end linear_ordered_ring
 
 section linear_ordered_field
 variables [linear_ordered_field k] [ordered_add_comm_group M] [module k M] [ordered_smul k M]
-  {s : set M} {c : k}
+ {s : set M} {c : k}
 
 @[simp] lemma lower_bounds_smul_of_neg (hc : c < 0) : lower_bounds (c • s) = c • upper_bounds s :=
 (order_iso.smul_left_dual M hc).upper_bounds_image
@@ -238,3 +238,4 @@ variables [linear_ordered_field k] [ordered_add_comm_group M] [module k M] [orde
 (order_iso.smul_left_dual M hc).bdd_below_image
 
 end linear_ordered_field
+

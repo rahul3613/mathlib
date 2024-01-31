@@ -38,7 +38,7 @@ lemma count_of [decidable_eq α] (x y : α) : count x (of y) = pi.single x 1 y :
 by simp only [count, countp_of, pi.single_apply, eq_comm]
 
 lemma count_apply [decidable_eq α] (x : α) (l : free_add_monoid α) :
-  count x l = list.count x l :=
+ count x l = list.count x l :=
 rfl
 
 end free_add_monoid
@@ -50,25 +50,26 @@ def countp (p : α → Prop) [decidable_pred p] : free_monoid α →* multiplica
 (free_add_monoid.countp p).to_multiplicative
 
 lemma countp_of' (x : α) :
-  countp p (of x) = if p x then multiplicative.of_add 1 else multiplicative.of_add 0 :=
+ countp p (of x) = if p x then multiplicative.of_add 1 else multiplicative.of_add 0 :=
 rfl
 
 lemma countp_of (x : α) : countp p (of x) = if p x then multiplicative.of_add 1 else 1 :=
-by rw [countp_of', of_add_zero] -- `rfl` is not transitive
+by rw [countp_of']; rw [ of_add_zero] -- `rfl` is not transitive
 
 lemma countp_apply (l : free_add_monoid α) :
-  countp p l = multiplicative.of_add (list.countp p l) :=
+ countp p l = multiplicative.of_add (list.countp p l) :=
 rfl
 
 /-- `list.count` as a bundled additive monoid homomorphism. -/
 def count [decidable_eq α] (x : α) : free_monoid α →* multiplicative ℕ := countp (eq x)
 
 lemma count_apply [decidable_eq α] (x : α) (l : free_add_monoid α) :
-  count x l = multiplicative.of_add (list.count x l) :=
+ count x l = multiplicative.of_add (list.count x l) :=
 rfl
 
 lemma count_of [decidable_eq α] (x y : α) :
-  count x (of y) = @pi.mul_single α (λ _, multiplicative ℕ) _ _ x (multiplicative.of_add 1) y :=
+ count x (of y) = @pi.mul_single α (λ _, multiplicative ℕ) _ _ x (multiplicative.of_add 1) y :=
 by simp only [count, countp_of, pi.mul_single_apply, eq_comm]
 
 end free_monoid
+

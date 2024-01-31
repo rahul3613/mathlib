@@ -109,51 +109,52 @@ by { dsimp [coprod_zero_iso, binary_cofan_zero_right], simp, }
 rfl
 
 instance has_pullback_over_zero
-  (X Y : C) [has_binary_product X Y] : has_pullback (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
+ (X Y : C) [has_binary_product X Y] : has_pullback (0 : X ⟶ 0) (0 : Y ⟶ 0) :=
 has_limit.mk ⟨_, is_pullback_of_is_terminal_is_product _ _ _ _
-  has_zero_object.zero_is_terminal (prod_is_prod X Y)⟩
+ has_zero_object.zero_is_terminal (prod_is_prod X Y)⟩
 
 /-- The pullback over the zeron object is the product. -/
 def pullback_zero_zero_iso (X Y : C) [has_binary_product X Y] :
-  pullback (0 : X ⟶ 0) (0 : Y ⟶ 0) ≅ X ⨯ Y :=
+ pullback (0 : X ⟶ 0) (0 : Y ⟶ 0) ≅ X ⨯ Y :=
 limit.iso_limit_cone ⟨_, is_pullback_of_is_terminal_is_product _ _ _ _
-  has_zero_object.zero_is_terminal (prod_is_prod X Y)⟩
+ has_zero_object.zero_is_terminal (prod_is_prod X Y)⟩
 
 @[simp] lemma pullback_zero_zero_iso_inv_fst (X Y : C) [has_binary_product X Y] :
-  (pullback_zero_zero_iso X Y).inv ≫ pullback.fst = prod.fst :=
+ (pullback_zero_zero_iso X Y).inv ≫ pullback.fst = prod.fst :=
 by { dsimp [pullback_zero_zero_iso], simp, }
 @[simp] lemma pullback_zero_zero_iso_inv_snd (X Y : C) [has_binary_product X Y] :
-  (pullback_zero_zero_iso X Y).inv ≫ pullback.snd = prod.snd :=
+ (pullback_zero_zero_iso X Y).inv ≫ pullback.snd = prod.snd :=
 by { dsimp [pullback_zero_zero_iso], simp, }
 @[simp] lemma pullback_zero_zero_iso_hom_fst (X Y : C) [has_binary_product X Y] :
-  (pullback_zero_zero_iso X Y).hom ≫ prod.fst = pullback.fst :=
+ (pullback_zero_zero_iso X Y).hom ≫ prod.fst = pullback.fst :=
 by { simp [←iso.eq_inv_comp], }
 @[simp] lemma pullback_zero_zero_iso_hom_snd (X Y : C) [has_binary_product X Y] :
-  (pullback_zero_zero_iso X Y).hom ≫ prod.snd = pullback.snd :=
+ (pullback_zero_zero_iso X Y).hom ≫ prod.snd = pullback.snd :=
 by { simp [←iso.eq_inv_comp], }
 
 instance has_pushout_over_zero
-  (X Y : C) [has_binary_coproduct X Y] : has_pushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) :=
+ (X Y : C) [has_binary_coproduct X Y] : has_pushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) :=
 has_colimit.mk ⟨_, is_pushout_of_is_initial_is_coproduct _ _ _ _
-  has_zero_object.zero_is_initial (coprod_is_coprod X Y)⟩
+ has_zero_object.zero_is_initial (coprod_is_coprod X Y)⟩
 
 /-- The pushout over the zero object is the coproduct. -/
 def pushout_zero_zero_iso
-  (X Y : C) [has_binary_coproduct X Y] : pushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) ≅ X ⨿ Y :=
+ (X Y : C) [has_binary_coproduct X Y] : pushout (0 : 0 ⟶ X) (0 : 0 ⟶ Y) ≅ X ⨿ Y :=
 colimit.iso_colimit_cocone ⟨_, is_pushout_of_is_initial_is_coproduct _ _ _ _
-  has_zero_object.zero_is_initial (coprod_is_coprod X Y)⟩
+ has_zero_object.zero_is_initial (coprod_is_coprod X Y)⟩
 
 @[simp] lemma inl_pushout_zero_zero_iso_hom (X Y : C) [has_binary_coproduct X Y] :
-  pushout.inl ≫ (pushout_zero_zero_iso X Y).hom = coprod.inl :=
+ pushout.inl ≫ (pushout_zero_zero_iso X Y).hom = coprod.inl :=
 by { dsimp [pushout_zero_zero_iso], simp, }
 @[simp] lemma inr_pushout_zero_zero_iso_hom (X Y : C) [has_binary_coproduct X Y] :
-  pushout.inr ≫ (pushout_zero_zero_iso X Y).hom = coprod.inr :=
+ pushout.inr ≫ (pushout_zero_zero_iso X Y).hom = coprod.inr :=
 by { dsimp [pushout_zero_zero_iso], simp, }
 @[simp] lemma inl_pushout_zero_zero_iso_inv (X Y : C) [has_binary_coproduct X Y] :
-  coprod.inl ≫ (pushout_zero_zero_iso X Y).inv = pushout.inl :=
+ coprod.inl ≫ (pushout_zero_zero_iso X Y).inv = pushout.inl :=
 by { simp [iso.comp_inv_eq], }
 @[simp] lemma inr_pushout_zero_zero_iso_inv (X Y : C) [has_binary_coproduct X Y] :
-  coprod.inr ≫ (pushout_zero_zero_iso X Y).inv = pushout.inr :=
+ coprod.inr ≫ (pushout_zero_zero_iso X Y).inv = pushout.inr :=
 by { simp [iso.comp_inv_eq], }
 
 end category_theory.limits
+

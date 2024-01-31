@@ -41,10 +41,11 @@ variables [ordered_comm_ring R] [ordered_ring A] [algebra R A] [ordered_smul R A
 lemma algebra_map_monotone : monotone (algebra_map R A) :=
 λ a b h,
 begin
-  rw [algebra.algebra_map_eq_smul_one, algebra.algebra_map_eq_smul_one, ←sub_nonneg, ←sub_smul],
-  transitivity (b - a) • (0 : A),
-  { simp, },
-  { exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h) }
+ rw [algebra.algebra_map_eq_smul_one]; rw [ algebra.algebra_map_eq_smul_one]; rw [ ←sub_nonneg]; rw [ ←sub_smul],
+ transitivity (b - a) • (0 : A),
+ { simp, },
+ { exact smul_le_smul_of_nonneg zero_le_one (sub_nonneg.mpr h) }
 end
 
 end ordered_algebra
+

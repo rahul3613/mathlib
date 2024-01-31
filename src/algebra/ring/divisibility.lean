@@ -32,7 +32,7 @@ section non_unital_comm_semiring
 variables [non_unital_comm_semiring α] [non_unital_comm_semiring β] {a b c : α}
 
 lemma has_dvd.dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) :
-  d ∣ (a * x + b * y) :=
+ d ∣ (a * x + b * y) :=
 dvd_add (hdx.mul_left a) (hdy.mul_left b)
 
 end non_unital_comm_semiring
@@ -80,12 +80,12 @@ by simpa only [←sub_eq_add_neg] using dvd_add_left (dvd_neg.2 h)
 /-- If an element `a` divides another element `b` in a ring, `a` divides the difference of `b` and
 another element `c` iff `a` divides `c`. -/
 theorem dvd_sub_right (h : a ∣ b) : a ∣ b - c ↔ a ∣ c :=
-by rw [sub_eq_add_neg, dvd_add_right h, dvd_neg]
+by rw [sub_eq_add_neg]; rw [ dvd_add_right h]; rw [ dvd_neg]
 
 lemma dvd_iff_dvd_of_dvd_sub (h : a ∣ b - c) : a ∣ b ↔ a ∣ c :=
-by rw [←sub_add_cancel b c, dvd_add_right h]
+by rw [←sub_add_cancel b c]; rw [ dvd_add_right h]
 
-lemma dvd_sub_comm : a ∣ b - c ↔ a ∣ c - b := by rw [←dvd_neg, neg_sub]
+lemma dvd_sub_comm : a ∣ b - c ↔ a ∣ c - b := by rw [←dvd_neg]; rw [ neg_sub]
 
 end non_unital_ring
 
@@ -114,11 +114,12 @@ section non_unital_comm_ring
 variables [non_unital_comm_ring α] {a b c : α}
 
 lemma dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) :
-  k ∣ a * x - b * y :=
+ k ∣ a * x - b * y :=
 begin
-  convert dvd_add (hxy.mul_left a) (hab.mul_right y),
-  rw [mul_sub_left_distrib, mul_sub_right_distrib],
-  simp only [sub_eq_add_neg, add_assoc, neg_add_cancel_left],
+ convert dvd_add (hxy.mul_left a) (hab.mul_right y),
+ rw [mul_sub_left_distrib]; rw [ mul_sub_right_distrib],
+ simp only [sub_eq_add_neg, add_assoc, neg_add_cancel_left],
 end
 
 end non_unital_comm_ring
+

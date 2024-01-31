@@ -21,17 +21,17 @@ variables {α : Type u}
 
 /-- A linearly ordered commutative monoid with a zero element. -/
 class linear_ordered_comm_monoid_with_zero (α : Type*)
-  extends linear_ordered_comm_monoid α, comm_monoid_with_zero α :=
+ extends linear_ordered_comm_monoid α, comm_monoid_with_zero α :=
 (zero_le_one : (0 : α) ≤ 1)
 
 @[priority 100]
 instance linear_ordered_comm_monoid_with_zero.to_zero_le_one_class
-  [linear_ordered_comm_monoid_with_zero α] : zero_le_one_class α :=
+ [linear_ordered_comm_monoid_with_zero α] : zero_le_one_class α :=
 { ..‹linear_ordered_comm_monoid_with_zero α› }
 
 @[priority 100]
 instance canonically_ordered_add_monoid.to_zero_le_one_class [canonically_ordered_add_monoid α]
-  [has_one α] : zero_le_one_class α :=
+ [has_one α] : zero_le_one_class α :=
 ⟨zero_le 1⟩
 
 namespace with_zero
@@ -61,46 +61,46 @@ instance [lattice α] : lattice (with_zero α) := with_bot.lattice
 instance [linear_order α] : linear_order (with_zero α) := with_bot.linear_order
 
 instance covariant_class_mul_le {α : Type u} [has_mul α] [preorder α]
-  [covariant_class α α (*) (≤)] :
-  covariant_class (with_zero α) (with_zero α) (*) (≤) :=
+ [covariant_class α α (*) (≤)] :
+ covariant_class (with_zero α) (with_zero α) (*) (≤) :=
 begin
-  refine ⟨λ a b c hbc, _⟩,
-  induction a using with_zero.rec_zero_coe, { exact zero_le _ },
-  induction b using with_zero.rec_zero_coe, { exact zero_le _ },
-  rcases with_bot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩,
-  rw [← coe_mul, ← coe_mul, coe_le_coe],
-  exact mul_le_mul_left' hbc' a
+ refine ⟨λ a b c hbc, _⟩,
+ induction a using with_zero.rec_zero_coe, { exact zero_le _ },
+ induction b using with_zero.rec_zero_coe, { exact zero_le _ },
+ rcases with_bot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩,
+ rw [← coe_mul]; rw [ ← coe_mul]; rw [ coe_le_coe],
+ exact mul_le_mul_left' hbc' a
 end
 
 @[simp] lemma le_max_iff [linear_order α] {a b c : α} :
-  (a : with_zero α) ≤ max b c ↔ a ≤ max b c :=
+ (a : with_zero α) ≤ max b c ↔ a ≤ max b c :=
 by simp only [with_zero.coe_le_coe, le_max_iff]
 
 @[simp] lemma min_le_iff [linear_order α] {a b c : α} :
-   min (a : with_zero α) b ≤ c ↔ min a b ≤ c :=
+ min (a : with_zero α) b ≤ c ↔ min a b ≤ c :=
 by simp only [with_zero.coe_le_coe, min_le_iff]
 
 instance [ordered_comm_monoid α] : ordered_comm_monoid (with_zero α) :=
 { mul_le_mul_left := λ _ _, mul_le_mul_left',
-  ..with_zero.comm_monoid_with_zero,
-  ..with_zero.partial_order }
+ ..with_zero.comm_monoid_with_zero,
+ ..with_zero.partial_order }
 
 protected lemma covariant_class_add_le [add_zero_class α] [preorder α]
-  [covariant_class α α (+) (≤)] (h : ∀ a : α, 0 ≤ a) :
-  covariant_class (with_zero α) (with_zero α) (+) (≤) :=
+ [covariant_class α α (+) (≤)] (h : ∀ a : α, 0 ≤ a) :
+ covariant_class (with_zero α) (with_zero α) (+) (≤) :=
 begin
-  refine ⟨λ a b c hbc, _⟩,
-  induction a using with_zero.rec_zero_coe,
-  { rwa [zero_add, zero_add] },
-  induction b using with_zero.rec_zero_coe,
-  { rw [add_zero],
-    induction c using with_zero.rec_zero_coe,
-    { rw [add_zero], exact le_rfl },
-    { rw [← coe_add, coe_le_coe],
-      exact le_add_of_nonneg_right (h _) } },
-  { rcases with_bot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩,
-    rw [← coe_add, ← coe_add, coe_le_coe],
-    exact add_le_add_left hbc' a }
+ refine ⟨λ a b c hbc, _⟩,
+ induction a using with_zero.rec_zero_coe,
+ { rwa [zero_add]; rwa [ zero_add] },
+ induction b using with_zero.rec_zero_coe,
+ { rw [add_zero],
+ induction c using with_zero.rec_zero_coe,
+ { rw [add_zero], exact le_rfl },
+ { rw [← coe_add]; rw [ coe_le_coe],
+ exact le_add_of_nonneg_right (h _) } },
+ { rcases with_bot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩,
+ rw [← coe_add]; rw [ ← coe_add]; rw [ coe_le_coe],
+ exact add_le_add_left hbc' a }
 end
 
 /-
@@ -116,49 +116,50 @@ If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm
 See note [reducible non-instances].
 -/
 @[reducible] protected def ordered_add_comm_monoid [ordered_add_comm_monoid α]
-  (zero_le : ∀ a : α, 0 ≤ a) : ordered_add_comm_monoid (with_zero α) :=
+ (zero_le : ∀ a : α, 0 ≤ a) : ordered_add_comm_monoid (with_zero α) :=
 { add_le_add_left := @add_le_add_left _ _ _ (with_zero.covariant_class_add_le zero_le),
-  ..with_zero.partial_order,
-  ..with_zero.add_comm_monoid, .. }
+ ..with_zero.partial_order,
+ ..with_zero.add_comm_monoid, .. }
 
 end with_zero
 
 section canonically_ordered_monoid
 
 instance with_zero.has_exists_add_of_le {α} [has_add α] [preorder α] [has_exists_add_of_le α] :
-  has_exists_add_of_le (with_zero α) :=
+ has_exists_add_of_le (with_zero α) :=
 ⟨λ a b, begin
-  apply with_zero.cases_on a,
-  { exact λ _, ⟨b, (zero_add b).symm⟩ },
-  apply with_zero.cases_on b,
-  { exact λ b' h, (with_bot.not_coe_le_bot _ h).elim },
-  rintro a' b' h,
-  obtain ⟨c, rfl⟩ := exists_add_of_le (with_zero.coe_le_coe.1 h),
-  exact ⟨c, rfl⟩,
+ apply with_zero.cases_on a,
+ { exact λ _, ⟨b, (zero_add b).symm⟩ },
+ apply with_zero.cases_on b,
+ { exact λ b' h, (with_bot.not_coe_le_bot _ h).elim },
+ rintro a' b' h,
+ obtain ⟨c, rfl⟩ := exists_add_of_le (with_zero.coe_le_coe.1 h),
+ exact ⟨c, rfl⟩,
 end⟩
 
 -- This instance looks absurd: a monoid already has a zero
 /-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
 instance with_zero.canonically_ordered_add_monoid {α : Type u} [canonically_ordered_add_monoid α] :
-  canonically_ordered_add_monoid (with_zero α) :=
+ canonically_ordered_add_monoid (with_zero α) :=
 { le_self_add := λ a b, begin
-    apply with_zero.cases_on a,
-    { exact bot_le },
-    apply with_zero.cases_on b,
-    { exact λ b', le_rfl },
-    { exact λ a' b', with_zero.coe_le_coe.2 le_self_add }
-  end,
-  .. with_zero.order_bot,
-  .. with_zero.ordered_add_comm_monoid zero_le, ..with_zero.has_exists_add_of_le }
+ apply with_zero.cases_on a,
+ { exact bot_le },
+ apply with_zero.cases_on b,
+ { exact λ b', le_rfl },
+ { exact λ a' b', with_zero.coe_le_coe.2 le_self_add }
+ end,
+ .. with_zero.order_bot,
+ .. with_zero.ordered_add_comm_monoid zero_le, ..with_zero.has_exists_add_of_le }
 
 end canonically_ordered_monoid
 
 section canonically_linear_ordered_monoid
 
 instance with_zero.canonically_linear_ordered_add_monoid
-  (α : Type*) [canonically_linear_ordered_add_monoid α] :
-    canonically_linear_ordered_add_monoid (with_zero α) :=
+ (α : Type*) [canonically_linear_ordered_add_monoid α] :
+ canonically_linear_ordered_add_monoid (with_zero α) :=
 { .. with_zero.canonically_ordered_add_monoid,
-  .. with_zero.linear_order }
+ .. with_zero.linear_order }
 
 end canonically_linear_ordered_monoid
+

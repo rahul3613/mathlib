@@ -52,25 +52,26 @@ palindrome.rec_on p rfl (λ _, rfl) (λ x l p h, by simp [h])
 
 lemma of_reverse_eq {l : list α} : reverse l = l → palindrome l :=
 begin
-  refine bidirectional_rec_on l (λ _, palindrome.nil) (λ a _, palindrome.singleton a) _,
-  intros x l y hp hr,
-  rw [reverse_cons, reverse_append] at hr,
-  rw head_eq_of_cons_eq hr,
-  have : palindrome l, from hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl),
-  exact palindrome.cons_concat x this
+ refine bidirectional_rec_on l (λ _, palindrome.nil) (λ a _, palindrome.singleton a) _,
+ intros x l y hp hr,
+ rw [reverse_cons] at hr; rw [ reverse_append] at hr,
+ rw head_eq_of_cons_eq hr,
+ have : palindrome l, from hp (append_inj_left' (tail_eq_of_cons_eq hr) rfl),
+ exact palindrome.cons_concat x this
 end
 
 lemma iff_reverse_eq {l : list α} : palindrome l ↔ reverse l = l :=
 iff.intro reverse_eq of_reverse_eq
 
 lemma append_reverse (l : list α) : palindrome (l ++ reverse l) :=
-by { apply of_reverse_eq, rw [reverse_append, reverse_reverse] }
+by { apply of_reverse_eq, rw [reverse_append]; rw [ reverse_reverse] }
 
 protected lemma map (f : α → β) (p : palindrome l) : palindrome (map f l) :=
-of_reverse_eq $ by rw [← map_reverse, p.reverse_eq]
+of_reverse_eq $ by rw [← map_reverse]; rw [ p.reverse_eq]
 
 instance [decidable_eq α] (l : list α) : decidable (palindrome l) :=
 decidable_of_iff' _ iff_reverse_eq
 
 end palindrome
 end list
+

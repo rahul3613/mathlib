@@ -48,8 +48,8 @@ lemma fract_mem (x : ℝ) : fract x ∈ I := ⟨fract_nonneg _, (fract_lt_one _)
 
 lemma mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I :=
 begin
-  rw [mem_Icc, mem_Icc],
-  split ; intro ; split ; linarith
+ rw [mem_Icc]; rw [ mem_Icc],
+ split ; intro ; split ; linarith
 end
 
 instance has_zero : has_zero I := ⟨⟨0, zero_mem⟩⟩
@@ -114,11 +114,11 @@ lemma le_one' {t : I} : t ≤ 1 := t.2.2
 
 lemma mul_pos_mem_iff {a t : ℝ} (ha : 0 < a) : a * t ∈ I ↔ t ∈ set.Icc (0 : ℝ) (1/a) :=
 begin
-  split; rintros ⟨h₁, h₂⟩; split,
-  { exact nonneg_of_mul_nonneg_right h₁ ha },
-  { rwa [le_div_iff ha, mul_comm] },
-  { exact mul_nonneg ha.le h₁ },
-  { rwa [le_div_iff ha, mul_comm] at h₂ }
+ split; rintros ⟨h₁, h₂⟩; split,
+ { exact nonneg_of_mul_nonneg_right h₁ ha },
+ { rwa [le_div_iff ha]; rwa [ mul_comm] },
+ { exact mul_nonneg ha.le h₁ },
+ { rwa [le_div_iff ha] at h₂ ; rwa [ mul_comm] at h₂ }
 end
 
 lemma two_mul_sub_one_mem_iff {t : ℝ} : 2 * t - 1 ∈ I ↔ t ∈ set.Icc (1/2 : ℝ) 1 :=
@@ -150,7 +150,7 @@ The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.
 -- We only need the ordering on `𝕜` here to avoid talking about flipping the interval over.
 -- At the end of the day I only care about `ℝ`, so I'm hesitant to put work into generalizing.
 lemma affine_homeomorph_image_I (a b : 𝕜) (h : 0 < a) :
-  affine_homeomorph a b h.ne.symm '' set.Icc 0 1 = set.Icc b (a + b) :=
+ affine_homeomorph a b h.ne.symm '' set.Icc 0 1 = set.Icc b (a + b) :=
 by simp [h]
 
 /--
@@ -158,18 +158,19 @@ The affine homeomorphism from a nontrivial interval `[a,b]` to `[0,1]`.
 -/
 def Icc_homeo_I (a b : 𝕜) (h : a < b) : set.Icc a b ≃ₜ set.Icc (0 : 𝕜) (1 : 𝕜) :=
 begin
-  let e := homeomorph.image (affine_homeomorph (b-a) a (sub_pos.mpr h).ne.symm) (set.Icc 0 1),
-  refine (e.trans _).symm,
-  apply homeomorph.set_congr,
-  simp [sub_pos.mpr h],
+ let e := homeomorph.image (affine_homeomorph (b-a) a (sub_pos.mpr h).ne.symm) (set.Icc 0 1),
+ refine (e.trans _).symm,
+ apply homeomorph.set_congr,
+ simp [sub_pos.mpr h],
 end
 
 @[simp] lemma Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : set.Icc a b) :
-  ((Icc_homeo_I a b h) x : 𝕜) = (x - a) / (b - a) :=
+ ((Icc_homeo_I a b h) x : 𝕜) = (x - a) / (b - a) :=
 rfl
 
 @[simp] lemma Icc_homeo_I_symm_apply_coe (a b : 𝕜) (h : a < b) (x : set.Icc (0 : 𝕜) (1 : 𝕜)) :
-  ((Icc_homeo_I a b h).symm x : 𝕜) = (b - a) * x + a :=
+ ((Icc_homeo_I a b h).symm x : 𝕜) = (b - a) * x + a :=
 rfl
 
 end
+

@@ -49,7 +49,7 @@ lemma nonempty_star [has_involutive_star α] {s : set α} : (s⋆).nonempty ↔ 
 star_involutive.surjective.nonempty_preimage
 
 lemma nonempty.star [has_involutive_star α] {s : set α} (h : s.nonempty) :
-  (s⋆).nonempty :=
+ (s⋆).nonempty :=
 nonempty_star.2 h
 
 @[simp]
@@ -85,29 +85,28 @@ lemma compl_star [has_star α] : (sᶜ)⋆ = (s⋆)ᶜ := preimage_compl
 @[simp]
 instance [has_involutive_star α] : has_involutive_star (set α) :=
 { star := has_star.star,
-  star_involutive :=
-    λ s, by { simp only [← star_preimage, preimage_preimage, star_star, preimage_id'] } }
+ star_involutive :=
+ λ s, by { simp only [← star_preimage, preimage_preimage, star_star, preimage_id'] } }
 
 @[simp]
 lemma star_subset_star [has_involutive_star α] {s t : set α} : s⋆ ⊆ t⋆ ↔ s ⊆ t :=
 equiv.star.surjective.preimage_subset_preimage_iff
 
 lemma star_subset [has_involutive_star α] {s t : set α} : s⋆ ⊆ t ↔ s ⊆ t⋆ :=
-by { rw [← star_subset_star, star_star] }
+by { rw [← star_subset_star]; rw [ star_star] }
 
 lemma finite.star [has_involutive_star α] {s : set α} (hs : s.finite) : s⋆.finite :=
 hs.preimage $ star_injective.inj_on _
 
 lemma star_singleton {β : Type*} [has_involutive_star β] (x : β) : ({x} : set β)⋆ = {x⋆} :=
-by { ext1 y, rw [mem_star, mem_singleton_iff, mem_singleton_iff, star_eq_iff_star_eq, eq_comm], }
+by { ext1 y, rw [mem_star]; rw [ mem_singleton_iff]; rw [ mem_singleton_iff]; rw [ star_eq_iff_star_eq]; rw [ eq_comm], }
 
 protected lemma star_mul [monoid α] [star_semigroup α] (s t : set α) :
-  (s * t)⋆ = t⋆ * s⋆ :=
-by simp_rw [←image_star, ←image2_mul, image_image2, image2_image_left, image2_image_right,
-              star_mul, image2_swap _ s t]
+ (s * t)⋆ = t⋆ * s⋆ :=
+by simp_rw [←image_star, ←image2_mul, image_image2, image2_image_left, image2_image_right, star_mul, image2_swap _ s t]
 
 protected lemma star_add [add_monoid α] [star_add_monoid α] (s t : set α) :
-  (s + t)⋆ = s⋆ + t⋆ :=
+ (s + t)⋆ = s⋆ + t⋆ :=
 by simp_rw [←image_star, ←image2_add, image_image2, image2_image_left, image2_image_right, star_add]
 
 @[simp]
@@ -121,3 +120,4 @@ protected lemma star_inv' [division_semiring α] [star_ring α] (s : set α) : (
 by { ext, simp only [mem_star, mem_inv, star_inv'] }
 
 end set
+

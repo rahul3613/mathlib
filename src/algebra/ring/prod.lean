@@ -19,10 +19,10 @@ trivial `simp` lemmas, and define the following operations on `ring_hom`s and si
 `non_unital_ring_hom`s:
 
 * `fst R S : R × S →+* R`, `snd R S : R × S →+* S`: projections `prod.fst` and `prod.snd`
-  as `ring_hom`s;
+ as `ring_hom`s;
 * `f.prod g : `R →+* S × T`: sends `x` to `(f x, g x)`;
 * `f.prod_map g : `R × S → R' × S'`: `prod.map f g` as a `ring_hom`,
-  sends `(x, y)` to `(f x, g y)`.
+ sends `(x, y)` to `(f x, g y)`.
 -/
 
 variables {α β R R' S S' T T' : Type*}
@@ -32,22 +32,22 @@ namespace prod
 /-- Product of two distributive types is distributive. -/
 instance [distrib R] [distrib S] : distrib (R × S) :=
 { left_distrib := λ a b c, mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
-  right_distrib := λ a b c, mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩,
-  .. prod.has_add, .. prod.has_mul }
+ right_distrib := λ a b c, mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩,
+ .. prod.has_add, .. prod.has_mul }
 
 /-- Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
 instance [non_unital_non_assoc_semiring R] [non_unital_non_assoc_semiring S] :
-  non_unital_non_assoc_semiring (R × S) :=
+ non_unital_non_assoc_semiring (R × S) :=
 { .. prod.add_comm_monoid, .. prod.mul_zero_class, .. prod.distrib }
 
 /-- Product of two `non_unital_semiring`s is a `non_unital_semiring`. -/
 instance [non_unital_semiring R] [non_unital_semiring S] :
-  non_unital_semiring (R × S) :=
+ non_unital_semiring (R × S) :=
 { .. prod.non_unital_non_assoc_semiring, .. prod.semigroup }
 
 /-- Product of two `non_assoc_semiring`s is a `non_assoc_semiring`. -/
 instance [non_assoc_semiring R] [non_assoc_semiring S] :
-  non_assoc_semiring (R × S) :=
+ non_assoc_semiring (R × S) :=
 { .. prod.non_unital_non_assoc_semiring, .. prod.mul_one_class, .. prod.add_monoid_with_one }
 
 /-- Product of two semirings is a semiring. -/
@@ -56,7 +56,7 @@ instance [semiring R] [semiring S] : semiring (R × S) :=
 
 /-- Product of two `non_unital_comm_semiring`s is a `non_unital_comm_semiring`. -/
 instance [non_unital_comm_semiring R] [non_unital_comm_semiring S] :
-  non_unital_comm_semiring (R × S) :=
+ non_unital_comm_semiring (R × S) :=
 { .. prod.non_unital_semiring, .. prod.comm_semigroup }
 
 /-- Product of two commutative semirings is a commutative semiring. -/
@@ -64,15 +64,15 @@ instance [comm_semiring R] [comm_semiring S] : comm_semiring (R × S) :=
 { .. prod.semiring, .. prod.comm_monoid }
 
 instance [non_unital_non_assoc_ring R] [non_unital_non_assoc_ring S] :
-  non_unital_non_assoc_ring (R × S) :=
+ non_unital_non_assoc_ring (R × S) :=
 { .. prod.add_comm_group, .. prod.non_unital_non_assoc_semiring }
 
 instance [non_unital_ring R] [non_unital_ring S] :
-  non_unital_ring (R × S) :=
+ non_unital_ring (R × S) :=
 { .. prod.add_comm_group, .. prod.non_unital_semiring }
 
 instance [non_assoc_ring R] [non_assoc_ring S] :
-  non_assoc_ring (R × S) :=
+ non_assoc_ring (R × S) :=
 { .. prod.add_comm_group, .. prod.non_assoc_semiring, .. prod.add_group_with_one }
 
 /-- Product of two rings is a ring. -/
@@ -112,8 +112,8 @@ variables [non_unital_non_assoc_semiring T] (f : R →ₙ+* S) (g : R →ₙ+* T
 `f.prod g : R →ₙ+* S × T` given by `(f.prod g) x = (f x, g x)` -/
 protected def prod (f : R →ₙ+* S) (g : R →ₙ+* T) : R →ₙ+* S × T :=
 { to_fun := λ x, (f x, g x),
-  .. mul_hom.prod (f : mul_hom R S) (g : mul_hom R T),
-  .. add_monoid_hom.prod (f : R →+ S) (g : R →+ T) }
+ .. mul_hom.prod (f : mul_hom R S) (g : mul_hom R T),
+ .. add_monoid_hom.prod (f : R →+ S) (g : R →+ T) }
 
 @[simp] lemma prod_apply (x) : f.prod g x = (f x, g x) := rfl
 
@@ -124,7 +124,7 @@ ext $ λ x, rfl
 ext $ λ x, rfl
 
 lemma prod_unique (f : R →ₙ+* S × T) :
-  ((fst S T).comp f).prod ((snd S T).comp f) = f :=
+ ((fst S T).comp f).prod ((snd S T).comp f) = f :=
 ext $ λ x, by simp only [prod_apply, coe_fst, coe_snd, comp_apply, prod.mk.eta]
 
 end prod
@@ -132,7 +132,7 @@ end prod
 section prod_map
 
 variables [non_unital_non_assoc_semiring R'] [non_unital_non_assoc_semiring S']
-  [non_unital_non_assoc_semiring T]
+ [non_unital_non_assoc_semiring T]
 variables (f : R →ₙ+* R') (g : S →ₙ+* S')
 
 /-- `prod.map` as a `non_unital_ring_hom`. -/
@@ -144,7 +144,7 @@ lemma prod_map_def : prod_map f g = (f.comp (fst R S)).prod (g.comp (snd R S)) :
 lemma coe_prod_map : ⇑(prod_map f g) = prod.map f g := rfl
 
 lemma prod_comp_prod_map (f : T →ₙ+* R) (g : T →ₙ+* S) (f' : R →ₙ+* R') (g' : S →ₙ+* S') :
-  (f'.prod_map g').comp (f.prod g) = (f'.comp f).prod (g'.comp g) :=
+ (f'.prod_map g').comp (f.prod g) = (f'.comp f).prod (g'.comp g) :=
 rfl
 
 end prod_map
@@ -174,7 +174,7 @@ variables [non_assoc_semiring T] (f : R →+* S) (g : R →+* T)
 given by `(f.prod g) x = (f x, g x)` -/
 protected def prod (f : R →+* S) (g : R →+* T) : R →+* S × T :=
 { to_fun := λ x, (f x, g x),
-  .. monoid_hom.prod (f : R →* S) (g : R →* T), .. add_monoid_hom.prod (f : R →+ S) (g : R →+ T) }
+ .. monoid_hom.prod (f : R →* S) (g : R →* T), .. add_monoid_hom.prod (f : R →+ S) (g : R →+ T) }
 
 @[simp] lemma prod_apply (x) : f.prod g x = (f x, g x) := rfl
 
@@ -185,7 +185,7 @@ ext $ λ x, rfl
 ext $ λ x, rfl
 
 lemma prod_unique (f : R →+* S × T) :
-  ((fst S T).comp f).prod ((snd S T).comp f) = f :=
+ ((fst S T).comp f).prod ((snd S T).comp f) = f :=
 ext $ λ x, by simp only [prod_apply, coe_fst, coe_snd, comp_apply, prod.mk.eta]
 
 end prod
@@ -204,7 +204,7 @@ lemma prod_map_def : prod_map f g = (f.comp (fst R S)).prod (g.comp (snd R S)) :
 lemma coe_prod_map : ⇑(prod_map f g) = prod.map f g := rfl
 
 lemma prod_comp_prod_map (f : T →+* R) (g : T →+* S) (f' : R →+* R') (g' : S →+* S') :
-  (f'.prod_map g').comp (f.prod g) = (f'.comp f).prod (g'.comp g) :=
+ (f'.prod_map g').comp (f.prod g) = (f'.comp f).prod (g'.comp g) :=
 rfl
 
 end prod_map
@@ -224,11 +224,11 @@ def prod_comm : R × S ≃+* S × R :=
 @[simp] lemma coe_prod_comm_symm : ⇑((prod_comm : R × S ≃+* S × R).symm) = prod.swap := rfl
 
 @[simp] lemma fst_comp_coe_prod_comm :
-  (ring_hom.fst S R).comp ↑(prod_comm : R × S ≃+* S × R) = ring_hom.snd R S :=
+ (ring_hom.fst S R).comp ↑(prod_comm : R × S ≃+* S × R) = ring_hom.snd R S :=
 ring_hom.ext $ λ _, rfl
 
 @[simp] lemma snd_comp_coe_prod_comm :
-  (ring_hom.snd S R).comp ↑(prod_comm : R × S ≃+* S × R) = ring_hom.fst R S :=
+ (ring_hom.snd S R).comp ↑(prod_comm : R × S ≃+* S × R) = ring_hom.fst R S :=
 ring_hom.ext $ λ _, rfl
 
 section
@@ -238,21 +238,21 @@ variables (R R' S S')
 @[simps apply]
 def prod_prod_prod_comm : (R × R') × (S × S') ≃+* (R × S) × (R' × S') :=
 { to_fun := λ rrss, ((rrss.1.1, rrss.2.1), (rrss.1.2, rrss.2.2)),
-  inv_fun := λ rsrs, ((rsrs.1.1, rsrs.2.1), (rsrs.1.2, rsrs.2.2)),
-  .. add_equiv.prod_prod_prod_comm R R' S S',
-  .. mul_equiv.prod_prod_prod_comm R R' S S' }
+ inv_fun := λ rsrs, ((rsrs.1.1, rsrs.2.1), (rsrs.1.2, rsrs.2.2)),
+ .. add_equiv.prod_prod_prod_comm R R' S S',
+ .. mul_equiv.prod_prod_prod_comm R R' S S' }
 
 @[simp] lemma prod_prod_prod_comm_symm :
-  (prod_prod_prod_comm R R' S S').symm = prod_prod_prod_comm R S R' S' := rfl
+ (prod_prod_prod_comm R R' S S').symm = prod_prod_prod_comm R S R' S' := rfl
 
 @[simp] lemma prod_prod_prod_comm_to_add_equiv :
-  (prod_prod_prod_comm R R' S S').to_add_equiv = add_equiv.prod_prod_prod_comm R R' S S' := rfl
+ (prod_prod_prod_comm R R' S S').to_add_equiv = add_equiv.prod_prod_prod_comm R R' S S' := rfl
 
 @[simp] lemma prod_prod_prod_comm_to_mul_equiv :
-  (prod_prod_prod_comm R R' S S').to_mul_equiv = mul_equiv.prod_prod_prod_comm R R' S S' := rfl
+ (prod_prod_prod_comm R R' S S').to_mul_equiv = mul_equiv.prod_prod_prod_comm R R' S S' := rfl
 
 @[simp] lemma prod_prod_prod_comm_to_equiv :
-  (prod_prod_prod_comm R R' S S').to_equiv = equiv.prod_prod_prod_comm R R' S S' := rfl
+ (prod_prod_prod_comm R R' S S').to_equiv = equiv.prod_prod_prod_comm R R' S S' := rfl
 
 end
 
@@ -261,52 +261,53 @@ variables (R S) [subsingleton S]
 /-- A ring `R` is isomorphic to `R × S` when `S` is the zero ring -/
 @[simps] def prod_zero_ring : R ≃+* R × S :=
 { to_fun := λ x, (x, 0),
-  inv_fun := prod.fst,
-  map_add' := by simp,
-  map_mul' := by simp,
-  left_inv := λ x, rfl,
-  right_inv := λ x, by cases x; simp }
+ inv_fun := prod.fst,
+ map_add' := by simp,
+ map_mul' := by simp,
+ left_inv := λ x, rfl,
+ right_inv := λ x, by cases x; simp }
 
 /-- A ring `R` is isomorphic to `S × R` when `S` is the zero ring -/
 @[simps] def zero_ring_prod : R ≃+* S × R :=
 { to_fun := λ x, (0, x),
-  inv_fun := prod.snd,
-  map_add' := by simp,
-  map_mul' := by simp,
-  left_inv := λ x, rfl,
-  right_inv := λ x, by cases x; simp }
+ inv_fun := prod.snd,
+ map_add' := by simp,
+ map_mul' := by simp,
+ left_inv := λ x, rfl,
+ right_inv := λ x, by cases x; simp }
 
 end ring_equiv
 
 /-- The product of two nontrivial rings is not a domain -/
 lemma false_of_nontrivial_of_product_domain (R S : Type*) [ring R] [ring S]
-  [is_domain (R × S)] [nontrivial R] [nontrivial S] : false :=
+ [is_domain (R × S)] [nontrivial R] [nontrivial S] : false :=
 begin
-  have := no_zero_divisors.eq_zero_or_eq_zero_of_mul_eq_zero
-    (show ((0 : R), (1 : S)) * (1, 0) = 0, by simp),
-  rw [prod.mk_eq_zero,prod.mk_eq_zero] at this,
-  rcases this with (⟨_,h⟩|⟨h,_⟩),
-  { exact zero_ne_one h.symm },
-  { exact zero_ne_one h.symm }
+ have := no_zero_divisors.eq_zero_or_eq_zero_of_mul_eq_zero
+ (show ((0 : R), (1 : S)) * (1, 0) = 0, by simp),
+ rw [prod.mk_eq_zero] at this; rw [prod.mk_eq_zero] at this,
+ rcases this with (⟨_,h⟩|⟨h,_⟩),
+ { exact zero_ne_one h.symm },
+ { exact zero_ne_one h.symm }
 end
 
 /-! ### Order -/
 
 instance [ordered_semiring α] [ordered_semiring β] : ordered_semiring (α × β) :=
 { add_le_add_left := λ _ _, add_le_add_left,
-  zero_le_one := ⟨zero_le_one, zero_le_one⟩,
-  mul_le_mul_of_nonneg_left := λ a b c hab hc,
-    ⟨mul_le_mul_of_nonneg_left hab.1 hc.1, mul_le_mul_of_nonneg_left hab.2 hc.2⟩,
-  mul_le_mul_of_nonneg_right := λ a b c hab hc,
-    ⟨mul_le_mul_of_nonneg_right hab.1 hc.1, mul_le_mul_of_nonneg_right hab.2 hc.2⟩,
-  ..prod.semiring, ..prod.partial_order _ _ }
+ zero_le_one := ⟨zero_le_one, zero_le_one⟩,
+ mul_le_mul_of_nonneg_left := λ a b c hab hc,
+ ⟨mul_le_mul_of_nonneg_left hab.1 hc.1, mul_le_mul_of_nonneg_left hab.2 hc.2⟩,
+ mul_le_mul_of_nonneg_right := λ a b c hab hc,
+ ⟨mul_le_mul_of_nonneg_right hab.1 hc.1, mul_le_mul_of_nonneg_right hab.2 hc.2⟩,
+ ..prod.semiring, ..prod.partial_order _ _ }
 
 instance [ordered_comm_semiring α] [ordered_comm_semiring β] : ordered_comm_semiring (α × β) :=
 { ..prod.comm_semiring, ..prod.ordered_semiring }
 
 instance [ordered_ring α] [ordered_ring β] : ordered_ring (α × β) :=
 { mul_nonneg := λ a b ha hb, ⟨mul_nonneg ha.1 hb.1, mul_nonneg ha.2 hb.2⟩,
-  ..prod.ring, ..prod.ordered_semiring }
+ ..prod.ring, ..prod.ordered_semiring }
 
 instance [ordered_comm_ring α] [ordered_comm_ring β] : ordered_comm_ring (α × β) :=
 { ..prod.comm_ring, ..prod.ordered_ring }
+

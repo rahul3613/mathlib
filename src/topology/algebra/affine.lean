@@ -34,25 +34,25 @@ variables [ring R] [module R E] [module R F]
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
 lemma continuous_iff {f : E →ᵃ[R] F} :
-  continuous f ↔ continuous f.linear :=
+ continuous f ↔ continuous f.linear :=
 begin
-  split,
-  { intro hc,
-    rw decomp' f,
-    have := hc.sub continuous_const,
-    exact this, },
-  { intro hc,
-    rw decomp f,
-    have := hc.add continuous_const,
-    exact this }
+ split,
+ { intro hc,
+ rw decomp' f,
+ have := hc.sub continuous_const,
+ exact this, },
+ { intro hc,
+ rw decomp f,
+ have := hc.add continuous_const,
+ exact this }
 end
 
 /-- The line map is continuous. -/
 @[continuity]
 lemma line_map_continuous [topological_space R] [has_continuous_smul R F] {p v : F} :
-  continuous ⇑(line_map p v : R →ᵃ[R] F) :=
+ continuous ⇑(line_map p v : R →ᵃ[R] F) :=
 continuous_iff.mpr $ (continuous_id.smul continuous_const).add $
-  @continuous_const _ _ _ _ (0 : F)
+ @continuous_const _ _ _ _ (0 : F)
 
 end ring
 
@@ -63,9 +63,9 @@ variables [comm_ring R] [module R F] [has_continuous_const_smul R F]
 @[continuity]
 lemma homothety_continuous (x : F) (t : R) : continuous $ homothety x t :=
 begin
-  suffices : ⇑(homothety x t) = λ y, t • (y - x) + x, { rw this, continuity, },
-  ext y,
-  simp [homothety_apply],
+ suffices : ⇑(homothety x t) = λ y, t • (y - x) + x, { rw this, continuity, },
+ ext y,
+ simp [homothety_apply],
 end
 
 end comm_ring
@@ -76,11 +76,12 @@ variables [field R] [module R F] [has_continuous_const_smul R F]
 
 lemma homothety_is_open_map (x : F) (t : R) (ht : t ≠ 0) : is_open_map $ homothety x t :=
 begin
-  apply is_open_map.of_inverse (homothety_continuous x t⁻¹);
-  intros e;
-  simp [← affine_map.comp_apply, ← homothety_mul, ht],
+ apply is_open_map.of_inverse (homothety_continuous x t⁻¹);
+ intros e;
+ simp [← affine_map.comp_apply, ← homothety_mul, ht],
 end
 
 end field
 
 end affine_map
+

@@ -77,53 +77,53 @@ namespace Module
 instance : has_coe_to_sort (Module.{v} R) (Type v) := ⟨Module.carrier⟩
 
 instance Module_category : category (Module.{v} R) :=
-{ hom   := λ M N, M →ₗ[R] N,
-  id    := λ M, 1,
-  comp  := λ A B C f g, g.comp f,
-  id_comp' := λ X Y f, linear_map.id_comp _,
-  comp_id' := λ X Y f, linear_map.comp_id _,
-  assoc' := λ W X Y Z f g h, linear_map.comp_assoc _ _ _ }
+{ hom := λ M N, M →ₗ[R] N,
+ id := λ M, 1,
+ comp := λ A B C f g, g.comp f,
+ id_comp' := λ X Y f, linear_map.id_comp _,
+ comp_id' := λ X Y f, linear_map.comp_id _,
+ assoc' := λ W X Y Z f g h, linear_map.comp_assoc _ _ _ }
 
 instance Module_concrete_category : concrete_category.{v} (Module.{v} R) :=
 { forget := { obj := λ R, R, map := λ R S f, (f : R → S) },
-  forget_faithful := { } }
+ forget_faithful := { } }
 
 instance has_forget_to_AddCommGroup : has_forget₂ (Module R) AddCommGroup :=
 { forget₂ :=
-  { obj := λ M, AddCommGroup.of M,
-    map := λ M₁ M₂ f, linear_map.to_add_monoid_hom f } }
+ { obj := λ M, AddCommGroup.of M,
+ map := λ M₁ M₂ f, linear_map.to_add_monoid_hom f } }
 
 instance (M N : Module R) : linear_map_class (M ⟶ N) R M N :=
 { coe := λ f, f,
-  .. linear_map.semilinear_map_class }
+ .. linear_map.semilinear_map_class }
 
 /-- The object in the category of R-modules associated to an R-module -/
 def of (X : Type v) [add_comm_group X] [module R X] : Module R := ⟨X⟩
 
 @[simp] lemma forget₂_obj (X : Module R) :
-  (forget₂ (Module R) AddCommGroup).obj X = AddCommGroup.of X :=
+ (forget₂ (Module R) AddCommGroup).obj X = AddCommGroup.of X :=
 rfl
 
 @[simp] lemma forget₂_obj_Module_of (X : Type v) [add_comm_group X] [module R X] :
-  (forget₂ (Module R) AddCommGroup).obj (of R X) = AddCommGroup.of X :=
+ (forget₂ (Module R) AddCommGroup).obj (of R X) = AddCommGroup.of X :=
 rfl
 
 @[simp] lemma forget₂_map (X Y : Module R) (f : X ⟶ Y) :
-  (forget₂ (Module R) AddCommGroup).map f = linear_map.to_add_monoid_hom f :=
+ (forget₂ (Module R) AddCommGroup).map f = linear_map.to_add_monoid_hom f :=
 rfl
 
 /-- Typecheck a `linear_map` as a morphism in `Module R`. -/
 def of_hom {R : Type u} [ring R] {X Y : Type v} [add_comm_group X] [module R X] [add_comm_group Y]
-  [module R Y] (f : X →ₗ[R] Y) : of R X ⟶ of R Y := f
+ [module R Y] (f : X →ₗ[R] Y) : of R X ⟶ of R Y := f
 
 @[simp] lemma of_hom_apply {R : Type u} [ring R]
-  {X Y : Type v} [add_comm_group X] [module R X] [add_comm_group Y] [module R Y] (f : X →ₗ[R] Y)
-  (x : X) : of_hom f x = f x := rfl
+ {X Y : Type v} [add_comm_group X] [module R X] [add_comm_group Y] [module R Y] (f : X →ₗ[R] Y)
+ (x : X) : of_hom f x = f x := rfl
 
 instance : inhabited (Module R) := ⟨of R punit⟩
 
 instance of_unique {X : Type v} [add_comm_group X] [module R X] [i : unique X] :
-  unique (of R X) := i
+ unique (of R X) := i
 
 @[simp]
 lemma coe_of (X : Type v) [add_comm_group X] [module R X] : (of R X : Type v) = X := rfl
@@ -137,11 +137,11 @@ def of_self_iso (M : Module R) : Module.of R M ≅ M :=
 { hom := 𝟙 M, inv := 𝟙 M }
 
 lemma is_zero_of_subsingleton (M : Module R) [subsingleton M] :
-  is_zero M :=
+ is_zero M :=
 begin
-  refine ⟨λ X, ⟨⟨⟨0⟩, λ f, _⟩⟩, λ X, ⟨⟨⟨0⟩, λ f, _⟩⟩⟩,
-  { ext, have : x = 0 := subsingleton.elim _ _, rw [this, map_zero, map_zero], },
-  { ext, apply subsingleton.elim }
+ refine ⟨λ X, ⟨⟨⟨0⟩, λ f, _⟩⟩, λ X, ⟨⟨⟨0⟩, λ f, _⟩⟩⟩,
+ { ext, have : x = 0 := subsingleton.elim _ _, rw [this]; rw [ map_zero]; rw [ map_zero], },
+ { ext, apply subsingleton.elim }
 end
 
 instance : has_zero_object (Module.{v} R) :=
@@ -152,7 +152,7 @@ variables {R} {M N U : Module.{v} R}
 @[simp] lemma id_apply (m : M) : (𝟙 M : M → M) m = m := rfl
 
 @[simp] lemma coe_comp (f : M ⟶ N) (g : N ⟶ U) :
-  ((f ≫ g) : M → U) = g ∘ f := rfl
+ ((f ≫ g) : M → U) = g ∘ f := rfl
 
 lemma comp_def (f : M ⟶ N) (g : N ⟶ U) : f ≫ g = g.comp f := rfl
 
@@ -163,32 +163,32 @@ variables {X₁ X₂ : Type v}
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
 def Module.as_hom [add_comm_group X₁] [module R X₁] [add_comm_group X₂] [module R X₂] :
-  (X₁ →ₗ[R] X₂) → (Module.of R X₁ ⟶ Module.of R X₂) := id
+ (X₁ →ₗ[R] X₂) → (Module.of R X₁ ⟶ Module.of R X₂) := id
 
 localized "notation (name := Module.as_hom) `↟` f : 1024 := Module.as_hom f" in Module
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
 def Module.as_hom_right [add_comm_group X₁] [module R X₁] {X₂ : Module.{v} R} :
-  (X₁ →ₗ[R] X₂) → (Module.of R X₁ ⟶ X₂) := id
+ (X₁ →ₗ[R] X₂) → (Module.of R X₁ ⟶ X₂) := id
 
 localized "notation (name := Module.as_hom_right) `↾` f : 1024 := Module.as_hom_right f" in Module
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
 def Module.as_hom_left {X₁ : Module.{v} R} [add_comm_group X₂] [module R X₂] :
-  (X₁ →ₗ[R] X₂) → (X₁ ⟶ Module.of R X₂) := id
+ (X₁ →ₗ[R] X₂) → (X₁ ⟶ Module.of R X₂) := id
 
 localized "notation (name := Module.as_hom_left) `↿` f : 1024 := Module.as_hom_left f" in Module
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s. -/
 @[simps]
 def linear_equiv.to_Module_iso
-  {g₁ : add_comm_group X₁} {g₂ : add_comm_group X₂} {m₁ : module R X₁} {m₂ : module R X₂}
-  (e : X₁ ≃ₗ[R] X₂) :
-  Module.of R X₁ ≅ Module.of R X₂ :=
+ {g₁ : add_comm_group X₁} {g₂ : add_comm_group X₂} {m₁ : module R X₁} {m₂ : module R X₂}
+ (e : X₁ ≃ₗ[R] X₂) :
+ Module.of R X₁ ≅ Module.of R X₂ :=
 { hom := (e : X₁ →ₗ[R] X₂),
-  inv := (e.symm : X₂ →ₗ[R] X₁),
-  hom_inv_id' := begin ext, exact e.left_inv x, end,
-  inv_hom_id' := begin ext, exact e.right_inv x, end, }
+ inv := (e.symm : X₂ →ₗ[R] X₁),
+ hom_inv_id' := begin ext, exact e.left_inv x, end,
+ inv_hom_id' := begin ext, exact e.right_inv x, end, }
 
 /--
 Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -198,9 +198,9 @@ This version is better than `linear_equiv_to_Module_iso` when applicable, becaus
 @[simps]
 def linear_equiv.to_Module_iso' {M N : Module.{v} R} (i : M ≃ₗ[R] N) : M ≅ N :=
 { hom := i,
-  inv := i.symm,
-  hom_inv_id' := linear_map.ext $ λ x, by simp,
-  inv_hom_id' := linear_map.ext $ λ x, by simp }
+ inv := i.symm,
+ hom_inv_id' := linear_map.ext $ λ x, by simp,
+ inv_hom_id' := linear_map.ext $ λ x, by simp }
 
 /--
 Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -209,11 +209,11 @@ This version is better than `linear_equiv_to_Module_iso` when applicable, becaus
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
 def linear_equiv.to_Module_iso'_left {X₁ : Module.{v} R} {g₂ : add_comm_group X₂} {m₂ : module R X₂}
-  (e : X₁ ≃ₗ[R] X₂) : X₁ ≅ Module.of R X₂ :=
+ (e : X₁ ≃ₗ[R] X₂) : X₁ ≅ Module.of R X₂ :=
 { hom := (e : X₁ →ₗ[R] X₂),
-  inv := (e.symm : X₂ →ₗ[R] X₁),
-  hom_inv_id' := linear_map.ext $ λ x, by simp,
-  inv_hom_id' := linear_map.ext $ λ x, by simp }
+ inv := (e.symm : X₂ →ₗ[R] X₁),
+ hom_inv_id' := linear_map.ext $ λ x, by simp,
+ inv_hom_id' := linear_map.ext $ λ x, by simp }
 
 /--
 Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -222,23 +222,23 @@ This version is better than `linear_equiv_to_Module_iso` when applicable, becaus
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
 def linear_equiv.to_Module_iso'_right {g₁ : add_comm_group X₁} {m₁ : module R X₁}
-  {X₂ : Module.{v} R} (e : X₁ ≃ₗ[R] X₂) : Module.of R X₁ ≅ X₂ :=
+ {X₂ : Module.{v} R} (e : X₁ ≃ₗ[R] X₂) : Module.of R X₁ ≅ X₂ :=
 { hom := (e : X₁ →ₗ[R] X₂),
-  inv := (e.symm : X₂ →ₗ[R] X₁),
-  hom_inv_id' := linear_map.ext $ λ x, by simp,
-  inv_hom_id' := linear_map.ext $ λ x, by simp }
+ inv := (e.symm : X₂ →ₗ[R] X₁),
+ hom_inv_id' := linear_map.ext $ λ x, by simp,
+ inv_hom_id' := linear_map.ext $ λ x, by simp }
 
 namespace category_theory.iso
 
 /-- Build a `linear_equiv` from an isomorphism in the category `Module R`. -/
 @[simps]
 def to_linear_equiv {X Y : Module R} (i : X ≅ Y) : X ≃ₗ[R] Y :=
-{ to_fun    := i.hom,
-  inv_fun   := i.inv,
-  left_inv  := by tidy,
-  right_inv := by tidy,
-  map_add'  := by tidy,
-  map_smul' := by tidy, }.
+{ to_fun := i.hom,
+ inv_fun := i.inv,
+ left_inv := by tidy,
+ right_inv := by tidy,
+ map_add' := by tidy,
+ map_smul' := by tidy, }.
 
 end category_theory.iso
 
@@ -246,18 +246,18 @@ end category_theory.iso
 in `Module` -/
 @[simps]
 def linear_equiv_iso_Module_iso {X Y : Type u} [add_comm_group X] [add_comm_group Y] [module R X]
-  [module R Y] :
-  (X ≃ₗ[R] Y) ≅ (Module.of R X ≅ Module.of R Y) :=
+ [module R Y] :
+ (X ≃ₗ[R] Y) ≅ (Module.of R X ≅ Module.of R Y) :=
 { hom := λ e, e.to_Module_iso,
-  inv := λ i, i.to_linear_equiv, }
+ inv := λ i, i.to_linear_equiv, }
 
 namespace Module
 
 instance : preadditive (Module.{v} R) :=
 { add_comp' := λ P Q R f f' g,
-    show (f + f') ≫ g = f ≫ g + f' ≫ g, by { ext, simp },
-  comp_add' := λ P Q R f g g',
-    show f ≫ (g + g') = f ≫ g + f ≫ g', by { ext, simp } }
+ show (f + f') ≫ g = f ≫ g + f' ≫ g, by { ext, simp },
+ comp_add' := λ P Q R f g g',
+ show f ≫ (g + g') = f ≫ g + f ≫ g', by { ext, simp } }
 
 instance forget₂_AddCommGroup_additive : (forget₂ (Module.{v} R) AddCommGroup).additive := {}
 
@@ -266,16 +266,16 @@ variables {S : Type u} [comm_ring S]
 
 instance : linear S (Module.{v} S) :=
 { hom_module := λ X Y, linear_map.module,
-  smul_comp' := by { intros, ext, simp },
-  comp_smul' := by { intros, ext, simp }, }
+ smul_comp' := by { intros, ext, simp },
+ comp_smul' := by { intros, ext, simp }, }
 
 variables {X Y X' Y' : Module.{v} S}
 
 lemma iso.hom_congr_eq_arrow_congr (i : X ≅ X') (j : Y ≅ Y') (f : X ⟶ Y) :
-  iso.hom_congr i j f = linear_equiv.arrow_congr i.to_linear_equiv j.to_linear_equiv f := rfl
+ iso.hom_congr i j f = linear_equiv.arrow_congr i.to_linear_equiv j.to_linear_equiv f := rfl
 
 lemma iso.conj_eq_conj (i : X ≅ X') (f : End X) :
-  iso.conj i f = linear_equiv.conj i.to_linear_equiv f := rfl
+ iso.conj i f = linear_equiv.conj i.to_linear_equiv f := rfl
 
 end
 
@@ -283,3 +283,4 @@ end Module
 
 instance (M : Type u) [add_comm_group M] [module R M] : has_coe (submodule R M) (Module R) :=
 ⟨ λ N, Module.of R N ⟩
+

@@ -15,11 +15,11 @@ renaming of bound variables.
 * `rename_var old new at h` does the same in hypothesis `h`.
 
 ```lean
-example (P : ℕ →  ℕ → Prop) (h : ∀ n, ∃ m, P n m) : ∀ l, ∃ m, P l m :=
+example (P : ℕ → ℕ → Prop) (h : ∀ n, ∃ m, P n m) : ∀ l, ∃ m, P l m :=
 begin
-  rename_var n q at h, -- h is now ∀ (q : ℕ), ∃ (m : ℕ), P q m,
-  rename_var m n, -- goal is now ∀ (l : ℕ), ∃ (n : ℕ), P k n,
-  exact h -- Lean does not care about those bound variable names
+ rename_var n q at h, -- h is now ∀ (q : ℕ), ∃ (m : ℕ), P q m,
+ rename_var m n, -- goal is now ∀ (l : ℕ), ∃ (n : ℕ), P k n,
+ exact h -- Lean does not care about those bound variable names
 end
 ```
 
@@ -40,14 +40,14 @@ namespace tactic
 /-- Rename bound variable `old` to `new` in goal -/
 meta def rename_var_at_goal (old new : name) : tactic unit :=
 do
-  old_tgt ← target,
-  tactic.change (expr.rename_var old new old_tgt)
+ old_tgt ← target,
+ tactic.change (expr.rename_var old new old_tgt)
 
 /-- Rename bound variable `old` to `new` in assumption `h` -/
 meta def rename_var_at_hyp (old new : name) (e : expr) : tactic unit :=
 do
-  old_e ← infer_type e,
-  tactic.change_core (expr.rename_var old new old_e) (some e)
+ old_e ← infer_type e,
+ tactic.change_core (expr.rename_var old new old_e) (some e)
 end tactic
 
 namespace tactic.interactive
@@ -68,16 +68,17 @@ end tactic.interactive
 This is meant for teaching bound variables only. Such a renaming should never be relevant to Lean.
 
 ```lean
-example (P : ℕ →  ℕ → Prop) (h : ∀ n, ∃ m, P n m) : ∀ l, ∃ m, P l m :=
+example (P : ℕ → ℕ → Prop) (h : ∀ n, ∃ m, P n m) : ∀ l, ∃ m, P l m :=
 begin
-  rename_var n q at h, -- h is now ∀ (q : ℕ), ∃ (m : ℕ), P q m,
-  rename_var m n, -- goal is now ∀ (l : ℕ), ∃ (n : ℕ), P k n,
-  exact h -- Lean does not care about those bound variable names
+ rename_var n q at h, -- h is now ∀ (q : ℕ), ∃ (m : ℕ), P q m,
+ rename_var m n, -- goal is now ∀ (l : ℕ), ∃ (n : ℕ), P k n,
+ exact h -- Lean does not care about those bound variable names
 end
 ```
 -/
 add_tactic_doc
-{ name       := "rename_var",
-  category   := doc_category.tactic,
-  decl_names := [`tactic.interactive.rename_var],
-  tags       := ["renaming"] }
+{ name := "rename_var",
+ category := doc_category.tactic,
+ decl_names := [`tactic.interactive.rename_var],
+ tags := ["renaming"] }
+

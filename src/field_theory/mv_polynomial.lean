@@ -33,13 +33,13 @@ variables {σ : Type u} {K : Type v}
 variables (σ K) [field K]
 
 lemma quotient_mk_comp_C_injective (I : ideal (mv_polynomial σ K)) (hI : I ≠ ⊤) :
-  function.injective ((ideal.quotient.mk I).comp mv_polynomial.C) :=
+ function.injective ((ideal.quotient.mk I).comp mv_polynomial.C) :=
 begin
-  refine (injective_iff_map_eq_zero _).2 (λ x hx, _),
-  rw [ring_hom.comp_apply, ideal.quotient.eq_zero_iff_mem] at hx,
-  refine classical.by_contradiction (λ hx0, absurd (I.eq_top_iff_one.2 _) hI),
-  have := I.mul_mem_left (mv_polynomial.C x⁻¹) hx,
-  rwa [← mv_polynomial.C.map_mul, inv_mul_cancel hx0, mv_polynomial.C_1] at this,
+ refine (injective_iff_map_eq_zero _).2 (λ x hx, _),
+ rw [ring_hom.comp_apply] at hx; rw [ ideal.quotient.eq_zero_iff_mem] at hx,
+ refine classical.by_contradiction (λ hx0, absurd (I.eq_top_iff_one.2 _) hI),
+ have := I.mul_mem_left (mv_polynomial.C x⁻¹) hx,
+ rwa [← mv_polynomial.C.map_mul] at this; rwa [ inv_mul_cancel hx0] at this; rwa [ mv_polynomial.C_1] at this,
 end
 
 end mv_polynomial
@@ -54,6 +54,7 @@ variables {σ : Type u} {K : Type u} [field K]
 open_locale classical
 
 lemma rank_mv_polynomial : module.rank K (mv_polynomial σ K) = cardinal.mk (σ →₀ ℕ) :=
-by rw [← cardinal.lift_inj, ← (basis_monomials σ K).mk_eq_rank]
+by rw [← cardinal.lift_inj]; rw [ ← (basis_monomials σ K).mk_eq_rank]
 
 end mv_polynomial
+

@@ -34,11 +34,10 @@ variables [add_comm_group N] [module R N] [module.free R N]
 open module.free
 
 @[simp] lemma rank_finsupp (ι : Type w) :
-  module.rank R (ι →₀ M) = cardinal.lift.{v} #ι * cardinal.lift.{w} (module.rank R M) :=
+ module.rank R (ι →₀ M) = cardinal.lift.{v} #ι * cardinal.lift.{w} (module.rank R M) :=
 begin
-  obtain ⟨⟨_, bs⟩⟩ := module.free.exists_basis R M,
-  rw [← bs.mk_eq_rank'', ← (finsupp.basis (λa:ι, bs)).mk_eq_rank'',
-    cardinal.mk_sigma, cardinal.sum_const]
+ obtain ⟨⟨_, bs⟩⟩ := module.free.exists_basis R M,
+ rw [← bs.mk_eq_rank'']; rw [ ← (finsupp.basis (λa:ι, bs)).mk_eq_rank'']; rw [ cardinal.mk_sigma]; rw [ cardinal.sum_const]
 end
 
 lemma rank_finsupp' (ι : Type v) : module.rank R (ι →₀ M) = #ι * module.rank R M :=
@@ -52,36 +51,36 @@ by simp [rank_finsupp]
 lemma rank_finsupp_self' {ι : Type u} : module.rank R (ι →₀ R) = # ι := by simp
 
 /-- The rank of the direct sum is the sum of the ranks. -/
-@[simp] lemma rank_direct_sum  {ι : Type v} (M : ι → Type w) [Π (i : ι), add_comm_group (M i)]
-  [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] :
-  module.rank R (⨁ i, M i) = cardinal.sum (λ i, module.rank R (M i)) :=
+@[simp] lemma rank_direct_sum {ι : Type v} (M : ι → Type w) [Π (i : ι), add_comm_group (M i)]
+ [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] :
+ module.rank R (⨁ i, M i) = cardinal.sum (λ i, module.rank R (M i)) :=
 begin
-  let B := λ i, choose_basis R (M i),
-  let b : basis _ R (⨁ i, M i) := dfinsupp.basis (λ i, B i),
-  simp [← b.mk_eq_rank'', λ i, (B i).mk_eq_rank''],
+ let B := λ i, choose_basis R (M i),
+ let b : basis _ R (⨁ i, M i) := dfinsupp.basis (λ i, B i),
+ simp [← b.mk_eq_rank'', λ i, (B i).mk_eq_rank''],
 end
 
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp] lemma rank_matrix (m : Type v) (n : Type w) [finite m] [finite n] :
-  module.rank R (matrix m n R) = (lift.{(max v w u) v} (# m)) * (lift.{(max v w u) w} (# n)) :=
+ module.rank R (matrix m n R) = (lift.{(max v w u) v} (# m)) * (lift.{(max v w u) w} (# n)) :=
 begin
-  casesI nonempty_fintype m,
-  casesI nonempty_fintype n,
-  have h := (matrix.std_basis R m n).mk_eq_rank,
-  rw [← lift_lift.{(max v w u) (max v w)}, lift_inj] at h,
-  simpa using h.symm,
+ casesI nonempty_fintype m,
+ casesI nonempty_fintype n,
+ have h := (matrix.std_basis R m n).mk_eq_rank,
+ rw [← lift_lift.{(max v w u) (max v w)}] at h; rw [ lift_inj] at h,
+ simpa using h.symm,
 end
 
 /-- If `m` and `n` are `fintype` that lie in the same universe, the rank of `m × n` matrices is
-  `(# n * # m).lift`. -/
+ `(# n * # m).lift`. -/
 @[simp] lemma rank_matrix' (m n : Type v) [finite m] [finite n] :
-  module.rank R (matrix m n R) =  (# m * # n).lift :=
-by rw [rank_matrix, lift_mul, lift_umax]
+ module.rank R (matrix m n R) = (# m * # n).lift :=
+by rw [rank_matrix]; rw [ lift_mul]; rw [ lift_umax]
 
 /-- If `m` and `n` are `fintype` that lie in the same universe as `R`, the rank of `m × n` matrices
-  is `# m * # n`. -/
+ is `# m * # n`. -/
 @[simp] lemma rank_matrix'' (m n : Type u) [finite m] [finite n] :
-  module.rank R (matrix m n R) =  # m * # n := by simp
+ module.rank R (matrix m n R) = # m * # n := by simp
 
 end ring
 
@@ -95,16 +94,17 @@ open module.free
 
 /-- The rank of `M ⊗[R] N` is `(module.rank R M).lift * (module.rank R N).lift`. -/
 @[simp] lemma rank_tensor_product : module.rank R (M ⊗[R] N) = lift.{w v} (module.rank R M) *
-  lift.{v w} (module.rank R N) :=
+ lift.{v w} (module.rank R N) :=
 begin
-  obtain ⟨⟨_, bM⟩⟩ := module.free.exists_basis R M,
-  obtain ⟨⟨_, bN⟩⟩ := module.free.exists_basis R N,
-  rw [← bM.mk_eq_rank'', ← bN.mk_eq_rank'', ← (bM.tensor_product bN).mk_eq_rank'', cardinal.mk_prod]
+ obtain ⟨⟨_, bM⟩⟩ := module.free.exists_basis R M,
+ obtain ⟨⟨_, bN⟩⟩ := module.free.exists_basis R N,
+ rw [← bM.mk_eq_rank'']; rw [ ← bN.mk_eq_rank'']; rw [ ← (bM.tensor_product bN).mk_eq_rank'']; rw [ cardinal.mk_prod]
 end
 
 /-- If `M` and `N` lie in the same universe, the rank of `M ⊗[R] N` is
-  `(module.rank R M) * (module.rank R N)`. -/
+ `(module.rank R M) * (module.rank R N)`. -/
 lemma rank_tensor_product' (N : Type v) [add_comm_group N] [module R N] [module.free R N] :
-  module.rank R (M ⊗[R] N) = (module.rank R M) * (module.rank R N) := by simp
+ module.rank R (M ⊗[R] N) = (module.rank R M) * (module.rank R N) := by simp
 
 end comm_ring
+

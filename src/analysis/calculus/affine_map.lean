@@ -28,12 +28,13 @@ variables [normed_add_comm_group W] [normed_space 𝕜 W]
 
 /-- A continuous affine map between normed vector spaces is smooth. -/
 lemma cont_diff {n : ℕ∞} (f : V →A[𝕜] W) :
-  cont_diff 𝕜 n f :=
+ cont_diff 𝕜 n f :=
 begin
-  rw f.decomp,
-  apply f.cont_linear.cont_diff.add,
-  simp only,
-  exact cont_diff_const,
+ rw f.decomp,
+ apply f.cont_linear.cont_diff.add,
+ simp only,
+ exact cont_diff_const,
 end
 
 end continuous_affine_map
+

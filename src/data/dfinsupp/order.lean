@@ -16,7 +16,7 @@ This file lifts order structures on the `α i` to `Π₀ i, α i`.
 ## Main declarations
 
 * `dfinsupp.order_embedding_to_fun`: The order embedding from finitely supported dependent functions
-  to functions.
+ to functions.
 
 -/
 
@@ -43,11 +43,11 @@ lemma le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i := iff.rfl
 /-- The order on `dfinsupp`s over a partial order embeds into the order on functions -/
 def order_embedding_to_fun : (Π₀ i, α i) ↪o Π i, α i :=
 { to_fun := coe_fn,
-  inj' := coe_fn_injective,
-  map_rel_iff' := λ a b, (@le_def _ _ _ _ a b).symm }
+ inj' := coe_fn_injective,
+ map_rel_iff' := λ a b, (@le_def _ _ _ _ a b).symm }
 
 @[simp] lemma order_embedding_to_fun_apply {f : Π₀ i, α i} {i : ι} :
-  order_embedding_to_fun f i = f i := rfl
+ order_embedding_to_fun f i = f i := rfl
 
 end has_le
 
@@ -56,8 +56,8 @@ variables [Π i, preorder (α i)]
 
 instance : preorder (Π₀ i, α i) :=
 { le_refl := λ f i, le_rfl,
-  le_trans := λ f g h hfg hgh i, (hfg i).trans (hgh i),
-  .. dfinsupp.has_le }
+ le_trans := λ f g h hfg hgh i, (hfg i).trans (hgh i),
+ .. dfinsupp.has_le }
 
 lemma coe_fn_mono : monotone (coe_fn : (Π₀ i, α i) → Π i, α i) := λ f g, le_def.1
 
@@ -65,28 +65,28 @@ end preorder
 
 instance [Π i, partial_order (α i)] : partial_order (Π₀ i, α i) :=
 { le_antisymm := λ f g hfg hgf, ext $ λ i, (hfg i).antisymm (hgf i),
-  .. dfinsupp.preorder }
+ .. dfinsupp.preorder }
 
 instance [Π i, semilattice_inf (α i)] : semilattice_inf (Π₀ i, α i) :=
 { inf := zip_with (λ _, (⊓)) (λ _, inf_idem),
-  inf_le_left := λ f g i, by { rw zip_with_apply, exact inf_le_left },
-  inf_le_right := λ f g i, by { rw zip_with_apply, exact inf_le_right },
-  le_inf := λ f g h hf hg i, by { rw zip_with_apply, exact le_inf (hf i) (hg i) },
-  ..dfinsupp.partial_order }
+ inf_le_left := λ f g i, by { rw zip_with_apply, exact inf_le_left },
+ inf_le_right := λ f g i, by { rw zip_with_apply, exact inf_le_right },
+ le_inf := λ f g h hf hg i, by { rw zip_with_apply, exact le_inf (hf i) (hg i) },
+ ..dfinsupp.partial_order }
 
 @[simp] lemma inf_apply [Π i, semilattice_inf (α i)] (f g : Π₀ i, α i) (i : ι) :
-  (f ⊓ g) i = f i ⊓ g i :=
+ (f ⊓ g) i = f i ⊓ g i :=
 zip_with_apply _ _ _ _ _
 
 instance [Π i, semilattice_sup (α i)] : semilattice_sup (Π₀ i, α i) :=
 { sup := zip_with (λ _, (⊔)) (λ _, sup_idem),
-  le_sup_left := λ f g i, by { rw zip_with_apply, exact le_sup_left },
-  le_sup_right := λ f g i, by { rw zip_with_apply, exact le_sup_right },
-  sup_le := λ f g h hf hg i, by { rw zip_with_apply, exact sup_le (hf i) (hg i) },
-  ..dfinsupp.partial_order }
+ le_sup_left := λ f g i, by { rw zip_with_apply, exact le_sup_left },
+ le_sup_right := λ f g i, by { rw zip_with_apply, exact le_sup_right },
+ sup_le := λ f g h hf hg i, by { rw zip_with_apply, exact sup_le (hf i) (hg i) },
+ ..dfinsupp.partial_order }
 
 @[simp] lemma sup_apply [Π i, semilattice_sup (α i)] (f g : Π₀ i, α i) (i : ι) :
-  (f ⊔ g) i = f i ⊔ g i :=
+ (f ⊔ g) i = f i ⊔ g i :=
 zip_with_apply _ _ _ _ _
 
 section lattice
@@ -108,30 +108,30 @@ end has_zero
 /-! ### Algebraic order structures -/
 
 instance (α : ι → Type*) [Π i, ordered_add_comm_monoid (α i)] :
-  ordered_add_comm_monoid (Π₀ i, α i) :=
+ ordered_add_comm_monoid (Π₀ i, α i) :=
 { add_le_add_left := λ a b h c i,
-    by { rw [add_apply, add_apply], exact add_le_add_left (h i) (c i) },
-  .. dfinsupp.add_comm_monoid, .. dfinsupp.partial_order }
+ by { rw [add_apply]; rw [ add_apply], exact add_le_add_left (h i) (c i) },
+ .. dfinsupp.add_comm_monoid, .. dfinsupp.partial_order }
 
 instance (α : ι → Type*) [Π i, ordered_cancel_add_comm_monoid (α i)] :
-  ordered_cancel_add_comm_monoid (Π₀ i, α i) :=
+ ordered_cancel_add_comm_monoid (Π₀ i, α i) :=
 { le_of_add_le_add_left := λ f g h H i, begin
-    specialize H i,
-    rw [add_apply, add_apply] at H,
-    exact le_of_add_le_add_left H,
-  end,
-  .. dfinsupp.ordered_add_comm_monoid α }
+ specialize H i,
+ rw [add_apply] at H; rw [ add_apply] at H,
+ exact le_of_add_le_add_left H,
+ end,
+ .. dfinsupp.ordered_add_comm_monoid α }
 
 instance [Π i, ordered_add_comm_monoid (α i)] [Π i, contravariant_class (α i) (α i) (+) (≤)] :
-  contravariant_class (Π₀ i, α i) (Π₀ i, α i) (+) (≤) :=
-⟨λ f g h H i, by { specialize H i, rw [add_apply, add_apply] at H, exact le_of_add_le_add_left H }⟩
+ contravariant_class (Π₀ i, α i) (Π₀ i, α i) (+) (≤) :=
+⟨λ f g h H i, by { specialize H i, rw [add_apply] at H; rw [ add_apply] at H, exact le_of_add_le_add_left H }⟩
 
 section canonically_ordered_add_monoid
 variables (α) [Π i, canonically_ordered_add_monoid (α i)]
 
 instance : order_bot (Π₀ i, α i) :=
 { bot := 0,
-  bot_le := by simp only [le_def, coe_zero, pi.zero_apply, implies_true_iff, zero_le] }
+ bot_le := by simp only [le_def, coe_zero, pi.zero_apply, implies_true_iff, zero_le] }
 
 variables {α}
 
@@ -152,7 +152,7 @@ lemma le_iff : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i := le_iff' $ subset.
 variables (α)
 
 instance decidable_le [Π i, decidable_rel (@has_le.le (α i) _)] :
-  decidable_rel (@has_le.le (Π₀ i, α i) _) :=
+ decidable_rel (@has_le.le (Π₀ i, α i) _) :=
 λ f g, decidable_of_iff _ le_iff.symm
 
 variables {α}
@@ -163,7 +163,7 @@ variables {α}
 end le
 
 variables (α) [Π i, has_sub (α i)] [Π i, has_ordered_sub (α i)] {f g : Π₀ i, α i} {i : ι}
-  {a b : α i}
+ {a b : α i}
 
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
 additive group. -/
@@ -178,12 +178,12 @@ lemma tsub_apply (f g : Π₀ i, α i) (i : ι) : (f - g) i = f i - g i := zip_w
 variables (α)
 
 instance : has_ordered_sub (Π₀ i, α i) :=
-⟨λ n m k, forall_congr $ λ i, by { rw [add_apply, tsub_apply], exact tsub_le_iff_right }⟩
+⟨λ n m k, forall_congr $ λ i, by { rw [add_apply]; rw [ tsub_apply], exact tsub_le_iff_right }⟩
 
 instance : canonically_ordered_add_monoid (Π₀ i, α i) :=
 { exists_add_of_le := λ f g h, ⟨g - f,
-    by { ext i, rw [add_apply, tsub_apply], exact (add_tsub_cancel_of_le $ h i).symm }⟩,
-  le_self_add := λ f g i, by { rw add_apply, exact le_self_add },
+ by { ext i, rw [add_apply]; rw [ tsub_apply], exact (add_tsub_cancel_of_le $ h i).symm }⟩,
+ le_self_add := λ f g i, by { rw add_apply, exact le_self_add },
  .. dfinsupp.order_bot α,
  .. dfinsupp.ordered_add_comm_monoid α }
 
@@ -191,17 +191,17 @@ variables {α} [decidable_eq ι]
 
 @[simp] lemma single_tsub : single i (a - b) = single i a - single i b :=
 begin
-  ext j,
-  obtain rfl | h := eq_or_ne i j,
-  { rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same] },
-  { rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self] }
+ ext j,
+ obtain rfl | h := eq_or_ne i j,
+ { rw [tsub_apply]; rw [ single_eq_same]; rw [ single_eq_same]; rw [ single_eq_same] },
+ { rw [tsub_apply]; rw [ single_eq_of_ne h]; rw [ single_eq_of_ne h]; rw [ single_eq_of_ne h]; rw [ tsub_self] }
 end
 
 variables [Π i (x : α i), decidable (x ≠ 0)]
 
 lemma support_tsub : (f - g).support ⊆ f.support :=
 by simp only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, ne.def, coe_tsub, pi.sub_apply,
-    not_imp_not, zero_le, implies_true_iff] {contextual := tt}
+ not_imp_not, zero_le, implies_true_iff] {contextual := tt}
 
 lemma subset_support_tsub : f.support \ g.support ⊆ (f - g).support :=
 by simp [subset_iff] {contextual := tt}
@@ -213,25 +213,25 @@ variables [Π i, canonically_linear_ordered_add_monoid (α i)] [decidable_eq ι]
 
 @[simp] lemma support_inf : (f ⊓ g).support = f.support ∩ g.support :=
 begin
-  ext,
-  simp only [inf_apply, mem_support_iff,  ne.def,
-    finset.mem_union, finset.mem_filter, finset.mem_inter],
-  simp only [inf_eq_min, ←nonpos_iff_eq_zero, min_le_iff, not_or_distrib],
+ ext,
+ simp only [inf_apply, mem_support_iff, ne.def,
+ finset.mem_union, finset.mem_filter, finset.mem_inter],
+ simp only [inf_eq_min, ←nonpos_iff_eq_zero, min_le_iff, not_or_distrib],
 end
 
 @[simp] lemma support_sup : (f ⊔ g).support = f.support ∪ g.support :=
 begin
-  ext,
-  simp only [finset.mem_union, mem_support_iff, sup_apply, ne.def, ←bot_eq_zero],
-  rw [_root_.sup_eq_bot_iff, not_and_distrib],
+ ext,
+ simp only [finset.mem_union, mem_support_iff, sup_apply, ne.def, ←bot_eq_zero],
+ rw [_root_.sup_eq_bot_iff]; rw [ not_and_distrib],
 end
 
 lemma disjoint_iff : disjoint f g ↔ disjoint f.support g.support :=
 begin
-  rw [disjoint_iff, disjoint_iff, dfinsupp.bot_eq_zero, ← dfinsupp.support_eq_empty,
-    dfinsupp.support_inf],
-  refl,
+ rw [disjoint_iff]; rw [ disjoint_iff]; rw [ dfinsupp.bot_eq_zero]; rw [ ← dfinsupp.support_eq_empty]; rw [ dfinsupp.support_inf],
+ refl,
 end
 
 end canonically_linear_ordered_add_monoid
 end dfinsupp
+

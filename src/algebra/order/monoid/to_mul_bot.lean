@@ -29,13 +29,13 @@ def to_mul_bot : with_zero (multiplicative α) ≃* multiplicative (with_bot α)
 by exact mul_equiv.refl _
 
 @[simp] lemma to_mul_bot_zero :
-  to_mul_bot (0 : with_zero (multiplicative α)) = multiplicative.of_add ⊥ := rfl
+ to_mul_bot (0 : with_zero (multiplicative α)) = multiplicative.of_add ⊥ := rfl
 @[simp] lemma to_mul_bot_coe (x : multiplicative α) :
-  to_mul_bot ↑x = multiplicative.of_add (x.to_add : with_bot α) := rfl
+ to_mul_bot ↑x = multiplicative.of_add (x.to_add : with_bot α) := rfl
 @[simp] lemma to_mul_bot_symm_bot :
-  to_mul_bot.symm (multiplicative.of_add (⊥ : with_bot α)) = 0 := rfl
+ to_mul_bot.symm (multiplicative.of_add (⊥ : with_bot α)) = 0 := rfl
 @[simp] lemma to_mul_bot_coe_of_add (x : α) :
-  to_mul_bot.symm (multiplicative.of_add (x : with_bot α)) = multiplicative.of_add x := rfl
+ to_mul_bot.symm (multiplicative.of_add (x : with_bot α)) = multiplicative.of_add x := rfl
 
 variables [preorder α] (a b : with_zero (multiplicative α))
 
@@ -44,3 +44,4 @@ lemma to_mul_bot_strict_mono : strict_mono (@to_mul_bot α _) := λ x y, id
 @[simp] lemma to_mul_bot_lt : to_mul_bot a < to_mul_bot b ↔ a < b := iff.rfl
 
 end with_zero
+

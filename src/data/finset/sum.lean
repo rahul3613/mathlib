@@ -43,8 +43,8 @@ by { simp_rw [disjoint_left, mem_map], rintro x ⟨a, _, rfl⟩ ⟨b, _, ⟨⟩�
 
 @[simp]
 lemma map_inl_disj_union_map_inr :
-  (s.map embedding.inl).disj_union (t.map embedding.inr) (disjoint_map_inl_map_inr _ _) =
-    s.disj_sum t := rfl
+ (s.map embedding.inl).disj_union (t.map embedding.inr) (disjoint_map_inl_map_inr _ _) =
+ s.disj_sum t := rfl
 
 variables {s t} {s₁ s₂ : finset α} {t₁ t₂ : finset β} {a : α} {b : β} {x : α ⊕ β}
 
@@ -66,18 +66,19 @@ lemma disj_sum_mono_right (s : finset α) : monotone (s.disj_sum : finset β →
 λ t₁ t₂, disj_sum_mono subset.rfl
 
 lemma disj_sum_ssubset_disj_sum_of_ssubset_of_subset (hs : s₁ ⊂ s₂) (ht : t₁ ⊆ t₂) :
-  s₁.disj_sum t₁ ⊂ s₂.disj_sum t₂ :=
+ s₁.disj_sum t₁ ⊂ s₂.disj_sum t₂ :=
 val_lt_iff.1 $ disj_sum_lt_disj_sum_of_lt_of_le (val_lt_iff.2 hs) (val_le_iff.2 ht)
 
 lemma disj_sum_ssubset_disj_sum_of_subset_of_ssubset (hs : s₁ ⊆ s₂) (ht : t₁ ⊂ t₂) :
-  s₁.disj_sum t₁ ⊂ s₂.disj_sum t₂ :=
+ s₁.disj_sum t₁ ⊂ s₂.disj_sum t₂ :=
 val_lt_iff.1 $ disj_sum_lt_disj_sum_of_le_of_lt (val_le_iff.2 hs) (val_lt_iff.2 ht)
 
 lemma disj_sum_strict_mono_left (t : finset β) : strict_mono (λ s : finset α, s.disj_sum t) :=
 λ s₁ s₂ hs, disj_sum_ssubset_disj_sum_of_ssubset_of_subset hs subset.rfl
 
 lemma disj_sum_strict_mono_right (s : finset α) :
-  strict_mono (s.disj_sum : finset β → finset (α ⊕ β)) :=
+ strict_mono (s.disj_sum : finset β → finset (α ⊕ β)) :=
 λ s₁ s₂, disj_sum_ssubset_disj_sum_of_subset_of_ssubset subset.rfl
 
 end finset
+

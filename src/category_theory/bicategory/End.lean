@@ -30,15 +30,15 @@ open bicategory
 
 instance (X : C) : monoidal_category (End_monoidal X) :=
 { tensor_obj := λ f g, f ≫ g,
-  tensor_hom := λ f g h i η θ, (η ▷ h) ≫ (g ◁ θ),
-  tensor_unit := 𝟙 _,
-  associator := λ f g h, α_ f g h,
-  left_unitor := λ f, λ_ f,
-  right_unitor := λ f, ρ_ f,
-  tensor_comp' := begin
-    intros,
-    rw [bicategory.whisker_left_comp, bicategory.comp_whisker_right, category.assoc, category.assoc,
-      bicategory.whisker_exchange_assoc],
-  end }
+ tensor_hom := λ f g h i η θ, (η ▷ h) ≫ (g ◁ θ),
+ tensor_unit := 𝟙 _,
+ associator := λ f g h, α_ f g h,
+ left_unitor := λ f, λ_ f,
+ right_unitor := λ f, ρ_ f,
+ tensor_comp' := begin
+ intros,
+ rw [bicategory.whisker_left_comp]; rw [ bicategory.comp_whisker_right]; rw [ category.assoc]; rw [ category.assoc]; rw [ bicategory.whisker_exchange_assoc],
+ end }
 
 end category_theory
+

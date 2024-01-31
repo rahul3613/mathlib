@@ -53,3 +53,4 @@ encodable.of_equiv _ (equiv.array_equiv_fin _ _)
 /-- If `α` is countable, then so is `array n α`. -/
 instance _root_.array.countable {α} [countable α] {n} : countable (array n α) :=
 countable.of_equiv _ (equiv.vector_equiv_array _ _)
+

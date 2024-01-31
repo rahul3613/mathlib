@@ -31,21 +31,22 @@ namespace nat
 
 lemma choose_le_pow (r n : ℕ) : (n.choose r : α) ≤ n^r / r! :=
 begin
-  rw le_div_iff',
-  { norm_cast,
-    rw ←nat.desc_factorial_eq_factorial_mul_choose,
-    exact n.desc_factorial_le_pow r },
-  exact_mod_cast r.factorial_pos,
+ rw le_div_iff',
+ { norm_cast,
+ rw ←nat.desc_factorial_eq_factorial_mul_choose,
+ exact n.desc_factorial_le_pow r },
+ exact_mod_cast r.factorial_pos,
 end
 
 -- horrific casting is due to ℕ-subtraction
 lemma pow_le_choose (r n : ℕ) : ((n + 1 - r : ℕ)^r : α) / r! ≤ n.choose r :=
 begin
-  rw div_le_iff',
-  { norm_cast,
-    rw [←nat.desc_factorial_eq_factorial_mul_choose],
-    exact n.pow_sub_le_desc_factorial r },
-  exact_mod_cast r.factorial_pos,
+ rw div_le_iff',
+ { norm_cast,
+ rw [←nat.desc_factorial_eq_factorial_mul_choose],
+ exact n.pow_sub_le_desc_factorial r },
+ exact_mod_cast r.factorial_pos,
 end
 
 end nat
+

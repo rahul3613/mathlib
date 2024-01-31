@@ -46,7 +46,7 @@ theorem of_rat_one : (of_rat 1 : Cauchy abv) = 1 := rfl
 
 @[simp] theorem mk_eq_zero {f : cau_seq _ abv} : mk f = 0 ↔ lim_zero f :=
 by have : mk f = 0 ↔ lim_zero (f - 0) := quotient.eq;
-   rwa sub_zero at this
+ rwa sub_zero at this
 
 instance : has_add (Cauchy abv) :=
 ⟨quotient.map₂ (+) $ λ f₁ g₁ hf f₂ g₂ hg, add_equiv_add hf hg⟩
@@ -71,9 +71,9 @@ instance : has_sub (Cauchy abv) :=
 instance {γ : Type*} [has_smul γ β] [is_scalar_tower γ β β] : has_smul γ (Cauchy abv) :=
 ⟨λ c, quotient.map ((•) c) $ λ f₁ g₁ hf, smul_equiv_smul _ hf⟩
 
-@[simp] theorem mk_smul  {γ : Type*} [has_smul γ β] [is_scalar_tower γ β β] (c : γ)
-  (f : cau_seq β abv) :
-  c • mk f = mk (c • f) := rfl
+@[simp] theorem mk_smul {γ : Type*} [has_smul γ β] [is_scalar_tower γ β β] (c : γ)
+ (f : cau_seq β abv) :
+ c • mk f = mk (c • f) := rfl
 
 instance : has_pow (Cauchy abv) ℕ :=
 ⟨λ x n, quotient.map (^ n) (λ f₁ g₁ hf, pow_equiv_pow hf _) x⟩
@@ -101,19 +101,19 @@ private lemma one_def : 1 = (mk 1 : Cauchy abv) := rfl
 
 instance : ring (Cauchy abv) :=
 function.surjective.ring mk (surjective_quotient_mk _)
-  zero_def.symm one_def.symm (λ _ _, (mk_add _ _).symm) (λ _ _, (mk_mul _ _).symm)
-  (λ _, (mk_neg _).symm) (λ _ _, (mk_sub _ _).symm)
-  (λ _ _, (mk_smul _ _).symm) (λ _ _, (mk_smul _ _).symm)
-  (λ _ _, (mk_pow _ _).symm) (λ _, rfl) (λ _, rfl)
+ zero_def.symm one_def.symm (λ _ _, (mk_add _ _).symm) (λ _ _, (mk_mul _ _).symm)
+ (λ _, (mk_neg _).symm) (λ _ _, (mk_sub _ _).symm)
+ (λ _ _, (mk_smul _ _).symm) (λ _ _, (mk_smul _ _).symm)
+ (λ _ _, (mk_pow _ _).symm) (λ _, rfl) (λ _, rfl)
 
-/-- `cau_seq.completion.of_rat` as a `ring_hom`  -/
+/-- `cau_seq.completion.of_rat` as a `ring_hom` -/
 @[simps]
 def of_rat_ring_hom : β →+* Cauchy abv :=
 { to_fun := of_rat,
-  map_zero' := of_rat_zero,
-  map_one' := of_rat_one,
-  map_add' := of_rat_add,
-  map_mul' := of_rat_mul, }
+ map_zero' := of_rat_zero,
+ map_one' := of_rat_one,
+ map_add' := of_rat_add,
+ map_mul' := of_rat_mul, }
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = (of_rat x - of_rat y : Cauchy abv) :=
 congr_arg mk (const_sub _ _)
@@ -126,10 +126,10 @@ variables {β : Type*} [comm_ring β] {abv : β → α} [is_absolute_value abv]
 
 instance : comm_ring (Cauchy abv) :=
 function.surjective.comm_ring mk (surjective_quotient_mk _)
-  zero_def.symm one_def.symm (λ _ _, (mk_add _ _).symm) (λ _ _, (mk_mul _ _).symm)
-  (λ _, (mk_neg _).symm) (λ _ _, (mk_sub _ _).symm)
-  (λ _ _, (mk_smul _ _).symm) (λ _ _, (mk_smul _ _).symm)
-  (λ _ _, (mk_pow _ _).symm) (λ _, rfl) (λ _, rfl)
+ zero_def.symm one_def.symm (λ _ _, (mk_add _ _).symm) (λ _ _, (mk_mul _ _).symm)
+ (λ _, (mk_neg _).symm) (λ _ _, (mk_sub _ _).symm)
+ (λ _ _, (mk_smul _ _).symm) (λ _ _, (mk_smul _ _).symm)
+ (λ _ _, (mk_pow _ _).symm) (λ _, rfl) (λ _, rfl)
 
 end
 
@@ -145,18 +145,17 @@ instance : has_rat_cast (Cauchy abv) := ⟨λ q, of_rat q⟩
 
 noncomputable instance : has_inv (Cauchy abv) :=
 ⟨λ x, quotient.lift_on x
-  (λ f, mk $ if h : lim_zero f then 0 else inv f h) $
+ (λ f, mk $ if h : lim_zero f then 0 else inv f h) $
 λ f g fg, begin
-  have := lim_zero_congr fg,
-  by_cases hf : lim_zero f,
-  { simp [hf, this.1 hf, setoid.refl] },
-  { have hg := mt this.2 hf, simp [hf, hg],
-    have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf),
-    have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg),
-    have Ig' : mk g * mk (inv g hg) = 1 := mk_eq.2 (mul_inv_cancel hg),
-    rw [mk_eq.2 fg, ← Ig] at If,
-    rw [← mul_one (mk (inv f hf)), ← Ig', ← mul_assoc, If,
-        mul_assoc, Ig', mul_one] }
+ have := lim_zero_congr fg,
+ by_cases hf : lim_zero f,
+ { simp [hf, this.1 hf, setoid.refl] },
+ { have hg := mt this.2 hf, simp [hf, hg],
+ have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf),
+ have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg),
+ have Ig' : mk g * mk (inv g hg) = 1 := mk_eq.2 (mul_inv_cancel hg),
+ rw [mk_eq.2 fg] at If; rw [ ← Ig] at If,
+ rw [← mul_one (mk (inv f hf))]; rw [ ← Ig']; rw [ ← mul_assoc]; rw [ If]; rw [ mul_assoc]; rw [ Ig']; rw [ mul_one] }
 end⟩
 
 @[simp] theorem inv_zero : (0 : Cauchy abv)⁻¹ = 0 :=
@@ -175,14 +174,14 @@ lemma zero_ne_one : (0 : Cauchy abv) ≠ 1 :=
 
 protected theorem inv_mul_cancel {x : Cauchy abv} : x ≠ 0 → x⁻¹ * x = 1 :=
 quotient.induction_on x $ λ f hf, begin
-  simp at hf, simp [hf],
-  exact quotient.sound (cau_seq.inv_mul_cancel hf)
+ simp at hf, simp [hf],
+ exact quotient.sound (cau_seq.inv_mul_cancel hf)
 end
 
 protected theorem mul_inv_cancel {x : Cauchy abv} : x ≠ 0 → x * x⁻¹ = 1 :=
 quotient.induction_on x $ λ f hf, begin
-  simp at hf, simp [hf],
-  exact quotient.sound (cau_seq.mul_inv_cancel hf)
+ simp at hf, simp [hf],
+ exact quotient.sound (cau_seq.mul_inv_cancel hf)
 end
 
 theorem of_rat_inv (x : β) : of_rat (x⁻¹) = ((of_rat x)⁻¹ : Cauchy abv) :=
@@ -190,14 +189,14 @@ congr_arg mk $ by split_ifs with h; [simp [const_lim_zero.1 h], refl]
 
 /-- The Cauchy completion forms a division ring. -/
 noncomputable instance : division_ring (Cauchy abv) :=
-{ inv              := has_inv.inv,
-  mul_inv_cancel   := λ x, cau_seq.completion.mul_inv_cancel,
-  exists_pair_ne   := ⟨0, 1, zero_ne_one⟩,
-  inv_zero         := inv_zero,
-  rat_cast := λ q, of_rat q,
-  rat_cast_mk := λ n d hd hnd,
-    by rw [rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast],
-  .. Cauchy.ring }
+{ inv := has_inv.inv,
+ mul_inv_cancel := λ x, cau_seq.completion.mul_inv_cancel,
+ exists_pair_ne := ⟨0, 1, zero_ne_one⟩,
+ inv_zero := inv_zero,
+ rat_cast := λ q, of_rat q,
+ rat_cast_mk := λ n d hd hnd,
+ by rw [rat.cast_mk']; rw [ of_rat_mul]; rw [ of_rat_int_cast]; rw [ of_rat_inv]; rw [ of_rat_nat_cast],
+ .. Cauchy.ring }
 
 theorem of_rat_div (x y : β) : of_rat (x / y) = (of_rat x / of_rat y : Cauchy abv) :=
 by simp only [div_eq_mul_inv, of_rat_inv, of_rat_mul]
@@ -209,8 +208,8 @@ converging to the same number may be printed differently.
 -/
 meta instance [has_repr β] : has_repr (Cauchy abv) :=
 { repr := λ r,
-  let N := 10, seq := r.unquot in
-    "(sorry /- " ++ (", ".intercalate $ (list.range N).map $ repr ∘ seq) ++ ", ... -/)" }
+ let N := 10, seq := r.unquot in
+ "(sorry /- " ++ (", ".intercalate $ (list.range N).map $ repr ∘ seq) ++ ", ... -/)" }
 
 end
 
@@ -221,7 +220,7 @@ variables {β : Type*} [field β] {abv : β → α} [is_absolute_value abv]
 /-- The Cauchy completion forms a field. -/
 noncomputable instance : field (Cauchy abv) :=
 { .. Cauchy.division_ring,
-  .. Cauchy.comm_ring }
+ .. Cauchy.comm_ring }
 
 end
 
@@ -268,33 +267,33 @@ lim_eq_of_equiv_const $ setoid.refl _
 
 lemma lim_add (f g : cau_seq β abv) : lim f + lim g = lim (f + g) :=
 eq_lim_of_const_equiv $ show lim_zero (const abv (lim f + lim g) - (f + g)),
-  by rw [const_add, add_sub_add_comm];
-  exact add_lim_zero (setoid.symm (equiv_lim f)) (setoid.symm (equiv_lim g))
+ by rw [const_add]; rw [ add_sub_add_comm];
+ exact add_lim_zero (setoid.symm (equiv_lim f)) (setoid.symm (equiv_lim g))
 
 lemma lim_mul_lim (f g : cau_seq β abv) : lim f * lim g = lim (f * g) :=
 eq_lim_of_const_equiv $ show lim_zero (const abv (lim f * lim g) - f * g),
-  from have h : const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g
-      + const abv (lim f) * (const abv (lim g) - g) :=
-    by simp [const_mul (lim f), mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm],
-  by rw h; exact add_lim_zero (mul_lim_zero_left _ (setoid.symm (equiv_lim _)))
-    (mul_lim_zero_right _ (setoid.symm (equiv_lim _)))
+ from have h : const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g
+ + const abv (lim f) * (const abv (lim g) - g) :=
+ by simp [const_mul (lim f), mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm],
+ by rw h; exact add_lim_zero (mul_lim_zero_left _ (setoid.symm (equiv_lim _)))
+ (mul_lim_zero_right _ (setoid.symm (equiv_lim _)))
 
 lemma lim_mul (f : cau_seq β abv) (x : β) : lim f * x = lim (f * const abv x) :=
-by rw [← lim_mul_lim, lim_const]
+by rw [← lim_mul_lim]; rw [ lim_const]
 
 lemma lim_neg (f : cau_seq β abv) : lim (-f) = -lim f :=
 lim_eq_of_equiv_const (show lim_zero (-f - const abv (-lim f)),
-  by rw [const_neg, sub_neg_eq_add, add_comm, ← sub_eq_add_neg];
-  exact setoid.symm (equiv_lim f))
+ by rw [const_neg]; rw [ sub_neg_eq_add]; rw [ add_comm]; rw [ ← sub_eq_add_neg];
+ exact setoid.symm (equiv_lim f))
 
 lemma lim_eq_zero_iff (f : cau_seq β abv) : lim f = 0 ↔ lim_zero f :=
 ⟨assume h,
-  by have hf := equiv_lim f;
-  rw h at hf;
-  exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
+ by have hf := equiv_lim f;
+ rw h at hf;
+ exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
 assume h,
-  have h₁ : f = (f - const abv 0) := ext (λ n, by simp [sub_apply, const_apply]),
-  by rw h₁ at h; exact lim_eq_of_equiv_const h ⟩
+ have h₁ : f = (f - const abv 0) := ext (λ n, by simp [sub_apply, const_apply]),
+ by rw h₁ at h; exact lim_eq_of_equiv_const h ⟩
 
 end
 
@@ -304,18 +303,18 @@ variables {β : Type*} [field β] {abv : β → α} [is_absolute_value abv] [is_
 lemma lim_inv {f : cau_seq β abv} (hf : ¬ lim_zero f) : lim (inv f hf) = (lim f)⁻¹ :=
 have hl : lim f ≠ 0 := by rwa ← lim_eq_zero_iff at hf,
 lim_eq_of_equiv_const $ show lim_zero (inv f hf - const abv (lim f)⁻¹),
-  from have h₁ : ∀ (g f : cau_seq β abv) (hf : ¬ lim_zero f), lim_zero (g - f * inv f hf * g) :=
-    λ g f hf, by rw [← one_mul g, ← mul_assoc, ← sub_mul, mul_one, mul_comm, mul_comm f];
-    exact mul_lim_zero_right _ (setoid.symm (cau_seq.inv_mul_cancel _)),
-  have h₂ : lim_zero ((inv f hf - const abv (lim f)⁻¹) - (const abv (lim f) - f) *
-      (inv f hf * const abv (lim f)⁻¹)) :=
-    by rw [sub_mul, ← sub_add, sub_sub, sub_add_eq_sub_sub, sub_right_comm, sub_add];
-    exact show lim_zero (inv f hf - const abv (lim f) * (inv f hf * const abv (lim f)⁻¹)
-      - (const abv (lim f)⁻¹ - f * (inv f hf * const abv (lim f)⁻¹))),
-    from sub_lim_zero
-      (by rw [← mul_assoc, mul_right_comm, const_inv hl]; exact h₁ _ _ _)
-      (by rw [← mul_assoc]; exact h₁ _ _ _),
-  (lim_zero_congr h₂).mpr $ mul_lim_zero_left _ (setoid.symm (equiv_lim f))
+ from have h₁ : ∀ (g f : cau_seq β abv) (hf : ¬ lim_zero f), lim_zero (g - f * inv f hf * g) :=
+ λ g f hf, by rw [← one_mul g]; rw [ ← mul_assoc]; rw [ ← sub_mul]; rw [ mul_one]; rw [ mul_comm]; rw [ mul_comm f];
+ exact mul_lim_zero_right _ (setoid.symm (cau_seq.inv_mul_cancel _)),
+ have h₂ : lim_zero ((inv f hf - const abv (lim f)⁻¹) - (const abv (lim f) - f) *
+ (inv f hf * const abv (lim f)⁻¹)) :=
+ by rw [sub_mul]; rw [ ← sub_add]; rw [ sub_sub]; rw [ sub_add_eq_sub_sub]; rw [ sub_right_comm]; rw [ sub_add];
+ exact show lim_zero (inv f hf - const abv (lim f) * (inv f hf * const abv (lim f)⁻¹)
+ - (const abv (lim f)⁻¹ - f * (inv f hf * const abv (lim f)⁻¹))),
+ from sub_lim_zero
+ (by rw [← mul_assoc]; rw [ mul_right_comm]; rw [ const_inv hl]; exact h₁ _ _ _)
+ (by rw [← mul_assoc]; exact h₁ _ _ _),
+ (lim_zero_congr h₂).mpr $ mul_lim_zero_left _ (setoid.symm (equiv_lim f))
 
 end
 
@@ -323,20 +322,21 @@ section
 variables [is_complete α abs]
 
 lemma lim_le {f : cau_seq α abs} {x : α}
-  (h : f ≤ cau_seq.const abs x) : lim f ≤ x :=
+ (h : f ≤ cau_seq.const abs x) : lim f ≤ x :=
 cau_seq.const_le.1 $ cau_seq.le_of_eq_of_le (setoid.symm (equiv_lim f)) h
 
 lemma le_lim {f : cau_seq α abs} {x : α}
-  (h : cau_seq.const abs x ≤ f) : x ≤ lim f :=
+ (h : cau_seq.const abs x ≤ f) : x ≤ lim f :=
 cau_seq.const_le.1 $ cau_seq.le_of_le_of_eq h (equiv_lim f)
 
 lemma lt_lim {f : cau_seq α abs} {x : α}
-  (h : cau_seq.const abs x < f) : x < lim f :=
+ (h : cau_seq.const abs x < f) : x < lim f :=
 cau_seq.const_lt.1 $ cau_seq.lt_of_lt_of_eq h (equiv_lim f)
 
 lemma lim_lt {f : cau_seq α abs} {x : α}
-  (h : f < cau_seq.const abs x) : lim f < x :=
+ (h : f < cau_seq.const abs x) : lim f < x :=
 cau_seq.const_lt.1 $ cau_seq.lt_of_eq_of_lt (setoid.symm (equiv_lim f)) h
 
 end
 end cau_seq
+

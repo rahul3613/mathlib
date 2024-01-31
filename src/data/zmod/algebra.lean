@@ -29,15 +29,15 @@ See note [reducible non-instances]. -/
 @[reducible]
 def algebra' (h : m ∣ n) : algebra (zmod n) R :=
 { smul := λ a r, a * r,
-  commutes' := λ a r, show (a * r : R) = r * a,
-  begin
-    rcases zmod.int_cast_surjective a with ⟨k, rfl⟩,
-    show zmod.cast_hom h R k * r = r * zmod.cast_hom h R k,
-    rw map_int_cast,
-    exact commute.cast_int_left r k,
-  end,
-  smul_def' := λ a r, rfl,
-  .. zmod.cast_hom h R }
+ commutes' := λ a r, show (a * r : R) = r * a,
+ begin
+ rcases zmod.int_cast_surjective a with ⟨k, rfl⟩,
+ show zmod.cast_hom h R k * r = r * zmod.cast_hom h R k,
+ rw map_int_cast,
+ exact commute.cast_int_left r k,
+ end,
+ smul_def' := λ a r, rfl,
+ .. zmod.cast_hom h R }
 
 end
 
@@ -48,3 +48,4 @@ See note [reducible non-instances]. -/
 def algebra (p : ℕ) [char_p R p] : algebra (zmod p) R := algebra' R p dvd_rfl
 
 end zmod
+

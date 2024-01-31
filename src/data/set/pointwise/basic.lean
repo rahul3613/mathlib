@@ -37,13 +37,13 @@ Appropriate definitions and results are also transported to the additive theory 
 ## Implementation notes
 
 * The following expressions are considered in simp-normal form in a group:
-  `(λ h, h * g) ⁻¹' s`, `(λ h, g * h) ⁻¹' s`, `(λ h, h * g⁻¹) ⁻¹' s`, `(λ h, g⁻¹ * h) ⁻¹' s`,
-  `s * t`, `s⁻¹`, `(1 : set _)` (and similarly for additive variants).
-  Expressions equal to one of these will be simplified.
+ `(λ h, h * g) ⁻¹' s`, `(λ h, g * h) ⁻¹' s`, `(λ h, h * g⁻¹) ⁻¹' s`, `(λ h, g⁻¹ * h) ⁻¹' s`,
+ `s * t`, `s⁻¹`, `(1 : set _)` (and similarly for additive variants).
+ Expressions equal to one of these will be simplified.
 * We put all instances in the locale `pointwise`, so that these instances are not available by
-  default. Note that we do not mark them as reducible (as argued by note [reducible non-instances])
-  since we expect the locale to be open whenever the instances are actually used (and making the
-  instances reducible changes the behavior of `simp`.
+ default. Note that we do not mark them as reducible (as argued by note [reducible non-instances])
+ since we expect the locale to be open whenever the instances are actually used (and making the
+ instances reducible changes the behavior of `simp`.
 
 ## Tags
 
@@ -144,19 +144,19 @@ congr_fun (image_eq_preimage_of_inverse inv_involutive.left_inverse inv_involuti
 @[simp, to_additive]
 instance : has_involutive_inv (set α) :=
 { inv := has_inv.inv,
-  inv_inv := λ s, by { simp only [← inv_preimage, preimage_preimage, inv_inv, preimage_id'] } }
+ inv_inv := λ s, by { simp only [← inv_preimage, preimage_preimage, inv_inv, preimage_id'] } }
 
 @[simp, to_additive]
 lemma inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
 (equiv.inv α).surjective.preimage_subset_preimage_iff
 
-@[to_additive] lemma inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by { rw [← inv_subset_inv, inv_inv] }
+@[to_additive] lemma inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by { rw [← inv_subset_inv]; rw [ inv_inv] }
 
 @[simp, to_additive] lemma inv_singleton (a : α) : ({a} : set α)⁻¹ = {a⁻¹} :=
-by rw [←image_inv, image_singleton]
+by rw [←image_inv]; rw [ image_singleton]
 
 @[simp, to_additive] lemma inv_insert (a : α) (s : set α) : (insert a s)⁻¹ = insert a⁻¹ s⁻¹ :=
-by rw [insert_eq, union_inv, inv_singleton, insert_eq]
+by rw [insert_eq]; rw [ union_inv]; rw [ inv_singleton]; rw [ insert_eq]
 
 @[to_additive] lemma inv_range {ι : Sort*} {f : ι → α} : (range f)⁻¹ = range (λ i, (f i)⁻¹) :=
 by { rw ←image_inv, exact (range_comp _ _).symm }
@@ -254,12 +254,12 @@ image2_Inter_subset_right _ _ _
 
 @[to_additive]
 lemma Inter₂_mul_subset (s : Π i, κ i → set α) (t : set α) :
-  (⋂ i j, s i j) * t ⊆ ⋂ i j, s i j * t :=
+ (⋂ i j, s i j) * t ⊆ ⋂ i j, s i j * t :=
 image2_Inter₂_subset_left _ _ _
 
 @[to_additive]
 lemma mul_Inter₂_subset (s : set α) (t : Π i, κ i → set α) :
-  s * (⋂ i j, t i j) ⊆ ⋂ i j, s * t i j :=
+ s * (⋂ i j, t i j) ⊆ ⋂ i j, s * t i j :=
 image2_Inter₂_subset_right _ _ _
 
 /-- The singleton operation as a `mul_hom`. -/
@@ -359,12 +359,12 @@ image2_Inter_subset_right _ _ _
 
 @[to_additive]
 lemma Inter₂_div_subset (s : Π i, κ i → set α) (t : set α) :
-  (⋂ i j, s i j) / t ⊆ ⋂ i j, s i j / t :=
+ (⋂ i j, s i j) / t ⊆ ⋂ i j, s i j / t :=
 image2_Inter₂_subset_left _ _ _
 
 @[to_additive]
 lemma div_Inter₂_subset (s : set α) (t : Π i, κ i → set α) :
-  s / (⋂ i j, t i j) ⊆ ⋂ i j, s / t i j :=
+ s / (⋂ i j, t i j) ⊆ ⋂ i j, s / t i j :=
 image2_Inter₂_subset_right _ _ _
 
 end has_div
@@ -395,7 +395,7 @@ localized "attribute [instance] set.has_nsmul set.has_npow set.has_zsmul set.has
 @[to_additive "`set α` is an `add_semigroup` under pointwise operations if `α` is."]
 protected def semigroup [semigroup α] : semigroup (set α) :=
 { mul_assoc := λ _ _ _, image2_assoc mul_assoc,
-  ..set.has_mul }
+ ..set.has_mul }
 
 section comm_semigroup
 variables [comm_semigroup α] {s t : set α}
@@ -404,7 +404,7 @@ variables [comm_semigroup α] {s t : set α}
 @[to_additive "`set α` is an `add_comm_semigroup` under pointwise operations if `α` is."]
 protected def comm_semigroup : comm_semigroup (set α) :=
 { mul_comm := λ s t, image2_comm mul_comm
-  ..set.semigroup }
+ ..set.semigroup }
 
 @[to_additive] lemma inter_mul_union_subset : (s ∩ t) * (s ∪ t) ⊆ s * t :=
 image2_inter_union_subset mul_comm
@@ -421,11 +421,11 @@ variables [mul_one_class α]
 @[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
 protected def mul_one_class : mul_one_class (set α) :=
 { mul_one := image2_right_identity mul_one,
-  one_mul := image2_left_identity one_mul,
-  ..set.has_one, ..set.has_mul }
+ one_mul := image2_left_identity one_mul,
+ ..set.has_one, ..set.has_mul }
 
 localized "attribute [instance] set.mul_one_class set.add_zero_class set.semigroup set.add_semigroup
-  set.comm_semigroup set.add_comm_semigroup" in pointwise
+ set.comm_semigroup set.add_comm_semigroup" in pointwise
 
 @[to_additive] lemma subset_mul_left (s : set α) {t : set α} (ht : (1 : α) ∈ t) : s ⊆ s * t :=
 λ x hx, ⟨x, 1, hx, ht, mul_one _⟩
@@ -438,7 +438,7 @@ localized "attribute [instance] set.mul_one_class set.add_zero_class set.semigro
 def singleton_monoid_hom : α →* set α := { ..singleton_mul_hom, ..singleton_one_hom }
 
 @[simp, to_additive] lemma coe_singleton_monoid_hom :
-  (singleton_monoid_hom : α → set α) = singleton := rfl
+ (singleton_monoid_hom : α → set α) = singleton := rfl
 @[simp, to_additive] lemma singleton_monoid_hom_apply (a : α) : singleton_monoid_hom a = {a} := rfl
 
 end mul_one_class
@@ -462,14 +462,14 @@ localized "attribute [instance] set.monoid set.add_monoid" in pointwise
 
 @[to_additive] lemma pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ s ^ n :=
 begin
-  refine nat.le_induction _ (λ n h ih, _) _,
-  { exact subset.rfl },
-  { rw pow_succ,
-    exact ih.trans (subset_mul_right _ hs) }
+ refine nat.le_induction _ (λ n h ih, _) _,
+ { exact subset.rfl },
+ { rw pow_succ,
+ exact ih.trans (subset_mul_right _ hs) }
 end
 
 @[simp, to_additive] lemma empty_pow {n : ℕ} (hn : n ≠ 0) : (∅ : set α) ^ n = ∅ :=
-by rw [← tsub_add_cancel_of_le (nat.succ_le_of_lt $ nat.pos_of_ne_zero hn), pow_succ, empty_mul]
+by rw [← tsub_add_cancel_of_le (nat.succ_le_of_lt $ nat.pos_of_ne_zero hn)]; rw [ pow_succ]; rw [ empty_mul]
 
 @[to_additive] lemma mul_univ_of_one_mem (hs : (1 : α) ∈ s) : s * univ = univ :=
 eq_univ_iff_forall.2 $ λ a, mem_mul.2 ⟨_, _, hs, mem_univ _, one_mul _⟩
@@ -484,12 +484,12 @@ mul_univ_of_one_mem $ mem_univ _
 @[simp] lemma nsmul_univ {α : Type*} [add_monoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (univ : set α) = univ
 | 0 := λ h, (h rfl).elim
 | 1 := λ _, one_nsmul _
-| (n + 2) := λ _, by { rw [succ_nsmul, nsmul_univ n.succ_ne_zero, univ_add_univ] }
+| (n + 2) := λ _, by { rw [succ_nsmul]; rw [ nsmul_univ n.succ_ne_zero]; rw [ univ_add_univ] }
 
 @[simp, to_additive nsmul_univ] lemma univ_pow : ∀ {n : ℕ}, n ≠ 0 → (univ : set α) ^ n = univ
 | 0 := λ h, (h rfl).elim
 | 1 := λ _, pow_one _
-| (n + 2) := λ _, by { rw [pow_succ, univ_pow n.succ_ne_zero, univ_mul_univ] }
+| (n + 2) := λ _, by { rw [pow_succ]; rw [ univ_pow n.succ_ne_zero]; rw [ univ_mul_univ] }
 
 @[to_additive] protected lemma _root_.is_unit.set : is_unit a → is_unit ({a} : set α) :=
 is_unit.map (singleton_monoid_hom : α →* set α)
@@ -510,41 +510,41 @@ variables [division_monoid α] {s t : set α}
 
 @[to_additive] protected lemma mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} ∧ a * b = 1 :=
 begin
-  refine ⟨λ h, _, _⟩,
-  { have hst : (s * t).nonempty := h.symm.subst one_nonempty,
-    obtain ⟨a, ha⟩ := hst.of_image2_left,
-    obtain ⟨b, hb⟩ := hst.of_image2_right,
-    have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) :=
-      λ a b ha hb, (h.subset $ mem_image2_of_mem ha hb),
-    refine ⟨a, b, _, _, H ha hb⟩; refine eq_singleton_iff_unique_mem.2 ⟨‹_›, λ x hx, _⟩,
-    { exact (eq_inv_of_mul_eq_one_left $ H hx hb).trans (inv_eq_of_mul_eq_one_left $ H ha hb) },
-    { exact (eq_inv_of_mul_eq_one_right $ H ha hx).trans (inv_eq_of_mul_eq_one_right $ H ha hb) } },
-  { rintro ⟨b, c, rfl, rfl, h⟩,
-    rw [singleton_mul_singleton, h, singleton_one] }
+ refine ⟨λ h, _, _⟩,
+ { have hst : (s * t).nonempty := h.symm.subst one_nonempty,
+ obtain ⟨a, ha⟩ := hst.of_image2_left,
+ obtain ⟨b, hb⟩ := hst.of_image2_right,
+ have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) :=
+ λ a b ha hb, (h.subset $ mem_image2_of_mem ha hb),
+ refine ⟨a, b, _, _, H ha hb⟩; refine eq_singleton_iff_unique_mem.2 ⟨‹_›, λ x hx, _⟩,
+ { exact (eq_inv_of_mul_eq_one_left $ H hx hb).trans (inv_eq_of_mul_eq_one_left $ H ha hb) },
+ { exact (eq_inv_of_mul_eq_one_right $ H ha hx).trans (inv_eq_of_mul_eq_one_right $ H ha hb) } },
+ { rintro ⟨b, c, rfl, rfl, h⟩,
+ rw [singleton_mul_singleton]; rw [ h]; rw [ singleton_one] }
 end
 
 /-- `set α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive "`set α` is a subtraction monoid under pointwise operations if `α` is."]
 protected def division_monoid : division_monoid (set α) :=
 { mul_inv_rev := λ s t, by { simp_rw ←image_inv, exact image_image2_antidistrib mul_inv_rev },
-  inv_eq_of_mul := λ s t h, begin
-    obtain ⟨a, b, rfl, rfl, hab⟩ := set.mul_eq_one_iff.1 h,
-    rw [inv_singleton, inv_eq_of_mul_eq_one_right hab],
-  end,
-  div_eq_mul_inv := λ s t,
-    by { rw [←image_id (s / t), ←image_inv], exact image_image2_distrib_right div_eq_mul_inv },
-  ..set.monoid, ..set.has_involutive_inv, ..set.has_div, ..set.has_zpow }
+ inv_eq_of_mul := λ s t h, begin
+ obtain ⟨a, b, rfl, rfl, hab⟩ := set.mul_eq_one_iff.1 h,
+ rw [inv_singleton]; rw [ inv_eq_of_mul_eq_one_right hab],
+ end,
+ div_eq_mul_inv := λ s t,
+ by { rw [←image_id (s / t)]; rw [ ←image_inv], exact image_image2_distrib_right div_eq_mul_inv },
+ ..set.monoid, ..set.has_involutive_inv, ..set.has_div, ..set.has_zpow }
 
 @[simp, to_additive] lemma is_unit_iff : is_unit s ↔ ∃ a, s = {a} ∧ is_unit a :=
 begin
-  split,
-  { rintro ⟨u, rfl⟩,
-    obtain ⟨a, b, ha, hb, h⟩ := set.mul_eq_one_iff.1 u.mul_inv,
-    refine ⟨a, ha, ⟨a, b, h, singleton_injective _⟩, rfl⟩,
-    rw [←singleton_mul_singleton, ←ha, ←hb],
-    exact u.inv_mul },
-  { rintro ⟨a, rfl, ha⟩,
-    exact ha.set }
+ split,
+ { rintro ⟨u, rfl⟩,
+ obtain ⟨a, b, ha, hb, h⟩ := set.mul_eq_one_iff.1 u.mul_inv,
+ refine ⟨a, ha, ⟨a, b, h, singleton_injective _⟩, rfl⟩,
+ rw [←singleton_mul_singleton]; rw [ ←ha]; rw [ ←hb],
+ exact u.inv_mul },
+ { rintro ⟨a, rfl, ha⟩,
+ exact ha.set }
 end
 
 end division_monoid
@@ -558,11 +558,11 @@ protected def division_comm_monoid [division_comm_monoid α] : division_comm_mon
 /-- `set α` has distributive negation if `α` has. -/
 protected def has_distrib_neg [has_mul α] [has_distrib_neg α] : has_distrib_neg (set α) :=
 { neg_mul := λ _ _, by { simp_rw ←image_neg, exact image2_image_left_comm neg_mul },
-  mul_neg := λ _ _, by { simp_rw ←image_neg, exact image_image2_right_comm mul_neg },
-  ..set.has_involutive_neg }
+ mul_neg := λ _ _, by { simp_rw ←image_neg, exact image_image2_right_comm mul_neg },
+ ..set.has_involutive_neg }
 
 localized "attribute [instance] set.division_monoid set.subtraction_monoid set.division_comm_monoid
-  set.subtraction_comm_monoid set.has_distrib_neg" in pointwise
+ set.subtraction_comm_monoid set.has_distrib_neg" in pointwise
 
 section distrib
 variables [distrib α] (s t u : set α)
@@ -626,16 +626,16 @@ by { rw image_eq_preimage_of_inverse; intro c; simp }
 @[to_additive] lemma image_mul_right' : (* b⁻¹) '' t = (* b) ⁻¹' t := by simp
 
 @[simp, to_additive] lemma preimage_mul_left_singleton : ((*) a) ⁻¹' {b} = {a⁻¹ * b} :=
-by rw [← image_mul_left', image_singleton]
+by rw [← image_mul_left']; rw [ image_singleton]
 
 @[simp, to_additive] lemma preimage_mul_right_singleton : (* a) ⁻¹' {b} = {b * a⁻¹} :=
-by rw [← image_mul_right', image_singleton]
+by rw [← image_mul_right']; rw [ image_singleton]
 
 @[simp, to_additive] lemma preimage_mul_left_one : ((*) a) ⁻¹' 1 = {a⁻¹} :=
-by rw [← image_mul_left', image_one, mul_one]
+by rw [← image_mul_left']; rw [ image_one]; rw [ mul_one]
 
 @[simp, to_additive] lemma preimage_mul_right_one : (* b) ⁻¹' 1 = {b⁻¹} :=
-by rw [← image_mul_right', image_one, one_mul]
+by rw [← image_mul_right']; rw [ image_one]; rw [ one_mul]
 
 @[to_additive] lemma preimage_mul_left_one' : (λ b, a⁻¹ * b) ⁻¹' 1 = {a} := by simp
 @[to_additive] lemma preimage_mul_right_one' : (* b⁻¹) ⁻¹' 1 = {b} := by simp
@@ -688,12 +688,12 @@ end group
 
 @[to_additive]
 lemma bdd_above_mul [ordered_comm_monoid α] {A B : set α} :
-  bdd_above A → bdd_above B → bdd_above (A * B) :=
+ bdd_above A → bdd_above B → bdd_above (A * B) :=
 begin
-  rintro ⟨bA, hbA⟩ ⟨bB, hbB⟩,
-  use bA * bB,
-  rintro x ⟨xa, xb, hxa, hxb, rfl⟩,
-  exact mul_le_mul' (hbA hxa) (hbB hxb),
+ rintro ⟨bA, hbA⟩ ⟨bB, hbB⟩,
+ use bA * bB,
+ rintro x ⟨xa, xb, hxa, hxb, rfl⟩,
+ exact mul_le_mul' (hbA hxa) (hbB hxb),
 end
 
 end set
@@ -706,21 +706,22 @@ open_locale pointwise
 namespace group
 
 lemma card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : monotone f)
-  {B : ℕ} (h2 : ∀ n, f n ≤ B) (h3 : ∀ n, f n = f (n + 1) → f (n + 1) = f (n + 2)) :
-  ∀ k, B ≤ k → f k = f B :=
+ {B : ℕ} (h2 : ∀ n, f n ≤ B) (h3 : ∀ n, f n = f (n + 1) → f (n + 1) = f (n + 2)) :
+ ∀ k, B ≤ k → f k = f B :=
 begin
-  have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1),
-  { contrapose! h2,
-    suffices : ∀ n : ℕ, n ≤ B + 1 → n ≤ f n,
-    { exact ⟨B + 1, this (B + 1) (le_refl (B + 1))⟩ },
-    exact λ n, nat.rec (λ h, nat.zero_le (f 0)) (λ n ih h, lt_of_le_of_lt (ih (n.le_succ.trans h))
-      (lt_of_le_of_ne (h1 n.le_succ) (h2 n (nat.succ_le_succ_iff.mp h)))) n },
-  { obtain ⟨n, hn1, hn2⟩ := key,
-    replace key : ∀ k : ℕ, f (n + k) = f (n + k + 1) ∧ f (n + k) = f n :=
-    λ k, nat.rec ⟨hn2, rfl⟩ (λ k ih, ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k,
-    replace key : ∀ k : ℕ, n ≤ k → f k = f n :=
-    λ k hk, (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2,
-    exact λ k hk, (key k (hn1.trans hk)).trans (key B hn1).symm },
+ have key : ∃ n : ℕ, n ≤ B ∧ f n = f (n + 1),
+ { contrapose! h2,
+ suffices : ∀ n : ℕ, n ≤ B + 1 → n ≤ f n,
+ { exact ⟨B + 1, this (B + 1) (le_refl (B + 1))⟩ },
+ exact λ n, nat.rec (λ h, nat.zero_le (f 0)) (λ n ih h, lt_of_le_of_lt (ih (n.le_succ.trans h))
+ (lt_of_le_of_ne (h1 n.le_succ) (h2 n (nat.succ_le_succ_iff.mp h)))) n },
+ { obtain ⟨n, hn1, hn2⟩ := key,
+ replace key : ∀ k : ℕ, f (n + k) = f (n + k + 1) ∧ f (n + k) = f n :=
+ λ k, nat.rec ⟨hn2, rfl⟩ (λ k ih, ⟨h3 _ ih.1, ih.1.symm.trans ih.2⟩) k,
+ replace key : ∀ k : ℕ, n ≤ k → f k = f n :=
+ λ k hk, (congr_arg f (add_tsub_cancel_of_le hk)).symm.trans (key (k - n)).2,
+ exact λ k hk, (key k (hn1.trans hk)).trans (key B hn1).symm },
 end
 
 end group
+

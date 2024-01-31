@@ -37,9 +37,9 @@ local notation `β*` := germ (φ : filter α) β
 
 instance [division_semiring β] : division_semiring β* :=
 { mul_inv_cancel := λ f, induction_on f $ λ f hf, coe_eq.2 $ (φ.em (λ y, f y = 0)).elim
-    (λ H, (hf $ coe_eq.2 H).elim) (λ H, H.mono $ λ x, mul_inv_cancel),
-  inv_zero := coe_eq.2 $ by simp only [(∘), inv_zero],
-  ..germ.semiring, ..germ.div_inv_monoid, ..germ.nontrivial }
+ (λ H, (hf $ coe_eq.2 H).elim) (λ H, H.mono $ λ x, mul_inv_cancel),
+ inv_zero := coe_eq.2 $ by simp only [(∘), inv_zero],
+ ..germ.semiring, ..germ.div_inv_monoid, ..germ.nontrivial }
 
 instance [division_ring β] : division_ring β* := { ..germ.ring, ..germ.division_semiring }
 instance [semifield β] : semifield β* := { ..germ.comm_semiring, ..germ.division_semiring }
@@ -67,30 +67,30 @@ instance [has_inf β] : has_inf β* := ⟨map₂ (⊓)⟩
 
 instance [semilattice_sup β] : semilattice_sup β* :=
 { sup := (⊔),
-  le_sup_left := λ f g, induction_on₂ f g $ λ f g,
-    eventually_of_forall $ λ x, le_sup_left,
-  le_sup_right := λ f g, induction_on₂ f g $ λ f g,
-    eventually_of_forall $ λ x, le_sup_right,
-  sup_le := λ f₁ f₂ g, induction_on₃ f₁ f₂ g $ λ f₁ f₂ g h₁ h₂,
-    h₂.mp $ h₁.mono $ λ x, sup_le,
-  .. germ.partial_order }
+ le_sup_left := λ f g, induction_on₂ f g $ λ f g,
+ eventually_of_forall $ λ x, le_sup_left,
+ le_sup_right := λ f g, induction_on₂ f g $ λ f g,
+ eventually_of_forall $ λ x, le_sup_right,
+ sup_le := λ f₁ f₂ g, induction_on₃ f₁ f₂ g $ λ f₁ f₂ g h₁ h₂,
+ h₂.mp $ h₁.mono $ λ x, sup_le,
+ .. germ.partial_order }
 
 instance [semilattice_inf β] : semilattice_inf β* :=
 { inf := (⊓),
-  inf_le_left := λ f g, induction_on₂ f g $ λ f g,
-    eventually_of_forall $ λ x, inf_le_left,
-  inf_le_right := λ f g, induction_on₂ f g $ λ f g,
-    eventually_of_forall $ λ x, inf_le_right,
-  le_inf := λ f₁ f₂ g, induction_on₃ f₁ f₂ g $ λ f₁ f₂ g h₁ h₂,
-    h₂.mp $ h₁.mono $ λ x, le_inf,
-  .. germ.partial_order }
+ inf_le_left := λ f g, induction_on₂ f g $ λ f g,
+ eventually_of_forall $ λ x, inf_le_left,
+ inf_le_right := λ f g, induction_on₂ f g $ λ f g,
+ eventually_of_forall $ λ x, inf_le_right,
+ le_inf := λ f₁ f₂ g, induction_on₃ f₁ f₂ g $ λ f₁ f₂ g h₁ h₂,
+ h₂.mp $ h₁.mono $ λ x, le_inf,
+ .. germ.partial_order }
 
 instance [lattice β] : lattice β* :=
 { .. germ.semilattice_sup, .. germ.semilattice_inf }
 
 instance [distrib_lattice β] : distrib_lattice β* :=
 { le_sup_inf := λ f g h, induction_on₃ f g h $ λ f g h, eventually_of_forall $ λ _, le_sup_inf,
-  .. germ.semilattice_sup, .. germ.semilattice_inf }
+ .. germ.semilattice_sup, .. germ.semilattice_inf }
 
 instance [has_le β] [is_total β (≤)] : is_total β* (≤) :=
 ⟨λ f g, induction_on₂ f g $ λ f g, eventually_or.1 $ eventually_of_forall $ λ x, total_of _ _ _⟩
@@ -101,14 +101,14 @@ noncomputable instance [linear_order β] : linear_order β* := lattice.to_linear
 @[to_additive]
 instance [ordered_comm_monoid β] : ordered_comm_monoid β* :=
 { mul_le_mul_left := λ f g, induction_on₂ f g $ λ f g H h, induction_on h $ λ h,
-    H.mono $ λ x H, mul_le_mul_left' H _,
-  .. germ.partial_order, .. germ.comm_monoid }
+ H.mono $ λ x H, mul_le_mul_left' H _,
+ .. germ.partial_order, .. germ.comm_monoid }
 
 @[to_additive]
 instance [ordered_cancel_comm_monoid β] : ordered_cancel_comm_monoid β* :=
 { le_of_mul_le_mul_left := λ f g h, induction_on₃ f g h $ λ f g h H,
-    H.mono $ λ x, le_of_mul_le_mul_left',
-  .. germ.partial_order, .. germ.ordered_comm_monoid }
+ H.mono $ λ x, le_of_mul_le_mul_left',
+ .. germ.partial_order, .. germ.ordered_comm_monoid }
 
 @[to_additive]
 instance [ordered_comm_group β] : ordered_comm_group β* :=
@@ -120,38 +120,38 @@ noncomputable instance [linear_ordered_comm_group β] : linear_ordered_comm_grou
 
 instance [ordered_semiring β] : ordered_semiring β* :=
 { zero_le_one := const_le zero_le_one,
-  mul_le_mul_of_nonneg_left := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, hh.mp $
-    hfg.mono $ λ a, mul_le_mul_of_nonneg_left,
-  mul_le_mul_of_nonneg_right := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, hh.mp $
-    hfg.mono $ λ a, mul_le_mul_of_nonneg_right,
-  ..germ.semiring, ..germ.ordered_add_comm_monoid }
+ mul_le_mul_of_nonneg_left := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, hh.mp $
+ hfg.mono $ λ a, mul_le_mul_of_nonneg_left,
+ mul_le_mul_of_nonneg_right := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, hh.mp $
+ hfg.mono $ λ a, mul_le_mul_of_nonneg_right,
+ ..germ.semiring, ..germ.ordered_add_comm_monoid }
 
 instance [ordered_comm_semiring β] : ordered_comm_semiring β* :=
 { ..germ.ordered_semiring, ..germ.comm_semiring }
 
 instance [ordered_ring β] : ordered_ring β* :=
 { zero_le_one := const_le zero_le_one,
-  mul_nonneg := λ x y, induction_on₂ x y $ λ f g hf hg, hg.mp $ hf.mono $ λ a, mul_nonneg,
-  ..germ.ring, ..germ.ordered_add_comm_group }
+ mul_nonneg := λ x y, induction_on₂ x y $ λ f g hf hg, hg.mp $ hf.mono $ λ a, mul_nonneg,
+ ..germ.ring, ..germ.ordered_add_comm_group }
 
 instance [ordered_comm_ring β] : ordered_comm_ring β* :=
 { ..germ.ordered_ring, ..germ.ordered_comm_semiring }
 
 instance [strict_ordered_semiring β] : strict_ordered_semiring β* :=
 { mul_lt_mul_of_pos_left := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, coe_lt.2 $
-   (coe_lt.1 hh).mp $ (coe_lt.1 hfg).mono $ λ a, mul_lt_mul_of_pos_left,
-  mul_lt_mul_of_pos_right := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, coe_lt.2 $
-   (coe_lt.1 hh).mp $ (coe_lt.1 hfg).mono $ λ a, mul_lt_mul_of_pos_right,
-  ..germ.ordered_semiring, ..germ.ordered_cancel_add_comm_monoid, ..germ.nontrivial }
+ (coe_lt.1 hh).mp $ (coe_lt.1 hfg).mono $ λ a, mul_lt_mul_of_pos_left,
+ mul_lt_mul_of_pos_right := λ x y z, induction_on₃ x y z $ λ f g h hfg hh, coe_lt.2 $
+ (coe_lt.1 hh).mp $ (coe_lt.1 hfg).mono $ λ a, mul_lt_mul_of_pos_right,
+ ..germ.ordered_semiring, ..germ.ordered_cancel_add_comm_monoid, ..germ.nontrivial }
 
 instance [strict_ordered_comm_semiring β] : strict_ordered_comm_semiring β* :=
 { .. germ.strict_ordered_semiring, ..germ.ordered_comm_semiring }
 
 instance [strict_ordered_ring β] : strict_ordered_ring β* :=
 { zero_le_one := const_le zero_le_one,
-  mul_pos := λ x y, induction_on₂ x y $ λ f g hf hg, coe_pos.2 $
-    (coe_pos.1 hg).mp $ (coe_pos.1 hf).mono $ λ x, mul_pos,
-  ..germ.ring, ..germ.strict_ordered_semiring }
+ mul_pos := λ x y, induction_on₂ x y $ λ f g hf hg, coe_pos.2 $
+ (coe_pos.1 hg).mp $ (coe_pos.1 hf).mono $ λ x, mul_pos,
+ ..germ.ring, ..germ.strict_ordered_semiring }
 
 instance [strict_ordered_comm_ring β] : strict_ordered_comm_ring β* :=
 { .. germ.strict_ordered_ring, ..germ.ordered_comm_ring }
@@ -168,32 +168,33 @@ noncomputable instance [linear_ordered_comm_ring β] : linear_ordered_comm_ring 
 lemma max_def [linear_order β] (x y : β*) : max x y = map₂ max x y :=
 induction_on₂ x y $ λ a b,
 begin
-  cases le_total (a : β*) b,
-  { rw [max_eq_right h, map₂_coe, coe_eq], exact h.mono (λ i hi, (max_eq_right hi).symm) },
-  { rw [max_eq_left h, map₂_coe, coe_eq], exact h.mono (λ i hi, (max_eq_left hi).symm) }
+ cases le_total (a : β*) b,
+ { rw [max_eq_right h]; rw [ map₂_coe]; rw [ coe_eq], exact h.mono (λ i hi, (max_eq_right hi).symm) },
+ { rw [max_eq_left h]; rw [ map₂_coe]; rw [ coe_eq], exact h.mono (λ i hi, (max_eq_left hi).symm) }
 end
 
 lemma min_def [K : linear_order β] (x y : β*) : min x y = map₂ min x y :=
 induction_on₂ x y $ λ a b,
 begin
-  cases le_total (a : β*) b,
-  { rw [min_eq_left h, map₂_coe, coe_eq], exact h.mono (λ i hi, (min_eq_left hi).symm) },
-  { rw [min_eq_right h, map₂_coe, coe_eq], exact h.mono (λ i hi, (min_eq_right hi).symm) }
+ cases le_total (a : β*) b,
+ { rw [min_eq_left h]; rw [ map₂_coe]; rw [ coe_eq], exact h.mono (λ i hi, (min_eq_left hi).symm) },
+ { rw [min_eq_right h]; rw [ map₂_coe]; rw [ coe_eq], exact h.mono (λ i hi, (min_eq_right hi).symm) }
 end
 
 lemma abs_def [linear_ordered_add_comm_group β] (x : β*) : |x| = map abs x :=
 induction_on x $ λ a, by exact rfl
 
 @[simp] lemma const_max [linear_order β] (x y : β) : (↑(max x y : β) : β*) = max ↑x ↑y :=
-by rw [max_def, map₂_const]
+by rw [max_def]; rw [ map₂_const]
 
 @[simp] lemma const_min [linear_order β] (x y : β) : (↑(min x y : β) : β*) = min ↑x ↑y :=
-by rw [min_def, map₂_const]
+by rw [min_def]; rw [ map₂_const]
 
 @[simp] lemma const_abs [linear_ordered_add_comm_group β] (x : β) :
-  (↑(|x|) : β*) = |↑x| :=
-by rw [abs_def, map_const]
+ (↑(|x|) : β*) = |↑x| :=
+by rw [abs_def]; rw [ map_const]
 
 end germ
 
 end filter
+

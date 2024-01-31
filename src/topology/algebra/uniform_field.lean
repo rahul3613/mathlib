@@ -41,7 +41,7 @@ open_locale classical uniformity topology
 
 open set uniform_space uniform_space.completion filter
 
-variables (K : Type*) [field K]  [uniform_space K]
+variables (K : Type*) [field K] [uniform_space K]
 
 local notation `hat` := completion
 
@@ -68,26 +68,26 @@ variables {K}
 def hat_inv : hat K → hat K := dense_inducing_coe.extend (λ x : K, (coe x⁻¹ : hat K))
 
 lemma continuous_hat_inv [completable_top_field K] {x : hat K} (h : x ≠ 0) :
-  continuous_at hat_inv x :=
+ continuous_at hat_inv x :=
 begin
-  haveI : t3_space (hat K) := completion.t3_space K,
-  refine dense_inducing_coe.continuous_at_extend _,
-  apply mem_of_superset (compl_singleton_mem_nhds h),
-  intros y y_ne,
-  rw mem_compl_singleton_iff at y_ne,
-  apply complete_space.complete,
-  rw ← filter.map_map,
-  apply cauchy.map _ (completion.uniform_continuous_coe K),
-  apply completable_top_field.nice,
-  { haveI := dense_inducing_coe.comap_nhds_ne_bot y,
-    apply cauchy_nhds.comap,
-    { rw completion.comap_coe_eq_uniformity,
-      exact le_rfl } },
-  { have eq_bot : 𝓝 (0 : hat K) ⊓ 𝓝 y = ⊥,
-    { by_contradiction h,
-      exact y_ne (eq_of_nhds_ne_bot $ ne_bot_iff.mpr h).symm },
-    erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← filter.comap_inf, eq_bot],
-    exact comap_bot },
+ haveI : t3_space (hat K) := completion.t3_space K,
+ refine dense_inducing_coe.continuous_at_extend _,
+ apply mem_of_superset (compl_singleton_mem_nhds h),
+ intros y y_ne,
+ rw mem_compl_singleton_iff at y_ne,
+ apply complete_space.complete,
+ rw ← filter.map_map,
+ apply cauchy.map _ (completion.uniform_continuous_coe K),
+ apply completable_top_field.nice,
+ { haveI := dense_inducing_coe.comap_nhds_ne_bot y,
+ apply cauchy_nhds.comap,
+ { rw completion.comap_coe_eq_uniformity,
+ exact le_rfl } },
+ { have eq_bot : 𝓝 (0 : hat K) ⊓ 𝓝 y = ⊥,
+ { by_contradiction h,
+ exact y_ne (eq_of_nhds_ne_bot $ ne_bot_iff.mpr h).symm },
+ erw [dense_inducing_coe.nhds_eq_comap (0 : K)]; erw [ ← filter.comap_inf]; erw [ eq_bot],
+ exact comap_bot },
 end
 
 /-
@@ -100,109 +100,109 @@ variables [topological_division_ring K]
 
 lemma hat_inv_extends {x : K} (h : x ≠ 0) : hat_inv (x : hat K) = coe (x⁻¹ : K) :=
 dense_inducing_coe.extend_eq_at
-    ((continuous_coe K).continuous_at.comp (continuous_at_inv₀ h))
+ ((continuous_coe K).continuous_at.comp (continuous_at_inv₀ h))
 
 variables [completable_top_field K]
 
 @[norm_cast]
 lemma coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
 begin
-  by_cases h : x = 0,
-  { rw [h, inv_zero],
-    dsimp [has_inv.inv],
-    norm_cast,
-    simp },
-  { conv_lhs { dsimp [has_inv.inv] },
-    rw if_neg,
-    { exact hat_inv_extends h },
-    { exact λ H, h (dense_embedding_coe.inj H) } }
+ by_cases h : x = 0,
+ { rw [h]; rw [ inv_zero],
+ dsimp [has_inv.inv],
+ norm_cast,
+ simp },
+ { conv_lhs { dsimp [has_inv.inv] },
+ rw if_neg,
+ { exact hat_inv_extends h },
+ { exact λ H, h (dense_embedding_coe.inj H) } }
 end
 
 variables [uniform_add_group K]
 
 lemma mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x*hat_inv x = 1 :=
 begin
-  haveI : t1_space (hat K) := t2_space.t1_space,
-  let f := λ x : hat K, x*hat_inv x,
-  let c := (coe : K → hat K),
-  change f x = 1,
-  have cont : continuous_at f x,
-  { letI : topological_space (hat K × hat K) := prod.topological_space,
-    have : continuous_at (λ y : hat K, ((y, hat_inv y) : hat K × hat K)) x,
-      from continuous_id.continuous_at.prod (continuous_hat_inv x_ne),
-    exact (_root_.continuous_mul.continuous_at.comp this : _) },
-  have clo : x ∈ closure (c '' {0}ᶜ),
-  { have := dense_inducing_coe.dense x,
-    rw [← image_univ, show (univ : set K) = {0} ∪ {0}ᶜ,
-                      from (union_compl_self _).symm, image_union] at this,
-    apply mem_closure_of_mem_closure_union this,
-    rw image_singleton,
-    exact compl_singleton_mem_nhds x_ne },
-  have fxclo : f x ∈ closure (f '' (c '' {0}ᶜ)) := mem_closure_image cont clo,
-  have : f '' (c '' {0}ᶜ) ⊆ {1},
-  { rw image_image,
-    rintros _ ⟨z, z_ne, rfl⟩,
-    rw mem_singleton_iff,
-    rw mem_compl_singleton_iff at z_ne,
-    dsimp [c, f],
-    rw hat_inv_extends z_ne,
-    norm_cast,
-    rw mul_inv_cancel z_ne, },
-  replace fxclo := closure_mono this fxclo,
-  rwa [closure_singleton, mem_singleton_iff] at fxclo
+ haveI : t1_space (hat K) := t2_space.t1_space,
+ let f := λ x : hat K, x*hat_inv x,
+ let c := (coe : K → hat K),
+ change f x = 1,
+ have cont : continuous_at f x,
+ { letI : topological_space (hat K × hat K) := prod.topological_space,
+ have : continuous_at (λ y : hat K, ((y, hat_inv y) : hat K × hat K)) x,
+ from continuous_id.continuous_at.prod (continuous_hat_inv x_ne),
+ exact (_root_.continuous_mul.continuous_at.comp this : _) },
+ have clo : x ∈ closure (c '' {0}ᶜ),
+ { have := dense_inducing_coe.dense x,
+ rw [← image_univ] at this; rw [ show (univ : set K) = {0} ∪ {0}ᶜ] at this; rw [ from (union_compl_self _).symm] at this; rw [ image_union] at this,
+ apply mem_closure_of_mem_closure_union this,
+ rw image_singleton,
+ exact compl_singleton_mem_nhds x_ne },
+ have fxclo : f x ∈ closure (f '' (c '' {0}ᶜ)) := mem_closure_image cont clo,
+ have : f '' (c '' {0}ᶜ) ⊆ {1},
+ { rw image_image,
+ rintros _ ⟨z, z_ne, rfl⟩,
+ rw mem_singleton_iff,
+ rw mem_compl_singleton_iff at z_ne,
+ dsimp [c, f],
+ rw hat_inv_extends z_ne,
+ norm_cast,
+ rw mul_inv_cancel z_ne, },
+ replace fxclo := closure_mono this fxclo,
+ rwa [closure_singleton] at fxclo; rwa [ mem_singleton_iff] at fxclo
 end
 
 instance : field (hat K) :=
 { exists_pair_ne := ⟨0, 1, λ h, zero_ne_one ((uniform_embedding_coe K).inj h)⟩,
-  mul_inv_cancel := λ x x_ne, by { dsimp [has_inv.inv],
-                                   simp [if_neg x_ne, mul_hat_inv_cancel x_ne], },
-  inv_zero := show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K), by rw [coe_inv, inv_zero],
-  ..completion.has_inv,
-  ..(by apply_instance : comm_ring (hat K)) }
+ mul_inv_cancel := λ x x_ne, by { dsimp [has_inv.inv],
+ simp [if_neg x_ne, mul_hat_inv_cancel x_ne], },
+ inv_zero := show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K), by rw [coe_inv]; rw [ inv_zero],
+ ..completion.has_inv,
+ ..(by apply_instance : comm_ring (hat K)) }
 
 instance : topological_division_ring (hat K) :=
 { continuous_at_inv₀ := begin
-    intros x x_ne,
-    have : {y | hat_inv y = y⁻¹ } ∈ 𝓝 x,
-    { have : {(0 : hat K)}ᶜ ⊆ {y : hat K | hat_inv y = y⁻¹ },
-      { intros y y_ne,
-        rw mem_compl_singleton_iff at y_ne,
-        dsimp [has_inv.inv],
-        rw if_neg y_ne },
-      exact mem_of_superset (compl_singleton_mem_nhds x_ne) this },
-    exact continuous_at.congr (continuous_hat_inv x_ne) this
-  end,
-  ..completion.top_ring_compl }
+ intros x x_ne,
+ have : {y | hat_inv y = y⁻¹ } ∈ 𝓝 x,
+ { have : {(0 : hat K)}ᶜ ⊆ {y : hat K | hat_inv y = y⁻¹ },
+ { intros y y_ne,
+ rw mem_compl_singleton_iff at y_ne,
+ dsimp [has_inv.inv],
+ rw if_neg y_ne },
+ exact mem_of_superset (compl_singleton_mem_nhds x_ne) this },
+ exact continuous_at.congr (continuous_hat_inv x_ne) this
+ end,
+ ..completion.top_ring_compl }
 
 end completion
 end uniform_space
 
-variables (L : Type*) [field L]  [uniform_space L] [completable_top_field L]
+variables (L : Type*) [field L] [uniform_space L] [completable_top_field L]
 
 instance subfield.completable_top_field (K : subfield L) : completable_top_field K :=
 { nice := begin
-    intros F F_cau inf_F,
-    let i : K →+* L := K.subtype,
-    have hi : uniform_inducing i, from uniform_embedding_subtype_coe.to_uniform_inducing,
-    rw ← hi.cauchy_map_iff at F_cau ⊢,
-    rw [map_comm (show (i ∘ λ x, x⁻¹) = (λ x, x⁻¹) ∘ i, by {ext, refl})],
-    apply completable_top_field.nice _ F_cau,
-    rw [← filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, filter.map_bot]
-  end,
-  ..subtype.separated_space (K : set L) }
+ intros F F_cau inf_F,
+ let i : K →+* L := K.subtype,
+ have hi : uniform_inducing i, from uniform_embedding_subtype_coe.to_uniform_inducing,
+ rw ← hi.cauchy_map_iff at F_cau ⊢,
+ rw [map_comm (show (i ∘ λ x, x⁻¹) = (λ x, x⁻¹) ∘ i, by {ext, refl})],
+ apply completable_top_field.nice _ F_cau,
+ rw [← filter.push_pull']; rw [ ← map_zero i]; rw [ ← hi.inducing.nhds_eq_comap]; rw [ inf_F]; rw [ filter.map_bot]
+ end,
+ ..subtype.separated_space (K : set L) }
 
 @[priority 100]
 instance completable_top_field_of_complete (L : Type*) [field L]
-  [uniform_space L] [topological_division_ring L] [separated_space L] [complete_space L] :
-  completable_top_field L :=
+ [uniform_space L] [topological_division_ring L] [separated_space L] [complete_space L] :
+ completable_top_field L :=
 { nice := λ F cau_F hF, begin
-    haveI : ne_bot F := cau_F.1,
-    rcases complete_space.complete cau_F with ⟨x, hx⟩,
-    have hx' : x ≠ 0,
-    { rintro rfl,
-      rw inf_eq_right.mpr hx at hF,
-      exact cau_F.1.ne hF },
-    exact filter.tendsto.cauchy_map (calc map (λ x, x⁻¹) F ≤ map (λ x, x⁻¹) (𝓝 x) : map_mono hx
-                                                       ... ≤ 𝓝 (x⁻¹) : continuous_at_inv₀ hx')
-  end,
-  ..‹separated_space L›}
+ haveI : ne_bot F := cau_F.1,
+ rcases complete_space.complete cau_F with ⟨x, hx⟩,
+ have hx' : x ≠ 0,
+ { rintro rfl,
+ rw inf_eq_right.mpr hx at hF,
+ exact cau_F.1.ne hF },
+ exact filter.tendsto.cauchy_map (calc map (λ x, x⁻¹) F ≤ map (λ x, x⁻¹) (𝓝 x) : map_mono hx
+ ... ≤ 𝓝 (x⁻¹) : continuous_at_inv₀ hx')
+ end,
+ ..‹separated_space L›}
+

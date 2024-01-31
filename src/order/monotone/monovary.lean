@@ -32,19 +32,19 @@ variables {ι ι' α β γ : Type*}
 
 section preorder
 variables [preorder α] [preorder β] [preorder γ] {f : ι → α} {f' : α → γ} {g : ι → β} {g' : β → γ}
-  {s t : set ι}
+ {s t : set ι}
 
-/--  `f` monovaries with `g` if `g i < g j` implies `f i ≤ f j`. -/
+/-- `f` monovaries with `g` if `g i < g j` implies `f i ≤ f j`. -/
 def monovary (f : ι → α) (g : ι → β) : Prop := ∀ ⦃i j⦄, g i < g j → f i ≤ f j
 
-/--  `f` antivaries with `g` if `g i < g j` implies `f j ≤ f i`. -/
+/-- `f` antivaries with `g` if `g i < g j` implies `f j ≤ f i`. -/
 def antivary (f : ι → α) (g : ι → β) : Prop := ∀ ⦃i j⦄, g i < g j → f j ≤ f i
 
-/--  `f` monovaries with `g` on `s` if `g i < g j` implies `f i ≤ f j` for all `i, j ∈ s`. -/
+/-- `f` monovaries with `g` on `s` if `g i < g j` implies `f i ≤ f j` for all `i, j ∈ s`. -/
 def monovary_on (f : ι → α) (g : ι → β) (s : set ι) : Prop :=
 ∀ ⦃i⦄ (hi : i ∈ s) ⦃j⦄ (hj : j ∈ s), g i < g j → f i ≤ f j
 
-/--  `f` antivaries with `g` on `s` if `g i < g j` implies `f j ≤ f i` for all `i, j ∈ s`. -/
+/-- `f` antivaries with `g` on `s` if `g i < g j` implies `f j ≤ f i` for all `i, j ∈ s`. -/
 def antivary_on (f : ι → α) (g : ι → β) (s : set ι) : Prop :=
 ∀ ⦃i⦄ (hi : i ∈ s) ⦃j⦄ (hj : j ∈ s), g i < g j → f j ≤ f i
 
@@ -84,11 +84,11 @@ protected lemma subsingleton.antivary [subsingleton ι] (f : ι → α) (g : ι 
 λ i j h, (ne_of_apply_ne _ h.ne $ subsingleton.elim _ _).elim
 
 protected lemma subsingleton.monovary_on [subsingleton ι] (f : ι → α) (g : ι → β) (s : set ι) :
-  monovary_on f g s :=
+ monovary_on f g s :=
 λ i _ j _ h, (ne_of_apply_ne _ h.ne $ subsingleton.elim _ _).elim
 
 protected lemma subsingleton.antivary_on [subsingleton ι] (f : ι → α) (g : ι → β) (s : set ι) :
-  antivary_on f g s :=
+ antivary_on f g s :=
 λ i _ j _ h, (ne_of_apply_ne _ h.ne $ subsingleton.elim _ _).elim
 
 lemma monovary_on_const_left (g : ι → β) (a : α) (s : set ι) : monovary_on (const ι a) g s :=
@@ -110,11 +110,11 @@ lemma antivary.comp_right (h : antivary f g) (k : ι' → ι) : antivary (f ∘ 
 λ i j hij, h hij
 
 lemma monovary_on.comp_right (h : monovary_on f g s) (k : ι' → ι) :
-  monovary_on (f ∘ k) (g ∘ k) (k ⁻¹' s) :=
+ monovary_on (f ∘ k) (g ∘ k) (k ⁻¹' s) :=
 λ i hi j hj, h hi hj
 
 lemma antivary_on.comp_right (h : antivary_on f g s) (k : ι' → ι) :
-  antivary_on (f ∘ k) (g ∘ k) (k ⁻¹' s) :=
+ antivary_on (f ∘ k) (g ∘ k) (k ⁻¹' s) :=
 λ i hi j hj, h hi hj
 
 lemma monovary.comp_monotone_left (h : monovary f g) (hf : monotone f') : monovary (f' ∘ f) g :=
@@ -130,19 +130,19 @@ lemma antivary.comp_antitone_left (h : antivary f g) (hf : antitone f') : monova
 λ i j hij, hf $ h hij
 
 lemma monovary_on.comp_monotone_on_left (h : monovary_on f g s) (hf : monotone f') :
-  monovary_on (f' ∘ f) g s :=
+ monovary_on (f' ∘ f) g s :=
 λ i hi j hj hij, hf $ h hi hj hij
 
 lemma monovary_on.comp_antitone_on_left (h : monovary_on f g s) (hf : antitone f') :
-  antivary_on (f' ∘ f) g s :=
+ antivary_on (f' ∘ f) g s :=
 λ i hi j hj hij, hf $ h hi hj hij
 
 lemma antivary_on.comp_monotone_on_left (h : antivary_on f g s) (hf : monotone f') :
-  antivary_on (f' ∘ f) g s :=
+ antivary_on (f' ∘ f) g s :=
 λ i hi j hj hij, hf $ h hi hj hij
 
 lemma antivary_on.comp_antitone_on_left (h : antivary_on f g s) (hf : antitone f') :
-  monovary_on (f' ∘ f) g s :=
+ monovary_on (f' ∘ f) g s :=
 λ i hi j hj hij, hf $ h hi hj hij
 
 section order_dual
@@ -207,41 +207,41 @@ protected lemma antitone.antivary (hf : antitone f) (hg : monotone g) : antivary
 (hf.monovary hg.dual_right).dual_right
 
 protected lemma monotone_on.monovary_on (hf : monotone_on f s) (hg : monotone_on g s) :
-  monovary_on f g s :=
+ monovary_on f g s :=
 λ i hi j hj hij, hf hi hj (hg.reflect_lt hi hj hij).le
 
 protected lemma monotone_on.antivary_on (hf : monotone_on f s) (hg : antitone_on g s) :
-  antivary_on f g s :=
+ antivary_on f g s :=
 (hf.monovary_on hg.dual_right).dual_right
 
 protected lemma antitone_on.monovary_on (hf : antitone_on f s) (hg : antitone_on g s) :
-  monovary_on f g s :=
+ monovary_on f g s :=
 (hf.dual_right.antivary_on hg).dual_left
 
 protected lemma antitone_on.antivary_on (hf : antitone_on f s) (hg : monotone_on g s) :
-  antivary_on f g s :=
+ antivary_on f g s :=
 (hf.monovary_on hg.dual_right).dual_right
 
 end preorder
 
 section linear_order
 variables [preorder α] [linear_order β] [preorder γ] {f : ι → α} {f' : α → γ} {g : ι → β}
-  {g' : β → γ} {s : set ι}
+ {g' : β → γ} {s : set ι}
 
 lemma monovary_on.comp_monotone_on_right (h : monovary_on f g s) (hg : monotone_on g' (g '' s)) :
-  monovary_on f (g' ∘ g) s :=
+ monovary_on f (g' ∘ g) s :=
 λ i hi j hj hij, h hi hj $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 
 lemma monovary_on.comp_antitone_on_right (h : monovary_on f g s) (hg : antitone_on g' (g '' s)) :
-  antivary_on f (g' ∘ g) s :=
+ antivary_on f (g' ∘ g) s :=
 λ i hi j hj hij, h hj hi $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 
 lemma antivary_on.comp_monotone_on_right (h : antivary_on f g s) (hg : monotone_on g' (g '' s)) :
-  antivary_on f (g' ∘ g) s :=
+ antivary_on f (g' ∘ g) s :=
 λ i hi j hj hij, h hi hj $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 
 lemma antivary_on.comp_antitone_on_right (h : antivary_on f g s) (hg : antitone_on g' (g '' s)) :
-  monovary_on f (g' ∘ g) s :=
+ monovary_on f (g' ∘ g) s :=
 λ i hi j hj hij, h hj hi $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 
 protected lemma monovary.symm (h : monovary f g) : monovary g f :=
@@ -271,3 +271,4 @@ protected lemma antivary_on_comm : antivary_on f g s ↔ antivary_on g f s :=
 ⟨antivary_on.symm, antivary_on.symm⟩
 
 end linear_order
+

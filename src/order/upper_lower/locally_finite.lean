@@ -19,11 +19,12 @@ namespace set
 variables {α : Type*} [preorder α] {s : set α}
 
 protected lemma finite.upper_closure [locally_finite_order_top α] (hs : s.finite) :
-  (upper_closure s : set α).finite :=
+ (upper_closure s : set α).finite :=
 by { rw coe_upper_closure, exact hs.bUnion (λ _ _, finite_Ici _) }
 
 protected lemma finite.lower_closure [locally_finite_order_bot α] (hs : s.finite) :
-  (lower_closure s : set α).finite :=
+ (lower_closure s : set α).finite :=
 by { rw coe_lower_closure, exact hs.bUnion (λ _ _, finite_Iic _) }
 
 end set
+

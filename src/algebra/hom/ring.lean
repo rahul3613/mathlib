@@ -25,9 +25,9 @@ slowly remove them from mathlib.
 ## Main definitions
 
 * `non_unital_ring_hom`: Non-unital (semi)ring homomorphisms. Additive monoid homomorphism which
-  preserve multiplication.
+ preserve multiplication.
 * `ring_hom`: (Semi)ring homomorphisms. Monoid homomorphisms which are also additive monoid
-  homomorphism.
+ homomorphism.
 
 ## Notations
 
@@ -37,13 +37,13 @@ slowly remove them from mathlib.
 ## Implementation notes
 
 * There's a coercion from bundled homs to fun, and the canonical notation is to
-  use the bundled hom as a function via this coercion.
+ use the bundled hom as a function via this coercion.
 
 * There is no `semiring_hom` -- the idea is that `ring_hom` is used.
-  The constructor for a `ring_hom` between semirings needs a proof of `map_zero`,
-  `map_one` and `map_add` as well as `map_mul`; a separate constructor
-  `ring_hom.mk'` will construct ring homs between rings from monoid homs given
-  only a proof that addition is preserved.
+ The constructor for a `ring_hom` between semirings needs a proof of `map_zero`,
+ `map_one` and `map_add` as well as `map_mul`; a separate constructor
+ `ring_hom.mk'` will construct ring homs between rings from monoid homs given
+ only a proof that addition is preserved.
 
 ## Tags
 
@@ -64,7 +64,7 @@ you should parametrize over `(F : Type*) [non_unital_ring_hom_class F α β] (f 
 
 When you extend this structure, make sure to extend `non_unital_ring_hom_class`. -/
 structure non_unital_ring_hom (α β : Type*) [non_unital_non_assoc_semiring α]
-  [non_unital_non_assoc_semiring β] extends α →ₙ* β, α →+ β
+ [non_unital_non_assoc_semiring β] extends α →ₙ* β, α →+ β
 
 infixr ` →ₙ+* `:25 := non_unital_ring_hom
 
@@ -81,11 +81,11 @@ section non_unital_ring_hom_class
 /-- `non_unital_ring_hom_class F α β` states that `F` is a type of non-unital (semi)ring
 homomorphisms. You should extend this class when you extend `non_unital_ring_hom`. -/
 class non_unital_ring_hom_class (F : Type*) (α β : out_param Type*)
-  [non_unital_non_assoc_semiring α] [non_unital_non_assoc_semiring β]
-  extends mul_hom_class F α β, add_monoid_hom_class F α β
+ [non_unital_non_assoc_semiring α] [non_unital_non_assoc_semiring β]
+ extends mul_hom_class F α β, add_monoid_hom_class F α β
 
 variables [non_unital_non_assoc_semiring α] [non_unital_non_assoc_semiring β]
-  [non_unital_ring_hom_class F α β]
+ [non_unital_ring_hom_class F α β]
 
 instance : has_coe_t F (α →ₙ+* β) :=
 ⟨λ f, { to_fun := f, map_zero' := map_zero f, map_mul' := map_mul f, map_add' := map_add f }⟩
@@ -106,10 +106,10 @@ include rα rβ
 
 instance : non_unital_ring_hom_class (α →ₙ+* β) α β :=
 { coe := non_unital_ring_hom.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  map_add := non_unital_ring_hom.map_add',
-  map_zero := non_unital_ring_hom.map_zero',
-  map_mul := non_unital_ring_hom.map_mul' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ map_add := non_unital_ring_hom.map_add',
+ map_zero := non_unital_ring_hom.map_zero',
+ map_mul := non_unital_ring_hom.map_mul' }
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -125,12 +125,12 @@ rfl
 @[simp] lemma coe_to_mul_hom (f : α →ₙ+* β) : ⇑f.to_mul_hom = f := rfl
 
 @[simp] lemma coe_mul_hom_mk (f : α → β) (h₁ h₂ h₃) :
-  ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →ₙ* β) = ⟨f, h₁⟩ := rfl
+ ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →ₙ* β) = ⟨f, h₁⟩ := rfl
 
 @[simp] lemma coe_to_add_monoid_hom (f : α →ₙ+* β) : ⇑f.to_add_monoid_hom = f := rfl
 
 @[simp] lemma coe_add_monoid_hom_mk (f : α → β) (h₁ h₂ h₃) :
-  ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →+ β) = ⟨f, h₂, h₃⟩ := rfl
+ ((⟨f, h₁, h₂, h₃⟩ : α →ₙ+* β) : α →+ β) = ⟨f, h₂, h₃⟩ := rfl
 
 /-- Copy of a `ring_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -173,9 +173,9 @@ include rα rβ
 
 instance : has_zero (α →ₙ+* β) :=
 ⟨{ to_fun := 0,
-   map_mul' := λ x y, (mul_zero (0 : β)).symm,
-   map_zero' := rfl,
-   map_add' := λ x y, (add_zero (0 : β)).symm }⟩
+ map_mul' := λ x y, (mul_zero (0 : β)).symm,
+ map_zero' := rfl,
+ map_add' := λ x y, (add_zero (0 : β)).symm }⟩
 
 instance : inhabited (α →ₙ+* β) := ⟨0⟩
 
@@ -186,7 +186,7 @@ omit rβ
 
 @[simp] lemma id_apply (x : α) : non_unital_ring_hom.id α x = x := rfl
 @[simp] lemma coe_add_monoid_hom_id :
-  (non_unital_ring_hom.id α : α →+ α) = add_monoid_hom.id α := rfl
+ (non_unital_ring_hom.id α : α →+ α) = add_monoid_hom.id α := rfl
 @[simp] lemma coe_mul_hom_id : (non_unital_ring_hom.id α : α →ₙ* α) = mul_hom.id α := rfl
 
 variable {rγ : non_unital_non_assoc_semiring γ}
@@ -198,15 +198,15 @@ def comp (g : β →ₙ+* γ) (f : α →ₙ+* β) : α →ₙ+* γ :=
 
 /-- Composition of non-unital ring homomorphisms is associative. -/
 lemma comp_assoc {δ} {rδ : non_unital_non_assoc_semiring δ} (f : α →ₙ+* β) (g : β →ₙ+* γ)
-  (h : γ →ₙ+* δ) : (h.comp g).comp f = h.comp (g.comp f) := rfl
+ (h : γ →ₙ+* δ) : (h.comp g).comp f = h.comp (g.comp f) := rfl
 
 @[simp] lemma coe_comp (g : β →ₙ+* γ) (f : α →ₙ+* β) : ⇑(g.comp f) = g ∘ f := rfl
 @[simp] lemma comp_apply (g : β →ₙ+* γ) (f : α →ₙ+* β) (x : α) : g.comp f x = g (f x) := rfl
 
 @[simp] lemma coe_comp_add_monoid_hom (g : β →ₙ+* γ) (f : α →ₙ+* β) :
-  (g.comp f : α →+ γ) = (g : β →+ γ).comp f := rfl
+ (g.comp f : α →+ γ) = (g : β →+ γ).comp f := rfl
 @[simp] lemma coe_comp_mul_hom (g : β →ₙ+* γ) (f : α →ₙ+* β) :
-  (g.comp f : α →ₙ* γ) = (g : β →ₙ* γ).comp f := rfl
+ (g.comp f : α →ₙ* γ) = (g : β →ₙ* γ).comp f := rfl
 
 @[simp] lemma comp_zero (g : β →ₙ+* γ) : g.comp (0 : α →ₙ+* β) = 0 := by { ext, simp }
 @[simp] lemma zero_comp (f : α →ₙ+* β) : (0 : β →ₙ+* γ).comp f = 0 := by { ext, refl }
@@ -220,13 +220,13 @@ omit rβ
 
 instance : monoid_with_zero (α →ₙ+* α) :=
 { one := non_unital_ring_hom.id α,
-  mul := comp,
-  mul_one := comp_id,
-  one_mul := id_comp,
-  mul_assoc := λ f g h, comp_assoc _ _ _,
-  zero := 0,
-  mul_zero := comp_zero,
-  zero_mul := zero_comp }
+ mul := comp,
+ mul_one := comp_id,
+ one_mul := id_comp,
+ mul_assoc := λ f g h, comp_assoc _ _ _,
+ zero := 0,
+ mul_zero := comp_zero,
+ zero_mul := zero_comp }
 
 lemma one_def : (1 : α →ₙ+* α) = non_unital_ring_hom.id α := rfl
 
@@ -239,12 +239,12 @@ lemma mul_def (f g : α →ₙ+* α) : f * g = f.comp g := rfl
 include rβ rγ
 
 lemma cancel_right {g₁ g₂ : β →ₙ+* γ} {f : α →ₙ+* β} (hf : surjective f) :
-  g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+ g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
 ⟨λ h, ext $ hf.forall.2 (ext_iff.1 h), λ h, h ▸ rfl⟩
 
 lemma cancel_left {g : β →ₙ+* γ} {f₁ f₂ : α →ₙ+* β} (hg : injective g) :
-  g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-⟨λ h, ext $ λ x, hg $ by rw [← comp_apply, h, comp_apply], λ h, h ▸ rfl⟩
+ g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+⟨λ h, ext $ λ x, hg $ by rw [← comp_apply]; rw [ h]; rw [ comp_apply], λ h, h ▸ rfl⟩
 
 omit rα rβ rγ
 
@@ -255,7 +255,7 @@ end non_unital_ring_hom
 This extends from both `monoid_hom` and `monoid_with_zero_hom` in order to put the fields in a
 sensible order, even though `monoid_with_zero_hom` already extends `monoid_hom`. -/
 structure ring_hom (α : Type*) (β : Type*) [non_assoc_semiring α] [non_assoc_semiring β]
-  extends α →* β, α →+ β, α →ₙ+* β, α →*₀ β
+ extends α →* β, α →+ β, α →ₙ+* β, α →*₀ β
 
 infixr ` →+* `:25 := ring_hom
 
@@ -284,8 +284,8 @@ This extends from both `monoid_hom_class` and `monoid_with_zero_hom_class` in
 order to put the fields in a sensible order, even though
 `monoid_with_zero_hom_class` already extends `monoid_hom_class`. -/
 class ring_hom_class (F : Type*) (α β : out_param Type*)
-  [non_assoc_semiring α] [non_assoc_semiring β]
-  extends monoid_hom_class F α β, add_monoid_hom_class F α β, monoid_with_zero_hom_class F α β
+ [non_assoc_semiring α] [non_assoc_semiring β]
+ extends monoid_hom_class F α β, add_monoid_hom_class F α β, monoid_with_zero_hom_class F α β
 
 variables [non_assoc_semiring α] [non_assoc_semiring β] [ring_hom_class F α β]
 
@@ -294,7 +294,7 @@ variables [non_assoc_semiring α] [non_assoc_semiring β] [ring_hom_class F α �
 
 instance : has_coe_t F (α →+* β) :=
 ⟨λ f, { to_fun := f, map_zero' := map_zero f, map_one' := map_one f, map_mul' := map_mul f,
-  map_add' := map_add f }⟩
+ map_add' := map_add f }⟩
 
 @[priority 100]
 instance ring_hom_class.to_non_unital_ring_hom_class : non_unital_ring_hom_class F α β :=
@@ -316,11 +316,11 @@ include rα rβ
 
 instance : ring_hom_class (α →+* β) α β :=
 { coe := ring_hom.to_fun,
-  coe_injective' := λ f g h, by cases f; cases g; congr',
-  map_add := ring_hom.map_add',
-  map_zero := ring_hom.map_zero',
-  map_mul := ring_hom.map_mul',
-  map_one := ring_hom.map_one' }
+ coe_injective' := λ f g h, by cases f; cases g; congr',
+ map_add := ring_hom.map_add',
+ map_zero := ring_hom.map_zero',
+ map_mul := ring_hom.map_mul',
+ map_one := ring_hom.map_one' }
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly.
@@ -342,17 +342,17 @@ instance has_coe_monoid_hom : has_coe (α →+* β) (α →* β) := ⟨ring_hom.
 
 @[simp] lemma to_monoid_hom_eq_coe (f : α →+* β) : f.to_monoid_hom = f := rfl
 @[simp] lemma to_monoid_with_zero_hom_eq_coe (f : α →+* β) :
-  (f.to_monoid_with_zero_hom : α → β) = f := rfl
+ (f.to_monoid_with_zero_hom : α → β) = f := rfl
 
 @[simp] lemma coe_monoid_hom_mk (f : α → β) (h₁ h₂ h₃ h₄) :
-  ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →* β) = ⟨f, h₁, h₂⟩ := rfl
+ ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →* β) = ⟨f, h₁, h₂⟩ := rfl
 
 @[simp, norm_cast] lemma coe_add_monoid_hom (f : α →+* β) : ⇑(f : α →+ β) = f := rfl
 
 @[simp] lemma to_add_monoid_hom_eq_coe (f : α →+* β) : f.to_add_monoid_hom = f := rfl
 
 @[simp] lemma coe_add_monoid_hom_mk (f : α → β) (h₁ h₂ h₃ h₄) :
-  ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →+ β) = ⟨f, h₃, h₄⟩ := rfl
+ ((⟨f, h₁, h₂, h₃, h₄⟩ : α →+* β) : α →+ β) = ⟨f, h₃, h₄⟩ := rfl
 
 /-- Copy of a `ring_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
@@ -408,26 +408,26 @@ protected lemma map_bit0 (f : α →+* β) : ∀ a, f (bit0 a) = bit0 (f a) := m
 protected lemma map_bit1 (f : α →+* β) : ∀ a, f (bit1 a) = bit1 (f a) := map_bit1 f
 
 @[simp] lemma map_ite_zero_one {F : Type*} [ring_hom_class F α β] (f : F) (p : Prop) [decidable p] :
-  f (ite p 0 1) = ite p 0 1 :=
+ f (ite p 0 1) = ite p 0 1 :=
 by { split_ifs; simp [h] }
 
 @[simp] lemma map_ite_one_zero {F : Type*} [ring_hom_class F α β] (f : F) (p : Prop) [decidable p] :
-  f (ite p 1 0) = ite p 1 0 :=
+ f (ite p 1 0) = ite p 1 0 :=
 by { split_ifs; simp [h] }
 
 /-- `f : α →+* β` has a trivial codomain iff `f 1 = 0`. -/
-lemma codomain_trivial_iff_map_one_eq_zero : (0 : β) = 1 ↔ f 1 = 0 := by rw [map_one, eq_comm]
+lemma codomain_trivial_iff_map_one_eq_zero : (0 : β) = 1 ↔ f 1 = 0 := by rw [map_one]; rw [ eq_comm]
 
 /-- `f : α →+* β` has a trivial codomain iff it has a trivial range. -/
 lemma codomain_trivial_iff_range_trivial : (0 : β) = 1 ↔ ∀ x, f x = 0 :=
 f.codomain_trivial_iff_map_one_eq_zero.trans
-  ⟨λ h x, by rw [←mul_one x, map_mul, h, mul_zero], λ h, h 1⟩
+ ⟨λ h x, by rw [←mul_one x]; rw [ map_mul]; rw [ h]; rw [ mul_zero], λ h, h 1⟩
 
 /-- `f : α →+* β` has a trivial codomain iff its range is `{0}`. -/
 lemma codomain_trivial_iff_range_eq_singleton_zero : (0 : β) = 1 ↔ set.range f = {0} :=
 f.codomain_trivial_iff_range_trivial.trans
-  ⟨ λ h, set.ext (λ y, ⟨λ ⟨x, hx⟩, by simp [←hx, h x], λ hy, ⟨0, by simpa using hy.symm⟩⟩),
-    λ h x, set.mem_singleton_iff.mp (h ▸ set.mem_range_self x)⟩
+ ⟨ λ h, set.ext (λ y, ⟨λ ⟨x, hx⟩, by simp [←hx, h x], λ hy, ⟨0, by simpa using hy.symm⟩⟩),
+ λ h x, set.mem_singleton_iff.mp (h ▸ set.mem_range_self x)⟩
 
 /-- `f : α →+* β` doesn't map `1` to `0` if `β` is nontrivial -/
 lemma map_one_ne_zero [nontrivial β] : f 1 ≠ 0 :=
@@ -435,27 +435,27 @@ mt f.codomain_trivial_iff_map_one_eq_zero.mpr zero_ne_one
 
 /-- If there is a homomorphism `f : α →+* β` and `β` is nontrivial, then `α` is nontrivial. -/
 lemma domain_nontrivial [nontrivial β] : nontrivial α :=
-⟨⟨1, 0, mt (λ h, show f 1 = 0, by rw [h, map_zero]) f.map_one_ne_zero⟩⟩
+⟨⟨1, 0, mt (λ h, show f 1 = 0, by rw [h]; rw [ map_zero]) f.map_one_ne_zero⟩⟩
 
 lemma codomain_trivial (f : α →+* β) [h : subsingleton α] : subsingleton β :=
 (subsingleton_or_nontrivial β).resolve_right
-  (λ _, by exactI not_nontrivial_iff_subsingleton.mpr h f.domain_nontrivial)
+ (λ _, by exactI not_nontrivial_iff_subsingleton.mpr h f.domain_nontrivial)
 
 end
 
 /-- Ring homomorphisms preserve additive inverse. -/
 protected theorem map_neg [non_assoc_ring α] [non_assoc_ring β] (f : α →+* β) (x : α) :
-  f (-x) = -(f x) :=
+ f (-x) = -(f x) :=
 map_neg f x
 
 /-- Ring homomorphisms preserve subtraction. -/
 protected theorem map_sub [non_assoc_ring α] [non_assoc_ring β] (f : α →+* β) (x y : α) :
-  f (x - y) = (f x) - (f y) := map_sub f x y
+ f (x - y) = (f x) - (f y) := map_sub f x y
 
 /-- Makes a ring homomorphism from a monoid homomorphism of rings which preserves addition. -/
 def mk' [non_assoc_semiring α] [non_assoc_ring β] (f : α →* β)
-  (map_add : ∀ a b, f (a + b) = f a + f b) :
-  α →+* β :=
+ (map_add : ∀ a b, f (a + b) = f a + f b) :
+ α →+* β :=
 { ..add_monoid_hom.mk' f map_add, ..f }
 
 section semiring
@@ -484,17 +484,17 @@ include rβ rγ
 /-- Composition of ring homomorphisms is a ring homomorphism. -/
 def comp (g : β →+* γ) (f : α →+* β) : α →+* γ :=
 { to_fun := g ∘ f,
-  map_one' := by simp,
-  ..g.to_non_unital_ring_hom.comp f.to_non_unital_ring_hom }
+ map_one' := by simp,
+ ..g.to_non_unital_ring_hom.comp f.to_non_unital_ring_hom }
 
 /-- Composition of semiring homomorphisms is associative. -/
 lemma comp_assoc {δ} {rδ: non_assoc_semiring δ} (f : α →+* β) (g : β →+* γ) (h : γ →+* δ) :
-  (h.comp g).comp f = h.comp (g.comp f) := rfl
+ (h.comp g).comp f = h.comp (g.comp f) := rfl
 
 @[simp] lemma coe_comp (hnp : β →+* γ) (hmn : α →+* β) : (hnp.comp hmn : α → γ) = hnp ∘ hmn := rfl
 
 lemma comp_apply (hnp : β →+* γ) (hmn : α →+* β) (x : α) : (hnp.comp hmn : α → γ) x =
-  (hnp (hmn x)) := rfl
+ (hnp (hmn x)) := rfl
 
 omit rγ
 
@@ -506,10 +506,10 @@ omit rβ
 
 instance : monoid (α →+* α) :=
 { one := id α,
-  mul := comp,
-  mul_one := comp_id,
-  one_mul := id_comp,
-  mul_assoc := λ f g h, comp_assoc _ _ _ }
+ mul := comp,
+ mul_one := comp_id,
+ one_mul := id_comp,
+ mul_assoc := λ f g h, comp_assoc _ _ _ }
 
 lemma one_def : (1 : α →+* α) = id α := rfl
 lemma mul_def (f g : α →+* α) : f * g = f.comp g := rfl
@@ -520,23 +520,23 @@ lemma mul_def (f g : α →+* α) : f * g = f.comp g := rfl
 include rβ rγ
 
 lemma cancel_right {g₁ g₂ : β →+* γ} {f : α →+* β} (hf : surjective f) :
-  g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+ g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
 ⟨λ h, ring_hom.ext $ hf.forall.2 (ext_iff.1 h), λ h, h ▸ rfl⟩
 
 lemma cancel_left {g : β →+* γ} {f₁ f₂ : α →+* β} (hg : injective g) :
-  g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-⟨λ h, ring_hom.ext $ λ x, hg $ by rw [← comp_apply, h, comp_apply], λ h, h ▸ rfl⟩
+ g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+⟨λ h, ring_hom.ext $ λ x, hg $ by rw [← comp_apply]; rw [ h]; rw [ comp_apply], λ h, h ▸ rfl⟩
 
 end ring_hom
 
 /-- Pullback `is_domain` instance along an injective function. -/
 protected theorem function.injective.is_domain [ring α] [is_domain α] [ring β] (f : β →+* α)
-  (hf : injective f) : is_domain β :=
+ (hf : injective f) : is_domain β :=
 begin
-  haveI := pullback_nonzero f f.map_zero f.map_one,
-  haveI := is_right_cancel_mul_zero.to_no_zero_divisors α,
-  haveI := hf.no_zero_divisors f f.map_zero f.map_mul,
-  exact no_zero_divisors.to_is_domain β,
+ haveI := pullback_nonzero f f.map_zero f.map_one,
+ haveI := is_right_cancel_mul_zero.to_no_zero_divisors α,
+ haveI := hf.no_zero_divisors f f.map_zero f.map_mul,
+ exact no_zero_divisors.to_is_domain β,
 end
 
 namespace add_monoid_hom
@@ -546,25 +546,23 @@ variables [comm_ring α] [is_domain α] [comm_ring β] (f : β →+ α)
 integral domain that commutes with self multiplication, assumes that two is nonzero and `1` is sent
 to `1`. -/
 def mk_ring_hom_of_mul_self_of_two_ne_zero (h : ∀ x, f (x * x) = f x * f x) (h_two : (2 : α) ≠ 0)
-  (h_one : f 1 = 1) : β →+* α :=
+ (h_one : f 1 = 1) : β →+* α :=
 { map_one' := h_one,
-  map_mul' := λ x y, begin
-    have hxy := h (x + y),
-    rw [mul_add, add_mul, add_mul, f.map_add, f.map_add, f.map_add, f.map_add, h x, h y, add_mul,
-      mul_add, mul_add, ← sub_eq_zero, add_comm, ← sub_sub, ← sub_sub, ← sub_sub,
-      mul_comm y x, mul_comm (f y) (f x)] at hxy,
-    simp only [add_assoc, add_sub_assoc, add_sub_cancel'_right] at hxy,
-    rw [sub_sub, ← two_mul, ← add_sub_assoc, ← two_mul, ← mul_sub, mul_eq_zero, sub_eq_zero,
-      or_iff_not_imp_left] at hxy,
-    exact hxy h_two,
-  end,
-  ..f }
+ map_mul' := λ x y, begin
+ have hxy := h (x + y),
+ rw [mul_add] at hxy; rw [ add_mul] at hxy; rw [ add_mul] at hxy; rw [ f.map_add] at hxy; rw [ f.map_add] at hxy; rw [ f.map_add] at hxy; rw [ f.map_add] at hxy; rw [ h x] at hxy; rw [ h y] at hxy; rw [ add_mul] at hxy; rw [ mul_add] at hxy; rw [ mul_add] at hxy; rw [ ← sub_eq_zero] at hxy; rw [ add_comm] at hxy; rw [ ← sub_sub] at hxy; rw [ ← sub_sub] at hxy; rw [ ← sub_sub] at hxy; rw [ mul_comm y x] at hxy; rw [ mul_comm (f y) (f x)] at hxy,
+ simp only [add_assoc, add_sub_assoc, add_sub_cancel'_right] at hxy,
+ rw [sub_sub] at hxy; rw [ ← two_mul] at hxy; rw [ ← add_sub_assoc] at hxy; rw [ ← two_mul] at hxy; rw [ ← mul_sub] at hxy; rw [ mul_eq_zero] at hxy; rw [ sub_eq_zero] at hxy; rw [ or_iff_not_imp_left] at hxy,
+ exact hxy h_two,
+ end,
+ ..f }
 
 @[simp] lemma coe_fn_mk_ring_hom_of_mul_self_of_two_ne_zero (h h_two h_one) :
-  (f.mk_ring_hom_of_mul_self_of_two_ne_zero h h_two h_one : β → α) = f := rfl
+ (f.mk_ring_hom_of_mul_self_of_two_ne_zero h h_two h_one : β → α) = f := rfl
 
 @[simp] lemma coe_add_monoid_hom_mk_ring_hom_of_mul_self_of_two_ne_zero (h h_two h_one) :
-  (f.mk_ring_hom_of_mul_self_of_two_ne_zero h h_two h_one : β →+ α) = f :=
+ (f.mk_ring_hom_of_mul_self_of_two_ne_zero h h_two h_one : β →+ α) = f :=
 by { ext, refl }
 
 end add_monoid_hom
+

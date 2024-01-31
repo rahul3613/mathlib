@@ -34,32 +34,32 @@ instance [has_le α] : Π [bounded_order α], bounded_order (additive α) := id
 
 instance [ordered_add_comm_monoid α] : ordered_comm_monoid (multiplicative α) :=
 { mul_le_mul_left := @ordered_add_comm_monoid.add_le_add_left α _,
-  ..multiplicative.partial_order,
-  ..multiplicative.comm_monoid }
+ ..multiplicative.partial_order,
+ ..multiplicative.comm_monoid }
 
 instance [ordered_comm_monoid α] : ordered_add_comm_monoid (additive α) :=
 { add_le_add_left := @ordered_comm_monoid.mul_le_mul_left α _,
-  ..additive.partial_order,
-  ..additive.add_comm_monoid }
+ ..additive.partial_order,
+ ..additive.add_comm_monoid }
 
 instance [ordered_cancel_add_comm_monoid α] : ordered_cancel_comm_monoid (multiplicative α) :=
 { le_of_mul_le_mul_left := @ordered_cancel_add_comm_monoid.le_of_add_le_add_left α _,
-  ..multiplicative.ordered_comm_monoid }
+ ..multiplicative.ordered_comm_monoid }
 
 instance [ordered_cancel_comm_monoid α] : ordered_cancel_add_comm_monoid (additive α) :=
 { le_of_add_le_add_left := @ordered_cancel_comm_monoid.le_of_mul_le_mul_left α _,
-  ..additive.ordered_add_comm_monoid }
+ ..additive.ordered_add_comm_monoid }
 
 instance [linear_ordered_add_comm_monoid α] : linear_ordered_comm_monoid (multiplicative α) :=
 { ..multiplicative.linear_order,
-  ..multiplicative.ordered_comm_monoid }
+ ..multiplicative.ordered_comm_monoid }
 
 instance [linear_ordered_comm_monoid α] : linear_ordered_add_comm_monoid (additive α) :=
 { ..additive.linear_order,
-  ..additive.ordered_add_comm_monoid }
+ ..additive.ordered_add_comm_monoid }
 
 instance [has_add α] [has_le α] [has_exists_add_of_le α] :
-  has_exists_mul_of_le (multiplicative α) :=
+ has_exists_mul_of_le (multiplicative α) :=
 ⟨@exists_add_of_le α _ _ _⟩
 
 instance [has_mul α] [has_le α] [has_exists_mul_of_le α] : has_exists_add_of_le (additive α) :=
@@ -67,19 +67,19 @@ instance [has_mul α] [has_le α] [has_exists_mul_of_le α] : has_exists_add_of_
 
 instance [canonically_ordered_add_monoid α] : canonically_ordered_monoid (multiplicative α) :=
 { le_self_mul := @le_self_add α _,
-  ..multiplicative.ordered_comm_monoid, ..multiplicative.order_bot,
-  ..multiplicative.has_exists_mul_of_le }
+ ..multiplicative.ordered_comm_monoid, ..multiplicative.order_bot,
+ ..multiplicative.has_exists_mul_of_le }
 
 instance [canonically_ordered_monoid α] : canonically_ordered_add_monoid (additive α) :=
 { le_self_add := @le_self_mul α _,
-  ..additive.ordered_add_comm_monoid, ..additive.order_bot, ..additive.has_exists_add_of_le }
+ ..additive.ordered_add_comm_monoid, ..additive.order_bot, ..additive.has_exists_add_of_le }
 
 instance [canonically_linear_ordered_add_monoid α] :
-  canonically_linear_ordered_monoid (multiplicative α) :=
+ canonically_linear_ordered_monoid (multiplicative α) :=
 { ..multiplicative.canonically_ordered_monoid, ..multiplicative.linear_order }
 
 instance [canonically_linear_ordered_monoid α] :
-  canonically_linear_ordered_add_monoid (additive α) :=
+ canonically_linear_ordered_add_monoid (additive α) :=
 { ..additive.canonically_ordered_add_monoid, ..additive.linear_order }
 
 namespace additive
@@ -109,3 +109,4 @@ variables [preorder α]
 @[simp] lemma to_add_lt {a b : multiplicative α} : to_add a < to_add b ↔ a < b := iff.rfl
 
 end multiplicative
+

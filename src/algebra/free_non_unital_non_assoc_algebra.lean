@@ -21,9 +21,9 @@ Note that elsewhere we have a construction of the free unital, associative algeb
 
 ## Main definitions
 
-  * `free_non_unital_non_assoc_algebra`
-  * `free_non_unital_non_assoc_algebra.lift`
-  * `free_non_unital_non_assoc_algebra.of`
+ * `free_non_unital_non_assoc_algebra`
+ * `free_non_unital_non_assoc_algebra.lift`
+ * `free_non_unital_non_assoc_algebra.of`
 
 ## Implementation details
 
@@ -65,26 +65,27 @@ def lift : (X → A) ≃ (free_non_unital_non_assoc_algebra R X →ₙₐ[R] A) 
 free_magma.lift.trans (monoid_algebra.lift_magma R)
 
 @[simp] lemma lift_symm_apply (F : free_non_unital_non_assoc_algebra R X →ₙₐ[R] A) :
-  (lift R).symm F = F ∘ (of R) :=
+ (lift R).symm F = F ∘ (of R) :=
 rfl
 
 @[simp] lemma of_comp_lift (f : X → A) : (lift R f) ∘ (of R) = f :=
 (lift R).left_inv f
 
 @[simp] lemma lift_unique
-  (f : X → A) (F : free_non_unital_non_assoc_algebra R X →ₙₐ[R] A) :
-  F ∘ (of R) = f ↔ F = lift R f :=
+ (f : X → A) (F : free_non_unital_non_assoc_algebra R X →ₙₐ[R] A) :
+ F ∘ (of R) = f ↔ F = lift R f :=
 (lift R).symm_apply_eq
 
 @[simp] lemma lift_of_apply (f : X → A) (x) : lift R f (of R x) = f x :=
 congr_fun (of_comp_lift _ f) x
 
 @[simp] lemma lift_comp_of (F : free_non_unital_non_assoc_algebra R X →ₙₐ[R] A) :
-  lift R (F ∘ (of R)) = F :=
+ lift R (F ∘ (of R)) = F :=
 (lift R).apply_symm_apply F
 
 @[ext] lemma hom_ext {F₁ F₂ : free_non_unital_non_assoc_algebra R X →ₙₐ[R] A}
-  (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
+ (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
 (lift R).symm.injective $ funext h
 
 end free_non_unital_non_assoc_algebra
+

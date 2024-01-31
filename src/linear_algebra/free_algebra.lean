@@ -25,13 +25,14 @@ namespace free_algebra
 mapping `[x₁, x₂, ..., xₙ]` to the "monomial" `1 • x₁ * x₂ * ⋯ * xₙ` -/
 @[simps]
 noncomputable def basis_free_monoid (R : Type u) (X : Type v) [comm_ring R] :
-  basis (free_monoid X) R (free_algebra R X) :=
+ basis (free_monoid X) R (free_algebra R X) :=
 finsupp.basis_single_one.map
-  (equiv_monoid_algebra_free_monoid.symm.to_linear_equiv : _ ≃ₗ[R] free_algebra R X)
+ (equiv_monoid_algebra_free_monoid.symm.to_linear_equiv : _ ≃ₗ[R] free_algebra R X)
 
 -- TODO: generalize to `X : Type v`
 lemma rank_eq {K : Type u} {X : Type (max u v)} [field K] :
-  module.rank K (free_algebra K X) = cardinal.mk (list X) :=
+ module.rank K (free_algebra K X) = cardinal.mk (list X) :=
 (cardinal.lift_inj.mp (basis_free_monoid K X).mk_eq_rank).symm
 
 end free_algebra
+

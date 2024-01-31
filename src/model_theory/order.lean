@@ -84,7 +84,7 @@ end is_ordered
 instance : is_ordered language.order := ⟨unit.star⟩
 
 @[simp] lemma order_Lhom_le_symb [L.is_ordered] :
-  (order_Lhom L).on_relation le_symb = (le_symb : L.relations 2) := rfl
+ (order_Lhom L).on_relation le_symb = (le_symb : L.relations 2) := rfl
 
 @[simp]
 lemma order_Lhom_order : order_Lhom language.order = Lhom.id language.order :=
@@ -108,7 +108,7 @@ def linear_order_theory : L.Theory :=
 {le_symb.reflexive, le_symb.antisymmetric, le_symb.transitive, le_symb.total}
 
 /-- A sentence indicating that an order has no top element:
-$\forall x, \exists y, \neg y \le x$.   -/
+$\forall x, \exists y, \neg y \le x$. -/
 def no_top_order_sentence : L.sentence := ∀' ∃' ∼ ((&1).le &0)
 
 /-- A sentence indicating that an order has no bottom element:
@@ -123,7 +123,7 @@ def densely_ordered_sentence : L.sentence :=
 /-- The theory of dense linear orders without endpoints. -/
 def DLO : L.Theory :=
 L.linear_order_theory ∪
-  {L.no_top_order_sentence, L.no_bot_order_sentence, L.densely_ordered_sentence}
+ {L.no_top_order_sentence, L.no_bot_order_sentence, L.densely_ordered_sentence}
 
 end
 
@@ -136,60 +136,60 @@ Lhom.is_expansion_on (order_Lhom L) M
 variables {L M}
 
 @[simp] lemma ordered_structure_iff [is_ordered L] [has_le M] [L.Structure M] :
-  L.ordered_structure M ↔ Lhom.is_expansion_on (order_Lhom L) M := iff.rfl
+ L.ordered_structure M ↔ Lhom.is_expansion_on (order_Lhom L) M := iff.rfl
 
 instance ordered_structure_has_le [has_le M] :
-  ordered_structure language.order M :=
+ ordered_structure language.order M :=
 begin
-  rw [ordered_structure_iff, order_Lhom_order],
-  exact Lhom.id_is_expansion_on M,
+ rw [ordered_structure_iff]; rw [ order_Lhom_order],
+ exact Lhom.id_is_expansion_on M,
 end
 
 instance model_preorder [preorder M] :
-  M ⊨ language.order.preorder_theory :=
+ M ⊨ language.order.preorder_theory :=
 begin
-  simp only [preorder_theory, Theory.model_iff, set.mem_insert_iff, set.mem_singleton_iff,
-    forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, forall_eq,
-    relations.realize_transitive],
-  exact ⟨le_refl, λ _ _ _, le_trans⟩
+ simp only [preorder_theory, Theory.model_iff, set.mem_insert_iff, set.mem_singleton_iff,
+ forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, forall_eq,
+ relations.realize_transitive],
+ exact ⟨le_refl, λ _ _ _, le_trans⟩
 end
 
 instance model_partial_order [partial_order M] :
-  M ⊨ language.order.partial_order_theory :=
+ M ⊨ language.order.partial_order_theory :=
 begin
-  simp only [partial_order_theory, Theory.model_iff, set.mem_insert_iff, set.mem_singleton_iff,
-    forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric,
-    forall_eq, relations.realize_transitive],
-  exact ⟨le_refl, λ _ _, le_antisymm, λ _ _ _, le_trans⟩,
+ simp only [partial_order_theory, Theory.model_iff, set.mem_insert_iff, set.mem_singleton_iff,
+ forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric,
+ forall_eq, relations.realize_transitive],
+ exact ⟨le_refl, λ _ _, le_antisymm, λ _ _ _, le_trans⟩,
 end
 
 instance model_linear_order [linear_order M] :
-  M ⊨ language.order.linear_order_theory :=
+ M ⊨ language.order.linear_order_theory :=
 begin
-  simp only [linear_order_theory, Theory.model_iff, set.mem_insert_iff, set.mem_singleton_iff,
-    forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric,
-    relations.realize_transitive, forall_eq, relations.realize_total],
-  exact ⟨le_refl, λ _ _, le_antisymm, λ _ _ _, le_trans, le_total⟩,
+ simp only [linear_order_theory, Theory.model_iff, set.mem_insert_iff, set.mem_singleton_iff,
+ forall_eq_or_imp, relations.realize_reflexive, rel_map_apply₂, relations.realize_antisymmetric,
+ relations.realize_transitive, forall_eq, relations.realize_total],
+ exact ⟨le_refl, λ _ _, le_antisymm, λ _ _ _, le_trans, le_total⟩,
 end
 
 section ordered_structure
 variables [is_ordered L] [L.Structure M]
 
 @[simp] lemma rel_map_le_symb [has_le M] [L.ordered_structure M] {a b : M} :
-  rel_map (le_symb : L.relations 2) ![a, b] ↔ a ≤ b :=
+ rel_map (le_symb : L.relations 2) ![a, b] ↔ a ≤ b :=
 begin
-  rw [← order_Lhom_le_symb, Lhom.map_on_relation],
-  refl,
+ rw [← order_Lhom_le_symb]; rw [ Lhom.map_on_relation],
+ refl,
 end
 
 @[simp] lemma term.realize_le [has_le M] [L.ordered_structure M]
-  {t₁ t₂ : L.term (α ⊕ fin n)} {v : α → M} {xs : fin n → M} :
-  (t₁.le t₂).realize v xs ↔ t₁.realize (sum.elim v xs) ≤ t₂.realize (sum.elim v xs) :=
+ {t₁ t₂ : L.term (α ⊕ fin n)} {v : α → M} {xs : fin n → M} :
+ (t₁.le t₂).realize v xs ↔ t₁.realize (sum.elim v xs) ≤ t₂.realize (sum.elim v xs) :=
 by simp [term.le]
 
 @[simp] lemma term.realize_lt [preorder M] [L.ordered_structure M]
-  {t₁ t₂ : L.term (α ⊕ fin n)} {v : α → M} {xs : fin n → M} :
-  (t₁.lt t₂).realize v xs ↔ t₁.realize (sum.elim v xs) < t₂.realize (sum.elim v xs) :=
+ {t₁ t₂ : L.term (α ⊕ fin n)} {v : α → M} {xs : fin n → M} :
+ (t₁.lt t₂).realize v xs ↔ t₁.realize (sum.elim v xs) < t₂.realize (sum.elim v xs) :=
 by simp [term.lt, lt_iff_le_not_le]
 
 end ordered_structure
@@ -199,58 +199,59 @@ variables [has_le M]
 
 theorem realize_no_top_order_iff : M ⊨ language.order.no_top_order_sentence ↔ no_top_order M :=
 begin
-  simp only [no_top_order_sentence, sentence.realize, formula.realize, bounded_formula.realize_all,
-    bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le,
-    sum.elim_inr],
-  refine ⟨λ h, ⟨λ a, h a⟩, _⟩,
-  introsI h a,
-  exact exists_not_le a,
+ simp only [no_top_order_sentence, sentence.realize, formula.realize, bounded_formula.realize_all,
+ bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le,
+ sum.elim_inr],
+ refine ⟨λ h, ⟨λ a, h a⟩, _⟩,
+ introsI h a,
+ exact exists_not_le a,
 end
 
 @[simp] lemma realize_no_top_order [h : no_top_order M] :
-  M ⊨ language.order.no_top_order_sentence :=
+ M ⊨ language.order.no_top_order_sentence :=
 realize_no_top_order_iff.2 h
 
 theorem realize_no_bot_order_iff : M ⊨ language.order.no_bot_order_sentence ↔ no_bot_order M :=
 begin
-  simp only [no_bot_order_sentence, sentence.realize, formula.realize, bounded_formula.realize_all,
-    bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le,
-    sum.elim_inr],
-  refine ⟨λ h, ⟨λ a, h a⟩, _⟩,
-  introsI h a,
-  exact exists_not_ge a,
+ simp only [no_bot_order_sentence, sentence.realize, formula.realize, bounded_formula.realize_all,
+ bounded_formula.realize_ex, bounded_formula.realize_not, realize, term.realize_le,
+ sum.elim_inr],
+ refine ⟨λ h, ⟨λ a, h a⟩, _⟩,
+ introsI h a,
+ exact exists_not_ge a,
 end
 
 @[simp] lemma realize_no_bot_order [h : no_bot_order M] :
-  M ⊨ language.order.no_bot_order_sentence :=
+ M ⊨ language.order.no_bot_order_sentence :=
 realize_no_bot_order_iff.2 h
 
 end has_le
 
 theorem realize_densely_ordered_iff [preorder M] :
-  M ⊨ language.order.densely_ordered_sentence ↔ densely_ordered M :=
+ M ⊨ language.order.densely_ordered_sentence ↔ densely_ordered M :=
 begin
-  simp only [densely_ordered_sentence, sentence.realize, formula.realize,
-    bounded_formula.realize_imp, bounded_formula.realize_all, realize, term.realize_lt,
-    sum.elim_inr, bounded_formula.realize_ex, bounded_formula.realize_inf],
-  refine ⟨λ h, ⟨λ a b ab, h a b ab⟩, _⟩,
-  introsI h a b ab,
-  exact exists_between ab,
+ simp only [densely_ordered_sentence, sentence.realize, formula.realize,
+ bounded_formula.realize_imp, bounded_formula.realize_all, realize, term.realize_lt,
+ sum.elim_inr, bounded_formula.realize_ex, bounded_formula.realize_inf],
+ refine ⟨λ h, ⟨λ a b ab, h a b ab⟩, _⟩,
+ introsI h a b ab,
+ exact exists_between ab,
 end
 
 @[simp] lemma realize_densely_ordered [preorder M] [h : densely_ordered M] :
-  M ⊨ language.order.densely_ordered_sentence :=
+ M ⊨ language.order.densely_ordered_sentence :=
 realize_densely_ordered_iff.2 h
 
 instance model_DLO [linear_order M] [densely_ordered M] [no_top_order M] [no_bot_order M] :
-  M ⊨ language.order.DLO :=
+ M ⊨ language.order.DLO :=
 begin
-  simp only [DLO, set.union_insert, set.union_singleton, Theory.model_iff,
-    set.mem_insert_iff, forall_eq_or_imp, realize_no_top_order, realize_no_bot_order,
-    realize_densely_ordered, true_and],
-  rw ← Theory.model_iff,
-  apply_instance,
+ simp only [DLO, set.union_insert, set.union_singleton, Theory.model_iff,
+ set.mem_insert_iff, forall_eq_or_imp, realize_no_top_order, realize_no_bot_order,
+ realize_densely_ordered, true_and],
+ rw ← Theory.model_iff,
+ apply_instance,
 end
 
 end language
 end first_order
+

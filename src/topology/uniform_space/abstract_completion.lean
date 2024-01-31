@@ -89,14 +89,14 @@ pkg.uniform_continuous_coe.continuous
 
 @[elab_as_eliminator]
 lemma induction_on {p : hatα → Prop}
-  (a : hatα) (hp : is_closed {a | p a}) (ih : ∀ a, p (ι a)) : p a :=
+ (a : hatα) (hp : is_closed {a | p a}) (ih : ∀ a, p (ι a)) : p a :=
 is_closed_property pkg.dense hp ih a
 
 variables {β : Type*}
 
 protected lemma funext [topological_space β] [t2_space β] {f g : hatα → β}
-  (hf : continuous f) (hg : continuous g)
-  (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
+ (hf : continuous f) (hg : continuous g)
+ (h : ∀ a, f (ι a) = g (ι a)) : f = g :=
 funext $ assume a, pkg.induction_on a (is_closed_eq hf hg) h
 
 variables [uniform_space β]
@@ -105,9 +105,9 @@ section extend
 /-- Extension of maps to completions -/
 protected def extend (f : α → β) : hatα → β :=
 if uniform_continuous f then
-  pkg.dense_inducing.extend f
+ pkg.dense_inducing.extend f
 else
-  λ x, f (pkg.dense.some x)
+ λ x, f (pkg.dense.some x)
 
 variables {f : α → β}
 
@@ -115,23 +115,23 @@ lemma extend_def (hf : uniform_continuous f) : pkg.extend f = pkg.dense_inducing
 if_pos hf
 
 lemma extend_coe [t2_space β] (hf : uniform_continuous f) (a : α) :
-  (pkg.extend f) (ι a) = f a :=
+ (pkg.extend f) (ι a) = f a :=
 begin
-  rw pkg.extend_def hf,
-  exact pkg.dense_inducing.extend_eq hf.continuous a
+ rw pkg.extend_def hf,
+ exact pkg.dense_inducing.extend_eq hf.continuous a
 end
 
 variables [complete_space β]
 
 lemma uniform_continuous_extend : uniform_continuous (pkg.extend f) :=
 begin
-  by_cases hf : uniform_continuous f,
-  { rw pkg.extend_def hf,
-    exact uniform_continuous_uniformly_extend (pkg.uniform_inducing)
-      (pkg.dense) hf },
-  { change uniform_continuous (ite _ _ _),
-    rw if_neg hf,
-    exact uniform_continuous_of_const (assume a b, by congr) }
+ by_cases hf : uniform_continuous f,
+ { rw pkg.extend_def hf,
+ exact uniform_continuous_uniformly_extend (pkg.uniform_inducing)
+ (pkg.dense) hf },
+ { change uniform_continuous (ite _ _ _),
+ rw if_neg hf,
+ exact uniform_continuous_of_const (assume a b, by congr) }
 end
 
 lemma continuous_extend : continuous (pkg.extend f) :=
@@ -140,16 +140,16 @@ pkg.uniform_continuous_extend.continuous
 variables [separated_space β]
 
 lemma extend_unique (hf : uniform_continuous f) {g : hatα → β} (hg : uniform_continuous g)
-  (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
+ (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
 begin
-  apply pkg.funext pkg.continuous_extend hg.continuous,
-  simpa only [pkg.extend_coe hf] using h
+ apply pkg.funext pkg.continuous_extend hg.continuous,
+ simpa only [pkg.extend_coe hf] using h
 end
 
 @[simp] lemma extend_comp_coe {f : hatα → β} (hf : uniform_continuous f) :
-  pkg.extend (f ∘ ι) = f :=
+ pkg.extend (f ∘ ι) = f :=
 funext $ λ x, pkg.induction_on x (is_closed_eq pkg.continuous_extend hf.continuous)
-    (λ y, pkg.extend_coe (hf.comp $ pkg.uniform_continuous_coe) y)
+ (λ y, pkg.extend_coe (hf.comp $ pkg.uniform_continuous_coe) y)
 
 end extend
 
@@ -177,13 +177,13 @@ variables {f}
 pkg.extend_coe (pkg'.uniform_continuous_coe.comp hf) a
 
 lemma map_unique {f : α → β} {g : hatα → hatβ}
-  (hg : uniform_continuous g) (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
+ (hg : uniform_continuous g) (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
 pkg.funext (pkg.continuous_map _ _) hg.continuous $
 begin
-  intro a,
-  change pkg.extend (ι' ∘ f) _ = _,
-  simp only [(∘), h],
-  rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
+ intro a,
+ change pkg.extend (ι' ∘ f) _ = _,
+ simp only [(∘), h],
+ rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
 end
 
 @[simp] lemma map_id : pkg.map pkg id = id :=
@@ -192,15 +192,15 @@ pkg.map_unique pkg uniform_continuous_id (assume a, rfl)
 variables {γ : Type*} [uniform_space γ]
 
 lemma extend_map [complete_space γ] [separated_space γ] {f : β → γ} {g : α → β}
-  (hf : uniform_continuous f) (hg : uniform_continuous g) :
-  pkg'.extend f ∘ map g = pkg.extend (f ∘ g) :=
+ (hf : uniform_continuous f) (hg : uniform_continuous g) :
+ pkg'.extend f ∘ map g = pkg.extend (f ∘ g) :=
 pkg.funext (pkg'.continuous_extend.comp (pkg.continuous_map pkg' _)) pkg.continuous_extend $ λ a,
-  by rw [pkg.extend_coe (hf.comp hg), comp_app, pkg.map_coe pkg' hg, pkg'.extend_coe hf]
+ by rw [pkg.extend_coe (hf.comp hg)]; rw [ comp_app]; rw [ pkg.map_coe pkg' hg]; rw [ pkg'.extend_coe hf]
 
 variables (pkg'' : abstract_completion γ)
 
 lemma map_comp {g : β → γ} {f : α → β} (hg : uniform_continuous g) (hf : uniform_continuous f) :
-  (pkg'.map pkg'' g) ∘ (pkg.map pkg' f) = pkg.map pkg'' (g ∘ f) :=
+ (pkg'.map pkg'' g) ∘ (pkg.map pkg' f) = pkg.map pkg'' (g ∘ f) :=
 pkg.extend_map pkg' (pkg''.uniform_continuous_coe.comp hg) hf
 
 end map_sec
@@ -222,22 +222,22 @@ pkg.extend_coe pkg'.uniform_continuous_coe a
 
 lemma inverse_compare : (pkg.compare pkg') ∘ (pkg'.compare pkg) = id :=
 begin
-  have uc := pkg.uniform_continuous_compare pkg',
-  have uc' := pkg'.uniform_continuous_compare pkg,
-  apply pkg'.funext (uc.comp uc').continuous continuous_id,
-  intro a,
-  rw [comp_app, pkg'.compare_coe pkg, pkg.compare_coe pkg'],
-  refl
+ have uc := pkg.uniform_continuous_compare pkg',
+ have uc' := pkg'.uniform_continuous_compare pkg,
+ apply pkg'.funext (uc.comp uc').continuous continuous_id,
+ intro a,
+ rw [comp_app]; rw [ pkg'.compare_coe pkg]; rw [ pkg.compare_coe pkg'],
+ refl
 end
 
 /-- The uniform bijection between two completions of the same uniform space. -/
 def compare_equiv : pkg.space ≃ᵤ pkg'.space :=
 { to_fun := pkg.compare pkg',
-  inv_fun := pkg'.compare pkg,
-  left_inv := congr_fun (pkg'.inverse_compare pkg),
-  right_inv := congr_fun (pkg.inverse_compare pkg'),
-  uniform_continuous_to_fun := uniform_continuous_compare _ _,
-  uniform_continuous_inv_fun := uniform_continuous_compare _ _, }
+ inv_fun := pkg'.compare pkg,
+ left_inv := congr_fun (pkg'.inverse_compare pkg),
+ right_inv := congr_fun (pkg.inverse_compare pkg'),
+ uniform_continuous_to_fun := uniform_continuous_compare _ _,
+ uniform_continuous_inv_fun := uniform_continuous_compare _ _, }
 
 lemma uniform_continuous_compare_equiv : uniform_continuous (pkg.compare_equiv pkg') :=
 pkg.uniform_continuous_compare pkg'
@@ -255,12 +255,12 @@ local notation `ι'` := pkg'.coe
 /-- Products of completions -/
 protected def prod : abstract_completion (α × β) :=
 { space := hatα × hatβ,
-  coe := λ p, ⟨ι p.1, ι' p.2⟩,
-  uniform_struct := prod.uniform_space,
-  complete := by apply_instance,
-  separation := by apply_instance,
-  uniform_inducing := uniform_inducing.prod pkg.uniform_inducing pkg'.uniform_inducing,
-  dense := pkg.dense.prod_map pkg'.dense }
+ coe := λ p, ⟨ι p.1, ι' p.2⟩,
+ uniform_struct := prod.uniform_space,
+ complete := by apply_instance,
+ separation := by apply_instance,
+ uniform_inducing := uniform_inducing.prod pkg.uniform_inducing pkg'.uniform_inducing,
+ dense := pkg.dense.prod_map pkg'.dense }
 end prod
 
 section extension₂
@@ -280,9 +280,9 @@ section separated_space
 variables [separated_space γ] {f : α → β → γ}
 
 lemma extension₂_coe_coe (hf : uniform_continuous $ uncurry f) (a : α) (b : β) :
-  pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
+ pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
 show (pkg.prod pkg').extend (uncurry f) ((pkg.prod pkg').coe (a, b)) = uncurry f (a, b),
-  from (pkg.prod pkg').extend_coe hf _
+ from (pkg.prod pkg').extend_coe hf _
 
 end separated_space
 
@@ -292,8 +292,8 @@ variables [complete_space γ] (f)
 
 lemma uniform_continuous_extension₂ : uniform_continuous₂ (pkg.extend₂ pkg' f) :=
 begin
-  rw [uniform_continuous₂_def, abstract_completion.extend₂, uncurry_curry],
-  apply uniform_continuous_extend
+ rw [uniform_continuous₂_def]; rw [ abstract_completion.extend₂]; rw [ uncurry_curry],
+ apply uniform_continuous_extend
 end
 
 end extension₂
@@ -317,13 +317,14 @@ lemma uniform_continuous_map₂ (f : α → β → γ) : uniform_continuous₂ (
 pkg.uniform_continuous_extension₂ pkg' _
 
 lemma continuous_map₂ {δ} [topological_space δ] {f : α → β → γ}
-  {a : δ → hatα} {b : δ → hatβ} (ha : continuous a) (hb : continuous b) :
-  continuous (λd:δ, pkg.map₂ pkg' pkg'' f (a d) (b d)) :=
+ {a : δ → hatα} {b : δ → hatβ} (ha : continuous a) (hb : continuous b) :
+ continuous (λd:δ, pkg.map₂ pkg' pkg'' f (a d) (b d)) :=
 ((pkg.uniform_continuous_map₂ pkg' pkg'' f).continuous.comp (continuous.prod_mk ha hb) : _)
 
 lemma map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : uniform_continuous₂ f) :
-  pkg.map₂ pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=
+ pkg.map₂ pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=
 pkg.extension₂_coe_coe pkg' (pkg''.uniform_continuous_coe.comp hf) a b
 
 end map₂
 end abstract_completion
+

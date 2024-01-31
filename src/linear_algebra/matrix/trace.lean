@@ -47,13 +47,13 @@ variables {n R}
 finset.sum_add_distrib
 
 @[simp] lemma trace_smul [monoid α] [distrib_mul_action α R] (r : α) (A : matrix n n R) :
-  trace (r • A) = r • trace A :=
+ trace (r • A) = r • trace A :=
 finset.smul_sum.symm
 
 @[simp] lemma trace_transpose (A : matrix n n R) : trace Aᵀ = trace A := rfl
 
 @[simp] lemma trace_conj_transpose [star_add_monoid R] (A : matrix n n R) :
-  trace Aᴴ = star (trace A) :=
+ trace Aᴴ = star (trace A) :=
 (star_sum _ _).symm
 
 variables (n α R)
@@ -75,7 +75,7 @@ map_list_sum (trace_add_monoid_hom n R) l
 map_multiset_sum (trace_add_monoid_hom n R) s
 
 @[simp] lemma trace_sum (s : finset ι) (f : ι → matrix n n R) :
-  trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
+ trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
 map_sum (trace_add_monoid_hom n R) f s
 
 end add_comm_monoid
@@ -102,24 +102,24 @@ end one
 section mul
 
 @[simp] lemma trace_transpose_mul [add_comm_monoid R] [has_mul R]
-  (A : matrix m n R) (B : matrix n m R) : trace (Aᵀ ⬝ Bᵀ) = trace (A ⬝ B) := finset.sum_comm
+ (A : matrix m n R) (B : matrix n m R) : trace (Aᵀ ⬝ Bᵀ) = trace (A ⬝ B) := finset.sum_comm
 
 lemma trace_mul_comm [add_comm_monoid R] [comm_semigroup R] (A : matrix m n R) (B : matrix n m R) :
-  trace (A ⬝ B) = trace (B ⬝ A) :=
-by rw [←trace_transpose, ←trace_transpose_mul, transpose_mul]
+ trace (A ⬝ B) = trace (B ⬝ A) :=
+by rw [←trace_transpose]; rw [ ←trace_transpose_mul]; rw [ transpose_mul]
 
 lemma trace_mul_cycle [non_unital_comm_semiring R]
-  (A : matrix m n R) (B : matrix n p R) (C : matrix p m R) :
-  trace (A ⬝ B ⬝ C) = trace (C ⬝ A ⬝ B) :=
-by rw [trace_mul_comm, matrix.mul_assoc]
+ (A : matrix m n R) (B : matrix n p R) (C : matrix p m R) :
+ trace (A ⬝ B ⬝ C) = trace (C ⬝ A ⬝ B) :=
+by rw [trace_mul_comm]; rw [ matrix.mul_assoc]
 
 lemma trace_mul_cycle' [non_unital_comm_semiring R]
-  (A : matrix m n R) (B : matrix n p R) (C : matrix p m R) :
-  trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) :=
-by rw [←matrix.mul_assoc, trace_mul_comm]
+ (A : matrix m n R) (B : matrix n p R) (C : matrix p m R) :
+ trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) :=
+by rw [←matrix.mul_assoc]; rw [ trace_mul_comm]
 
 @[simp] lemma trace_col_mul_row [non_unital_non_assoc_semiring R] (a b : n → R) :
-  trace (col a ⬝ row b) = dot_product a b :=
+ trace (col a ⬝ row b) = dot_product a b :=
 by simp [dot_product, trace]
 
 end mul
@@ -143,8 +143,9 @@ lemma trace_fin_two (A : matrix (fin 2) (fin 2) R) : trace A = A 0 0 + A 1 1 :=
 congr_arg ((+) _) (add_zero (A 1 1))
 
 lemma trace_fin_three (A : matrix (fin 3) (fin 3) R) : trace A = A 0 0 + A 1 1 + A 2 2 :=
-by { rw [← add_zero (A 2 2), add_assoc], refl }
+by { rw [← add_zero (A 2 2)]; rw [ add_assoc], refl }
 
 end fin
 
 end matrix
+

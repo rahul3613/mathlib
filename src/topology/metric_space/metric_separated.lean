@@ -49,64 +49,65 @@ lemma subset_compl_right (h : is_metric_separated s t) : s ⊆ tᶜ :=
 λ x hs ht, h.disjoint.le_bot ⟨hs, ht⟩
 
 @[mono] lemma mono {s' t'} (hs : s ⊆ s') (ht : t ⊆ t') :
-  is_metric_separated s' t' → is_metric_separated s t :=
+ is_metric_separated s' t' → is_metric_separated s t :=
 λ ⟨r, r0, hr⟩, ⟨r, r0, λ x hx y hy, hr x (hs hx) y (ht hy)⟩
 
 lemma mono_left {s'} (h' : is_metric_separated s' t) (hs : s ⊆ s') :
-  is_metric_separated s t :=
+ is_metric_separated s t :=
 h'.mono hs subset.rfl
 
 lemma mono_right {t'} (h' : is_metric_separated s t') (ht : t ⊆ t') :
-  is_metric_separated s t :=
+ is_metric_separated s t :=
 h'.mono subset.rfl ht
 
 lemma union_left {s'} (h : is_metric_separated s t) (h' : is_metric_separated s' t) :
-  is_metric_separated (s ∪ s') t :=
+ is_metric_separated (s ∪ s') t :=
 begin
-  rcases ⟨h, h'⟩ with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩,
-  refine ⟨min r r', _, λ x hx y hy, hx.elim _ _⟩,
-  { rw [← pos_iff_ne_zero] at r0 r0' ⊢,
-    exact lt_min r0 r0' },
-  { exact λ hx, (min_le_left _ _).trans (hr _ hx _ hy) },
-  { exact λ hx, (min_le_right _ _).trans (hr' _ hx _ hy) }
+ rcases ⟨h, h'⟩ with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩,
+ refine ⟨min r r', _, λ x hx y hy, hx.elim _ _⟩,
+ { rw [← pos_iff_ne_zero] at r0 r0' ⊢,
+ exact lt_min r0 r0' },
+ { exact λ hx, (min_le_left _ _).trans (hr _ hx _ hy) },
+ { exact λ hx, (min_le_right _ _).trans (hr' _ hx _ hy) }
 end
 
 @[simp] lemma union_left_iff {s'} :
-  is_metric_separated (s ∪ s') t ↔ is_metric_separated s t ∧ is_metric_separated s' t :=
+ is_metric_separated (s ∪ s') t ↔ is_metric_separated s t ∧ is_metric_separated s' t :=
 ⟨λ h, ⟨h.mono_left (subset_union_left _ _), h.mono_left (subset_union_right _ _)⟩,
-  λ h, h.1.union_left h.2⟩
+ λ h, h.1.union_left h.2⟩
 
 lemma union_right {t'} (h : is_metric_separated s t) (h' : is_metric_separated s t') :
-  is_metric_separated s (t ∪ t') :=
+ is_metric_separated s (t ∪ t') :=
 (h.symm.union_left h'.symm).symm
 
 @[simp] lemma union_right_iff {t'} :
-  is_metric_separated s (t ∪ t') ↔ is_metric_separated s t ∧ is_metric_separated s t' :=
+ is_metric_separated s (t ∪ t') ↔ is_metric_separated s t ∧ is_metric_separated s t' :=
 comm.trans $ union_left_iff.trans $ and_congr comm comm
 
 lemma finite_Union_left_iff {ι : Type*} {I : set ι} (hI : I.finite) {s : ι → set X} {t : set X} :
-  is_metric_separated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, is_metric_separated (s i) t :=
+ is_metric_separated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, is_metric_separated (s i) t :=
 begin
-  refine finite.induction_on hI (by simp) (λ i I hi _ hI, _),
-  rw [bUnion_insert, ball_insert_iff, union_left_iff, hI]
+ refine finite.induction_on hI (by simp) (λ i I hi _ hI, _),
+ rw [bUnion_insert]; rw [ ball_insert_iff]; rw [ union_left_iff]; rw [ hI]
 end
 
 alias finite_Union_left_iff ↔ _ finite_Union_left
 
 lemma finite_Union_right_iff {ι : Type*} {I : set ι} (hI : I.finite) {s : set X} {t : ι → set X} :
-  is_metric_separated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, is_metric_separated s (t i) :=
+ is_metric_separated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, is_metric_separated s (t i) :=
 by simpa only [@comm _ _ s] using finite_Union_left_iff hI
 
 @[simp] lemma finset_Union_left_iff {ι : Type*} {I : finset ι} {s : ι → set X} {t : set X} :
-  is_metric_separated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, is_metric_separated (s i) t :=
+ is_metric_separated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, is_metric_separated (s i) t :=
 finite_Union_left_iff I.finite_to_set
 
 alias finset_Union_left_iff ↔ _ finset_Union_left
 
 @[simp] lemma finset_Union_right_iff {ι : Type*} {I : finset ι} {s : set X} {t : ι → set X} :
-  is_metric_separated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, is_metric_separated s (t i) :=
+ is_metric_separated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, is_metric_separated s (t i) :=
 finite_Union_right_iff I.finite_to_set
 
 alias finset_Union_right_iff ↔ _ finset_Union_right
 
 end is_metric_separated
+

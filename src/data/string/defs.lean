@@ -42,7 +42,7 @@ abbreviation ends_with (x y : string) : bool :=
 y.is_suffix_of x
 
 /-- `get_rest s t` returns `some r` if `s = t ++ r`.
-  If `t` is not a prefix of `s`, returns `none` -/
+ If `t` is not a prefix of `s`, returns `none` -/
 def get_rest (s t : string) : option string :=
 list.as_string <$> s.to_list.get_rest t.to_list
 
@@ -59,3 +59,4 @@ def head (s : string) : char :=
 s.mk_iterator.curr
 
 end string
+

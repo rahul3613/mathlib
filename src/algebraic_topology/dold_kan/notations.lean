@@ -22,6 +22,7 @@ as `N[X]` for the normalized subcomplex in the case `C` is an abelian category.
 -/
 
 localized "notation (name := alternating_face_map_complex) `K[`X`]` :=
-  algebraic_topology.alternating_face_map_complex.obj X" in dold_kan
+ algebraic_topology.alternating_face_map_complex.obj X" in dold_kan
 localized "notation (name := normalized_Moore_complex) `N[`X`]` :=
-  algebraic_topology.normalized_Moore_complex.obj X" in dold_kan
+ algebraic_topology.normalized_Moore_complex.obj X" in dold_kan
+

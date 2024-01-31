@@ -50,17 +50,17 @@ namespace quotient
 /-- Generates the closure of a family of relations w.r.t. composition from left and right. -/
 inductive comp_closure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
 | intro {a b} (f : s ⟶ a) (m₁ m₂ : a ⟶ b) (g : b ⟶ t) (h : r m₁ m₂) :
-  comp_closure (f ≫ m₁ ≫ g) (f ≫ m₂ ≫ g)
+ comp_closure (f ≫ m₁ ≫ g) (f ≫ m₂ ≫ g)
 
 lemma comp_closure.of {a b} (m₁ m₂ : a ⟶ b) (h : r m₁ m₂) : comp_closure r m₁ m₂ :=
 by simpa using comp_closure.intro (𝟙 _) m₁ m₂ (𝟙 _) h
 
 lemma comp_left {a b c : C} (f : a ⟶ b) : Π (g₁ g₂ : b ⟶ c) (h : comp_closure r g₁ g₂),
-  comp_closure r (f ≫ g₁) (f ≫ g₂)
+ comp_closure r (f ≫ g₁) (f ≫ g₂)
 | _ _ ⟨x, m₁, m₂, y, h⟩ := by simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
 
 lemma comp_right {a b c : C} (g : b ⟶ c) : Π (f₁ f₂ : a ⟶ b) (h : comp_closure r f₁ f₂),
-  comp_closure r (f₁ ≫ g) (f₂ ≫ g)
+ comp_closure r (f₁ ≫ g) (f₂ ≫ g)
 | _ _ ⟨x, m₁, m₂, y, h⟩ := by simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
 
 /-- Hom-sets of the quotient category. -/
@@ -71,23 +71,23 @@ instance (a : quotient r) : inhabited (hom r a a) := ⟨quot.mk _ (𝟙 a.as)⟩
 /-- Composition in the quotient category. -/
 def comp ⦃a b c : quotient r⦄ : hom r a b → hom r b c → hom r a c :=
 λ hf hg, quot.lift_on hf ( λ f, quot.lift_on hg (λ g, quot.mk _ (f ≫ g))
-  (λ g₁ g₂ h, quot.sound $ comp_left r f g₁ g₂ h) )
-  (λ f₁ f₂ h, quot.induction_on hg $ λ g, quot.sound $ comp_right r g f₁ f₂ h)
+ (λ g₁ g₂ h, quot.sound $ comp_left r f g₁ g₂ h) )
+ (λ f₁ f₂ h, quot.induction_on hg $ λ g, quot.sound $ comp_right r g f₁ f₂ h)
 
 @[simp]
 lemma comp_mk {a b c : quotient r} (f : a.as ⟶ b.as) (g : b.as ⟶ c.as) :
-  comp r (quot.mk _ f) (quot.mk _ g) = quot.mk _ (f ≫ g) := rfl
+ comp r (quot.mk _ f) (quot.mk _ g) = quot.mk _ (f ≫ g) := rfl
 
 instance category : category (quotient r) :=
 { hom := hom r,
-  id := λ a, quot.mk _ (𝟙 a.as),
-  comp := comp r }
+ id := λ a, quot.mk _ (𝟙 a.as),
+ comp := comp r }
 
 /-- The functor from a category to its quotient. -/
 @[simps]
 def functor : C ⥤ quotient r :=
 { obj := λ a, { as := a },
-  map := λ _ _ f, quot.mk _ f }
+ map := λ _ _ f, quot.mk _ f }
 
 noncomputable instance : full (functor r) :=
 { preimage := λ X Y f, quot.out f, }
@@ -96,60 +96,60 @@ instance : ess_surj (functor r) :=
 { mem_ess_image := λ Y, ⟨Y.as, ⟨eq_to_iso (by { ext, refl, })⟩⟩ }
 
 protected lemma induction {P : Π {a b : quotient r}, (a ⟶ b) → Prop}
-  (h : ∀ {x y : C} (f : x ⟶ y), P ((functor r).map f)) :
-  ∀ {a b : quotient r} (f : a ⟶ b), P f :=
+ (h : ∀ {x y : C} (f : x ⟶ y), P ((functor r).map f)) :
+ ∀ {a b : quotient r} (f : a ⟶ b), P f :=
 by { rintros ⟨x⟩ ⟨y⟩ ⟨f⟩, exact h f, }
 
 protected lemma sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) :
-  (functor r).map f₁ = (functor r).map f₂ :=
+ (functor r).map f₁ = (functor r).map f₂ :=
 by simpa using quot.sound (comp_closure.intro (𝟙 a) f₁ f₂ (𝟙 b) h)
 
 lemma functor_map_eq_iff [congruence r] {X Y : C} (f f' : X ⟶ Y) :
-  (functor r).map f = (functor r).map f' ↔ r f f' :=
+ (functor r).map f = (functor r).map f' ↔ r f f' :=
 begin
-  split,
-  { erw quot.eq,
-    intro h,
-    induction h with m m' hm,
-    { cases hm, apply congruence.comp_left, apply congruence.comp_right, assumption, },
-    { apply refl },
-    { apply symm, assumption },
-    { apply trans; assumption }, },
-  { apply quotient.sound },
+ split,
+ { erw quot.eq,
+ intro h,
+ induction h with m m' hm,
+ { cases hm, apply congruence.comp_left, apply congruence.comp_right, assumption, },
+ { apply refl },
+ { apply symm, assumption },
+ { apply trans; assumption }, },
+ { apply quotient.sound },
 end
 
 variables {D : Type*} [category D]
-  (F : C ⥤ D)
-  (H : ∀ (x y : C) (f₁ f₂ : x ⟶ y), r f₁ f₂ → F.map f₁ = F.map f₂)
+ (F : C ⥤ D)
+ (H : ∀ (x y : C) (f₁ f₂ : x ⟶ y), r f₁ f₂ → F.map f₁ = F.map f₂)
 include H
 
 /-- The induced functor on the quotient category. -/
 @[simps]
 def lift : quotient r ⥤ D :=
 { obj := λ a, F.obj a.as,
-  map := λ a b hf, quot.lift_on hf (λ f, F.map f)
-    (by { rintro _ _ ⟨_, _, _, _, h⟩, simp [H _ _ _ _ h], }),
-  map_id' := λ a, F.map_id a.as,
-  map_comp' := by { rintros a b c ⟨f⟩ ⟨g⟩, exact F.map_comp f g, } }
+ map := λ a b hf, quot.lift_on hf (λ f, F.map f)
+ (by { rintro _ _ ⟨_, _, _, _, h⟩, simp [H _ _ _ _ h], }),
+ map_id' := λ a, F.map_id a.as,
+ map_comp' := by { rintros a b c ⟨f⟩ ⟨g⟩, exact F.map_comp f g, } }
 
 lemma lift_spec : (functor r) ⋙ lift r F H = F :=
 begin
-  apply functor.ext, rotate,
-  { rintro X, refl, },
-  { rintro X Y f, simp, },
+ apply functor.ext, rotate,
+ { rintro X, refl, },
+ { rintro X Y f, simp, },
 end
 
 lemma lift_unique (Φ : quotient r ⥤ D) (hΦ : (functor r) ⋙ Φ = F) : Φ = lift r F H :=
 begin
-  subst_vars,
-  apply functor.hext,
-  { rintro X, dsimp [lift, functor], congr, ext, refl, },
-  { rintro X Y f,
-    dsimp [lift, functor],
-    apply quot.induction_on f,
-    rintro ff,
-    simp only [quot.lift_on_mk, functor.comp_map],
-    congr; ext; refl, },
+ subst_vars,
+ apply functor.hext,
+ { rintro X, dsimp [lift, functor], congr, ext, refl, },
+ { rintro X Y f,
+ dsimp [lift, functor],
+ apply quot.induction_on f,
+ rintro ff,
+ simp only [quot.lift_on_mk, functor.comp_map],
+ congr; ext; refl, },
 end
 
 /-- The original functor factors through the induced functor. -/
@@ -164,9 +164,10 @@ lemma lift.is_lift_inv (X : C) : (lift.is_lift r F H).inv.app X = 𝟙 (F.obj X)
 rfl
 
 lemma lift_map_functor_map {X Y : C} (f : X ⟶ Y) :
-  (lift r F H).map ((functor r).map f) = F.map f :=
+ (lift r F H).map ((functor r).map f) = F.map f :=
 by { rw ←(nat_iso.naturality_1 (lift.is_lift r F H)), dsimp, simp, }
 
 end quotient
 
 end category_theory
+

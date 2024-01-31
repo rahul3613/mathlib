@@ -35,11 +35,12 @@ Auxiliary lemma for norm_cast to move the cast `-↑n` upwards to `↑-↑n`.
 lemma cast_neg_nat_cast {R} [division_ring R] (n : ℕ) : ((-n : ℤ) : R) = -n := by simp
 
 @[simp] theorem cast_div [division_ring α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
-  ((m / n : ℤ) : α) = m / n :=
+ ((m / n : ℤ) : α) = m / n :=
 begin
-  rcases n_dvd with ⟨k, rfl⟩,
-  have : n ≠ 0, { rintro rfl, simpa using n_nonzero },
-  rw [int.mul_div_cancel_left _ this, mul_comm n k, int.cast_mul, mul_div_cancel _ n_nonzero],
+ rcases n_dvd with ⟨k, rfl⟩,
+ have : n ≠ 0, { rintro rfl, simpa using n_nonzero },
+ rw [int.mul_div_cancel_left _ this]; rw [ mul_comm n k]; rw [ int.cast_mul]; rw [ mul_div_cancel _ n_nonzero],
 end
 
 end int
+

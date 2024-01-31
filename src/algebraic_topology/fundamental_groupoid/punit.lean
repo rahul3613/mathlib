@@ -30,15 +30,16 @@ namespace fundamental_groupoid
 
 instance {x y : fundamental_groupoid punit} : subsingleton (x ⟶ y) :=
 begin
-  convert_to subsingleton (path.homotopic.quotient punit.star punit.star),
-  { congr; apply punit_eq_star, },
-  apply quotient.subsingleton,
+ convert_to subsingleton (path.homotopic.quotient punit.star punit.star),
+ { congr; apply punit_eq_star, },
+ apply quotient.subsingleton,
 end
 
 /-- Equivalence of groupoids between fundamental groupoid of punit and punit -/
 def punit_equiv_discrete_punit : fundamental_groupoid punit.{u+1} ≌ discrete punit.{v+1} :=
 equivalence.mk (functor.star _) ((category_theory.functor.const _).obj punit.star)
-  (nat_iso.of_components (λ _, eq_to_iso dec_trivial) (λ _ _ _, dec_trivial))
-  (functor.punit_ext _ _)
+ (nat_iso.of_components (λ _, eq_to_iso dec_trivial) (λ _ _ _, dec_trivial))
+ (functor.punit_ext _ _)
 
 end fundamental_groupoid
+

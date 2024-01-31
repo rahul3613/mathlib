@@ -38,7 +38,7 @@ prod.exists
 @[simp] lemma fst_comp_mk (x : α) : prod.fst ∘ (prod.mk x : β → α × β) = function.const β x := rfl
 
 @[simp, mfld_simps] lemma map_mk (f : α → γ) (g : β → δ) (a : α) (b : β) :
-  map f g (a, b) = (f a, g b) :=
+ map f g (a, b) = (f a, g b) :=
 rfl
 
 lemma map_fst (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).1 = f (p.1) := rfl
@@ -56,8 +56,8 @@ Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
 -/
 lemma map_comp_map {ε ζ : Type*}
-  (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
-  prod.map g g' ∘ prod.map f f' = prod.map (g ∘ f) (g' ∘ f') :=
+ (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
+ prod.map g g' ∘ prod.map f f' = prod.map (g ∘ f) (g' ∘ f') :=
 rfl
 
 /--
@@ -65,8 +65,8 @@ Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions, fully applied.
 -/
 lemma map_map {ε ζ : Type*}
-  (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
-  prod.map g g' (prod.map f f' x) = prod.map (g ∘ f) (g' ∘ f') x :=
+ (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
+ prod.map g g' (prod.map f f' x) = prod.map (g ∘ f) (g' ∘ f') x :=
 rfl
 
 variables {a a₁ a₂ : α} {b b₁ b₂ : β}
@@ -74,18 +74,18 @@ variables {a a₁ a₂ : α} {b b₁ b₂ : β}
 @[simp] lemma mk.inj_iff : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ := ⟨prod.mk.inj, by cc⟩
 
 lemma mk.inj_left {α β : Type*} (a : α) :
-  function.injective (prod.mk a : β → α × β) :=
+ function.injective (prod.mk a : β → α × β) :=
 by { intros b₁ b₂ h, simpa only [true_and, prod.mk.inj_iff, eq_self_iff_true] using h }
 
 lemma mk.inj_right {α β : Type*} (b : β) :
-  function.injective (λ a, prod.mk a b : α → α × β) :=
+ function.injective (λ a, prod.mk a b : α → α × β) :=
 by { intros b₁ b₂ h, by simpa only [and_true, eq_self_iff_true, mk.inj_iff] using h }
 
 lemma mk_inj_left : (a, b₁) = (a, b₂) ↔ b₁ = b₂ := (mk.inj_left _).eq_iff
 lemma mk_inj_right : (a₁, b) = (a₂, b) ↔ a₁ = a₂ := (mk.inj_right _).eq_iff
 
 lemma ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 :=
-by rw [← @mk.eta _ _ p, ← @mk.eta _ _ q, mk.inj_iff]
+by rw [← @mk.eta _ _ p]; rw [ ← @mk.eta _ _ q]; rw [ mk.inj_iff]
 
 @[ext]
 lemma ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
@@ -156,81 +156,81 @@ lemma snd_eq_iff : ∀ {p : α × β} {x : β}, p.2 = x ↔ p = (p.1, x)
 variables {r : α → α → Prop} {s : β → β → Prop} {x y : α × β}
 
 theorem lex_def (r : α → α → Prop) (s : β → β → Prop)
-  {p q : α × β} : prod.lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
+ {p q : α × β} : prod.lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
 ⟨λ h, by cases h; simp *,
  λ h, match p, q, h with
  | (a, b), (c, d), or.inl h := lex.left _ _ h
  | (a, b), (c, d), or.inr ⟨e, h⟩ :=
-   by change a = c at e; subst e; exact lex.right _ h
+ by change a = c at e; subst e; exact lex.right _ h
  end⟩
 
 lemma lex_iff : lex r s x y ↔ r x.1 y.1 ∨ x.1 = y.1 ∧ s x.2 y.2 := lex_def _ _
 
 instance lex.decidable [decidable_eq α]
-  (r : α → α → Prop) (s : β → β → Prop) [decidable_rel r] [decidable_rel s] :
-  decidable_rel (prod.lex r s) :=
+ (r : α → α → Prop) (s : β → β → Prop) [decidable_rel r] [decidable_rel s] :
+ decidable_rel (prod.lex r s) :=
 λ p q, decidable_of_decidable_of_iff (by apply_instance) (lex_def r s).symm
 
 @[refl] lemma lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [is_refl α r] :
-  ∀ x, prod.lex r s x x
+ ∀ x, prod.lex r s x x
 | (x₁, x₂) := lex.left _ _ (refl _)
 
 instance is_refl_left {r : α → α → Prop} {s : β → β → Prop} [is_refl α r] :
-  is_refl (α × β) (lex r s) :=
+ is_refl (α × β) (lex r s) :=
 ⟨lex.refl_left _ _⟩
 
 @[refl] lemma lex.refl_right (r : α → α → Prop) (s : β → β → Prop) [is_refl β s] :
-  ∀ x, prod.lex r s x x
+ ∀ x, prod.lex r s x x
 | (x₁, x₂) := lex.right _ (refl _)
 
 instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [is_refl β s] :
-  is_refl (α × β) (lex r s) :=
+ is_refl (α × β) (lex r s) :=
 ⟨lex.refl_right _ _⟩
 
 instance is_irrefl [is_irrefl α r] [is_irrefl β s] : is_irrefl (α × β) (lex r s) :=
 ⟨by rintro ⟨i, a⟩ (⟨_, _, h⟩ | ⟨_, h⟩); exact irrefl _ h⟩
 
 @[trans] lemma lex.trans {r : α → α → Prop} {s : β → β → Prop} [is_trans α r] [is_trans β s] :
-  ∀ {x y z : α × β}, prod.lex r s x y → prod.lex r s y z → prod.lex r s x z
+ ∀ {x y z : α × β}, prod.lex r s x y → prod.lex r s y z → prod.lex r s x z
 | (x₁, x₂) (y₁, y₂) (z₁, z₂) (lex.left _ _ hxy₁) (lex.left _ _ hyz₁) :=
-    lex.left _ _ (trans hxy₁ hyz₁)
+ lex.left _ _ (trans hxy₁ hyz₁)
 | (x₁, x₂) (y₁, y₂) (z₁, z₂) (lex.left _ _ hxy₁) (lex.right _ hyz₂) := lex.left _ _ hxy₁
 | (x₁, x₂) (y₁, y₂) (z₁, z₂) (lex.right _ _) (lex.left _ _ hyz₁) := lex.left _ _ hyz₁
 | (x₁, x₂) (y₁, y₂) (z₁, z₂) (lex.right _ hxy₂) (lex.right _ hyz₂) := lex.right _ (trans hxy₂ hyz₂)
 
 instance {r : α → α → Prop} {s : β → β → Prop} [is_trans α r] [is_trans β s] :
-  is_trans (α × β) (lex r s) :=
+ is_trans (α × β) (lex r s) :=
 ⟨λ _ _ _, lex.trans⟩
 
 instance {r : α → α → Prop} {s : β → β → Prop} [is_strict_order α r] [is_antisymm β s] :
-  is_antisymm (α × β) (lex r s) :=
+ is_antisymm (α × β) (lex r s) :=
 ⟨λ x₁ x₂ h₁₂ h₂₁, match x₁, x₂, h₁₂, h₂₁ with
-  | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.left _ _ hr₂ := (irrefl a₁ (trans hr₁ hr₂)).elim
-  | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.right _ _ := (irrefl _ hr₁).elim
-  | (a₁, b₁), (a₂, b₂), lex.right _ _, lex.left _ _ hr₂ := (irrefl _ hr₂).elim
-  | (a₁, b₁), (a₂, b₂), lex.right _ hs₁, lex.right _ hs₂ := antisymm hs₁ hs₂ ▸ rfl
+ | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.left _ _ hr₂ := (irrefl a₁ (trans hr₁ hr₂)).elim
+ | (a₁, b₁), (a₂, b₂), lex.left _ _ hr₁, lex.right _ _ := (irrefl _ hr₁).elim
+ | (a₁, b₁), (a₂, b₂), lex.right _ _, lex.left _ _ hr₂ := (irrefl _ hr₂).elim
+ | (a₁, b₁), (a₂, b₂), lex.right _ hs₁, lex.right _ hs₂ := antisymm hs₁ hs₂ ▸ rfl
 end⟩
 
 instance is_total_left {r : α → α → Prop} {s : β → β → Prop} [is_total α r] :
-  is_total (α × β) (lex r s) :=
+ is_total (α × β) (lex r s) :=
 ⟨λ ⟨a₁, b₁⟩ ⟨a₂, b₂⟩, (is_total.total a₁ a₂).imp (lex.left _ _) (lex.left _ _)⟩
 
 instance is_total_right {r : α → α → Prop} {s : β → β → Prop} [is_trichotomous α r] [is_total β s] :
-  is_total (α × β) (lex r s) :=
+ is_total (α × β) (lex r s) :=
 ⟨λ ⟨i, a⟩ ⟨j, b⟩, begin
-  obtain hij | rfl | hji := trichotomous_of r i j,
-  { exact or.inl (lex.left _ _ hij) },
-  { exact (total_of (s) a b).imp (lex.right _) (lex.right _), },
-  { exact or.inr (lex.left _ _ hji) }
+ obtain hij | rfl | hji := trichotomous_of r i j,
+ { exact or.inl (lex.left _ _ hij) },
+ { exact (total_of (s) a b).imp (lex.right _) (lex.right _), },
+ { exact or.inr (lex.left _ _ hji) }
 end⟩
 
 instance is_trichotomous [is_trichotomous α r] [is_trichotomous β s] :
-  is_trichotomous (α × β) (lex r s) :=
+ is_trichotomous (α × β) (lex r s) :=
 ⟨λ ⟨i, a⟩ ⟨j, b⟩, begin
-  obtain hij | rfl | hji := trichotomous_of r i j,
-  { exact or.inl (lex.left _ _ hij) },
-  { exact (trichotomous_of s a b).imp3 (lex.right _) (congr_arg _) (lex.right _) },
-  { exact or.inr (or.inr $ lex.left _ _ hji) }
+ obtain hij | rfl | hji := trichotomous_of r i j,
+ { exact or.inl (lex.left _ _ hij) },
+ { exact (trichotomous_of s a b).imp3 (lex.right _) (congr_arg _) (lex.right _) },
+ { exact or.inr (or.inr $ lex.left _ _ hji) }
 end⟩
 
 end prod
@@ -250,15 +250,15 @@ lemma bijective.prod_map (hf : bijective f) (hg : bijective g) : bijective (map 
 ⟨hf.1.prod_map hg.1, hf.2.prod_map hg.2⟩
 
 lemma left_inverse.prod_map (hf : left_inverse f₁ f₂) (hg : left_inverse g₁ g₂) :
-  left_inverse (map f₁ g₁) (map f₂ g₂) :=
-λ a, by rw [prod.map_map, hf.comp_eq_id, hg.comp_eq_id, map_id, id]
+ left_inverse (map f₁ g₁) (map f₂ g₂) :=
+λ a, by rw [prod.map_map]; rw [ hf.comp_eq_id]; rw [ hg.comp_eq_id]; rw [ map_id]; rw [ id]
 
 lemma right_inverse.prod_map :
-  right_inverse f₁ f₂ → right_inverse g₁ g₂ → right_inverse (map f₁ g₁) (map f₂ g₂) :=
+ right_inverse f₁ f₂ → right_inverse g₁ g₂ → right_inverse (map f₁ g₁) (map f₂ g₂) :=
 left_inverse.prod_map
 
 lemma involutive.prod_map {f : α → α} {g : β → β} :
-  involutive f → involutive g → involutive (map f g) :=
+ involutive f → involutive g → involutive (map f g) :=
 left_inverse.prod_map
 
 end function
@@ -267,53 +267,54 @@ namespace prod
 open function
 
 @[simp] lemma map_injective [nonempty α] [nonempty β] {f : α → γ} {g : β → δ} :
-  injective (map f g) ↔ injective f ∧ injective g :=
+ injective (map f g) ↔ injective f ∧ injective g :=
 ⟨λ h, ⟨λ a₁ a₂ ha, begin
-  inhabit β,
-  injection @h (a₁, default) (a₂, default) (congr_arg (λ c : γ, prod.mk c (g default)) ha : _),
+ inhabit β,
+ injection @h (a₁, default) (a₂, default) (congr_arg (λ c : γ, prod.mk c (g default)) ha : _),
 end, λ b₁ b₂ hb, begin
-  inhabit α,
-  injection @h (default, b₁) (default, b₂) (congr_arg (prod.mk (f default)) hb : _),
+ inhabit α,
+ injection @h (default, b₁) (default, b₂) (congr_arg (prod.mk (f default)) hb : _),
 end⟩, λ h, h.1.prod_map h.2⟩
 
 @[simp] lemma map_surjective [nonempty γ] [nonempty δ] {f : α → γ} {g : β → δ} :
-  surjective (map f g) ↔ surjective f ∧ surjective g :=
+ surjective (map f g) ↔ surjective f ∧ surjective g :=
 ⟨λ h, ⟨λ c, begin
-  inhabit δ,
-  obtain ⟨⟨a, b⟩, h⟩ := h (c, default),
-  exact ⟨a, congr_arg prod.fst h⟩,
+ inhabit δ,
+ obtain ⟨⟨a, b⟩, h⟩ := h (c, default),
+ exact ⟨a, congr_arg prod.fst h⟩,
 end, λ d, begin
-  inhabit γ,
-  obtain ⟨⟨a, b⟩, h⟩ := h (default, d),
-  exact ⟨b, congr_arg prod.snd h⟩,
+ inhabit γ,
+ obtain ⟨⟨a, b⟩, h⟩ := h (default, d),
+ exact ⟨b, congr_arg prod.snd h⟩,
 end⟩, λ h, h.1.prod_map h.2⟩
 
 @[simp] lemma map_bijective [nonempty α] [nonempty β] {f : α → γ} {g : β → δ} :
-  bijective (map f g) ↔ bijective f ∧ bijective g :=
+ bijective (map f g) ↔ bijective f ∧ bijective g :=
 begin
-  haveI := nonempty.map f ‹_›,
-  haveI := nonempty.map g ‹_›,
-  exact (map_injective.and map_surjective).trans (and_and_and_comm _ _ _ _)
+ haveI := nonempty.map f ‹_›,
+ haveI := nonempty.map g ‹_›,
+ exact (map_injective.and map_surjective).trans (and_and_and_comm _ _ _ _)
 end
 
 @[simp] lemma map_left_inverse [nonempty β] [nonempty δ]
-  {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ} :
-  left_inverse (map f₁ g₁) (map f₂ g₂) ↔ left_inverse f₁ f₂ ∧ left_inverse g₁ g₂ :=
+ {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ} :
+ left_inverse (map f₁ g₁) (map f₂ g₂) ↔ left_inverse f₁ f₂ ∧ left_inverse g₁ g₂ :=
 ⟨λ h, ⟨λ b, begin
-  inhabit δ,
-  exact congr_arg prod.fst (h (b, default)),
+ inhabit δ,
+ exact congr_arg prod.fst (h (b, default)),
 end, λ d, begin
-  inhabit β,
-  exact congr_arg prod.snd (h (default, d)),
+ inhabit β,
+ exact congr_arg prod.snd (h (default, d)),
 end⟩, λ h, h.1.prod_map h.2⟩
 
 @[simp] lemma map_right_inverse [nonempty α] [nonempty γ]
-  {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ} :
-  right_inverse (map f₁ g₁) (map f₂ g₂) ↔ right_inverse f₁ f₂ ∧ right_inverse g₁ g₂ :=
+ {f₁ : α → β} {g₁ : γ → δ} {f₂ : β → α} {g₂ : δ → γ} :
+ right_inverse (map f₁ g₁) (map f₂ g₂) ↔ right_inverse f₁ f₂ ∧ right_inverse g₁ g₂ :=
 map_left_inverse
 
 @[simp] lemma map_involutive [nonempty α] [nonempty β] {f : α → α} {g : β → β} :
-  involutive (map f g) ↔ involutive f ∧ involutive g :=
+ involutive (map f g) ↔ involutive f ∧ involutive g :=
 map_left_inverse
 
 end prod
+

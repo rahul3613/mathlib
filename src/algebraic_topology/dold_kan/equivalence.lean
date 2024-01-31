@@ -148,22 +148,22 @@ the functor `idempotents.dold_kan.N` from the pseudoabelian case -/
 def comparison_N : (N : simplicial_object A ⥤ _) ≅ idempotents.dold_kan.N :=
 calc N ≅ N ⋙ 𝟭 _ : functor.left_unitor N
 ... ≅ N ⋙ ((to_karoubi_equivalence _).functor ⋙ (to_karoubi_equivalence _).inverse) :
-  iso_whisker_left _ (to_karoubi_equivalence _).unit_iso
+ iso_whisker_left _ (to_karoubi_equivalence _).unit_iso
 ... ≅ (N ⋙ (to_karoubi_equivalence _).functor) ⋙ (to_karoubi_equivalence _).inverse :
-  iso.refl _
+ iso.refl _
 ... ≅ N₁ ⋙ (to_karoubi_equivalence _).inverse : iso_whisker_right
-  (N₁_iso_normalized_Moore_complex_comp_to_karoubi A).symm _
+ (N₁_iso_normalized_Moore_complex_comp_to_karoubi A).symm _
 ... ≅ idempotents.dold_kan.N : by refl
 
 /-- The Dold-Kan equivalence for abelian categories -/
 @[simps functor]
 def equivalence : simplicial_object A ≌ chain_complex A ℕ :=
 begin
-  let F : simplicial_object A ⥤ _ := idempotents.dold_kan.N,
-  let hF : is_equivalence F := is_equivalence.of_equivalence idempotents.dold_kan.equivalence,
-  letI : is_equivalence (N : simplicial_object A ⥤ _ ) :=
-    is_equivalence.of_iso comparison_N.symm hF,
-  exact N.as_equivalence,
+ let F : simplicial_object A ⥤ _ := idempotents.dold_kan.N,
+ let hF : is_equivalence F := is_equivalence.of_equivalence idempotents.dold_kan.equivalence,
+ letI : is_equivalence (N : simplicial_object A ⥤ _ ) :=
+ is_equivalence.of_iso comparison_N.symm hF,
+ exact N.as_equivalence,
 end
 
 lemma equivalence_inverse : (equivalence : simplicial_object A ≌ _).inverse = Γ := rfl
@@ -173,3 +173,4 @@ end dold_kan
 end abelian
 
 end category_theory
+

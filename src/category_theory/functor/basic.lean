@@ -39,8 +39,8 @@ The axiom `map_id` expresses preservation of identities, and
 See <https://stacks.math.columbia.edu/tag/001B>.
 -/
 structure functor (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
-  extends prefunctor C D : Type (max v₁ v₂ u₁ u₂) :=
-(map_id'   : ∀ (X : C), map (𝟙 X) = 𝟙 (obj X) . obviously)
+ extends prefunctor C D : Type (max v₁ v₂ u₁ u₂) :=
+(map_id' : ∀ (X : C), map (𝟙 X) = 𝟙 (obj X) . obviously)
 (map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = (map f) ≫ (map g) . obviously)
 
 /-- The prefunctor between the underlying quivers. -/
@@ -50,7 +50,7 @@ end
 
 -- A functor is basically a function, so give ⥤ a similar precedence to → (25).
 -- For example, `C × D ⥤ E` should parse as `(C × D) ⥤ E` not `C × (D ⥤ E)`.
-infixr ` ⥤ `:26 := functor       -- type as \func --
+infixr ` ⥤ `:26 := functor -- type as \func --
 
 restate_axiom functor.map_id'
 attribute [simp] functor.map_id
@@ -66,7 +66,7 @@ variables (C : Type u₁) [category.{v₁} C]
 -- We don't use `@[simps]` here because we want `C` implicit for the simp lemmas.
 protected def id : C ⥤ C :=
 { obj := λ X, X,
-  map := λ _ _ f, f }
+ map := λ _ _ f, f }
 
 notation `𝟭` := functor.id -- Type this as `\sb1`
 
@@ -81,20 +81,20 @@ end
 
 section
 variables {C : Type u₁} [category.{v₁} C]
-          {D : Type u₂} [category.{v₂} D]
-          {E : Type u₃} [category.{v₃} E]
+ {D : Type u₂} [category.{v₂} D]
+ {E : Type u₃} [category.{v₃} E]
 
 /--
 `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
 @[simps obj] def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E :=
 { obj := λ X, G.obj (F.obj X),
-  map := λ _ _ f, G.map (F.map f) }
+ map := λ _ _ f, G.map (F.map f) }
 
 infixr ` ⋙ `:80 := comp
 
 @[simp] lemma comp_map (F : C ⥤ D) (G : D ⥤ E) {X Y : C} (f : X ⟶ Y) :
-  (F ⋙ G).map f = G.map (F.map f) := rfl
+ (F ⋙ G).map f = G.map (F.map f) := rfl
 
 -- These are not simp lemmas because rewriting along equalities between functors
 -- is not necessarily a good idea.
@@ -103,18 +103,18 @@ protected lemma comp_id (F : C ⥤ D) : F ⋙ (𝟭 D) = F := by cases F; refl
 protected lemma id_comp (F : C ⥤ D) : (𝟭 C) ⋙ F = F := by cases F; refl
 
 @[simp] lemma map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [decidable P]
-  (f : P → (X ⟶ Y)) (g : ¬P → (X ⟶ Y)) :
-  F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) :=
+ (f : P → (X ⟶ Y)) (g : ¬P → (X ⟶ Y)) :
+ F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) :=
 by { split_ifs; refl, }
 
 @[simp] lemma to_prefunctor_obj (F : C ⥤ D) (X : C) :
-  F.to_prefunctor.obj X = F.obj X := rfl
+ F.to_prefunctor.obj X = F.obj X := rfl
 
 @[simp] lemma to_prefunctor_map (F : C ⥤ D)
-  {X Y : C} (f : X ⟶ Y) : F.to_prefunctor.map f = F.map f := rfl
+ {X Y : C} (f : X ⟶ Y) : F.to_prefunctor.map f = F.map f := rfl
 
 @[simp] lemma to_prefunctor_comp (F : C ⥤ D) (G : D ⥤ E) :
-  F.to_prefunctor.comp G.to_prefunctor = (F ⋙ G).to_prefunctor := rfl
+ F.to_prefunctor.comp G.to_prefunctor = (F ⋙ G).to_prefunctor := rfl
 
 
 end
@@ -122,3 +122,4 @@ end
 end functor
 
 end category_theory
+

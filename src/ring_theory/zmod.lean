@@ -21,10 +21,8 @@ We collect a few facts about `zmod n` that need some ring theory to be proved/st
 -/
 
 @[simp] lemma is_reduced_zmod {n : ℕ} : is_reduced (zmod n) ↔ squarefree n ∨ n = 0 :=
-by rw [← ring_hom.ker_is_radical_iff_reduced_of_surjective
-    (zmod.ring_hom_surjective $ int.cast_ring_hom $ zmod n),
-  zmod.ker_int_cast_ring_hom, ← is_radical_iff_span_singleton,
-  is_radical_iff_squarefree_or_zero, int.squarefree_coe_nat, nat.cast_eq_zero]
+by rw [← ring_hom.ker_is_radical_iff_reduced_of_surjective (zmod.ring_hom_surjective $ int.cast_ring_hom $ zmod n)]; rw [ zmod.ker_int_cast_ring_hom]; rw [ ← is_radical_iff_span_singleton]; rw [ is_radical_iff_squarefree_or_zero]; rw [ int.squarefree_coe_nat]; rw [ nat.cast_eq_zero]
 
 instance {n : ℕ} [fact $ squarefree n] : is_reduced (zmod n) :=
 is_reduced_zmod.2 $ or.inl $ fact.out _
+

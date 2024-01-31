@@ -21,27 +21,28 @@ open set
 
 @[to_additive]
 lemma measurable_set.const_smul {G α : Type*} [group G] [mul_action G α] [measurable_space G]
-  [measurable_space α] [has_measurable_smul G α] {s : set α} (hs : measurable_set s) (a : G) :
-  measurable_set (a • s) :=
+ [measurable_space α] [has_measurable_smul G α] {s : set α} (hs : measurable_set s) (a : G) :
+ measurable_set (a • s) :=
 begin
-  rw ← preimage_smul_inv,
-  exact measurable_const_smul _ hs
+ rw ← preimage_smul_inv,
+ exact measurable_const_smul _ hs
 end
 
 lemma measurable_set.const_smul_of_ne_zero {G₀ α : Type*} [group_with_zero G₀] [mul_action G₀ α]
-  [measurable_space G₀] [measurable_space α] [has_measurable_smul G₀ α] {s : set α}
-  (hs : measurable_set s) {a : G₀} (ha : a ≠ 0) :
-  measurable_set (a • s) :=
+ [measurable_space G₀] [measurable_space α] [has_measurable_smul G₀ α] {s : set α}
+ (hs : measurable_set s) {a : G₀} (ha : a ≠ 0) :
+ measurable_set (a • s) :=
 begin
-  rw ← preimage_smul_inv₀ ha,
-  exact measurable_const_smul _ hs
+ rw ← preimage_smul_inv₀ ha,
+ exact measurable_const_smul _ hs
 end
 
 lemma measurable_set.const_smul₀ {G₀ α : Type*} [group_with_zero G₀] [has_zero α]
-  [mul_action_with_zero G₀ α] [measurable_space G₀] [measurable_space α] [has_measurable_smul G₀ α]
-  [measurable_singleton_class α] {s : set α} (hs : measurable_set s) (a : G₀) :
-  measurable_set (a • s) :=
+ [mul_action_with_zero G₀ α] [measurable_space G₀] [measurable_space α] [has_measurable_smul G₀ α]
+ [measurable_singleton_class α] {s : set α} (hs : measurable_set s) (a : G₀) :
+ measurable_set (a • s) :=
 begin
-  rcases eq_or_ne a 0 with (rfl|ha),
-  exacts [(subsingleton_zero_smul_set s).measurable_set, hs.const_smul_of_ne_zero ha]
+ rcases eq_or_ne a 0 with (rfl|ha),
+ exacts [(subsingleton_zero_smul_set s).measurable_set, hs.const_smul_of_ne_zero ha]
 end
+

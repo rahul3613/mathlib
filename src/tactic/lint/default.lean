@@ -24,9 +24,9 @@ User commands to spot common mistakes in the code
 
 * `#lint`: check all declarations in the current file
 * `#lint_mathlib`: check all declarations in mathlib (so excluding core or other projects,
-  and also excluding the current file)
+ and also excluding the current file)
 * `#lint_all`: check all declarations in the environment (the current file and all
-  imported files)
+ imported files)
 
 The following linters are run by default:
 1. `unused_arguments` checks for unused arguments in declarations.
@@ -35,25 +35,25 @@ The following linters are run by default:
 4. `ge_or_gt` checks whether ≥/> is used in the declaration.
 5. `instance_priority` checks that instances that always apply have priority below default.
 6. `doc_blame` checks for missing doc strings on definitions and constants.
-7.  `has_nonempty_instance` checks whether every type has an associated `inhabited`, `unique`
-    or `nonempty` instance.
-8.  `impossible_instance` checks for instances that can never fire.
-9.  `incorrect_type_class_argument` checks for arguments in [square brackets] that are not classes.
+7. `has_nonempty_instance` checks whether every type has an associated `inhabited`, `unique`
+ or `nonempty` instance.
+8. `impossible_instance` checks for instances that can never fire.
+9. `incorrect_type_class_argument` checks for arguments in [square brackets] that are not classes.
 10. `dangerous_instance` checks for instances that generate type-class problems with metavariables.
 11. `fails_quickly` tests that type-class inference ends (relatively) quickly when applied to
-    variables.
+ variables.
 12. `has_coe_variable` tests that there are no instances of type `has_coe α t` for a variable `α`.
 13. `inhabited_nonempty` checks for `inhabited` instance arguments that should be changed to
-    `nonempty`.
+ `nonempty`.
 14. `simp_nf` checks that the left-hand side of simp lemmas is in simp-normal form.
 15. `simp_var_head` checks that there are no variables as head symbol of left-hand sides of
-    simp lemmas.
+ simp lemmas.
 16. `simp_comm` checks that no commutativity lemmas (such as `add_comm`) are marked simp.
 17. `decidable_classical` checks for `decidable` hypotheses that are used in the proof of a
-    proposition but not in the statement, and could be removed using `classical`.
-    Theorems in the `decidable` namespace are exempt.
+ proposition but not in the statement, and could be removed using `classical`.
+ Theorems in the `decidable` namespace are exempt.
 18. `has_coe_to_fun` checks that every type that coerces to a function has a direct
-    `has_coe_to_fun` instance.
+ `has_coe_to_fun` instance.
 19. `check_type` checks that the statement of a declaration is well-typed.
 20. `check_univs` checks that there are no bad `max u v` universe levels.
 21. `syn_taut` checks that declarations are not syntactic tautologies.
@@ -74,7 +74,7 @@ that suppresses the output if all checks pass.
 A silent lint will fail if any test fails.
 
 You can append a `+` to any command (e.g. `#lint_mathlib+`) to run a verbose lint
-that reports the result of each linter, including  the successes.
+that reports the result of each linter, including the successes.
 
 You can append a sequence of linter names to any command to run extra tests, in addition to the
 default ones. e.g. `#lint doc_blame_thm` will run all default tests and `doc_blame_thm`.
@@ -91,14 +91,15 @@ Adding the attribute `@[nolint doc_blame unused_arguments]` to a declaration
 omits it from only the specified linter checks.
 -/
 add_tactic_doc
-{ name                     := "linting commands",
-  category                 := doc_category.cmd,
-  decl_names               := [`lint_cmd, `lint_mathlib_cmd, `lint_all_cmd, `list_linters],
-  tags                     := ["linting"] }
+{ name := "linting commands",
+ category := doc_category.cmd,
+ decl_names := [`lint_cmd, `lint_mathlib_cmd, `lint_all_cmd, `list_linters],
+ tags := ["linting"] }
 
 /-- The default linters used in mathlib CI. -/
 meta def mathlib_linters : list name := by do
 ls ← get_checks tt [] ff,
 let ls := ls.map (λ ⟨n, _⟩, `linter ++ n) ++
-  [`assert_not_exists.linter, `assert_no_instance.linter],
+ [`assert_not_exists.linter, `assert_no_instance.linter],
 exact (reflect ls)
+

@@ -21,10 +21,10 @@ It also contains several examples:
 
 ## Examples
 
-- `fin_encoding_nat_bool`   : a binary encoding of ℕ in a simple alphabet.
-- `fin_encoding_nat_Γ'`    : a binary encoding of ℕ in the alphabet used for TM's.
+- `fin_encoding_nat_bool` : a binary encoding of ℕ in a simple alphabet.
+- `fin_encoding_nat_Γ'` : a binary encoding of ℕ in the alphabet used for TM's.
 - `unary_fin_encoding_nat` : a unary encoding of ℕ
-- `fin_encoding_bool_bool`  : an encoding of bool.
+- `fin_encoding_bool_bool` : an encoding of bool.
 -/
 
 universes u v
@@ -40,10 +40,10 @@ structure encoding (α : Type u) :=
 (decode_encode : ∀ x, decode (encode x) = some x)
 
 lemma encoding.encode_injective {α : Type u} (e : encoding α) :
-  function.injective e.encode :=
+ function.injective e.encode :=
 begin
-  refine λ _ _ h, option.some_injective _ _,
-  rw [← e.decode_encode, ← e.decode_encode, h],
+ refine λ _ _ h, option.some_injective _ _,
+ rw [← e.decode_encode]; rw [ ← e.decode_encode]; rw [ h],
 end
 
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
@@ -51,7 +51,7 @@ structure fin_encoding (α : Type u) extends encoding.{u 0} α :=
 (Γ_fin : fintype Γ)
 
 instance {α : Type u} (e : fin_encoding α) :
-  fintype e.to_encoding.Γ :=
+ fintype e.to_encoding.Γ :=
 e.Γ_fin
 
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
@@ -106,37 +106,37 @@ pos_num.cases_on n (list.cons_ne_nil _ _) (λ m, list.cons_ne_nil _ _) (λ m, li
 
 lemma decode_encode_pos_num : ∀ n, decode_pos_num(encode_pos_num n) = n :=
 begin
-  intros n,
-  induction n with m hm m hm; unfold encode_pos_num decode_pos_num,
-  { refl },
-  { rw hm,
-    exact if_neg (encode_pos_num_nonempty m) },
-  { exact congr_arg pos_num.bit0 hm }
+ intros n,
+ induction n with m hm m hm; unfold encode_pos_num decode_pos_num,
+ { refl },
+ { rw hm,
+ exact if_neg (encode_pos_num_nonempty m) },
+ { exact congr_arg pos_num.bit0 hm }
 end
 
 lemma decode_encode_num : ∀ n, decode_num(encode_num n) = n :=
 begin
-  intros n,
-  cases n; unfold encode_num decode_num,
-  { refl },
-  rw decode_encode_pos_num n,
-  rw pos_num.cast_to_num,
-  exact if_neg (encode_pos_num_nonempty n),
+ intros n,
+ cases n; unfold encode_num decode_num,
+ { refl },
+ rw decode_encode_pos_num n,
+ rw pos_num.cast_to_num,
+ exact if_neg (encode_pos_num_nonempty n),
 end
 
 lemma decode_encode_nat : ∀ n, decode_nat(encode_nat n) = n :=
 begin
-  intro n,
-  conv_rhs {rw ← num.to_of_nat n},
-  exact congr_arg coe (decode_encode_num ↑n),
+ intro n,
+ conv_rhs {rw ← num.to_of_nat n},
+ exact congr_arg coe (decode_encode_num ↑n),
 end
 
 /-- A binary encoding of ℕ in bool. -/
 def encoding_nat_bool : encoding ℕ :=
 { Γ := bool,
-  encode := encode_nat,
-  decode := λ n, some (decode_nat n),
-  decode_encode := λ n, congr_arg _ (decode_encode_nat n) }
+ encode := encode_nat,
+ decode := λ n, some (decode_nat n),
+ decode_encode := λ n, congr_arg _ (decode_encode_nat n) }
 
 /-- A binary fin_encoding of ℕ in bool. -/
 def fin_encoding_nat_bool : fin_encoding ℕ := ⟨encoding_nat_bool, bool.fintype⟩
@@ -144,10 +144,10 @@ def fin_encoding_nat_bool : fin_encoding ℕ := ⟨encoding_nat_bool, bool.finty
 /-- A binary encoding of ℕ in Γ'. -/
 def encoding_nat_Γ' : encoding ℕ :=
 { Γ := Γ',
-  encode := λ x, list.map inclusion_bool_Γ' (encode_nat x),
-  decode := λ x, some (decode_nat (list.map section_Γ'_bool x)),
-  decode_encode := λ x, congr_arg _ $
-    by rw [list.map_map, list.map_id' left_inverse_section_inclusion, decode_encode_nat] }
+ encode := λ x, list.map inclusion_bool_Γ' (encode_nat x),
+ decode := λ x, some (decode_nat (list.map section_Γ'_bool x)),
+ decode_encode := λ x, congr_arg _ $
+ by rw [list.map_map]; rw [ list.map_id' left_inverse_section_inclusion]; rw [ decode_encode_nat] }
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
 def fin_encoding_nat_Γ' : fin_encoding ℕ := ⟨encoding_nat_Γ', Γ'.fintype⟩
@@ -166,10 +166,10 @@ lemma unary_decode_encode_nat : ∀ n, unary_decode_nat (unary_encode_nat n) = n
 /-- A unary fin_encoding of ℕ. -/
 def unary_fin_encoding_nat : fin_encoding ℕ :=
 { Γ := bool,
-  encode := unary_encode_nat,
-  decode := λ n, some (unary_decode_nat n),
-  decode_encode := λ n, congr_arg _ (unary_decode_encode_nat n),
-  Γ_fin := bool.fintype}
+ encode := unary_encode_nat,
+ decode := λ n, some (unary_decode_nat n),
+ decode_encode := λ n, congr_arg _ (unary_decode_encode_nat n),
+ Γ_fin := bool.fintype}
 
 /-- An encoding function of bool in bool. -/
 def encode_bool : bool → list bool := list.ret
@@ -184,32 +184,33 @@ lemma decode_encode_bool : ∀ b, decode_bool(encode_bool b) = b := λ b, bool.c
 /-- A fin_encoding of bool in bool. -/
 def fin_encoding_bool_bool : fin_encoding bool :=
 { Γ := bool,
-  encode := encode_bool,
-  decode := λ x, some (decode_bool x),
-  decode_encode := λ x, congr_arg _ (decode_encode_bool x),
-  Γ_fin := bool.fintype }
+ encode := encode_bool,
+ decode := λ x, some (decode_bool x),
+ decode_encode := λ x, congr_arg _ (decode_encode_bool x),
+ Γ_fin := bool.fintype }
 
 instance inhabited_fin_encoding : inhabited (fin_encoding bool) := ⟨fin_encoding_bool_bool⟩
 
 instance inhabited_encoding : inhabited (encoding bool) := ⟨fin_encoding_bool_bool.to_encoding⟩
 
 lemma encoding.card_le_card_list {α : Type u} (e : encoding.{u v} α) :
-  cardinal.lift.{v} (# α) ≤ cardinal.lift.{u} (# (list e.Γ)) :=
+ cardinal.lift.{v} (# α) ≤ cardinal.lift.{u} (# (list e.Γ)) :=
 (cardinal.lift_mk_le').2 ⟨⟨e.encode, e.encode_injective⟩⟩
 
 lemma encoding.card_le_aleph_0 {α : Type u} (e : encoding.{u v} α) [encodable e.Γ] : #α ≤ ℵ₀ :=
 begin
-  refine cardinal.lift_le.1 (e.card_le_card_list.trans _),
-  simp only [cardinal.lift_aleph_0, cardinal.lift_le_aleph_0],
-  casesI is_empty_or_nonempty e.Γ with h h,
-  { simp only [cardinal.mk_le_aleph_0] },
-  { rw cardinal.mk_list_eq_aleph_0 }
+ refine cardinal.lift_le.1 (e.card_le_card_list.trans _),
+ simp only [cardinal.lift_aleph_0, cardinal.lift_le_aleph_0],
+ casesI is_empty_or_nonempty e.Γ with h h,
+ { simp only [cardinal.mk_le_aleph_0] },
+ { rw cardinal.mk_list_eq_aleph_0 }
 end
 
 lemma fin_encoding.card_le_aleph_0 {α : Type u} (e : fin_encoding α) : #α ≤ ℵ₀ :=
 begin
-  haveI : encodable e.Γ := fintype.to_encodable _,
-  exact e.to_encoding.card_le_aleph_0
+ haveI : encodable e.Γ := fintype.to_encodable _,
+ exact e.to_encoding.card_le_aleph_0
 end
 
 end computability
+

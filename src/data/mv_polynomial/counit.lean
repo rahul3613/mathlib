@@ -20,7 +20,7 @@ obtained by `X a ↦ a`.
 ### Main declarations
 
 * `mv_polynomial.acounit R A` is the natural surjective algebra homomorphism
-  `mv_polynomial A R →ₐ[R] A` obtained by `X a ↦ a`
+ `mv_polynomial A R →ₐ[R] A` obtained by `X a ↦ a`
 * `mv_polynomial.counit` is an “absolute” variant with `R = ℤ`
 * `mv_polynomial.counit_nat` is an “absolute” variant with `R = ℕ`
 
@@ -80,3 +80,4 @@ variables {R A}
 @[simp] lemma counit_nat_X (a : A) : counit_nat A (X a) = a := acounit_X _ _
 
 end mv_polynomial
+

@@ -26,20 +26,20 @@ variables [field K]
 /-- A natural number `t` is invertible in a field `K` if the charactistic of `K` does not divide
 `t`. -/
 def invertible_of_ring_char_not_dvd
-  {t : ℕ} (not_dvd : ¬(ring_char K ∣ t)) : invertible (t : K) :=
+ {t : ℕ} (not_dvd : ¬(ring_char K ∣ t)) : invertible (t : K) :=
 invertible_of_nonzero (λ h, not_dvd ((ring_char.spec K t).mp h))
 
 lemma not_ring_char_dvd_of_invertible {t : ℕ} [invertible (t : K)] :
-  ¬(ring_char K ∣ t) :=
+ ¬(ring_char K ∣ t) :=
 begin
-  rw [← ring_char.spec, ← ne.def],
-  exact nonzero_of_invertible (t : K)
+ rw [← ring_char.spec]; rw [ ← ne.def],
+ exact nonzero_of_invertible (t : K)
 end
 
 /-- A natural number `t` is invertible in a field `K` of charactistic `p` if `p` does not divide
 `t`. -/
 def invertible_of_char_p_not_dvd {p : ℕ} [char_p K p]
-  {t : ℕ} (not_dvd : ¬(p ∣ t)) : invertible (t : K) :=
+ {t : ℕ} (not_dvd : ¬(p ∣ t)) : invertible (t : K) :=
 invertible_of_nonzero (λ h, not_dvd ((char_p.cast_eq_zero_iff K p t).mp h))
 
 -- warning: this could potentially loop with `ne_zero.invertible` - if there is weird type-class
@@ -67,3 +67,4 @@ instance invertible_three : invertible (3 : K) :=
 invertible_of_nonzero (by exact_mod_cast (dec_trivial : 3 ≠ 0))
 
 end division_ring
+

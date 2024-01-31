@@ -26,7 +26,7 @@ variables {α : Type u} {β : Type v} {δ : Type w}
 
 /-- Prepend an element to a stream. -/
 def cons (a : α) (s : stream α) : stream α
-| 0       := a
+| 0 := a
 | (n + 1) := s n
 
 notation (name := stream.cons) h :: t := cons h t
@@ -96,17 +96,17 @@ corec g f a
 /-- Interleave two streams. -/
 def interleave (s₁ s₂ : stream α) : stream α :=
 corec_on (s₁, s₂)
-  (λ ⟨s₁, s₂⟩, head s₁)
-  (λ ⟨s₁, s₂⟩, (s₂, tail s₁))
+ (λ ⟨s₁, s₂⟩, head s₁)
+ (λ ⟨s₁, s₂⟩, (s₂, tail s₁))
 
 infix ` ⋈ `:65 := interleave
 
 /-- Elements of a stream with even indices. -/
 def even (s : stream α) : stream α :=
 corec
-  (λ s, head s)
-  (λ s, tail (tail s))
-  s
+ (λ s, head s)
+ (λ s, tail (tail s))
+ s
 
 /-- Elements of a stream with odd indices. -/
 def odd (s : stream α) : stream α :=
@@ -114,14 +114,14 @@ even (tail s)
 
 /-- Append a stream to a list. -/
 def append_stream : list α → stream α → stream α
-| []              s := s
+| [] s := s
 | (list.cons a l) s := a :: append_stream l s
 
 infix ` ++ₛ `:65 := append_stream
 
 /-- `take n s` returns a list of the `n` first elements of stream `s` -/
 def take : ℕ → stream α → list α
-| 0     s := []
+| 0 s := []
 | (n+1) s := list.cons (head s) (take n (tail s))
 
 /-- An auxiliary definition for `stream.cycle` corecursive def -/
@@ -130,12 +130,12 @@ protected def cycle_f : α × list α × α × list α → α
 
 /-- An auxiliary definition for `stream.cycle` corecursive def -/
 protected def cycle_g : α × list α × α × list α → α × list α × α × list α
-| (v₁, [],              v₀, l₀) := (v₀, l₀, v₀, l₀)
+| (v₁, [], v₀, l₀) := (v₀, l₀, v₀, l₀)
 | (v₁, list.cons v₂ l₂, v₀, l₀) := (v₂, l₂, v₀, l₀)
 
 /-- Interpret a nonempty list as a cyclic stream. -/
 def cycle : Π (l : list α), l ≠ [] → stream α
-| []              h := absurd rfl h
+| [] h := absurd rfl h
 | (list.cons a l) h := corec stream.cycle_f stream.cycle_g (a, l, a, l)
 
 /-- Tails of a stream, starting with `stream.tail s`. -/
@@ -145,8 +145,8 @@ corec id tail (tail s)
 /-- An auxiliary definition for `stream.inits`. -/
 def inits_core (l : list α) (s : stream α) : stream (list α) :=
 corec_on (l, s)
-  (λ ⟨a, b⟩, a)
-  (λ p, match p with (l', s') := (l' ++ [head s'], tail s') end)
+ (λ ⟨a, b⟩, a)
+ (λ p, match p with (l', s') := (l' ++ [head s'], tail s') end)
 
 /-- Nonempty initial segments of a stream. -/
 def inits (s : stream α) : stream (list α) :=
@@ -160,10 +160,11 @@ const a
 def apply (f : stream (α → β)) (s : stream α) : stream β :=
 λ n, (nth f n) (nth s n)
 
-infix ` ⊛ `:75 := apply  -- input as \o*
+infix ` ⊛ `:75 := apply -- input as \o*
 
 /-- The stream of natural numbers: `stream.nth n stream.nats = n`. -/
 def nats : stream nat :=
 λ n, n
 
 end stream
+

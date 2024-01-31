@@ -58,23 +58,23 @@ The `testable` instance is supported by instances of `sampleable (list ℕ)`,
 
 ```
 - testable (∀ (xs : list ℕ), (∃ x ∈ xs, x < 3) → (∀ y ∈ xs, y < 5))
-                                     -: sampleable (list xs)
+ -: sampleable (list xs)
 - testable ((∃ x ∈ xs, x < 3) → (∀ y ∈ xs, y < 5))
 - testable (∀ x ∈ xs, x < 3 → (∀ y ∈ xs, y < 5))
 - testable (x < 3 → (∀ y ∈ xs, y < 5))
-                                     -: decidable (x < 3)
+ -: decidable (x < 3)
 - testable (∀ y ∈ xs, y < 5)
-                                     -: decidable (y < 5)
+ -: decidable (y < 5)
 ```
 
 `sampleable (list ℕ)` lets us create random data of type `list ℕ` in a way that
-helps find small counter-examples.  Next, the test of the proposition
+helps find small counter-examples. Next, the test of the proposition
 hinges on `x < 3` and `y < 5` to both be decidable. The
 implication between the two could be tested as a whole but it would be
 less informative. Indeed, if we generate lists that only contain numbers
 greater than `3`, the implication will always trivially hold but we should
 conclude that we haven't found meaningful examples. Instead, when `x < 3`
-does not hold, we reject the example (i.e.  we do not count it toward
+does not hold, we reject the example (i.e. we do not count it toward
 the 100 required positive examples) and we start over. Therefore, when
 `slim_check` prints `Success`, it means that a hundred suitable lists
 were found and successfully tested.
@@ -119,21 +119,21 @@ name of the `testable` instances that it is built from
 and the proposition that they test. -/
 meta def summarize_instance : expr → tactic instance_tree
 | (lam n bi d b) := do
-   v ← mk_local' n bi d,
-   summarize_instance $ b.instantiate_var v
+ v ← mk_local' n bi d,
+ summarize_instance $ b.instantiate_var v
 | e@(app f x) := do
-   `(testable %%p) ← infer_type e,
-   xs ← e.get_app_args.mmap_filter (try_core ∘ summarize_instance),
-   pure $ instance_tree.node e.get_app_fn.const_name p xs
+ `(testable %%p) ← infer_type e,
+ xs ← e.get_app_args.mmap_filter (try_core ∘ summarize_instance),
+ pure $ instance_tree.node e.get_app_fn.const_name p xs
 | e := do
-  failed
+ failed
 
 /-- format a `instance_tree` -/
 meta def instance_tree.to_format : instance_tree → tactic format
 | (instance_tree.node n p xs) := do
-  xs ← format.join <$> (xs.mmap $ λ t, flip format.indent 2 <$> instance_tree.to_format t),
-  ys ← pformat!"testable ({p})",
-  pformat!"+ {n} :{format.indent ys 2}\n{xs}"
+ xs ← format.join <$> (xs.mmap $ λ t, flip format.indent 2 <$> instance_tree.to_format t),
+ ys ← pformat!"testable ({p})",
+ pformat!"+ {n} :{format.indent ys 2}\n{xs}"
 
 meta instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
 ⟨ instance_tree.to_format ⟩
@@ -183,34 +183,34 @@ Optional arguments given with `slim_check_cfg`
 Options:
 * `set_option trace.slim_check.decoration true`: print the proposition with quantifier annotations
 * `set_option trace.slim_check.discarded true`: print the examples discarded because they do not
-  satisfy assumptions
+ satisfy assumptions
 * `set_option trace.slim_check.shrink.steps true`: trace the shrinking of counter-example
 * `set_option trace.slim_check.shrink.candidates true`: print the lists of candidates considered
-  when shrinking each variable
+ when shrinking each variable
 * `set_option trace.slim_check.instance true`: print the instances of `testable` being used to test
-  the proposition
+ the proposition
 * `set_option trace.slim_check.success true`: print the tested samples that satisfy a property
 -/
 meta def slim_check (cfg : slim_check_cfg := {}) : tactic unit := do
 { tgt ← retrieve $ tactic.revert_all >> target,
-  let tgt' := tactic.add_decorations tgt,
-  let cfg := { cfg with
-               trace_discarded         := cfg.trace_discarded
-                || is_trace_enabled_for `slim_check.discarded,
-               trace_shrink            := cfg.trace_shrink
-                || is_trace_enabled_for `slim_check.shrink.steps,
-               trace_shrink_candidates := cfg.trace_shrink_candidates
-                || is_trace_enabled_for `slim_check.shrink.candidates,
-               trace_success           := cfg.trace_success
-                || is_trace_enabled_for `slim_check.success },
-  inst ← mk_app ``testable [tgt'] >>= mk_instance <|>
-    fail!("Failed to create a `testable` instance for `{tgt}`.
+ let tgt' := tactic.add_decorations tgt,
+ let cfg := { cfg with
+ trace_discarded := cfg.trace_discarded
+ || is_trace_enabled_for `slim_check.discarded,
+ trace_shrink := cfg.trace_shrink
+ || is_trace_enabled_for `slim_check.shrink.steps,
+ trace_shrink_candidates := cfg.trace_shrink_candidates
+ || is_trace_enabled_for `slim_check.shrink.candidates,
+ trace_success := cfg.trace_success
+ || is_trace_enabled_for `slim_check.success },
+ inst ← mk_app ``testable [tgt'] >>= mk_instance <|>
+ fail!("Failed to create a `testable` instance for `{tgt}`.
 What to do:
 1. make sure that the types you are using have `slim_check.sampleable` instances
-   (you can use `#sample my_type` if you are unsure);
+ (you can use `#sample my_type` if you are unsure);
 2. make sure that the relations and predicates that your proposition use are decidable;
 3. make sure that instances of `slim_check.testable` exist that, when combined,
-   apply to your decorated proposition:
+ apply to your decorated proposition:
 ```
 {tgt'}
 ```
@@ -220,13 +220,14 @@ Use `set_option trace.class_instances true` to understand what instances are mis
 Try this:
 set_option trace.class_instances true
 #check (by apply_instance : slim_check.testable ({tgt'}))"),
-  e ← mk_mapp ``testable.check [tgt, `(cfg), tgt', inst],
-  when_tracing `slim_check.decoration trace!"[testable decoration]\n  {tgt'}",
-  when_tracing `slim_check.instance   $ do
-  { inst ← summarize_instance inst >>= pp,
-    trace!"\n[testable instance]{format.indent inst 2}" },
-  code ← eval_expr (io punit) e,
-  unsafe_run_io code,
-  tactic.admit }
+ e ← mk_mapp ``testable.check [tgt, `(cfg), tgt', inst],
+ when_tracing `slim_check.decoration trace!"[testable decoration]\n {tgt'}",
+ when_tracing `slim_check.instance $ do
+ { inst ← summarize_instance inst >>= pp,
+ trace!"\n[testable instance]{format.indent inst 2}" },
+ code ← eval_expr (io punit) e,
+ unsafe_run_io code,
+ tactic.admit }
 
 end tactic.interactive
+

@@ -32,10 +32,10 @@ Instances of these typeclasses mostly involving `ring_hom.id` are also provided:
 ## Implementation notes
 
 * For the typeclass `ring_hom_inv_pair σ₁₂ σ₂₁`, `σ₂₁` is marked as an `out_param`,
-  as it must typically be found via the typeclass inference system.
+ as it must typically be found via the typeclass inference system.
 
 * Likewise, for `ring_hom_comp_triple σ₁₂ σ₂₃ σ₁₃`, `σ₁₃` is marked as an `out_param`,
-  for the same reason.
+ for the same reason.
 
 ## Tags
 
@@ -48,7 +48,7 @@ variables [semiring R₁] [semiring R₂] [semiring R₃]
 /-- Class that expresses the fact that three ring homomorphisms form a composition triple. This is
 used to handle composition of semilinear maps. -/
 class ring_hom_comp_triple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃)
-  (σ₁₃ : out_param (R₁ →+* R₃)) : Prop :=
+ (σ₁₃ : out_param (R₁ →+* R₃)) : Prop :=
 (comp_eq : σ₂₃.comp σ₁₂ = σ₁₃)
 
 attribute [simp] ring_hom_comp_triple.comp_eq
@@ -58,7 +58,7 @@ variables {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : 
 namespace ring_hom_comp_triple
 
 @[simp] lemma comp_apply [ring_hom_comp_triple σ₁₂ σ₂₃ σ₁₃] {x : R₁} :
-  σ₂₃ (σ₁₂ x) = σ₁₃ x :=
+ σ₂₃ (σ₁₂ x) = σ₁₃ x :=
 ring_hom.congr_fun comp_eq x
 
 end ring_hom_comp_triple
@@ -79,18 +79,18 @@ namespace ring_hom_inv_pair
 variables [ring_hom_inv_pair σ σ']
 
 @[simp] lemma comp_apply_eq {x : R₁} : σ' (σ x) = x :=
-by { rw [← ring_hom.comp_apply, comp_eq], simp }
+by { rw [← ring_hom.comp_apply]; rw [ comp_eq], simp }
 
 @[simp] lemma comp_apply_eq₂ {x : R₂} : σ (σ' x) = x :=
-by { rw [← ring_hom.comp_apply, comp_eq₂], simp }
+by { rw [← ring_hom.comp_apply]; rw [ comp_eq₂], simp }
 
 instance ids : ring_hom_inv_pair (ring_hom.id R₁) (ring_hom.id R₁) := ⟨rfl, rfl⟩
 instance triples {σ₂₁ : R₂ →+* R₁} [ring_hom_inv_pair σ₁₂ σ₂₁] :
-  ring_hom_comp_triple σ₁₂ σ₂₁ (ring_hom.id R₁) :=
+ ring_hom_comp_triple σ₁₂ σ₂₁ (ring_hom.id R₁) :=
 ⟨by simp only [comp_eq]⟩
 
 instance triples₂ {σ₂₁ : R₂ →+* R₁} [ring_hom_inv_pair σ₁₂ σ₂₁] :
-  ring_hom_comp_triple σ₂₁ σ₁₂ (ring_hom.id R₂) :=
+ ring_hom_comp_triple σ₂₁ σ₁₂ (ring_hom.id R₂) :=
 ⟨by simp only [comp_eq₂]⟩
 
 /--
@@ -103,7 +103,7 @@ See note [reducible non-instances].
 -/
 @[reducible]
 lemma of_ring_equiv (e : R₁ ≃+* R₂) :
-  ring_hom_inv_pair (↑e : R₁ →+* R₂) ↑e.symm :=
+ ring_hom_inv_pair (↑e : R₁ →+* R₂) ↑e.symm :=
 ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
 
 /--
@@ -115,7 +115,7 @@ See note [reducible non-instances].
 -/
 @[reducible]
 lemma symm (σ₁₂ : R₁ →+* R₂) (σ₂₁ : R₂ →+* R₁) [ring_hom_inv_pair σ₁₂ σ₂₁] :
-  ring_hom_inv_pair σ₂₁ σ₁₂ :=
+ ring_hom_inv_pair σ₂₁ σ₁₂ :=
 ⟨ring_hom_inv_pair.comp_eq₂, ring_hom_inv_pair.comp_eq⟩
 
 end ring_hom_inv_pair
@@ -139,17 +139,18 @@ namespace ring_hom_surjective
 
 -- The linter gives a false positive, since `σ₂` is an out_param
 @[priority 100, nolint dangerous_instance] instance inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁}
-  [ring_hom_inv_pair σ₁ σ₂] : ring_hom_surjective σ₁ :=
+ [ring_hom_inv_pair σ₁ σ₂] : ring_hom_surjective σ₁ :=
 ⟨λ x, ⟨σ₂ x, ring_hom_inv_pair.comp_apply_eq₂⟩⟩
 
 instance ids : ring_hom_surjective (ring_hom.id R₁) := ⟨is_surjective⟩
 
 /-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
 lemma comp [ring_hom_comp_triple σ₁₂ σ₂₃ σ₁₃] [ring_hom_surjective σ₁₂] [ring_hom_surjective σ₂₃] :
-  ring_hom_surjective σ₁₃ :=
+ ring_hom_surjective σ₁₃ :=
 { is_surjective := begin
-    have := σ₂₃.is_surjective.comp σ₁₂.is_surjective,
-    rwa [← ring_hom.coe_comp, ring_hom_comp_triple.comp_eq] at this,
-  end }
+ have := σ₂₃.is_surjective.comp σ₁₂.is_surjective,
+ rwa [← ring_hom.coe_comp] at this; rwa [ ring_hom_comp_triple.comp_eq] at this,
+ end }
 
 end ring_hom_surjective
+

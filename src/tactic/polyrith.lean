@@ -11,7 +11,7 @@ import data.json
 
 # polyrith Tactic
 
-In this file, the `polyrith` tactic is created.  This tactic, which
+In this file, the `polyrith` tactic is created. This tactic, which
 works over `field`s, attempts to prove a multivariate polynomial target over said
 field by using multivariable polynomial hypotheses/proof terms over the same field.
 Used as is, the tactic makes use of those hypotheses in the local context that are
@@ -42,17 +42,17 @@ remember to force recompilation of any files that call `polyrith`.
 ## TODO
 
 * Give Sage more information about the specific ring being used for the coefficients. For now,
-  we always use ℚ (or `QQ` in Sage).
+ we always use ℚ (or `QQ` in Sage).
 * Handle `•` terms.
 * Support local Sage installations.
 
 ## References
 
 * See the book [*Ideals, Varieties, and Algorithms*][coxlittleOshea1997] by David Cox, John Little,
-  and Donal O'Shea for the background theory on Groebner bases
+ and Donal O'Shea for the background theory on Groebner bases
 * This code was heavily inspired by the code for the tactic `linarith`, which was written by
-  Robert Lewis, who advised me on this project as part of a Computer Science independant study
-  at Brown University.
+ Robert Lewis, who advised me on this project as part of a Computer Science independant study
+ at Brown University.
 
 -/
 
@@ -115,17 +115,17 @@ If `e` appears with index `k` in `vars`, it returns the singleton sum `p = poly.
 Otherwise it updates `vars`, adding `e` with index `n`, and returns the singleton `p = poly.var n`.
 -/
 meta def poly_form_of_atom (red : transparency) (vars : list expr) (e : expr) :
-  tactic (list expr × poly) :=
+ tactic (list expr × poly) :=
 do
-  index_of_e ← vars.mfoldl_with_index
-    (λ n last e', match last with
-    | none := tactic.try_core $ tactic.is_def_eq e e' red >> return n
-    | some k := return k
-    end) none,
-  return (match index_of_e with
-  | some k := (vars, poly.var k)
-  | none   := (vars.concat e, poly.var vars.length)
-  end)
+ index_of_e ← vars.mfoldl_with_index
+ (λ n last e', match last with
+ | none := tactic.try_core $ tactic.is_def_eq e e' red >> return n
+ | some k := return k
+ end) none,
+ return (match index_of_e with
+ | some k := (vars, poly.var k)
+ | none := (vars.concat e, poly.var vars.length)
+ end)
 
 /--
 `poly_form_of_expr red map e` computes the polynomial form of `e`.
@@ -139,32 +139,32 @@ and forces some functions that call it into `tactic` as well.
 -/
 meta def poly_form_of_expr (red : transparency) : list expr → expr → tactic (list expr × poly)
 | m `(%%e1 * %%e2) :=
-   do (m', comp1) ← poly_form_of_expr m e1,
-      (m', comp2) ← poly_form_of_expr m' e2,
-      return (m', comp1 * comp2)
+ do (m', comp1) ← poly_form_of_expr m e1,
+ (m', comp2) ← poly_form_of_expr m' e2,
+ return (m', comp1 * comp2)
 | m `(%%e1 + %%e2) :=
-   do (m', comp1) ← poly_form_of_expr m e1,
-      (m', comp2) ← poly_form_of_expr m' e2,
-      return (m', comp1 + comp2)
+ do (m', comp1) ← poly_form_of_expr m e1,
+ (m', comp2) ← poly_form_of_expr m' e2,
+ return (m', comp1 + comp2)
 | m `(%%e1 - %%e2) :=
-   do (m', comp1) ← poly_form_of_expr m e1,
-      (m', comp2) ← poly_form_of_expr m' e2,
-      return (m',  comp1 - comp2)
+ do (m', comp1) ← poly_form_of_expr m e1,
+ (m', comp2) ← poly_form_of_expr m' e2,
+ return (m', comp1 - comp2)
 | m `(-%%e) :=
-  do (m', comp) ← poly_form_of_expr m e,
-     return (m', - comp)
+ do (m', comp) ← poly_form_of_expr m e,
+ return (m', - comp)
 | m p@`(@has_pow.pow _ ℕ _ %%e %%n) :=
-  match n.to_nat with
-  | some k :=
-    do (m', comp) ← poly_form_of_expr m e,
-    return (m', comp^k)
-  | none := poly_form_of_atom red m p
-  end
+ match n.to_nat with
+ | some k :=
+ do (m', comp) ← poly_form_of_expr m e,
+ return (m', comp^k)
+ | none := poly_form_of_atom red m p
+ end
 | m e :=
-  match e.to_rat with
-  | some z := return ⟨m, poly.const z⟩
-  | none := poly_form_of_atom red m e
-  end
+ match e.to_rat with
+ | some z := return ⟨m, poly.const z⟩
+ | none := poly_form_of_atom red m e
+ end
 
 
 /-!
@@ -187,33 +187,33 @@ no typing information.
 meta def poly.to_pexpr : list expr → poly → tactic pexpr
 | _ (poly.const z) := return z.to_pexpr
 | m (poly.var n) :=
-  do
-    some (e) ← return $ m.nth n | fail! "unknown variable poly.var {n}",
-    return ``(%%e)
+ do
+ some (e) ← return $ m.nth n | fail! "unknown variable poly.var {n}",
+ return ``(%%e)
 | m (poly.add p q) :=
-  do
-    p_pexpr ← poly.to_pexpr m p,
-    q_pexpr ← poly.to_pexpr m q,
-    return ``(%%p_pexpr + %%q_pexpr)
+ do
+ p_pexpr ← poly.to_pexpr m p,
+ q_pexpr ← poly.to_pexpr m q,
+ return ``(%%p_pexpr + %%q_pexpr)
 | m (poly.sub p q) :=
-  do
-    p_pexpr ← poly.to_pexpr m p,
-    q_pexpr ← poly.to_pexpr m q,
-    if p_pexpr = ``(0) then return ``(- %%q_pexpr) else
-    return ``(%%p_pexpr - %%q_pexpr)
+ do
+ p_pexpr ← poly.to_pexpr m p,
+ q_pexpr ← poly.to_pexpr m q,
+ if p_pexpr = ``(0) then return ``(- %%q_pexpr) else
+ return ``(%%p_pexpr - %%q_pexpr)
 | m (poly.mul p q) :=
-  do
-    p_pexpr ← poly.to_pexpr m p,
-    q_pexpr ← poly.to_pexpr m q,
-    return ``(%%p_pexpr * %%q_pexpr)
+ do
+ p_pexpr ← poly.to_pexpr m p,
+ q_pexpr ← poly.to_pexpr m q,
+ return ``(%%p_pexpr * %%q_pexpr)
 | m (poly.pow p n) :=
-  do
-    p_pexpr ← poly.to_pexpr m p,
-    return ``(%%p_pexpr ^ %%n.to_pexpr)
+ do
+ p_pexpr ← poly.to_pexpr m p,
+ return ``(%%p_pexpr ^ %%n.to_pexpr)
 | m (poly.neg p) :=
-  do
-    p_pexpr ← poly.to_pexpr m p,
-    return ``(- %%p_pexpr)
+ do
+ p_pexpr ← poly.to_pexpr m p,
+ return ``(- %%p_pexpr)
 
 /-!
 # Parsing SageMath output into a poly
@@ -286,19 +286,19 @@ str "poly.neg " >> poly.neg <$> cont
 `(poly.add (poly.var 0) (poly.const 1)`. -/
 meta def poly_parser : parser poly :=
 ch '('
-  *> (var_parser <|> const_fraction_parser <|> add_parser poly_parser
-    <|> sub_parser poly_parser <|> mul_parser poly_parser <|> pow_parser poly_parser
-    <|> neg_parser poly_parser)
-  <* ch ')'
+ *> (var_parser <|> const_fraction_parser <|> add_parser poly_parser
+ <|> sub_parser poly_parser <|> mul_parser poly_parser <|> pow_parser poly_parser
+ <|> neg_parser poly_parser)
+ <* ch ')'
 
 meta instance : non_null_json_serializable poly :=
-{ to_json := λ p, json.null,  -- we don't actually need this, but the typeclass asks for it
-  of_json := λ j, do
-    s ← of_json string j,
-    match poly_parser.run_string s with
-    | sum.inl s := exceptional.fail format!"unable to parse polynomial from.\n\n{s}"
-    | sum.inr p := pure p
-    end}
+{ to_json := λ p, json.null, -- we don't actually need this, but the typeclass asks for it
+ of_json := λ j, do
+ s ← of_json string j,
+ match poly_parser.run_string s with
+ | sum.inl s := exceptional.fail format!"unable to parse polynomial from.\n\n{s}"
+ | sum.inr p := pure p
+ end}
 
 /-- A schema for success messages from the python script -/
 @[derive [non_null_json_serializable, inhabited]]
@@ -318,16 +318,16 @@ structure sage_json_failure :=
 objects, or `none` if only trace output was requested. -/
 meta def convert_sage_output (j : json) : tactic (option (list poly)) :=
 do
-  r : sage_json_success ⊕ sage_json_failure ← decorate_ex "internal json error: "
-    -- try the error format first, so that if both fail we get the message from the success parser
-    (sum.inr <$> of_json sage_json_failure j <|> sum.inl <$> of_json sage_json_success j),
-  match r with
-  | sum.inr f :=
-      fail!"polyrith failed to retrieve a solution from Sage! {f.error_name}: {f.error_value}"
-  | sum.inl s := do
-      s.trace.mmap trace,
-      pure s.data
-  end
+ r : sage_json_success ⊕ sage_json_failure ← decorate_ex "internal json error: "
+ -- try the error format first, so that if both fail we get the message from the success parser
+ (sum.inr <$> of_json sage_json_failure j <|> sum.inl <$> of_json sage_json_success j),
+ match r with
+ | sum.inr f :=
+ fail!"polyrith failed to retrieve a solution from Sage! {f.error_name}: {f.error_value}"
+ | sum.inl s := do
+ s.trace.mmap trace,
+ pure s.data
+ end
 
 /-!
 # Parsing context into poly
@@ -347,16 +347,16 @@ some field) into a `poly`. The result is a list of the atomic expressions in the
 the `poly` itself, and an `expr` representing the type of the field. -/
 meta def parse_target_to_poly : tactic (list expr × poly × expr) :=
 do
-  e@`(@eq %%R _ _) ← target,
-  left_side ← equality_to_left_side e,
-  (m, p) ← poly_form_of_expr transparency.reducible [] left_side,
-  return (m, p, R)
+ e@`(@eq %%R _ _) ← target,
+ left_side ← equality_to_left_side e,
+ (m, p) ← poly_form_of_expr transparency.reducible [] left_side,
+ return (m, p, R)
 
 /-- Filter `l` to the elements which are equalities of type `expt`. -/
 meta def get_equalities_of_type (expt : expr) (l : list expr) : tactic (list expr) :=
 l.mfilter $ λ h_eq, succeeds $ do
-  `(@eq %%R _ _) ← infer_type h_eq,
-  unify expt R
+ `(@eq %%R _ _) ← infer_type h_eq,
+ unify expt R
 
 /--
 The purpose of this tactic is to collect all the hypotheses
@@ -380,20 +380,20 @@ a list of atoms updated with information from all these hypotheses,
 and a list of these hypotheses converted into `poly` objects.
 -/
 meta def parse_ctx_to_polys (expt : expr) (m : list expr) (only_on : bool) (hyps : list pexpr) :
-  tactic (list expr × list expr × list poly) :=
+ tactic (list expr × list expr × list poly) :=
 do
-  hyps ← hyps.mmap i_to_expr,
-  hyps ← if only_on then return hyps else (++ hyps) <$> local_context,
-  eq_names ← get_equalities_of_type expt hyps,
-  eqs ← eq_names.mmap infer_type,
-  eqs_to_left ← eqs.mmap equality_to_left_side,
-  -- convert the expressions to polynomials, tracking the variables in `m`
-  (m, poly_list) ← eqs_to_left.mfoldl (λ (s : _ × list poly) new_exp, do
-    { let (m, poly_list) := s,
-      (m', new_poly) ← poly_form_of_expr transparency.reducible m new_exp,
-      return (m', poly_list ++ [new_poly]) })
-    (m, []),
-  return (eq_names, m, poly_list)
+ hyps ← hyps.mmap i_to_expr,
+ hyps ← if only_on then return hyps else (++ hyps) <$> local_context,
+ eq_names ← get_equalities_of_type expt hyps,
+ eqs ← eq_names.mmap infer_type,
+ eqs_to_left ← eqs.mmap equality_to_left_side,
+ -- convert the expressions to polynomials, tracking the variables in `m`
+ (m, poly_list) ← eqs_to_left.mfoldl (λ (s : _ × list poly) new_exp, do
+ { let (m, poly_list) := s,
+ (m', new_poly) ← poly_form_of_expr transparency.reducible m new_exp,
+ return (m', poly_list ++ [new_poly]) })
+ (m, []),
+ return (eq_names, m, poly_list)
 
 /-!
 # Connecting with Python
@@ -408,11 +408,11 @@ It assumes that `python3` is available on the path.
 -/
 meta def sage_output (arg_list : list string := []) : tactic json :=
 do
-  path ← get_mathlib_dir,
-  let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list,
-  s ← unsafe_run_io $ io.cmd { cmd := "python3", args := args},
-  some j ← pure (json.parse s) | fail!"Invalid json: {s}",
-  pure j
+ path ← get_mathlib_dir,
+ let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list,
+ s ← unsafe_run_io $ io.cmd { cmd := "python3", args := args},
+ some j ← pure (json.parse s) | fail!"Invalid json: {s}",
+ pure j
 
 /--
 Adds parentheses around additions and subtractions, for printing at
@@ -436,8 +436,8 @@ because it may appear as a negation (if this is the first component)
 or a subtraction.
 -/
 meta def component_to_lc_format : expr × expr → tactic (bool × format)
-| (ex, `(@has_one.one _ _))  := prod.mk ff <$> pformat!"{ex}"
-| (ex, `(@has_one.one _ _ / %%cf))  := do f ← add_parens cf, prod.mk ff <$> pformat!"{ex} / {f}"
+| (ex, `(@has_one.one _ _)) := prod.mk ff <$> pformat!"{ex}"
+| (ex, `(@has_one.one _ _ / %%cf)) := do f ← add_parens cf, prod.mk ff <$> pformat!"{ex} / {f}"
 | (ex, `(-%%cf)) := do (neg, fmt) ← component_to_lc_format (ex, cf), return (!neg, fmt)
 | (ex, cf) := do f ← add_parens cf, prod.mk ff <$> pformat!"{f} * {ex}"
 
@@ -471,41 +471,41 @@ declare_trace polyrith
 The first half of `tactic.polyrith` produces a list of arguments to be sent to Sage.
 -/
 meta def create_args (only_on : bool) (hyps : list pexpr) :
-  tactic (list expr × list expr × expr × list string) := do
-  (m, p, R) ← parse_target_to_poly,
-  (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps,
-  let args := [to_string R, to_string m.length,
-    (polys.map poly.mk_string).to_string, p.mk_string],
-  return $ (eq_names, m, R, to_string (is_trace_enabled_for `polyrith) :: args)
+ tactic (list expr × list expr × expr × list string) := do
+ (m, p, R) ← parse_target_to_poly,
+ (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps,
+ let args := [to_string R, to_string m.length,
+ (polys.map poly.mk_string).to_string, p.mk_string],
+ return $ (eq_names, m, R, to_string (is_trace_enabled_for `polyrith) :: args)
 
 /--
 The second half of `tactic.polyrith` processes the output from Sage into
 a call to `linear_combination`.
 -/
 meta def process_output (eq_names : list expr) (m : list expr) (R : expr) (sage_out : json) :
-  tactic format := focus1 $ do
-  some coeffs_as_poly ← convert_sage_output sage_out | fail!"internal error: No output available",
-  coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m),
-  let eq_names_pexpr := eq_names.map to_pexpr,
-  coeffs_as_expr ← coeffs_as_pexpr.mmap $ λ e, to_expr ``(%%e : %%R),
-  linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr,
-  let components := (eq_names.zip coeffs_as_expr).filter
-    $ λ pr, bnot $ pr.2.is_app_of `has_zero.zero,
-  expr_string ← components_to_lc_format components,
-  let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string),
-  done <|>
-    fail!"polyrith found the following certificate, but it failed to close the goal:\n{lc_fmt}",
-  return $ "linear_combination " ++ format.nest 2 (format.group expr_string)
+ tactic format := focus1 $ do
+ some coeffs_as_poly ← convert_sage_output sage_out | fail!"internal error: No output available",
+ coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m),
+ let eq_names_pexpr := eq_names.map to_pexpr,
+ coeffs_as_expr ← coeffs_as_pexpr.mmap $ λ e, to_expr ``(%%e : %%R),
+ linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr,
+ let components := (eq_names.zip coeffs_as_expr).filter
+ $ λ pr, bnot $ pr.2.is_app_of `has_zero.zero,
+ expr_string ← components_to_lc_format components,
+ let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string),
+ done <|>
+ fail!"polyrith found the following certificate, but it failed to close the goal:\n{lc_fmt}",
+ return $ "linear_combination " ++ format.nest 2 (format.group expr_string)
 
 /-- Tactic for the special case when no hypotheses are available. -/
 meta def no_hypotheses_case : tactic (option format) :=
 (do `[ring], return $ some "ring") <|>
-  fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
+ fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 
 /-- Tactic for the special case when there are no variables. -/
 meta def no_variables_case : tactic (option format) :=
 (do `[ring], return $ some "ring") <|>
-  fail "polyrith did not find any variables and the goal is not provable by ring"
+ fail "polyrith did not find any variables and the goal is not provable by ring"
 
 /--
 This is the main body of the `polyrith` tactic. It takes in the following inputs:
@@ -533,15 +533,15 @@ This returns `none` if this was a "dry run" attempt that does not actually invok
 -/
 meta def _root_.tactic.polyrith (only_on : bool) (hyps : list pexpr) : tactic (option format) :=
 do
-  sleep 10, -- otherwise can lead to weird errors when actively editing code with polyrith calls
-  (eq_names, m, R, args) ← create_args only_on hyps,
-  if eq_names.length = 0 then no_hypotheses_case else
-  if m.length = 0 then no_variables_case else do
-  sage_out ← sage_output args,
-  if is_trace_enabled_for `polyrith then do
-    convert_sage_output sage_out,
-    return none
-  else some <$> process_output eq_names m R sage_out
+ sleep 10, -- otherwise can lead to weird errors when actively editing code with polyrith calls
+ (eq_names, m, R, args) ← create_args only_on hyps,
+ if eq_names.length = 0 then no_hypotheses_case else
+ if m.length = 0 then no_variables_case else do
+ sage_out ← sage_output args,
+ if is_trace_enabled_for `polyrith then do
+ convert_sage_output sage_out,
+ return none
+ else some <$> process_output eq_names m R sage_out
 
 /-! # Interactivity -/
 setup_tactic_parser
@@ -556,21 +556,21 @@ is suggested to the user.
 * `polyrith` will use all relevant hypotheses in the local context.
 * `polyrith [t1, t2, t3]` will add proof terms t1, t2, t3 to the local context.
 * `polyrith only [h1, h2, h3, t1, t2, t3]` will use only local hypotheses
-  `h1`, `h2`, `h3`, and proofs `t1`, `t2`, `t3`. It will ignore the rest of the local context.
+ `h1`, `h2`, `h3`, and proofs `t1`, `t2`, `t3`. It will ignore the rest of the local context.
 
 Notes:
 * This tactic only works with a working internet connection, since it calls Sage
-  using the SageCell web API at <https://sagecell.sagemath.org/>.
-  Many thanks to the Sage team and organization for allowing this use.
+ using the SageCell web API at <https://sagecell.sagemath.org/>.
+ Many thanks to the Sage team and organization for allowing this use.
 * This tactic assumes that the user has `python3` installed and available on the path.
-  (Test by opening a terminal and executing `python3 --version`.)
-  It also assumes that the `requests` library is installed: `python3 -m pip install requests`.
+ (Test by opening a terminal and executing `python3 --version`.)
+ It also assumes that the `requests` library is installed: `python3 -m pip install requests`.
 
 Examples:
 
 ```lean
 example (x y : ℚ) (h1 : x*y + 2*x = 1) (h2 : x = y) :
-  x*y = -2*y + 1 :=
+ x*y = -2*y + 1 :=
 by polyrith
 -- Try this: linear_combination h1 - 2 * h2
 
@@ -586,15 +586,16 @@ by polyrith only [scary c d, h]
 ```
 -/
 meta def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?)
-  (hyps : parse pexpr_list?) : tactic unit :=
+ (hyps : parse pexpr_list?) : tactic unit :=
 do
-  some f ← tactic.polyrith restr.is_some (hyps.get_or_else []) | skip,
-  trace!"Try this: {f}"
+ some f ← tactic.polyrith restr.is_some (hyps.get_or_else []) | skip,
+ trace!"Try this: {f}"
 
 add_tactic_doc
 { name := "polyrith",
-  category := doc_category.tactic,
-  decl_names := [`tactic.interactive.polyrith],
-  tags := ["arithmetic", "finishing", "decision procedure"] }
+ category := doc_category.tactic,
+ decl_names := [`tactic.interactive.polyrith],
+ tags := ["arithmetic", "finishing", "decision procedure"] }
 
 end polyrith
+

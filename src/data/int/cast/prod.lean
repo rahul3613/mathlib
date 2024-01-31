@@ -19,12 +19,13 @@ variables {α β : Type*} [add_group_with_one α] [add_group_with_one β]
 
 instance : add_group_with_one (α × β) :=
 { int_cast := λ n, (n, n),
-  int_cast_of_nat := λ _, by simp; refl,
-  int_cast_neg_succ_of_nat := λ _, by simp; refl,
-  .. prod.add_monoid_with_one, .. prod.add_group }
+ int_cast_of_nat := λ _, by simp; refl,
+ int_cast_neg_succ_of_nat := λ _, by simp; refl,
+ .. prod.add_monoid_with_one, .. prod.add_group }
 
 @[simp] lemma fst_int_cast (n : ℤ) : (n : α × β).fst = n := rfl
 
 @[simp] lemma snd_int_cast (n : ℤ) : (n : α × β).snd = n := rfl
 
 end prod
+

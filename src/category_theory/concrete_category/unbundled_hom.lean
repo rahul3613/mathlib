@@ -27,7 +27,7 @@ and return a predicate on `α → β`. -/
 class unbundled_hom {c : Type u → Type u} (hom : Π {α β}, c α → c β → (α → β) → Prop) :=
 (hom_id [] : ∀ {α} (ia : c α), hom ia ia id)
 (hom_comp [] : ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β}
-  (hg : hom Iβ Iγ g) (hf : hom Iα Iβ f), hom Iα Iγ (g ∘ f))
+ (hg : hom Iβ Iγ g) (hf : hom Iα Iβ f), hom Iα Iγ (g ∘ f))
 
 namespace unbundled_hom
 
@@ -36,20 +36,20 @@ include 𝒞
 
 instance bundled_hom : bundled_hom (λ α β (Iα : c α) (Iβ : c β), subtype (hom Iα Iβ)) :=
 { to_fun := λ _ _ _ _, subtype.val,
-  id := λ α Iα, ⟨id, hom_id hom Iα⟩,
-  id_to_fun := by intros; refl,
-  comp := λ _ _ _ _ _ _ g f, ⟨g.1 ∘ f.1, hom_comp c g.2 f.2⟩,
-  comp_to_fun := by intros; refl,
-  hom_ext := by intros; apply subtype.eq }
+ id := λ α Iα, ⟨id, hom_id hom Iα⟩,
+ id_to_fun := by intros; refl,
+ comp := λ _ _ _ _ _ _ g f, ⟨g.1 ∘ f.1, hom_comp c g.2 f.2⟩,
+ comp_to_fun := by intros; refl,
+ hom_ext := by intros; apply subtype.eq }
 
 section has_forget₂
 
 variables {c hom} {c' : Type u → Type u} {hom' : Π ⦃α β⦄, c' α → c' β → (α → β) → Prop}
-  [𝒞' : unbundled_hom hom']
+ [𝒞' : unbundled_hom hom']
 include 𝒞'
 
 variables (obj : Π ⦃α⦄, c α → c' α)
-  (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
+ (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
 
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/
@@ -61,3 +61,4 @@ end has_forget₂
 end unbundled_hom
 
 end category_theory
+

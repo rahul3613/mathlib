@@ -49,12 +49,12 @@ Note that if `M` does not fit in `w`, the reverse direction of this implication 
 `module.free.of_basis`. -/
 lemma module.free_def [small.{w} M] : module.free R M ↔ ∃ (I : Type w), nonempty (basis I R M) :=
 ⟨ λ h, ⟨shrink (set.range h.exists_basis.some.2),
-    ⟨(basis.reindex_range h.exists_basis.some.2).reindex (equiv_shrink _)⟩⟩,
-  λ h, ⟨(nonempty_sigma.2 h).map $ λ ⟨i, b⟩, ⟨set.range b, b.reindex_range⟩⟩⟩
+ ⟨(basis.reindex_range h.exists_basis.some.2).reindex (equiv_shrink _)⟩⟩,
+ λ h, ⟨(nonempty_sigma.2 h).map $ λ ⟨i, b⟩, ⟨set.range b, b.reindex_range⟩⟩⟩
 
 lemma module.free_iff_set : module.free R M ↔ ∃ (S : set M), nonempty (basis S R M) :=
 ⟨λ h, ⟨set.range h.exists_basis.some.2, ⟨basis.reindex_range h.exists_basis.some.2⟩⟩,
-    λ ⟨S, hS⟩, ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
+ λ ⟨S, hS⟩, ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
 
 variables {R M}
 
@@ -71,7 +71,7 @@ variables (R M) [semiring R] [add_comm_monoid M] [module R M] [module.free R M]
 variables [add_comm_monoid N] [module R N]
 
 /-- If `module.free R M` then `choose_basis_index R M` is the `ι` which indexes the basis
-  `ι → M`. -/
+ `ι → M`. -/
 def choose_basis_index := (exists_basis R M).some.1
 
 /-- If `module.free R M` then `choose_basis : ι → M` is the basis.
@@ -90,7 +90,7 @@ If `R` is commutative, you can set `S := R`; if `R` is not commutative,
 you can recover an `add_equiv` by setting `S := ℕ`.
 See library note [bundled maps over different rings]. -/
 noncomputable def constr {S : Type z} [semiring S] [module S N] [smul_comm_class R S N] :
-  ((choose_basis_index R M) → N) ≃ₗ[S] M →ₗ[R] N := basis.constr (choose_basis R M) S
+ ((choose_basis_index R M) → N) ≃ₗ[S] M →ₗ[R] N := basis.constr (choose_basis R M) S
 
 @[priority 100]
 instance no_zero_smul_divisors [no_zero_divisors R] : no_zero_smul_divisors R M :=
@@ -107,7 +107,7 @@ of_basis $ (choose_basis R M).map e
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
 instance. -/
 lemma of_equiv' {P : Type v} [add_comm_monoid P] [module R P] (h : module.free R P)
-  (e : P ≃ₗ[R] N) : module.free R N :=
+ (e : P ≃ₗ[R] N) : module.free R N :=
 of_equiv e
 
 variables (R M N)
@@ -120,7 +120,7 @@ of_basis $ (choose_basis R M).prod (choose_basis R N)
 
 /-- The product of finitely many free modules is free. -/
 instance pi (M : ι → Type*) [finite ι] [Π (i : ι), add_comm_monoid (M i)]
-  [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] : module.free R (Π i, M i) :=
+ [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] : module.free R (Π i, M i) :=
 let ⟨_⟩ := nonempty_fintype ι in by exactI (of_basis $ pi.basis $ λ i, choose_basis R (M i))
 
 /-- The module of finite matrices is free. -/
@@ -147,11 +147,11 @@ instance of_subsingleton' [subsingleton R] : module.free R N :=
 by letI := module.subsingleton R N; exact module.free.of_subsingleton R N
 
 instance dfinsupp {ι : Type*} (M : ι → Type*) [Π (i : ι), add_comm_monoid (M i)]
-  [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] : module.free R (Π₀ i, M i) :=
+ [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] : module.free R (Π₀ i, M i) :=
 of_basis $ dfinsupp.basis $ λ i, choose_basis R (M i)
 
 instance direct_sum {ι : Type*} (M : ι → Type*) [Π (i : ι), add_comm_monoid (M i)]
-  [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] : module.free R (⨁ i, M i) :=
+ [Π (i : ι), module R (M i)] [Π (i : ι), module.free R (M i)] : module.free R (⨁ i, M i) :=
 module.free.dfinsupp R M
 
 end semiring
@@ -177,3 +177,4 @@ of_basis (basis.of_vector_space R M)
 end division_ring
 
 end module.free
+

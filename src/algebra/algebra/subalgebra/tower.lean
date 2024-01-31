@@ -22,11 +22,11 @@ compatibility condition `(r • s) • a = r • (s • a)`.
 ## Main results
 
  * `is_scalar_tower.subalgebra`: if `A/S/R` is a tower and `S₀` is a subalgebra
-   between `S` and `R`, then `A/S/S₀` is a tower
+ between `S` and `R`, then `A/S/S₀` is a tower
  * `is_scalar_tower.subalgebra'`: if `A/S/R` is a tower and `S₀` is a subalgebra
-   between `S` and `R`, then `A/S₀/R` is a tower
+ between `S` and `R`, then `A/S₀/R` is a tower
  * `subalgebra.restrict_scalars`: turn an `S`-subalgebra of `A` into an `R`-subalgebra of `A`,
-   given that `A/S/R` is a tower
+ given that `A/S/R` is a tower
 
 -/
 
@@ -43,7 +43,7 @@ variables [add_comm_monoid M] [module R M] [module A M] [is_scalar_tower R A M]
 variables {A}
 
 lemma lmul_algebra_map (x : R) :
-  algebra.lmul R A (algebra_map R A x) = algebra.lsmul R A x :=
+ algebra.lmul R A (algebra_map R A x) = algebra.lsmul R A x :=
 eq.symm $ linear_map.ext $ smul_def x
 
 end algebra
@@ -83,24 +83,24 @@ variables [is_scalar_tower R S A] [is_scalar_tower R S B]
 `U` as an `R`-subalgebra of `A`. -/
 def restrict_scalars (U : subalgebra S A) : subalgebra R A :=
 { algebra_map_mem' := λ x, by { rw algebra_map_apply R S A, exact U.algebra_map_mem _ },
-  .. U }
+ .. U }
 
 @[simp] lemma coe_restrict_scalars {U : subalgebra S A} :
-  (restrict_scalars R U : set A) = (U : set A) := rfl
+ (restrict_scalars R U : set A) = (U : set A) := rfl
 
 @[simp] lemma restrict_scalars_top : restrict_scalars R (⊤ : subalgebra S A) = ⊤ :=
 set_like.coe_injective rfl
 
 @[simp] lemma restrict_scalars_to_submodule {U : subalgebra S A} :
-  (U.restrict_scalars R).to_submodule = U.to_submodule.restrict_scalars R :=
+ (U.restrict_scalars R).to_submodule = U.to_submodule.restrict_scalars R :=
 set_like.coe_injective rfl
 
 @[simp] lemma mem_restrict_scalars {U : subalgebra S A} {x : A} :
-  x ∈ restrict_scalars R U ↔ x ∈ U := iff.rfl
+ x ∈ restrict_scalars R U ↔ x ∈ U := iff.rfl
 
 lemma restrict_scalars_injective :
-  function.injective (restrict_scalars R : subalgebra S A → subalgebra R A) :=
-λ U V H, ext $ λ x, by rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
+ function.injective (restrict_scalars R : subalgebra S A → subalgebra R A) :=
+λ U V H, ext $ λ x, by rw [← mem_restrict_scalars R]; rw [ H]; rw [ mem_restrict_scalars]
 
 /-- Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.
 
@@ -121,13 +121,14 @@ variables [comm_semiring R] [comm_semiring S] [comm_semiring A]
 variables [algebra R S] [algebra S A] [algebra R A] [is_scalar_tower R S A]
 
 theorem adjoin_range_to_alg_hom (t : set A) :
-  (algebra.adjoin (to_alg_hom R S A).range t).restrict_scalars R =
-    (algebra.adjoin S t).restrict_scalars R :=
+ (algebra.adjoin (to_alg_hom R S A).range t).restrict_scalars R =
+ (algebra.adjoin S t).restrict_scalars R :=
 subalgebra.ext $ λ z,
 show z ∈ subsemiring.closure (set.range (algebra_map (to_alg_hom R S A).range A) ∪ t : set A) ↔
-  z ∈ subsemiring.closure (set.range (algebra_map S A) ∪ t : set A),
+ z ∈ subsemiring.closure (set.range (algebra_map S A) ∪ t : set A),
 from suffices set.range (algebra_map (to_alg_hom R S A).range A) = set.range (algebra_map S A),
-  by rw this,
+ by rw this,
 by { ext z, exact ⟨λ ⟨⟨x, y, h1⟩, h2⟩, ⟨y, h2 ▸ h1⟩, λ ⟨y, hy⟩, ⟨⟨z, y, hy⟩, rfl⟩⟩ }
 
 end is_scalar_tower
+

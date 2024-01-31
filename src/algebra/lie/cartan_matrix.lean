@@ -19,13 +19,13 @@ an `l × l` Cartan matrix, the corresponding Lie algebra may be obtained as the 
 subject to the following relations:
 $$
 \begin{align}
-  [H_i, H_j] &= 0\\
-  [E_i, F_i] &= H_i\\
-  [E_i, F_j] &= 0 \quad\text{if $i \ne j$}\\
-  [H_i, E_j] &= A_{ij}E_j\\
-  [H_i, F_j] &= -A_{ij}F_j\\
-  ad(E_i)^{1 - A_{ij}}(E_j) &= 0 \quad\text{if $i \ne j$}\\
-  ad(F_i)^{1 - A_{ij}}(F_j) &= 0 \quad\text{if $i \ne j$}\\
+ [H_i, H_j] &= 0\\
+ [E_i, F_i] &= H_i\\
+ [E_i, F_j] &= 0 \quad\text{if $i \ne j$}\\
+ [H_i, E_j] &= A_{ij}E_j\\
+ [H_i, F_j] &= -A_{ij}F_j\\
+ ad(E_i)^{1 - A_{ij}}(E_j) &= 0 \quad\text{if $i \ne j$}\\
+ ad(F_i)^{1 - A_{ij}}(F_j) &= 0 \quad\text{if $i \ne j$}\\
 \end{align}
 $$
 
@@ -56,7 +56,7 @@ exceptional semisimple Lie algebras.
 ## References
 
 * [N. Bourbaki, *Lie Groups and Lie Algebras, Chapters 4--6*](bourbaki1968) plates V -- IX,
-  pages 275--290
+ pages 275--290
 
 * [N. Bourbaki, *Lie Groups and Lie Algebras, Chapters 7--9*](bourbaki1975b) chapter VIII, §4.3
 
@@ -64,17 +64,17 @@ exceptional semisimple Lie algebras.
 
 ## Main definitions
 
-  * `matrix.to_lie_algebra`
-  * `cartan_matrix.E₆`
-  * `cartan_matrix.E₇`
-  * `cartan_matrix.E₈`
-  * `cartan_matrix.F₄`
-  * `cartan_matrix.G₂`
-  * `lie_algebra.e₆`
-  * `lie_algebra.e₇`
-  * `lie_algebra.e₈`
-  * `lie_algebra.f₄`
-  * `lie_algebra.g₂`
+ * `matrix.to_lie_algebra`
+ * `cartan_matrix.E₆`
+ * `cartan_matrix.E₇`
+ * `cartan_matrix.E₈`
+ * `cartan_matrix.F₄`
+ * `cartan_matrix.G₂`
+ * `lie_algebra.e₆`
+ * `lie_algebra.e₇`
+ * `lie_algebra.e₈`
+ * `lie_algebra.f₄`
+ * `lie_algebra.g₂`
 
 ## Tags
 
@@ -180,52 +180,52 @@ namespace cartan_matrix
 
 The corresponding Dynkin diagram is:
 ```
-            o
-            |
+ o
+ |
 o --- o --- o --- o --- o
 ```
 -/
-def E₆ : matrix (fin 6) (fin 6) ℤ := !![ 2,  0, -1,  0,  0,  0;
-                                         0,  2,  0, -1,  0,  0;
-                                        -1,  0,  2, -1,  0,  0;
-                                         0, -1, -1,  2, -1,  0;
-                                         0,  0,  0, -1,  2, -1;
-                                         0,  0,  0,  0, -1,  2]
+def E₆ : matrix (fin 6) (fin 6) ℤ := !![ 2, 0, -1, 0, 0, 0;
+ 0, 2, 0, -1, 0, 0;
+ -1, 0, 2, -1, 0, 0;
+ 0, -1, -1, 2, -1, 0;
+ 0, 0, 0, -1, 2, -1;
+ 0, 0, 0, 0, -1, 2]
 
 /-- The Cartan matrix of type e₇. See [bourbaki1968] plate VI, page 281.
 
 The corresponding Dynkin diagram is:
 ```
-            o
-            |
+ o
+ |
 o --- o --- o --- o --- o --- o
 ```
 -/
-def E₇ : matrix (fin 7) (fin 7) ℤ := !![ 2,  0, -1,  0,  0,  0,  0;
-                                         0,  2,  0, -1,  0,  0,  0;
-                                        -1,  0,  2, -1,  0,  0,  0;
-                                         0, -1, -1,  2, -1,  0,  0;
-                                         0,  0,  0, -1,  2, -1,  0;
-                                         0,  0,  0,  0, -1,  2, -1;
-                                         0,  0,  0,  0,  0, -1,  2]
+def E₇ : matrix (fin 7) (fin 7) ℤ := !![ 2, 0, -1, 0, 0, 0, 0;
+ 0, 2, 0, -1, 0, 0, 0;
+ -1, 0, 2, -1, 0, 0, 0;
+ 0, -1, -1, 2, -1, 0, 0;
+ 0, 0, 0, -1, 2, -1, 0;
+ 0, 0, 0, 0, -1, 2, -1;
+ 0, 0, 0, 0, 0, -1, 2]
 
 /-- The Cartan matrix of type e₈. See [bourbaki1968] plate VII, page 285.
 
 The corresponding Dynkin diagram is:
 ```
-            o
-            |
+ o
+ |
 o --- o --- o --- o --- o --- o --- o
 ```
 -/
-def E₈ : matrix (fin 8) (fin 8) ℤ := !![ 2,  0, -1,  0,  0,  0,  0,  0;
-                                         0,  2,  0, -1,  0,  0,  0,  0;
-                                        -1,  0,  2, -1,  0,  0,  0,  0;
-                                         0, -1, -1,  2, -1,  0,  0,  0;
-                                         0,  0,  0, -1,  2, -1,  0,  0;
-                                         0,  0,  0,  0, -1,  2, -1,  0;
-                                         0,  0,  0,  0,  0, -1,  2, -1;
-                                         0,  0,  0,  0,  0,  0, -1,  2]
+def E₈ : matrix (fin 8) (fin 8) ℤ := !![ 2, 0, -1, 0, 0, 0, 0, 0;
+ 0, 2, 0, -1, 0, 0, 0, 0;
+ -1, 0, 2, -1, 0, 0, 0, 0;
+ 0, -1, -1, 2, -1, 0, 0, 0;
+ 0, 0, 0, -1, 2, -1, 0, 0;
+ 0, 0, 0, 0, -1, 2, -1, 0;
+ 0, 0, 0, 0, 0, -1, 2, -1;
+ 0, 0, 0, 0, 0, 0, -1, 2]
 
 /-- The Cartan matrix of type f₄. See [bourbaki1968] plate VIII, page 288.
 
@@ -234,10 +234,10 @@ The corresponding Dynkin diagram is:
 o --- o =>= o --- o
 ```
 -/
-def F₄ : matrix (fin 4) (fin 4) ℤ := !![ 2, -1,  0,  0;
-                                        -1,  2, -2,  0;
-                                         0, -1,  2, -1;
-                                         0,  0, -1,  2]
+def F₄ : matrix (fin 4) (fin 4) ℤ := !![ 2, -1, 0, 0;
+ -1, 2, -2, 0;
+ 0, -1, 2, -1;
+ 0, 0, -1, 2]
 
 /-- The Cartan matrix of type g₂. See [bourbaki1968] plate IX, page 290.
 
@@ -248,7 +248,7 @@ o ≡>≡ o
 Actually we are using the transpose of Bourbaki's matrix. This is to make this matrix consistent
 with `cartan_matrix.F₄`, in the sense that all non-zero values below the diagonal are -1. -/
 def G₂ : matrix (fin 2) (fin 2) ℤ := !![ 2, -3;
-                                        -1,  2]
+ -1, 2]
 
 end cartan_matrix
 
@@ -270,3 +270,4 @@ abbreviation f₄ := cartan_matrix.F₄.to_lie_algebra R
 abbreviation g₂ := cartan_matrix.G₂.to_lie_algebra R
 
 end lie_algebra
+

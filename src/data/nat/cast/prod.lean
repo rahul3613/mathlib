@@ -20,9 +20,9 @@ variables [add_monoid_with_one α] [add_monoid_with_one β]
 
 instance : add_monoid_with_one (α × β) :=
 { nat_cast := λ n, (n, n),
-  nat_cast_zero := congr_arg2 prod.mk nat.cast_zero nat.cast_zero,
-  nat_cast_succ := λ n, congr_arg2 prod.mk (nat.cast_succ _) (nat.cast_succ _),
-  .. prod.add_monoid, .. prod.has_one }
+ nat_cast_zero := congr_arg2 prod.mk nat.cast_zero nat.cast_zero,
+ nat_cast_succ := λ n, congr_arg2 prod.mk (nat.cast_succ _) (nat.cast_succ _),
+ .. prod.add_monoid, .. prod.has_one }
 
 @[simp] lemma fst_nat_cast (n : ℕ) : (n : α × β).fst = n :=
 by induction n; simp *
@@ -31,3 +31,4 @@ by induction n; simp *
 by induction n; simp *
 
 end prod
+

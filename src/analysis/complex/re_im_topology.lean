@@ -20,14 +20,14 @@ topological properties of `complex.re` and `complex.im`.
 Each statement about `complex.re` listed below has a counterpart about `complex.im`.
 
 * `complex.is_homeomorphic_trivial_fiber_bundle_re`: `complex.re` turns `ℂ` into a trivial
-  topological fiber bundle over `ℝ`;
+ topological fiber bundle over `ℝ`;
 * `complex.is_open_map_re`, `complex.quotient_map_re`: in particular, `complex.re` is an open map
-  and is a quotient map;
+ and is a quotient map;
 * `complex.interior_preimage_re`, `complex.closure_preimage_re`, `complex.frontier_preimage_re`:
-  formulas for `interior (complex.re ⁻¹' s)` etc;
+ formulas for `interior (complex.re ⁻¹' s)` etc;
 * `complex.interior_set_of_re_le` etc: particular cases of the above formulas in the cases when `s`
-  is one of the infinite intervals `set.Ioi a`, `set.Ici a`, `set.Iio a`, and `set.Iic a`,
-  formulated as `interior {z : ℂ | z.re ≤ a} = {z | z.re < a}` etc.
+ is one of the infinite intervals `set.Ioi a`, `set.Ici a`, `set.Iio a`, and `set.Iic a`,
+ formulated as `interior {z : ℂ | z.re ≤ a} = {z | z.re < a}` etc.
 
 ## Tags
 
@@ -121,26 +121,26 @@ by simpa only [frontier_Ioi] using frontier_preimage_im (Ioi a)
 
 lemma closure_re_prod_im (s t : set ℝ) : closure (s ×ℂ t) = closure s ×ℂ closure t :=
 by simpa only [← preimage_eq_preimage equiv_real_prod_clm.symm.to_homeomorph.surjective,
-  equiv_real_prod_clm.symm.to_homeomorph.preimage_closure]
-  using @closure_prod_eq _ _ _ _ s t
+ equiv_real_prod_clm.symm.to_homeomorph.preimage_closure]
+ using @closure_prod_eq _ _ _ _ s t
 
 lemma interior_re_prod_im (s t : set ℝ) : interior (s ×ℂ t) = interior s ×ℂ interior t :=
-by rw [re_prod_im, re_prod_im, interior_inter, interior_preimage_re, interior_preimage_im]
+by rw [re_prod_im]; rw [ re_prod_im]; rw [ interior_inter]; rw [ interior_preimage_re]; rw [ interior_preimage_im]
 
 lemma frontier_re_prod_im (s t : set ℝ) :
-  frontier (s ×ℂ t) = (closure s ×ℂ frontier t) ∪ (frontier s ×ℂ closure t) :=
+ frontier (s ×ℂ t) = (closure s ×ℂ frontier t) ∪ (frontier s ×ℂ closure t) :=
 by simpa only [← preimage_eq_preimage equiv_real_prod_clm.symm.to_homeomorph.surjective,
-  equiv_real_prod_clm.symm.to_homeomorph.preimage_frontier]
-  using frontier_prod_eq s t
+ equiv_real_prod_clm.symm.to_homeomorph.preimage_frontier]
+ using frontier_prod_eq s t
 
 lemma frontier_set_of_le_re_and_le_im (a b : ℝ) :
-  frontier {z | a ≤ re z ∧ b ≤ im z} = {z | a ≤ re z ∧ im z = b ∨ re z = a ∧ b ≤ im z} :=
+ frontier {z | a ≤ re z ∧ b ≤ im z} = {z | a ≤ re z ∧ im z = b ∨ re z = a ∧ b ≤ im z} :=
 by simpa only [closure_Ici, frontier_Ici] using frontier_re_prod_im (Ici a) (Ici b)
 
 lemma frontier_set_of_le_re_and_im_le (a b : ℝ) :
-  frontier {z | a ≤ re z ∧ im z ≤ b} = {z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b} :=
+ frontier {z | a ≤ re z ∧ im z ≤ b} = {z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b} :=
 by simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic]
-  using frontier_re_prod_im (Ici a) (Iic b)
+ using frontier_re_prod_im (Ici a) (Iic b)
 
 end complex
 
@@ -156,3 +156,4 @@ lemma is_closed.re_prod_im (hs : is_closed s) (ht : is_closed t) : is_closed (s 
 
 lemma metric.bounded.re_prod_im (hs : bounded s) (ht : bounded t) : bounded (s ×ℂ t) :=
 antilipschitz_equiv_real_prod.bounded_preimage (hs.prod ht)
+

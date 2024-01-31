@@ -52,19 +52,19 @@ instance well_powered_of_small_category (C : Type u₁) [small_category C] : wel
 variables {C}
 
 theorem essentially_small_mono_over_iff_small_subobject (X : C) :
-  essentially_small.{v} (mono_over X) ↔ small.{v} (subobject X) :=
+ essentially_small.{v} (mono_over X) ↔ small.{v} (subobject X) :=
 essentially_small_iff_of_thin
 
 theorem well_powered_of_essentially_small_mono_over
-  (h : ∀ X : C, essentially_small.{v} (mono_over X)) :
-  well_powered C :=
+ (h : ∀ X : C, essentially_small.{v} (mono_over X)) :
+ well_powered C :=
 { subobject_small := λ X, (essentially_small_mono_over_iff_small_subobject X).mp (h X), }
 
 section
 variables [well_powered C]
 
 instance essentially_small_mono_over (X : C) :
-  essentially_small.{v} (mono_over X) :=
+ essentially_small.{v} (mono_over X) :=
 (essentially_small_mono_over_iff_small_subobject X).mpr (well_powered.subobject_small X)
 
 end
@@ -74,13 +74,14 @@ variables {D : Type u₂} [category.{v} D]
 
 theorem well_powered_of_equiv (e : C ≌ D) [well_powered C] : well_powered D :=
 well_powered_of_essentially_small_mono_over $
-  λ X, (essentially_small_congr (mono_over.congr X e.symm)).2 $ by apply_instance
+ λ X, (essentially_small_congr (mono_over.congr X e.symm)).2 $ by apply_instance
 
 /-- Being well-powered is preserved by equivalences, as long as the two categories involved have
-    their morphisms in the same universe. -/
+ their morphisms in the same universe. -/
 theorem well_powered_congr (e : C ≌ D) : well_powered C ↔ well_powered D :=
 ⟨λ i, by exactI well_powered_of_equiv e, λ i, by exactI well_powered_of_equiv e.symm⟩
 
 end equivalence
 
 end category_theory
+

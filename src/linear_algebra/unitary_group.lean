@@ -60,25 +60,25 @@ variables {n : Type u} [decidable_eq n] [fintype n]
 variables {α : Type v} [comm_ring α] [star_ring α]
 
 lemma mem_unitary_group_iff {A : matrix n n α} :
-  A ∈ matrix.unitary_group n α ↔ A * star A = 1 :=
+ A ∈ matrix.unitary_group n α ↔ A * star A = 1 :=
 begin
-  refine ⟨and.right, λ hA, ⟨_, hA⟩⟩,
-  simpa only [mul_eq_mul, mul_eq_one_comm] using hA
+ refine ⟨and.right, λ hA, ⟨_, hA⟩⟩,
+ simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 end
 
 lemma mem_unitary_group_iff' {A : matrix n n α} :
-  A ∈ matrix.unitary_group n α ↔ star A * A = 1 :=
+ A ∈ matrix.unitary_group n α ↔ star A * A = 1 :=
 begin
-  refine ⟨and.left, λ hA, ⟨hA, _⟩⟩,
-  rwa [mul_eq_mul, mul_eq_one_comm] at hA,
+ refine ⟨and.left, λ hA, ⟨hA, _⟩⟩,
+ rwa [mul_eq_mul] at hA; rwa [ mul_eq_one_comm] at hA,
 end
 
 lemma det_of_mem_unitary {A : matrix n n α} (hA : A ∈ matrix.unitary_group n α) :
-  A.det ∈ unitary α :=
+ A.det ∈ unitary α :=
 begin
-  split,
-  { simpa [star, det_transpose] using congr_arg det hA.1 },
-  { simpa [star, det_transpose] using congr_arg det hA.2 },
+ split,
+ { simpa [star, det_transpose] using congr_arg det hA.1 },
+ { simpa [star, det_transpose] using congr_arg det hA.2 },
 end
 
 namespace unitary_group
@@ -122,11 +122,11 @@ variables (A B : unitary_group n α)
 @[simp] lemma one_apply : ⇑(1 : unitary_group n α) = (1 : matrix n n α) := rfl
 
 @[simp] lemma to_lin'_mul :
-  to_lin' (A * B) = (to_lin' A).comp (to_lin' B) :=
+ to_lin' (A * B) = (to_lin' A).comp (to_lin' B) :=
 matrix.to_lin'_mul A B
 
 @[simp] lemma to_lin'_one :
-  to_lin' (1 : unitary_group n α) = linear_map.id :=
+ to_lin' (1 : unitary_group n α) = linear_map.id :=
 matrix.to_lin'_one
 
 end coe_lemmas
@@ -134,32 +134,32 @@ end coe_lemmas
 /-- `to_linear_equiv A` is matrix multiplication of vectors by `A`, as a linear equivalence. -/
 def to_linear_equiv (A : unitary_group n α) : (n → α) ≃ₗ[α] (n → α) :=
 { inv_fun := to_lin' A⁻¹,
-  left_inv := λ x, calc
-    (to_lin' A⁻¹).comp (to_lin' A) x
-        = (to_lin' (A⁻¹ * A)) x : by rw [←to_lin'_mul]
-    ... = x : by rw [mul_left_inv, to_lin'_one, id_apply],
-  right_inv := λ x, calc
-    (to_lin' A).comp (to_lin' A⁻¹) x
-        = to_lin' (A * A⁻¹) x : by rw [←to_lin'_mul]
-    ... = x : by rw [mul_right_inv, to_lin'_one, id_apply],
-  ..matrix.to_lin' A }
+ left_inv := λ x, calc
+ (to_lin' A⁻¹).comp (to_lin' A) x
+ = (to_lin' (A⁻¹ * A)) x : by rw [←to_lin'_mul]
+ ... = x : by rw [mul_left_inv]; rw [ to_lin'_one]; rw [ id_apply],
+ right_inv := λ x, calc
+ (to_lin' A).comp (to_lin' A⁻¹) x
+ = to_lin' (A * A⁻¹) x : by rw [←to_lin'_mul]
+ ... = x : by rw [mul_right_inv]; rw [ to_lin'_one]; rw [ id_apply],
+ ..matrix.to_lin' A }
 
 /-- `to_GL` is the map from the unitary group to the general linear group -/
 def to_GL (A : unitary_group n α) : general_linear_group α (n → α) :=
 general_linear_group.of_linear_equiv (to_linear_equiv A)
 
 lemma coe_to_GL (A : unitary_group n α) :
-  ↑(to_GL A) = to_lin' A :=
+ ↑(to_GL A) = to_lin' A :=
 rfl
 
 @[simp]
 lemma to_GL_one : to_GL (1 : unitary_group n α) = 1 :=
-by { ext1 v i, rw [coe_to_GL, to_lin'_one], refl }
+by { ext1 v i, rw [coe_to_GL]; rw [ to_lin'_one], refl }
 
 @[simp]
 lemma to_GL_mul (A B : unitary_group n α) :
-  to_GL (A * B) = to_GL A * to_GL B :=
-by { ext1 v i, rw [coe_to_GL, to_lin'_mul], refl }
+ to_GL (A * B) = to_GL A * to_GL B :=
+by { ext1 v i, rw [coe_to_GL]; rw [ to_lin'_mul], refl }
 
 /-- `unitary_group.embedding_GL` is the embedding from `unitary_group n α`
 to `general_linear_group n α`. -/
@@ -179,19 +179,20 @@ local attribute [instance] star_ring_of_comm
 abbreviation orthogonal_group := unitary_group n β
 
 lemma mem_orthogonal_group_iff {A : matrix n n β} :
-  A ∈ matrix.orthogonal_group n β ↔ A * star A = 1 :=
+ A ∈ matrix.orthogonal_group n β ↔ A * star A = 1 :=
 begin
-  refine ⟨and.right, λ hA, ⟨_, hA⟩⟩,
-  simpa only [mul_eq_mul, mul_eq_one_comm] using hA
+ refine ⟨and.right, λ hA, ⟨_, hA⟩⟩,
+ simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 end
 
 lemma mem_orthogonal_group_iff' {A : matrix n n β} :
-  A ∈ matrix.orthogonal_group n β ↔ star A * A = 1 :=
+ A ∈ matrix.orthogonal_group n β ↔ star A * A = 1 :=
 begin
-  refine ⟨and.left, λ hA, ⟨hA, _⟩⟩,
-  rwa [mul_eq_mul, mul_eq_one_comm] at hA,
+ refine ⟨and.left, λ hA, ⟨hA, _⟩⟩,
+ rwa [mul_eq_mul] at hA; rwa [ mul_eq_one_comm] at hA,
 end
 
 end orthogonal_group
 
 end matrix
+

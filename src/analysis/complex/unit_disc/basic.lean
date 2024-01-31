@@ -44,7 +44,7 @@ lemma coe_ne_one (z : 𝔻) : (z : ℂ) ≠ 1 :=
 ne_of_apply_ne abs $ (map_one abs).symm ▸ z.abs_ne_one
 
 lemma coe_ne_neg_one (z : 𝔻) : (z : ℂ) ≠ -1 :=
-ne_of_apply_ne abs $ by { rw [abs.map_neg, map_one], exact z.abs_ne_one }
+ne_of_apply_ne abs $ by { rw [abs.map_neg]; rw [ map_one], exact z.abs_ne_one }
 
 lemma one_add_coe_ne_zero (z : 𝔻) : (1 + z : ℂ) ≠ 0 :=
 mt neg_eq_iff_add_eq_zero.2 z.coe_ne_neg_one.symm
@@ -58,18 +58,18 @@ def mk (z : ℂ) (hz : abs z < 1) : 𝔻 := ⟨z, mem_ball_zero_iff.2 hz⟩
 @[simp] lemma coe_mk (z : ℂ) (hz : abs z < 1) : (mk z hz : ℂ) = z := rfl
 
 @[simp] lemma mk_coe (z : 𝔻) (hz : abs (z : ℂ) < 1 := z.abs_lt_one) :
-  mk z hz = z :=
+ mk z hz = z :=
 subtype.eta _ _
 
 @[simp] lemma mk_neg (z : ℂ) (hz : abs (-z) < 1) :
-  mk (-z) hz = -mk z (abs.map_neg z ▸ hz) :=
+ mk (-z) hz = -mk z (abs.map_neg z ▸ hz) :=
 rfl
 
 instance : semigroup_with_zero 𝔻 :=
 { zero := mk 0 $ (map_zero _).trans_lt one_pos,
-  zero_mul := λ z, coe_injective $ zero_mul _,
-  mul_zero := λ z, coe_injective $ mul_zero _,
-  .. unit_disc.comm_semigroup}
+ zero_mul := λ z, coe_injective $ zero_mul _,
+ mul_zero := λ z, coe_injective $ mul_zero _,
+ .. unit_disc.comm_semigroup}
 
 @[simp] lemma coe_zero : ((0 : 𝔻) : ℂ) = 0 := rfl
 @[simp] lemma coe_eq_zero {z : 𝔻} : (z : ℂ) = 0 ↔ z = 0 := coe_injective.eq_iff' coe_zero
@@ -89,7 +89,7 @@ instance smul_comm_class_circle' : smul_comm_class 𝔻 circle 𝔻 := smul_comm
 instance closed_ball_action : mul_action (closed_ball (0 : ℂ) 1) 𝔻 := mul_action_closed_ball_ball
 
 instance is_scalar_tower_closed_ball_closed_ball :
-  is_scalar_tower (closed_ball (0 : ℂ) 1) (closed_ball (0 : ℂ) 1) 𝔻 :=
+ is_scalar_tower (closed_ball (0 : ℂ) 1) (closed_ball (0 : ℂ) 1) 𝔻 :=
 is_scalar_tower_closed_ball_closed_ball_ball
 
 instance is_scalar_tower_closed_ball : is_scalar_tower (closed_ball (0 : ℂ) 1) 𝔻 𝔻 :=
@@ -135,3 +135,4 @@ def conj (z : 𝔻) : 𝔻 := mk (conj' ↑z) $ (abs_conj z).symm ▸ z.abs_lt_o
 end unit_disc
 
 end complex
+

@@ -20,7 +20,7 @@ variables {α : Type*} [monoid α]
 local attribute [instance, priority 100] is_conj.setoid
 
 instance [fintype α] [decidable_rel (is_conj : α → α → Prop)] :
-  fintype (conj_classes α) :=
+ fintype (conj_classes α) :=
 quotient.fintype (is_conj.setoid α)
 
 instance [finite α] : finite (conj_classes α) :=
@@ -40,3 +40,4 @@ instance {x : conj_classes α} : fintype (carrier x) :=
 quotient.rec_on_subsingleton x $ λ a, conjugates_of.fintype
 
 end conj_classes
+

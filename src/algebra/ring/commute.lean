@@ -29,11 +29,11 @@ open function
 namespace commute
 
 @[simp] theorem add_right [distrib R] {a b c : R} :
-  commute a b → commute a c → commute a (b + c) :=
+ commute a b → commute a c → commute a (b + c) :=
 semiconj_by.add_right
 
 @[simp] theorem add_left [distrib R] {a b c : R} :
-  commute a c → commute b c → commute (a + b) c :=
+ commute a c → commute b c → commute (a + b) c :=
 semiconj_by.add_left
 
 lemma bit0_right [distrib R] {x y : R} (h : commute x y) : commute x (bit0 y) :=
@@ -50,17 +50,16 @@ h.bit0_left.add_left (commute.one_left y)
 
 /-- Representation of a difference of two squares of commuting elements as a product. -/
 lemma mul_self_sub_mul_self_eq [non_unital_non_assoc_ring R] {a b : R} (h : commute a b) :
-  a * a - b * b = (a + b) * (a - b) :=
-by rw [add_mul, mul_sub, mul_sub, h.eq, sub_add_sub_cancel]
+ a * a - b * b = (a + b) * (a - b) :=
+by rw [add_mul]; rw [ mul_sub]; rw [ mul_sub]; rw [ h.eq]; rw [ sub_add_sub_cancel]
 
 lemma mul_self_sub_mul_self_eq' [non_unital_non_assoc_ring R] {a b : R} (h : commute a b) :
-  a * a - b * b = (a - b) * (a + b) :=
-by rw [mul_add, sub_mul, sub_mul, h.eq, sub_add_sub_cancel]
+ a * a - b * b = (a - b) * (a + b) :=
+by rw [mul_add]; rw [ sub_mul]; rw [ sub_mul]; rw [ h.eq]; rw [ sub_add_sub_cancel]
 
 lemma mul_self_eq_mul_self_iff [non_unital_non_assoc_ring R] [no_zero_divisors R] {a b : R}
-  (h : commute a b) : a * a = b * b ↔ a = b ∨ a = -b :=
-by rw [← sub_eq_zero, h.mul_self_sub_mul_self_eq, mul_eq_zero, or_comm, sub_eq_zero,
-  add_eq_zero_iff_eq_neg]
+ (h : commute a b) : a * a = b * b ↔ a = b ∨ a = -b :=
+by rw [← sub_eq_zero]; rw [ h.mul_self_sub_mul_self_eq]; rw [ mul_eq_zero]; rw [ or_comm]; rw [ sub_eq_zero]; rw [ add_eq_zero_iff_eq_neg]
 
 section
 variables [has_mul R] [has_distrib_neg R] {a b : R}
@@ -96,26 +95,27 @@ theorem mul_self_sub_mul_self [comm_ring R] (a b : R) : a * a - b * b = (a + b) 
 (commute.all a b).mul_self_sub_mul_self_eq
 
 lemma mul_self_sub_one [non_assoc_ring R] (a : R) : a * a - 1 = (a + 1) * (a - 1) :=
-by rw [←(commute.one_right a).mul_self_sub_mul_self_eq, mul_one]
+by rw [←(commute.one_right a).mul_self_sub_mul_self_eq]; rw [ mul_one]
 
 lemma mul_self_eq_mul_self_iff [comm_ring R] [no_zero_divisors R] {a b : R} :
-  a * a = b * b ↔ a = b ∨ a = -b :=
+ a * a = b * b ↔ a = b ∨ a = -b :=
 (commute.all a b).mul_self_eq_mul_self_iff
 
 lemma mul_self_eq_one_iff [non_assoc_ring R] [no_zero_divisors R] {a : R} :
-  a * a = 1 ↔ a = 1 ∨ a = -1 :=
-by rw [←(commute.one_right a).mul_self_eq_mul_self_iff, mul_one]
+ a * a = 1 ↔ a = 1 ∨ a = -1 :=
+by rw [←(commute.one_right a).mul_self_eq_mul_self_iff]; rw [ mul_one]
 
 namespace units
 
 /-- In the unit group of an integral domain, a unit is its own inverse iff the unit is one or
-  one's additive inverse. -/
+ one's additive inverse. -/
 lemma inv_eq_self_iff [ring R] [no_zero_divisors R] (u : Rˣ) : u⁻¹ = u ↔ u = 1 ∨ u = -1 :=
 begin
-  rw inv_eq_iff_mul_eq_one,
-  simp only [ext_iff],
-  push_cast,
-  exact mul_self_eq_one_iff
+ rw inv_eq_iff_mul_eq_one,
+ simp only [ext_iff],
+ push_cast,
+ exact mul_self_eq_one_iff
 end
 
 end units
+

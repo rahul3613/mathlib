@@ -45,7 +45,7 @@ class has_measurable_sup₂ (M : Type*) [measurable_space M] [has_sup M] : Prop 
 (measurable_sup : measurable (λ p : M × M, p.1 ⊔ p.2))
 
 export has_measurable_sup₂ (measurable_sup)
-  has_measurable_sup (measurable_const_sup measurable_sup_const)
+ has_measurable_sup (measurable_const_sup measurable_sup_const)
 
 /-- We say that a type `has_measurable_inf` if `((⊓) c)` and `(⊓ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (⊓)` see `has_measurable_inf₂`. -/
@@ -59,7 +59,7 @@ class has_measurable_inf₂ (M : Type*) [measurable_space M] [has_inf M] : Prop 
 (measurable_inf : measurable (λ p : M × M, p.1 ⊓ p.2))
 
 export has_measurable_inf₂ (measurable_inf)
-  has_measurable_inf (measurable_const_inf measurable_inf_const)
+ has_measurable_inf (measurable_const_inf measurable_inf_const)
 
 variables {M : Type*} [measurable_space M]
 
@@ -106,7 +106,7 @@ lemma measurable.sup_const (hf : measurable f) (c : M) : measurable (λ x, f x �
 
 @[measurability]
 lemma ae_measurable.sup_const (hf : ae_measurable f μ) (c : M) :
-  ae_measurable (λ x, f x ⊔ c) μ :=
+ ae_measurable (λ x, f x ⊔ c) μ :=
 (measurable_sup_const c).comp_ae_measurable hf
 
 end measurable_sup
@@ -124,12 +124,12 @@ measurable_sup.comp (hf.prod_mk hg)
 
 @[measurability]
 lemma ae_measurable.sup' (hf : ae_measurable f μ) (hg : ae_measurable g μ) :
-  ae_measurable (f ⊔ g) μ :=
+ ae_measurable (f ⊔ g) μ :=
 measurable_sup.comp_ae_measurable (hf.prod_mk hg)
 
 @[measurability]
 lemma ae_measurable.sup (hf : ae_measurable f μ) (hg : ae_measurable g μ) :
-  ae_measurable (λ a, f a ⊔ g a) μ :=
+ ae_measurable (λ a, f a ⊔ g a) μ :=
 measurable_sup.comp_ae_measurable (hf.prod_mk hg)
 
 omit m
@@ -150,22 +150,22 @@ variables [has_measurable_inf M]
 
 @[measurability]
 lemma measurable.const_inf (hf : measurable f) (c : M) :
-  measurable (λ x, c ⊓ f x) :=
+ measurable (λ x, c ⊓ f x) :=
 (measurable_const_inf c).comp hf
 
 @[measurability]
 lemma ae_measurable.const_inf (hf : ae_measurable f μ) (c : M) :
-  ae_measurable (λ x, c ⊓ f x) μ :=
+ ae_measurable (λ x, c ⊓ f x) μ :=
 (has_measurable_inf.measurable_const_inf c).comp_ae_measurable hf
 
 @[measurability]
 lemma measurable.inf_const (hf : measurable f) (c : M) :
-  measurable (λ x, f x ⊓ c) :=
+ measurable (λ x, f x ⊓ c) :=
 (measurable_inf_const c).comp hf
 
 @[measurability]
 lemma ae_measurable.inf_const (hf : ae_measurable f μ) (c : M) :
-  ae_measurable (λ x, f x ⊓ c) μ :=
+ ae_measurable (λ x, f x ⊓ c) μ :=
 (measurable_inf_const c).comp_ae_measurable hf
 
 end measurable_inf
@@ -183,12 +183,12 @@ measurable_inf.comp (hf.prod_mk hg)
 
 @[measurability]
 lemma ae_measurable.inf' (hf : ae_measurable f μ) (hg : ae_measurable g μ) :
-  ae_measurable (f ⊓ g) μ :=
+ ae_measurable (f ⊓ g) μ :=
 measurable_inf.comp_ae_measurable (hf.prod_mk hg)
 
 @[measurability]
 lemma ae_measurable.inf (hf : ae_measurable f μ) (hg : ae_measurable g μ) :
-  ae_measurable (λ a, f a ⊓ g a) μ :=
+ ae_measurable (λ a, f a ⊓ g a) μ :=
 measurable_inf.comp_ae_measurable (hf.prod_mk hg)
 
 omit m
@@ -208,26 +208,27 @@ open finset
 variables {δ : Type*} [measurable_space δ] [semilattice_sup α] [has_measurable_sup₂ α]
 
 @[measurability] lemma finset.measurable_sup' {ι : Type*} {s : finset ι} (hs : s.nonempty)
-  {f : ι → δ → α} (hf : ∀ n ∈ s, measurable (f n)) :
-  measurable (s.sup' hs f) :=
+ {f : ι → δ → α} (hf : ∀ n ∈ s, measurable (f n)) :
+ measurable (s.sup' hs f) :=
 finset.sup'_induction hs _ (λ f hf g hg, hf.sup hg) (λ n hn, hf n hn)
 
 @[measurability] lemma finset.measurable_range_sup'
-  {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, measurable (f k)) :
-  measurable ((range (n + 1)).sup' nonempty_range_succ f) :=
+ {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, measurable (f k)) :
+ measurable ((range (n + 1)).sup' nonempty_range_succ f) :=
 begin
-  simp_rw ← nat.lt_succ_iff at hf,
-  refine finset.measurable_sup' _ _,
-  simpa [finset.mem_range],
+ simp_rw ← nat.lt_succ_iff at hf,
+ refine finset.measurable_sup' _ _,
+ simpa [finset.mem_range],
 end
 
 @[measurability] lemma finset.measurable_range_sup''
-  {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, measurable (f k)) :
-  measurable (λ x, (range (n + 1)).sup' nonempty_range_succ (λ k, f k x)) :=
+ {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, measurable (f k)) :
+ measurable (λ x, (range (n + 1)).sup' nonempty_range_succ (λ k, f k x)) :=
 begin
-  convert finset.measurable_range_sup' hf,
-  ext x,
-  simp,
+ convert finset.measurable_range_sup' hf,
+ ext x,
+ simp,
 end
 
 end semilattice_sup
+
